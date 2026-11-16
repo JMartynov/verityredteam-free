@@ -17,11 +17,17 @@ PLUGIN_GROUP = "verity.plugins"
 def discover_and_load_plugins(dispatcher: Any) -> list[str]:
     """Discover and initialize plugins registered under the ``verity.plugins`` group.
 
-    Each entry point must resolve to a callable accepting ``dispatcher``.
-    Failures are logged and skipped so core functionality never breaks.
+    Each entry point should resolve to a callable accepting ``dispatcher``;
+    non-callable targets are recorded but not invoked. Per-plugin load failures
+    are logged and skipped. If entry-point enumeration itself fails, a warning
+    is logged and an empty list is returned so core functionality never breaks.
     """
     loaded_plugins: list[str] = []
-    entry_points = importlib.metadata.entry_points(group=PLUGIN_GROUP)
+    try:
+        entry_points = importlib.metadata.entry_points(group=PLUGIN_GROUP)
+    except Exception as exc:
+        logger.warning("Failed to enumerate verity plugins: %s", exc)
+        return loaded_plugins
 
     for ep in entry_points:
         try:

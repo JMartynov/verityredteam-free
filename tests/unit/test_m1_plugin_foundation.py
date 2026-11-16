@@ -152,6 +152,23 @@ def test_discover_and_load_plugins_uses_plugin_group(
     assert captured.get("group") == PLUGIN_GROUP
 
 
+def test_discover_and_load_plugins_handles_enumeration_failure(
+    monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    def _fake_entry_points(*args: Any, **kwargs: Any) -> list[Any]:
+        raise RuntimeError("enumeration failed")
+
+    monkeypatch.setattr("importlib.metadata.entry_points", _fake_entry_points)
+    with caplog.at_level(logging.WARNING, logger="verity.mcp_server.plugin_loader"):
+        loaded = discover_and_load_plugins(object())
+    assert loaded == []
+    messages = [record.getMessage() for record in caplog.records]
+    assert any(
+        message == "Failed to enumerate verity plugins: enumeration failed"
+        for message in messages
+    )
+
+
 def test_discover_and_load_plugins_calls_callable(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
