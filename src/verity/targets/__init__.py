@@ -42,8 +42,11 @@ def list_synthetic_targets() -> list[str]:
 
 def run_all_demo_probes(
     target_id: str | None = None,
+    *,
+    target: str | None = None,
 ) -> list[dict[str, Any]]:
     """Run demo probes for one target or for every registered target."""
-    if target_id is not None:
-        return [get_synthetic_target(target_id).run_demo_probe()]
-    return [target.run_demo_probe() for target in SYNTHETIC_TARGETS.values()]
+    resolved_id = target_id if target_id is not None else target
+    if resolved_id is not None:
+        return [get_synthetic_target(resolved_id).run_demo_probe()]
+    return [registered.run_demo_probe() for registered in SYNTHETIC_TARGETS.values()]
