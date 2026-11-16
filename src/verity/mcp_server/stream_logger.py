@@ -12,7 +12,11 @@ from typing import Any
 
 logger = logging.getLogger("verity.mcp_server.stream_logger")
 
-_REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+_REPO_ROOT = (
+    Path.cwd()
+    if (Path.cwd() / "artifacts").exists()
+    else Path(__file__).resolve().parent.parent.parent.parent
+)
 
 
 def _truncate_json(payload: Any, max_len: int) -> str:
