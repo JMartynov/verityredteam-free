@@ -216,3 +216,18 @@ def test_cli_test_writes_output_file(tmp_path: Path):
     )
     assert exit_code == 0
     assert output.read_text(encoding="utf-8").startswith("<!DOCTYPE html>")
+
+
+def test_cli_test_demo_all_targets_pass(capsys):
+    exit_code = cli.main(["test", "--demo"])
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "FAIL" not in captured.out
+    assert "PASS" in captured.out
+
+
+def test_cli_test_demo_single_target_passes(capsys):
+    exit_code = cli.main(["test", "--demo", "--target", "sqlite-basic"])
+    captured = capsys.readouterr()
+    assert exit_code == 0
+    assert "PASS" in captured.out

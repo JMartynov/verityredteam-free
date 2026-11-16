@@ -355,9 +355,44 @@ def _cmd_test(args: argparse.Namespace) -> int:
         try:
             from verity.targets import run_all_demo_probes
 
-            demo_results = run_all_demo_probes(target=args.target)
+            demo_results = run_all_demo_probes(target_id=args.target)
             if isinstance(demo_results, list):
-                results.extend(demo_results)
+                for item in demo_results:
+                    if not isinstance(item, dict):
+                        continue
+                    if "status" in item:
+                        results.append(item)
+                        continue
+                    normalized = dict(item)
+                    normalized["name"] = item.get("name") or item.get("target_id", "demo")
+                    normalized["status"] = (
+                        "PASS"
+                        if (item.get("vulnerable_breached") and item.get("secure_defended"))
+                        else "FAIL"
+                    )
+                    normalized["severity"] = (
+                        item.get("severity") or item.get("cwe_id") or "INFO"
+                    )
+                    normalized["message"] = item.get("message") or (
+                        f"Vulnerable breached={item.get('vulnerable_breached')}, "
+                        f"Secure defended={item.get('secure_defended')} — "
+                        f"{item.get('evidence', '')}"
+                    )
+                    normalized["details"] = item.get("details") or str(
+                        item.get("evidence") or ""
+                    )
+                    results.append(normalized)
+        except KeyError as exc:
+            reason = exc.args[0] if exc.args else f"Unknown demo target: {args.target}"
+            results.append(
+                {
+                    "name": args.target or "demo_probes",
+                    "status": "FAIL",
+                    "message": str(reason),
+                    "details": None,
+                    "severity": None,
+                }
+            )
         except (ImportError, AttributeError):
             results.append(
                 {
