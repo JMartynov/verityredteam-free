@@ -4,7 +4,7 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: In Progress (Active Sprint)  
+> **Status**: Completed (v0.1.0-alpha Released)  
 > **Target Baseline**: `v0.1.0-alpha` (Free Core) / `v0.3.0` (Enterprise Pro)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
@@ -47,12 +47,12 @@ flowchart TD
 
 | Task Key | Task Title | Architectural Scope | Status | GitHub Project #5 Item |
 | :---: | :--- | :--- | :---: | :---: |
-| **M1** | **Plugin Foundation & Core MCP Server** | Plugin protocols, entry points, stdlib JSON-RPC MCP server | `Todo` | [View Item #M1](https://github.com/users/JMartynov/projects/5) |
-| **M2** | **Workstation Discovery & Static Screening** | 9-client scanner, 13-rule StaticRuleEvaluator, fingerprinting, OSV cache | `Todo` | [View Item #M2](https://github.com/users/JMartynov/projects/5) |
-| **M3** | **Deterministic SQL AST Guard** | Cohesive 245-line `SqlSecurityGuard` (`sqlglot`), Pro Snowflake guard | `Todo` | [View Item #M3](https://github.com/users/JMartynov/projects/5) |
-| **M4** | **Link `verity-pro` to `verity-core` via `uv` Workspace** | `[tool.uv.sources]`, `src/verity_pro/` packaging, remove duplicated core | `Todo` | [View Item #M4](https://github.com/users/JMartynov/projects/5) |
-| **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | `Todo` | [View Item #M5](https://github.com/users/JMartynov/projects/5) |
-| **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | `Todo` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
+| **M1** | **Plugin Foundation & Core MCP Server** | Plugin protocols, entry points, stdlib JSON-RPC MCP server | `Done` | [View Item #M1](https://github.com/users/JMartynov/projects/5) |
+| **M2** | **Workstation Discovery & Static Screening** | 9-client scanner, 13-rule StaticRuleEvaluator, fingerprinting, OSV cache | `Done` | [View Item #M2](https://github.com/users/JMartynov/projects/5) |
+| **M3** | **Deterministic SQL AST Guard** | Cohesive 245-line `SqlSecurityGuard` (`sqlglot`), Pro Snowflake guard | `Done` | [View Item #M3](https://github.com/users/JMartynov/projects/5) |
+| **M4** | **Link `verity-pro` to `verity-core` via `uv` Workspace** | `[tool.uv.sources]`, `src/verity_pro/` packaging, remove duplicated core | `Done` | [View Item #M4](https://github.com/users/JMartynov/projects/5) |
+| **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | `Done` | [View Item #M5](https://github.com/users/JMartynov/projects/5) |
+| **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
 
 ---
 
