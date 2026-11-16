@@ -88,9 +88,13 @@ class DualPathRouter:
             try:
                 from verity.fingerprint.matcher import FingerprintMatcher
 
-                fp_dir = (
-                    Path(__file__).resolve().parent.parent.parent.parent / "data" / "fingerprints"
+                cwd_fp_dir = Path.cwd() / "data" / "fingerprints"
+                fallback_fp_dir = (
+                    Path(__file__).resolve().parent.parent.parent.parent
+                    / "data"
+                    / "fingerprints"
                 )
+                fp_dir = cwd_fp_dir if cwd_fp_dir.is_dir() else fallback_fp_dir
                 matcher = FingerprintMatcher()
                 if fp_dir.is_dir():
                     matcher.load_from_directory(fp_dir)
@@ -104,11 +108,13 @@ class DualPathRouter:
             try:
                 from verity.lookup.engine import VulnerabilityLookupEngine
 
-                vuln_dir = (
+                cwd_vuln_dir = Path.cwd() / "data" / "vulnerabilities"
+                fallback_vuln_dir = (
                     Path(__file__).resolve().parent.parent.parent.parent
                     / "data"
                     / "vulnerabilities"
                 )
+                vuln_dir = cwd_vuln_dir if cwd_vuln_dir.is_dir() else fallback_vuln_dir
                 if vuln_dir.is_dir():
                     self._vuln_engine = VulnerabilityLookupEngine.from_directory(vuln_dir)
                 else:
