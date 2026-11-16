@@ -6,14 +6,28 @@ Apache-2.0.
 ## Quickstart
 
 ```bash
-uvx verity scan
+uv run verity scan
 uv run verity test --demo
+uv run verity test --sql "SELECT id FROM users"
 uv run verity serve
 ```
 
 - `verity scan` — zero-Docker workstation discovery and static scanning across local AI client configs, with credential scrubbing.
-- `verity test` — deterministic probing of `stdio` or `HTTP/SSE` MCP servers, including in-memory demo targets.
+- `verity test` — deterministic probing of `stdio` or `HTTP/SSE` MCP servers, or a single SQL string via `--sql`, including in-memory demo targets.
 - `verity serve` — zero-framework stdlib JSON-RPC 2.0 MCP server for external IDE agents.
+
+`uv run verity test --demo` probes four in-memory synthetic targets with zero Docker:
+
+```text
+┌────────────────────────────────┬─────────┬────────┐
+│ Target                         │ CWE     │ Result │
+├────────────────────────────────┼─────────┼────────┤
+│ SQLite Basic Target            │ CWE-89  │ VULN   │
+│ PostgreSQL Multi-Tenant Target │ CWE-639 │ VULN   │
+│ MongoDB NoSQL Target           │ CWE-943 │ VULN   │
+│ MCP Code Execution Target      │ CWE-94  │ VULN   │
+└────────────────────────────────┴─────────┴────────┘
+```
 
 ## Capabilities
 
@@ -21,6 +35,20 @@ uv run verity serve
 - **Passport fingerprinting**: canonical SHA-256 tool hashing for stable server identification.
 - **OSV vulnerability lookup**: offline advisory matching via `mcp-vulnerabilities`.
 - **Static rule screening**: 13-rule `StaticRuleEvaluator` for MCP tool schemas at sub-millisecond latency.
+
+## Free vs Enterprise
+
+| Capability | `verity-core` (Free) | `verity-pro` (Enterprise) |
+| :--- | :---: | :---: |
+| Workstation discovery (9 clients) | ✅ | ✅ |
+| 13 static rule screening | ✅ | ✅ |
+| Deterministic SQL AST guard | ✅ | ✅ |
+| Zero-Docker demo targets | ✅ | ✅ |
+| Terminal / Markdown / HTML reports | ✅ | ✅ |
+| Snowflake RBAC & time-travel guard | — | ✅ |
+| Live database verification oracles | — | ✅ |
+| SARIF v2.1.0 export | — | ✅ |
+| Penetration automation & canary lab | — | ✅ |
 
 ## Extensibility
 
