@@ -3,6 +3,8 @@
 Open-core empirical security scanner for MCP servers and database-connected AI agents.
 Apache-2.0.
 
+![Verity RedTeam Free Terminal Demo](docs/assets/demo.svg)
+
 ## Quickstart
 
 ```bash
