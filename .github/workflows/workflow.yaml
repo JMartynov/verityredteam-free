@@ -9,8 +9,13 @@ on:
   workflow_dispatch:
 
 jobs:
+  full-tests:
+    name: Run Full Test Suite
+    uses: ./.github/workflows/full-tests.yml
+
   pypi-publish:
     name: Build and publish to PyPI
+    needs: full-tests
     runs-on: ubuntu-latest
     environment:
       name: pypi
