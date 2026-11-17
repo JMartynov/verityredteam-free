@@ -12,12 +12,27 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.12", "3.13"]
+    env:
+      OPENAI_API_KEY: ""
+      ANTHROPIC_API_KEY: ""
+      GEMINI_API_KEY: ""
+      GOOGLE_API_KEY: ""
+      DEEPSEEK_API_KEY: ""
+      ANTIGRAVITY_API_KEY: ""
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v4
       - run: uv python install ${{ matrix.python-version }}
       - run: uv sync --extra dev
-      - run: uv run ruff check src tests
-      - run: uv run pytest tests/ -q
-      - run: uv run verity test --demo
-      - run: uv build
+      - name: Lint and Code Style Checks
+        run: uv run --extra dev ruff check src tests
+      - name: Run Complete Unit, Guard, Target & CLI Test Suite
+        run: uv run --extra dev pytest tests/ -v
+      - name: Verify Zero-Docker Demo Targets CLI
+        run: uv run verity test --demo
+      - name: Verify SQL AST Guard CLI
+        run: uv run verity test --sql "SELECT id, username FROM users WHERE id = 1"
+      - name: Verify MCP Server CLI
+        run: uv run python -m verity.mcp_server.server --help
+      - name: Build Wheel and Sdist
+        run: uv build
