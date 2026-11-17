@@ -3,7 +3,7 @@ requires = ["setuptools>=75.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "verity-core"
+name = "verity-redteam-core"
 version = "0.1.0"
 description = "Verity RedTeam Free — Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server"
 readme = "README.md"
