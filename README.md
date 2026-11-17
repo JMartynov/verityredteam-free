@@ -1,4 +1,4 @@
-# verity-core (Verity RedTeam Free)
+# verity-redteam-core (Verity RedTeam Free)
 
 Open-core empirical security scanner for MCP servers and database-connected AI agents.
 Apache-2.0.
@@ -40,7 +40,7 @@ uv run verity serve
 
 ## Free vs Enterprise
 
-| Capability | `verity-core` (Free) | `verity-pro` (Enterprise) |
+| Capability | `verity-redteam-core` (Free) | `verity-pro` (Enterprise) |
 | :--- | :---: | :---: |
 | Workstation discovery (9 clients) | ✅ | ✅ |
 | 13 static rule screening | ✅ | ✅ |
@@ -54,7 +54,7 @@ uv run verity serve
 
 ## Extensibility
 
-`verity-core` is the single source of the runtime abstraction barrier. Enterprise
+`verity-redteam-core` is the single source of the runtime abstraction barrier. Enterprise
 extensions are discovered dynamically through Python entry points — no core code is
 patched or branched:
 
