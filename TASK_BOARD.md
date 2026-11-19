@@ -107,7 +107,7 @@ flowchart TD
 | **M26** | **Upgrade `actions/checkout` and `astral-sh/setup-uv` Pins Across All GitHub Actions Workflows** | Upgrade `actions/checkout` and `astral-sh/setup-uv` to Node-24-ready versions across all 4 workflows + unit test | [M26_upgrade_github_actions_pins.md](docs/tasks/M26_upgrade_github_actions_pins.md) | `Done` | [View Item #M26](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQW9A`) |
 | **M27** | **Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi`** | Guard `uv build` behind `INSTALL_SOURCE=wheel`, clean stale wheels, unit test & dual-mode container E2E | [M27_guard_uv_build_in_run_e2e.md](docs/tasks/M27_guard_uv_build_in_run_e2e.md) | `Done` | [View Item #M27](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXBQ`) |
 | **M28** | **Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard** | Replace `verity-core` with `verity-redteam-core` in `AGENTS.md` and extend `test_no_stale_package_references` | [M28_fix_agents_md_retired_package_name.md](docs/tasks/M28_fix_agents_md_retired_package_name.md) | `Done` | [View Item #M28](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXFA`) |
-| **M29** | **Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`)** | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard | [M29_exact_task_board_project_links.md](docs/tasks/M29_exact_task_board_project_links.md) | `Todo` | [View Item #M29](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXJA`) |
+| **M29** | **Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`)** | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard | [M29_exact_task_board_project_links.md](docs/tasks/M29_exact_task_board_project_links.md) | `Done` | [View Item #M29](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXJA`) |
 
 ---
 
@@ -917,4 +917,4 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 - Add dynamic task-board parity tests in `tests/unit/test_documentation_parity.py` asserting every discovered `M<N>` row has a unique `PVTI_…` ID and a valid spec link.
 
 #### Acceptance Criteria
-- [ ] Every row `M1`–`M29` in `TASK_BOARD.md` carries its exact, verified `PVTI_…` item ID in both the Task Matrix and detailed section, and `tests/unit/test_documentation_parity.py` passes.
+- [x] Every row `M1`–`M29` in `TASK_BOARD.md` carries its exact, verified `PVTI_…` item ID in both the Task Matrix and detailed section, and `tests/unit/test_documentation_parity.py` passes.
