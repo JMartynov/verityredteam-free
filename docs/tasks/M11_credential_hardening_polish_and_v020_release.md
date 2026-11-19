@@ -2,7 +2,7 @@
 
 - **Task ID**: `M11`
 - **Priority**: `P0`
-- **Status**: `In Progress`
+- **Status**: `Done`
 - **Dependencies**: `M7`, `M8`, `M9`, `M10`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
 - **GitHub Project #5**: [Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)
@@ -64,8 +64,8 @@ INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh
 
 ## 4. Acceptance Criteria
 
-- [ ] `MultiClientConfigScanner.is_secret_env_entry()` detects plaintext key patterns, `SECRET_VALUE_PATTERNS` under arbitrary keys, and DSN credential URLs while ignoring `${VAR}` references (including `${DB_PASS}` inside DSN URLs).
-- [ ] Neither full DSN values nor embedded passwords leak in `terminal`, `json`, `markdown`, or `html` outputs.
-- [ ] `terminal.py` renders full rule IDs (`no_wrap=True`), and `uv build` produces `0.2.0` wheel/sdist with zero `SetuptoolsDeprecationWarning`.
-- [ ] Both `verityredteam-free` unit tests (`ruff` + `pytest`) and `verityredteam` Pro MCP agent tests (`17/17`) pass cleanly.
-- [ ] Tag `v0.2.0` publishes `verity-redteam-core==0.2.0` to PyPI and `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh` passes across all 4 clean containers.
+- [x] `MultiClientConfigScanner.is_secret_env_entry()` detects plaintext key patterns, `SECRET_VALUE_PATTERNS` under arbitrary keys, and DSN credential URLs while ignoring `${VAR}` references (including `${DB_PASS}` inside DSN URLs).
+- [x] Neither full DSN values nor embedded passwords leak in `terminal`, `json`, `markdown`, or `html` outputs.
+- [x] `terminal.py` renders full rule IDs (`no_wrap=True`), and `uv build` produces `0.2.0` wheel/sdist with zero `SetuptoolsDeprecationWarning`.
+- [x] Both `verityredteam-free` unit tests (`ruff` + `pytest`) and `verityredteam` Pro MCP agent tests (`17/17`) pass cleanly.
+- [x] Tag `v0.2.0` publishes `verity-redteam-core==0.2.0` to PyPI and `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh` passes across all 4 clean containers.

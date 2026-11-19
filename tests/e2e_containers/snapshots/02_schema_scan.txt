@@ -13,16 +13,17 @@ Verity Scan Report
 │ INFO           │     0 │
 └────────────────┴───────┘
                                               Findings                                              
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Severity   ┃ Rule                       ┃ Title                       ┃ Location                 ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│  CRITICAL  │ VERITY-STATIC-INJECTION-O… │ Prompt Injection            │ query_customer_records:- │
-│            │                            │ Instruction Override        │                          │
-│  HIGH      │ VERITY-STATIC-TOOL-POISON… │ Tool Poisoning / Secondary  │ query_customer_records:- │
-│            │                            │ Shadow Functionality        │                          │
-│  HIGH      │ VERITY-STATIC-EXFIL-WEBHO… │ Out-of-Band Data            │ query_customer_records:- │
-│            │                            │ Exfiltration Endpoint       │                          │
-│  HIGH      │ VERITY-STATIC-METADATA-SS… │ Cloud Instance Metadata     │ fetch_docs:-             │
-│            │                            │ Service SSRF                │                          │
-└────────────┴────────────────────────────┴─────────────────────────────┴──────────────────────────┘
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Severity   ┃ Rule                             ┃ Title                  ┃ Location                ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  CRITICAL  │ VERITY-STATIC-INJECTION-OVERRIDE │ Prompt Injection       │ query_customer_records… │
+│            │                                  │ Instruction Override   │                         │
+│  HIGH      │ VERITY-STATIC-TOOL-POISONING     │ Tool Poisoning /       │ query_customer_records… │
+│            │                                  │ Secondary Shadow       │                         │
+│            │                                  │ Functionality          │                         │
+│  HIGH      │ VERITY-STATIC-EXFIL-WEBHOOK      │ Out-of-Band Data       │ query_customer_records… │
+│            │                                  │ Exfiltration Endpoint  │                         │
+│  HIGH      │ VERITY-STATIC-METADATA-SSRF      │ Cloud Instance         │ fetch_docs:-            │
+│            │                                  │ Metadata Service SSRF  │                         │
+└────────────┴──────────────────────────────────┴────────────────────────┴─────────────────────────┘
 Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.
