@@ -4,7 +4,7 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Active — Wave 2 (Customer Experience, Ground-Zero Verification & Launch Polish)  
+> **Status**: Completed — Wave 2 (M7–M10 Verified)  
 > **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Target (Wave 2 `M7`–`M10`)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
@@ -68,7 +68,7 @@ flowchart TD
 | **M7** | **CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support** | Wire secret scrubbing, shell wrappers, OSV CVEs & YAML parsing into `verity scan` | [M7_cli_parity_and_auditor_wiring.md](docs/tasks/M7_cli_parity_and_auditor_wiring.md) | `Done` | [View Item #M7](https://github.com/users/JMartynov/projects/5) |
 | **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Done` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
 | **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Done` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
-| **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Todo` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
+| **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Done` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
 
 ---
 
@@ -474,7 +474,7 @@ docker compose -f tests/e2e_containers/docker-compose.verify.yml down -v
 - [`docs/tasks/M9_dynamic_narrow_demo_gif.md`](docs/tasks/M9_dynamic_narrow_demo_gif.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKMCU4`)
 
 #### Context
-Replace the static, oversized SVG ([`docs/assets/demo.svg`](docs/assets/demo.svg), `1285 × 1975.6 px`, stale `verity-core` name) with a genuinely animated, narrow terminal screencast GIF (`docs/assets/demo.gif`) recorded reproducibly via Charmbracelet VHS in Docker from live `verity` runs.
+Replace the static, oversized SVG (`docs/assets/demo.svg`, `1285 × 1975.6 px`, stale `verity-core` name) with a genuinely animated, narrow terminal screencast GIF (`docs/assets/demo.gif`) recorded reproducibly via Charmbracelet VHS in Docker from live `verity` runs.
 
 #### Key Deliverables
 - `docs/assets/demo.tape` configured at narrow compact geometry (`Width 860`, `Height 440`, `FontSize 14`, `Framerate 18`) covering 4 dynamic ~6s scenes: workstation config/secret scan, live `stdio` poisoned MCP probe, SQL AST injection block vs. pass, and `--demo` + Python AST CI gate.
@@ -517,6 +517,6 @@ uv run ruff check src tests
 ```
 
 #### Acceptance Criteria
-- [ ] All 6 customer pain points include exact commands, verbatim `M8`-verified outputs, and clear value explanations.
-- [ ] `README.md` hero displays animated `docs/assets/demo.gif` and accurately reflects all Free features without stale mocks.
-- [ ] `tests/unit/test_documentation_parity.py` passes alongside full `pytest` and `ruff` checks.
+- [x] All 6 customer pain points include exact commands, verbatim `M8`-verified outputs, and clear value explanations.
+- [x] `README.md` hero displays animated `docs/assets/demo.gif` and accurately reflects all Free features without stale mocks.
+- [x] `tests/unit/test_documentation_parity.py` passes alongside full `pytest` and `ruff` checks.

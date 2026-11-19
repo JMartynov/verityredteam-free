@@ -2,7 +2,7 @@
 
 - **Task ID**: `M10`
 - **Priority**: `P1`
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: `M7`, `M8`, `M9`
 - **Blocks**: Launch / Release `v0.2.0`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
@@ -100,11 +100,11 @@ uv run ruff check src tests
 
 ## 6. Acceptance Criteria
 
-- [ ] `README.md` leads with real customer pain points, copy-paste commands, container-verified outputs (verbatim from `M8` snapshots), and clear explanations of how each pain point is solved.
-- [ ] Hero embeds narrow animated `docs/assets/demo.gif` (`M9`), and stale `docs/assets/demo.svg` is retired.
-- [ ] All Free capabilities (`scan` config/schema/AST/OSV/secrets, `test` demo/sql/url/command, `serve` MCP server + UCP, `SqlSecurityGuard` Python API, formats & exit codes) are accurately documented with zero exaggerated claims.
-- [ ] `tests/unit/test_documentation_parity.py` enforces CLI/flag/link/package-name parity and passes in CI.
-- [ ] `uv run pytest tests/ -q` and `uv run ruff check src tests` pass cleanly.
+- [x] `README.md` leads with real customer pain points, copy-paste commands, container-verified outputs (verbatim from `M8` snapshots), and clear explanations of how each pain point is solved.
+- [x] Hero embeds narrow animated `docs/assets/demo.gif` (`M9`), and stale `docs/assets/demo.svg` is retired.
+- [x] All Free capabilities (`scan` config/schema/AST/OSV/secrets, `test` demo/sql/url/command, `serve` MCP server + UCP, `SqlSecurityGuard` Python API, formats & exit codes) are accurately documented with zero exaggerated claims.
+- [x] `tests/unit/test_documentation_parity.py` enforces CLI/flag/link/package-name parity and passes in CI.
+- [x] `uv run pytest tests/ -q` and `uv run ruff check src tests` pass cleanly.
 
 ---
 
