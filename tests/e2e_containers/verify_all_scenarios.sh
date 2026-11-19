@@ -741,6 +741,129 @@ print("scenario 7 local clean assertion passed")
 PY
 pass "scenario 7 complete"
 
+# ---------------- Scenario 8: Dialect-aware SQL guard (M17) ----------------
+DEMO_DB="/tmp/verity_demo.db"
+rm -f "$DEMO_DB"
+python3 - "$DEMO_DB" <<'PY'
+import sqlite3
+import sys
+
+conn = sqlite3.connect(sys.argv[1])
+conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)")
+conn.execute("INSERT INTO users (id, name) VALUES (1, 'alice')")
+conn.commit()
+conn.close()
+PY
+
+expect_exit 0 "dialect mysql backticks" "$OUT_DIR/s8_mysql.txt" \
+  verity test --sql 'SELECT `id`, `name` FROM `users` LIMIT 1' --dialect mysql
+grep -q "PASS" "$OUT_DIR/s8_mysql.txt" || fail "dialect mysql missing PASS"
+grep -q "mysql" "$OUT_DIR/s8_mysql.txt" || fail "dialect mysql detail missing mysql"
+
+expect_exit 0 "dialect sqlite limit offset" "$OUT_DIR/s8_sqlite.txt" \
+  verity test --sql "SELECT id, name FROM users LIMIT 1 OFFSET 0" --dialect sqlite
+grep -q "PASS" "$OUT_DIR/s8_sqlite.txt" || fail "dialect sqlite missing PASS"
+grep -q "sqlite" "$OUT_DIR/s8_sqlite.txt" || fail "dialect sqlite detail missing sqlite"
+
+python3 - "$DEMO_DB" <<'PY'
+import sqlite3
+import sys
+
+from verity.mcp_library.sql_guard import SqlSecurityGuard
+
+query = "SELECT id, name FROM users LIMIT 1 OFFSET 0"
+SqlSecurityGuard.validate_single_select_statement(query, dialect="sqlite")
+conn = sqlite3.connect(sys.argv[1])
+try:
+    rows = conn.execute(query).fetchall()
+finally:
+    conn.close()
+assert rows == [(1, "alice")], rows
+print("sqlite dialect execution passed")
+PY
+
+expect_exit 1 "dialect stacked regression mysql" "$OUT_DIR/s8_stack_mysql.txt" \
+  verity test --sql "SELECT 1; DROP TABLE users" --dialect mysql
+expect_exit 1 "dialect stacked regression sqlite" "$OUT_DIR/s8_stack_sqlite.txt" \
+  verity test --sql "SELECT 1; DROP TABLE users" --dialect sqlite
+
+python3 - "$OUT_DIR/s8_mcp.json" <<'PY'
+import json
+import subprocess
+import sys
+
+
+def rpc(proc, message):
+    assert proc.stdin is not None and proc.stdout is not None
+    proc.stdin.write(json.dumps(message) + "\n")
+    proc.stdin.flush()
+    line = proc.stdout.readline()
+    if not line:
+        raise RuntimeError("no response from verity serve --transport stdio")
+    return json.loads(line)
+
+
+def extract_payload(response):
+    result = response.get("result") or {}
+    content = result.get("content") if isinstance(result, dict) else None
+    if isinstance(content, list):
+        for item in content:
+            if isinstance(item, dict) and isinstance(item.get("text"), str):
+                try:
+                    return json.loads(item["text"])
+                except Exception:
+                    continue
+    return result
+
+
+def main(out_path: str) -> None:
+    proc = subprocess.Popen(
+        ["verity", "serve", "--transport", "stdio"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        rpc(proc, {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
+        response = rpc(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "verity_database_guard",
+                    "arguments": {
+                        "action": "validate_sql_query",
+                        "options": {
+                            "sql_query": "SELECT TOP 5 [id] FROM [dbo].[users]",
+                            "dialect": "tsql",
+                        },
+                    },
+                },
+            },
+        )
+        payload = extract_payload(response)
+        assert payload.get("ok") is True, payload
+        assert payload.get("verdict") == "ALLOWED", payload
+        assert payload.get("dialect") == "tsql", payload
+        with open(out_path, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, indent=2)
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
+
+if __name__ == "__main__":
+    main(sys.argv[1])
+PY
+
+pass "scenario 8 complete"
+
 # ---------------- Final leak scan + snapshot export ----------------
 scan_for_leaks "$OUT_DIR"
 

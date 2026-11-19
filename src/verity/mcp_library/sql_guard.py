@@ -9,6 +9,16 @@ import sqlglot
 from sqlglot import exp
 from sqlglot.tokens import TokenType
 
+SUPPORTED_DIALECTS: tuple[str, ...] = (
+    "postgres",
+    "mysql",
+    "sqlite",
+    "duckdb",
+    "tsql",
+    "bigquery",
+    "snowflake",
+)
+
 
 class SqlSecurityError(Exception):
     """Raised when an unsafe or unparameterized SQL operation is detected."""
@@ -74,10 +84,19 @@ class SqlSecurityGuard:
         return out
 
     @classmethod
-    def validate_single_select_statement(cls, query: str) -> None:
+    def validate_single_select_statement(
+        cls, query: str, dialect: str = "postgres"
+    ) -> None:
         """Verify that a raw SQL query is strictly a single, read-only SELECT statement."""
         if not isinstance(query, str) or not query.strip():
             raise SqlSecurityError("SQL query must be a non-empty string.")
+
+        if not isinstance(dialect, str) or dialect.strip().lower() not in SUPPORTED_DIALECTS:
+            raise SqlSecurityError(
+                f"Unknown or unsupported SQL dialect: '{dialect}'. "
+                f"Supported dialects: {', '.join(SUPPORTED_DIALECTS)}."
+            )
+        dialect = dialect.strip().lower()
 
         clean_query = query.strip()
 
@@ -87,7 +106,7 @@ class SqlSecurityGuard:
 
         # 2. Check for semicolons / stacked queries outside string literals
         try:
-            tokens = sqlglot.tokenize(clean_query, read="postgres")
+            tokens = sqlglot.tokenize(clean_query, read=dialect)
             semicolon_indices = [
                 i for i, t in enumerate(tokens) if t.token_type == TokenType.SEMICOLON
             ]
@@ -116,7 +135,7 @@ class SqlSecurityGuard:
 
         for check_text in (decommented_compact, decommented_spaced, clean_query):
             try:
-                toks = sqlglot.tokenize(check_text, read="postgres")
+                toks = sqlglot.tokenize(check_text, read=dialect)
                 for t in toks:
                     if t.token_type in prohibited_token_types:
                         kw = prohibited_token_types[t.token_type]
@@ -130,10 +149,12 @@ class SqlSecurityGuard:
 
         # 4. Parse AST with sqlglot to enforce single statement and strictly SELECT / WITH
         try:
-            stmts = [s for s in sqlglot.parse(clean_query, read="postgres") if s is not None]
+            stmts = [s for s in sqlglot.parse(clean_query, read=dialect) if s is not None]
         except Exception as e:
             try:
-                stmts = [s for s in sqlglot.parse(decommented_spaced, read="postgres") if s is not None]
+                stmts = [
+                    s for s in sqlglot.parse(decommented_spaced, read=dialect) if s is not None
+                ]
             except Exception:
                 raise SqlSecurityError(f"Malformed or unparseable SQL statement: {e}") from e
 

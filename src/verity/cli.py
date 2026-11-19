@@ -793,15 +793,19 @@ def _cmd_test(args: argparse.Namespace) -> int:
     if args.sql:
         from verity.mcp_library.sql_guard import SqlSecurityError, SqlSecurityGuard
 
+        dialect = getattr(args, "dialect", "postgres") or "postgres"
+        details = f"{args.sql} #dialect={dialect}"
         try:
-            SqlSecurityGuard.validate_single_select_statement(args.sql)
+            SqlSecurityGuard.validate_single_select_statement(
+                args.sql, dialect=dialect
+            )
             SqlSecurityGuard.validate_parameterized_query(args.sql)
             results.append(
                 {
                     "name": "sql_security_guard",
                     "status": "PASS",
                     "message": "Query passed read-only and parameterization validation.",
-                    "details": args.sql,
+                    "details": details,
                     "severity": None,
                 }
             )
@@ -811,7 +815,7 @@ def _cmd_test(args: argparse.Namespace) -> int:
                     "name": "sql_security_guard",
                     "status": "FAIL",
                     "message": str(exc),
-                    "details": args.sql,
+                    "details": details,
                     "severity": "HIGH",
                 }
             )
@@ -821,7 +825,7 @@ def _cmd_test(args: argparse.Namespace) -> int:
                     "name": "sql_security_guard",
                     "status": "FAIL",
                     "message": f"SQL validation error: {exc}",
-                    "details": args.sql,
+                    "details": details,
                     "severity": "HIGH",
                 }
             )
@@ -908,6 +912,20 @@ def build_parser() -> argparse.ArgumentParser:
     test.add_argument("--demo", action="store_true", help="Run all demo probes.")
     test.add_argument("--target", default=None, help="Specific demo target identifier.")
     test.add_argument("--sql", default=None, help="SQL query to validate.")
+    test.add_argument(
+        "--dialect",
+        choices=(
+            "postgres",
+            "mysql",
+            "sqlite",
+            "duckdb",
+            "tsql",
+            "bigquery",
+            "snowflake",
+        ),
+        default="postgres",
+        help="SQL dialect for --sql validation (default: postgres).",
+    )
     test.add_argument("--url", default=None, help="SSE endpoint to probe.")
     test.add_argument("--command", default=None, help="Stdio MCP command to probe.")
     test.add_argument(

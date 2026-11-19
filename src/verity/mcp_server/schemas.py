@@ -139,6 +139,22 @@ UNIFIED_TOOL_DEFINITIONS = [
                             "enum": ["postgres", "mysql", "mongodb", "snowflake"],
                             "default": "postgres",
                         },
+                        "dialect": {
+                            "type": "string",
+                            "enum": [
+                                "postgres",
+                                "mysql",
+                                "sqlite",
+                                "duckdb",
+                                "tsql",
+                                "bigquery",
+                                "snowflake",
+                            ],
+                            "default": "postgres",
+                            "description": (
+                                "SQL dialect applied when validating the query"
+                            ),
+                        },
                         "row_data": {
                             "type": "object",
                             "description": "Database document/row to mask",

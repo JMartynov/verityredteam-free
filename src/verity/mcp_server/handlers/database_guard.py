@@ -20,15 +20,21 @@ class DatabaseGuardHandlerMixin:
 
         if action == "validate_sql_query":
             sql_query = options.get("sql_query", "")
+            dialect = options.get("dialect") or "postgres"
+            if isinstance(dialect, str):
+                dialect = dialect.strip().lower()
             timeout_ms = options.get("timeout_ms")
             try:
-                SqlSecurityGuard.validate_single_select_statement(sql_query)
+                SqlSecurityGuard.validate_single_select_statement(
+                    sql_query, dialect=dialect
+                )
                 SqlSecurityGuard.validate_parameterized_query(sql_query)
                 clamped_timeout = SqlSecurityGuard.validate_statement_timeout(timeout_ms)
                 return {
                     "ok": True,
                     "action": action,
                     "verdict": "ALLOWED",
+                    "dialect": dialect,
                     "details": (
                         "SQL query satisfies parameterization, single-statement, "
                         "and catalog isolation rules."
@@ -40,6 +46,7 @@ class DatabaseGuardHandlerMixin:
                     "ok": False,
                     "action": action,
                     "verdict": "BLOCKED",
+                    "dialect": dialect,
                     "violations": [str(e)],
                     "remediation": (
                         "Ensure query is a single SELECT/WITH statement without "
