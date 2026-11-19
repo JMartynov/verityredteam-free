@@ -2,14 +2,14 @@
 
 ## 1. Project Identity & Open-Core Purpose
 
-**Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-core`)  
+**Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)  
 **Companion Enterprise Repo**: `/Users/ivan/Project/3t.tools.intellij/verityredteam` (`verity-pro` & `verity_lite`)  
 **Task Board**: [GitHub Project #5 (`Verity RedTeam Free Task Board`)](https://github.com/users/JMartynov/projects/5) & [`TASK_BOARD.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/TASK_BOARD.md)  
 **Master Architecture Specs**:
 - [`../verityredteam/docs/plans/open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)
 - [`../verityredteam/docs/plans/architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)
 
-**Verity RedTeam Free (`verity-core`)** is the open-source (Apache-2.0) security scanner, deterministic SQL AST guard, and MCP security server for developers building or using Model Context Protocol (MCP) tools.
+**Verity RedTeam Free (`verity-redteam-core`)** is the open-source (Apache-2.0) security scanner, deterministic SQL AST guard, and MCP security server for developers building or using Model Context Protocol (MCP) tools.
 
 ### Core Product Principles
 1. **5-Second Magic Moment (Zero Docker, Zero API Keys)**:
@@ -30,7 +30,7 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
 │                 Lead Architect (Antigravity Coordinator)                 │
-│  • Formulates contracts from TASK_BOARD.md (Tasks M1–M6)                 │
+│  • Formulates contracts from TASK_BOARD.md & GitHub Project #5           │
 │  • Dispatches parallel worker sub-agents for [FREE] and [PRO] subtasks   │
 └────────────────────────────────────┬─────────────────────────────────────┘
                                      │

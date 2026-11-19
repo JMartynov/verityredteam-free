@@ -16,11 +16,16 @@ from verity.cli import build_parser
 REPO_ROOT = Path(__file__).resolve().parents[2]
 README_PATH = REPO_ROOT / "README.md"
 EXTENSIBILITY_PATH = REPO_ROOT / "docs" / "extensibility.md"
+AGENTS_PATH = REPO_ROOT / "AGENTS.md"
 
 _FENCE_RE = re.compile(r"```(?P<lang>[A-Za-z0-9_+-]*)\r?\n(?P<body>.*?)```", re.DOTALL)
 _LINK_RE = re.compile(r"!?\[[^\]]*\]\((?P<target>[^)]+)\)")
 _STALE_PACKAGE_RE = re.compile(r"\bverity-core\b")
 _SHELL_LANGS = {"bash", "sh", "console", "shell"}
+_YAML_LANGS = {"yaml", "yml"}
+_YAML_RUN_RE = re.compile(r"^\s*(?:-\s*)?run:\s*(?P<rest>.*)$")
+_YAML_BLOCK_SCALAR_MARKERS = {"|", ">", "|-", ">-", "|+", ">+"}
+_LINE_CONTINUATION_RE = re.compile(r"\\\r?\n")
 _SNAPSHOT_DIR = REPO_ROOT / "tests" / "e2e_containers" / "snapshots"
 _DEMO_TAPE_PATH = REPO_ROOT / "docs" / "assets" / "demo.tape"
 _DEMO_GIF_PATH = REPO_ROOT / "docs" / "assets" / "demo.gif"
@@ -190,18 +195,41 @@ def _assert_matches_snapshot(block: str, snapshot_name: str) -> None:
     )
 
 
-def _extract_verity_commands(markdown: str) -> list[list[str]]:
+def _yaml_command_lines(body: str) -> list[str]:
+    """Flatten a YAML fence into candidate command lines (unwraps ``run:``)."""
+    lines: list[str] = []
+    for raw in _LINE_CONTINUATION_RE.sub(" ", body).splitlines():
+        match = _YAML_RUN_RE.match(raw)
+        if match is None:
+            lines.append(raw)
+            continue
+        rest = match.group("rest").strip()
+        if rest and rest not in _YAML_BLOCK_SCALAR_MARKERS:
+            lines.append(rest)
+    return lines
+
+
+def _iter_fence_commands(markdown: str, langs: set[str]) -> list[list[str]]:
     commands: list[list[str]] = []
     for match in _FENCE_RE.finditer(markdown):
         lang = (match.group("lang") or "").lower()
-        if lang not in _SHELL_LANGS:
+        if lang not in langs:
             continue
-        body = match.group("body").replace("\\\n", " ")
-        for raw in body.splitlines():
+        body = match.group("body")
+        candidates = (
+            _yaml_command_lines(body)
+            if lang in _YAML_LANGS
+            else _LINE_CONTINUATION_RE.sub(" ", body).splitlines()
+        )
+        for raw in candidates:
             tokens = _split_command_line(raw)
             if tokens:
                 commands.append(tokens)
     return commands
+
+
+def _extract_verity_commands(markdown: str) -> list[list[str]]:
+    return _iter_fence_commands(markdown, _SHELL_LANGS | _YAML_LANGS)
 
 
 def test_cli_surface_exposes_expected_commands_and_formats() -> None:
@@ -226,6 +254,46 @@ def test_readme_cli_commands_are_valid() -> None:
             )
 
 
+def test_yaml_backslash_continuations_are_unwrapped() -> None:
+    markdown = "```yaml\n      run: |\n        verity scan \\\n          --offline\n```\n"
+    assert _extract_verity_commands(markdown) == [["verity", "scan", "--offline"]]
+
+
+def test_invalid_yaml_verity_command_is_rejected() -> None:
+    markdown = "```yaml\nrun: verity scan --definitely-not-a-flag\n```\n"
+    commands = _extract_verity_commands(markdown)
+    assert commands == [["verity", "scan", "--definitely-not-a-flag"]]
+    with pytest.raises(SystemExit):
+        build_parser().parse_args(commands[0][1:])
+
+
+def test_readme_yaml_snippet_commands_are_valid() -> None:
+    parser = build_parser()
+    markdown = README_PATH.read_text(encoding="utf-8")
+    commands = _iter_fence_commands(markdown, _YAML_LANGS)
+    assert commands, "README must document runnable verity commands in YAML fences"
+    for tokens in commands:
+        try:
+            parser.parse_args(tokens[1:])
+        except SystemExit as exc:  # argparse raises SystemExit on invalid invocations
+            pytest.fail(
+                f"README documents an invalid YAML CLI command: {' '.join(tokens)!r} "
+                f"(argparse exit code {exc.code})"
+            )
+
+
+def test_yaml_hardening_preserves_shell_fence_commands() -> None:
+    markdown = README_PATH.read_text(encoding="utf-8")
+    shell_commands = _iter_fence_commands(markdown, _SHELL_LANGS)
+    assert shell_commands, "README must keep runnable shell fence commands"
+    combined = _extract_verity_commands(markdown)
+    for tokens in shell_commands:
+        assert tokens in combined, (
+            f"YAML hardening dropped shell fence command: {' '.join(tokens)!r}"
+        )
+    assert len(combined) >= len(shell_commands)
+
+
 def test_readme_has_no_stale_pypi_caveat() -> None:
     text = README_PATH.read_text(encoding="utf-8").lower()
     assert "not yet on pypi" not in text
@@ -246,12 +314,28 @@ def test_readme_documents_pypi_quickstart() -> None:
     assert "dist/*.whl" in text[details_open:details_close]
 
 
-def test_no_stale_package_references() -> None:
-    for path in (README_PATH, EXTENSIBILITY_PATH):
-        text = path.read_text(encoding="utf-8")
-        assert not _STALE_PACKAGE_RE.search(text), (
-            f"{path.name} references the retired 'verity-core' package"
-        )
+@pytest.mark.parametrize("path", [README_PATH, EXTENSIBILITY_PATH, AGENTS_PATH])
+def test_no_stale_package_references(path: Path) -> None:
+    text = path.read_text(encoding="utf-8")
+    assert not _STALE_PACKAGE_RE.search(text), (
+        f"{path.name} references the retired 'verity-core' package"
+    )
+
+
+def test_agents_md_documents_current_package_name() -> None:
+    text = AGENTS_PATH.read_text(encoding="utf-8")
+    assert "verity-redteam-core" in text, "AGENTS.md must name the current package"
+    assert not _STALE_PACKAGE_RE.search(text), (
+        "AGENTS.md references the retired 'verity-core' package"
+    )
+
+
+def test_agents_md_has_no_stale_task_range() -> None:
+    text = AGENTS_PATH.read_text(encoding="utf-8")
+    assert re.search("Tasks\\s+M1[\u2013-]M6", text) is None, (
+        "AGENTS.md must not pin a stale task range"
+    )
+    assert "TASK_BOARD.md" in text, "AGENTS.md must point at TASK_BOARD.md"
 
 
 @pytest.mark.parametrize(("image", "target"), _HERO_BADGE_CASES)
