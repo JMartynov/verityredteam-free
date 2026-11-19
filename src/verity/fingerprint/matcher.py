@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 from typing import Any
 
 from mcp_fingerprints.matcher import FingerprintMatcher as UpstreamFingerprintMatcher
 
 from verity.fingerprint.index import FingerprintFastIndex
+
+logger = logging.getLogger("verity.fingerprint.matcher")
 
 
 class FingerprintMatcher(UpstreamFingerprintMatcher):
@@ -20,16 +23,48 @@ class FingerprintMatcher(UpstreamFingerprintMatcher):
         super().__init__(index=index or FingerprintFastIndex())
 
     def load_from_directory(self, directory: str | Path) -> int:
-        """Load from directory, falling back to snapshot if directory has no json files."""
+        """Load passports from a directory, cached snapshot, or packaged baseline."""
         p = Path(directory)
         json_files = list(p.glob("*.json")) if p.is_dir() else []
         if json_files:
             return super().load_from_directory(p)
-        from mcp_fingerprints.data_loader import get_passports_path
-        target = get_passports_path(download_if_missing=True)
-        if target.is_file():
-            return self.load_from_snapshot(target)
-        return super().load_from_directory(p)
+
+        from verity.data_fetcher import (
+            _is_offline,
+            resolve_cached_snapshot,
+            resolve_packaged_baseline,
+        )
+
+        if _is_offline():
+            cached = resolve_cached_snapshot("passports.json.gz")
+            if cached is not None:
+                try:
+                    return self.load_from_snapshot(cached)
+                except Exception as exc:  # pragma: no cover - defensive
+                    logger.debug("Failed to load cached passports snapshot: %s", exc)
+            packaged = resolve_packaged_baseline("passports.json.gz")
+            if packaged:
+                return self.load_from_snapshot(packaged)
+            return 0
+
+        try:
+            from mcp_fingerprints.data_loader import get_passports_path
+
+            target = Path(get_passports_path(download_if_missing=True))
+        except Exception:
+            target = None
+        if target is not None and target.is_file():
+            try:
+                return self.load_from_snapshot(target)
+            except Exception as exc:  # pragma: no cover - defensive
+                logger.debug("Failed to load passports snapshot %s: %s", target, exc)
+
+        if p.is_dir():
+            try:
+                return super().load_from_directory(p)
+            except Exception:  # pragma: no cover - defensive
+                return 0
+        return 0
 
     def load_from_snapshot(self, snapshot_data: dict[str, Any] | str | Path | bytes) -> int:
         """Load and index all passports from consolidated snapshot."""
@@ -42,7 +77,11 @@ class FingerprintMatcher(UpstreamFingerprintMatcher):
         p = Path(directory)
         if p.is_dir() and any(p.glob("*.json")):
             return self.load_from_directory(p)
-        from verity.data_fetcher import fetch_passports_snapshot
+
+        from verity.data_fetcher import _is_offline, fetch_passports_snapshot
+
+        if _is_offline():
+            return self.load_from_directory(p)
 
         snapshot = fetch_passports_snapshot(force_refresh=force_refresh)
         if snapshot:

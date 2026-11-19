@@ -27,6 +27,92 @@ PUBLIC_VULNERABILITIES_URL = (
 
 DEFAULT_TTL_SECONDS = 86400.0
 
+_OFFLINE_VALUES = ("1", "true", "yes")
+
+_PACKAGE_BY_SNAPSHOT = {
+    "passports.json.gz": "mcp_fingerprints",
+    "vulnerabilities.json.gz": "mcp_vulnerabilities",
+}
+
+
+def _is_offline() -> bool:
+    """Return True when VERITY_OFFLINE is enabled."""
+    return os.environ.get("VERITY_OFFLINE", "").strip().lower() in _OFFLINE_VALUES
+
+
+def decode_snapshot_bytes(payload: bytes) -> dict[str, Any] | None:
+    """Decode a gzip-compressed or plain JSON snapshot payload."""
+    try:
+        return json.loads(gzip.decompress(payload).decode("utf-8"))
+    except Exception:
+        try:
+            return json.loads(payload.decode("utf-8"))
+        except Exception:
+            return None
+
+
+def resolve_cached_snapshot(cached_filename: str) -> Path | None:
+    """Return an existing on-disk cache path for the given snapshot name."""
+    try:
+        cache_path = _get_cache_dir() / cached_filename
+    except Exception:
+        return None
+    return cache_path if cache_path.is_file() else None
+
+
+def resolve_packaged_baseline(cached_filename: str) -> dict[str, Any] | None:
+    """Load a snapshot bundled inside an installed knowledge-base package, if any."""
+    package_name = _PACKAGE_BY_SNAPSHOT.get(cached_filename)
+    if not package_name:
+        return None
+    try:
+        import importlib.resources as resources
+
+        root = resources.files(package_name)
+    except Exception:
+        return None
+    for candidate in (
+        root.joinpath(cached_filename),
+        root.joinpath("data", cached_filename),
+    ):
+        try:
+            if not candidate.is_file():
+                continue
+            data = decode_snapshot_bytes(candidate.read_bytes())
+            if isinstance(data, dict):
+                logger.info(
+                    "Loaded packaged baseline %s from %s", cached_filename, package_name
+                )
+                return data
+        except Exception:
+            continue
+    return None
+
+
+def _offline_snapshot(cached_filename: str) -> dict[str, Any] | None:
+    """Resolve a snapshot from local cache or packaged baseline without network."""
+    cached = resolve_cached_snapshot(cached_filename)
+    if cached is not None:
+        try:
+            data = decode_snapshot_bytes(cached.read_bytes())
+        except Exception as exc:
+            data = None
+            logger.warning("Corrupted local snapshot cache %s: %s", cached, exc)
+        if isinstance(data, dict):
+            return data
+        logger.warning("Ignoring unreadable local snapshot cache %s", cached)
+
+    packaged = resolve_packaged_baseline(cached_filename)
+    if packaged is not None:
+        return packaged
+
+    logger.warning(
+        "Offline mode: no cached or packaged baseline for %s; "
+        "skipping network fetch.",
+        cached_filename,
+    )
+    return None
+
 
 def _get_cache_dir() -> Path:
     """Return cache directory for verity datasets with write-permission verification."""
@@ -80,6 +166,9 @@ def fetch_remote_snapshot(
     cache_dir = _get_cache_dir()
     cache_path = cache_dir / cached_filename
     etag_path = cache_dir / f"{cached_filename}.etag"
+
+    if _is_offline():
+        return _offline_snapshot(cached_filename)
 
     # Check local cache validity
     if not force_refresh and cache_path.is_file():

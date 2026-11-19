@@ -50,6 +50,10 @@ class VulnerabilityIndex:
         """Load and index all OSV JSON files from the specified directory."""
         dir_path = Path(directory)
         if not dir_path.is_dir():
+            from verity.data_fetcher import _is_offline
+
+            if _is_offline():
+                return self._load_offline_fallback()
             from verity.data_fetcher import fetch_vulnerabilities_snapshot
             snapshot = fetch_vulnerabilities_snapshot()
             if snapshot:
@@ -60,6 +64,10 @@ class VulnerabilityIndex:
         count = 0
         json_files = [f for f in sorted(dir_path.glob("*.json")) if f.name not in ("index.json", "sync_state.json")]
         if not json_files:
+            from verity.data_fetcher import _is_offline
+
+            if _is_offline():
+                return self._load_offline_fallback()
             from verity.data_fetcher import fetch_vulnerabilities_snapshot
             snapshot = fetch_vulnerabilities_snapshot()
             if snapshot:
@@ -129,12 +137,29 @@ class VulnerabilityIndex:
     def _existing_cache_snapshot() -> Path | None:
         """Return an existing on-disk vulnerabilities cache path, if any."""
         try:
-            from verity.data_fetcher import _get_cache_dir
-
-            cache_path = _get_cache_dir() / "vulnerabilities.json.gz"
+            from verity.data_fetcher import resolve_cached_snapshot
         except Exception:
             return None
-        return cache_path if cache_path.is_file() else None
+        return resolve_cached_snapshot("vulnerabilities.json.gz")
+
+    def _load_offline_fallback(self) -> int:
+        """Load cached or packaged advisory data without any network access."""
+        cached = self._existing_cache_snapshot()
+        if cached is not None:
+            try:
+                return self.load_from_snapshot(cached)
+            except Exception as exc:
+                logger.debug("Failed to load cached snapshot %s: %s", cached, exc)
+
+        try:
+            from verity.data_fetcher import resolve_packaged_baseline
+        except Exception:
+            return 0
+
+        packaged = resolve_packaged_baseline("vulnerabilities.json.gz")
+        if packaged:
+            return self.load_from_snapshot(packaged)
+        return 0
 
     def load_auto(
         self, directory: str | Path = "data/vulnerabilities", force_refresh: bool = False
@@ -146,10 +171,7 @@ class VulnerabilityIndex:
 
         offline = os.environ.get("VERITY_OFFLINE", "").lower() in ("1", "true", "yes")
         if offline:
-            cached = self._existing_cache_snapshot()
-            if cached is not None:
-                return self.load_from_snapshot(cached)
-            return 0
+            return self._load_offline_fallback()
 
         from verity.data_fetcher import fetch_vulnerabilities_snapshot
 
