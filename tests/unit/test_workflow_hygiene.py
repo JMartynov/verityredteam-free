@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import fnmatch
+import json
 from pathlib import Path
 from typing import Any
 
@@ -11,6 +12,9 @@ import yaml
 
 WORKFLOW_PATH = (
     Path(__file__).resolve().parents[2] / ".github" / "workflows" / "workflow.yaml"
+)
+RELEASE_FIXTURE_PATH = (
+    Path(__file__).resolve().parent / "fixtures" / "gh_release_v0.2.0.json"
 )
 KNOWN_TRIGGERS = {"push", "release", "workflow_dispatch"}
 PUBLISH_ACTION = "pypa/gh-action-pypi-publish"
@@ -247,3 +251,15 @@ def test_duplicate_upload_guard_error_mentions_both_remedies() -> None:
     message = str(exc_info.value)
     assert "release" in message
     assert "skip-existing" in message
+
+
+def test_recorded_v020_release_fixture() -> None:
+    """Assert the recorded v0.2.0 GitHub Release payload contains M7-M11 notes."""
+    payload = json.loads(RELEASE_FIXTURE_PATH.read_text(encoding="utf-8"))
+    assert payload.get("tagName") == "v0.2.0"
+    body = payload.get("body", "")
+    for milestone in ("M7", "M8", "M9", "M10", "M11"):
+        assert milestone in body, f"Missing {milestone} section in v0.2.0 release body"
+    assert "https://pypi.org/project/verity-redteam-core/0.2.0/" in body
+    assert "verity-redteam-core==0.2.0" in body
+    assert "INSTALL_SOURCE=pypi" in body
