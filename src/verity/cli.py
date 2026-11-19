@@ -335,18 +335,23 @@ def _collect_config_findings(
 
             secrets: list[str] = []
             for key, value in candidate_env.items():
+                raw_val = raw_env.get(key, value)
+                if not MultiClientConfigScanner.is_secret_env_entry(str(key), raw_val):
+                    continue
                 text = str(value) if value is not None else ""
-                if (
-                    text
-                    and len(text) >= 4
-                    and not text.startswith("${")
-                    and not text.startswith("$")
-                    and (
-                        MultiClientConfigScanner.SECRET_KEY_PATTERNS.search(str(key))
-                        or MultiClientConfigScanner.SECRET_VALUE_PATTERNS.search(text)
-                    )
-                ):
+                raw_text = str(raw_val) if raw_val is not None else ""
+                if len(text) >= 4:
                     secrets.append(text)
+                if raw_text and raw_text != text and len(raw_text) >= 4:
+                    secrets.append(raw_text)
+                for candidate_text in (raw_text, text):
+                    dsn_match = MultiClientConfigScanner.DSN_CREDENTIAL_PATTERN.search(
+                        candidate_text
+                    )
+                    if dsn_match:
+                        pwd = dsn_match.group(1)
+                        if len(pwd) >= 4 and pwd not in secrets:
+                            secrets.append(pwd)
 
             if auditor is not None:
                 try:

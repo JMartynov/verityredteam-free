@@ -55,14 +55,8 @@ class ConsolidatedSecurityAuditor:
 
         # 1. Static Configuration Findings (Hardcoded Secrets & Unsafe Shells)
         for k, v in config.env.items():
-            raw_value = raw_env.get(k, v)
-            raw_text = str(raw_value) if raw_value is not None else ""
-            is_env_reference = raw_text.startswith("${") or raw_text.startswith("$")
-            if (
-                not is_env_reference
-                and MultiClientConfigScanner.SECRET_KEY_PATTERNS.search(k)
-                and v
-            ):
+            raw_text = str(raw_env.get(k, v) or "")
+            if v and MultiClientConfigScanner.is_secret_env_entry(k, raw_text):
                 findings.append(
                     SecurityAuditFinding(
                         issue_id="SEC-STATIC-SECRET-IN-CONFIG",

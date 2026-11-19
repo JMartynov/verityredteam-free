@@ -9,6 +9,7 @@ from types import SimpleNamespace
 
 import pytest
 
+import verity
 from verity import cli
 from verity.discovery import auditor as auditor_module
 from verity.discovery.active_bridge import ActiveExploitBridge
@@ -18,6 +19,7 @@ from verity.lookup.index import VulnerabilityIndex
 from verity.reporting import render_test_terminal
 
 SECRET_VALUE = "sk-super-secret-value-9876543210"
+DSN_PASSWORD = "SuperSecretPass999"
 
 
 def _spec(package_name: str, purl: str, version: str, tool_count: int = 1) -> SimpleNamespace:
@@ -145,11 +147,9 @@ def test_scan_redacts_plaintext_secret(
     exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
     out = capsys.readouterr().out
     assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
     if fmt == "terminal":
-        assert "SEC-STATIC-SECRET-IN-CONF" in out
         assert "OPENAI_API_KEY" in out
-    else:
-        assert "SEC-STATIC-SECRET-IN-CONFIG" in out
     assert SECRET_VALUE not in out
 
     if fmt == "json":
@@ -224,6 +224,124 @@ def test_scan_safe_env_reference_not_flagged(
     assert exit_code == 0
     assert "SEC-STATIC-SECRET-IN-CONFIG" not in out
     assert SECRET_VALUE not in out
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_scan_flags_and_scrubs_dsn_credentials(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    dsn = f"postgres://admin:{DSN_PASSWORD}@db.internal:5432/prod"
+    config_path = tmp_path / "mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "db-server": {
+                        "command": "npx",
+                        "args": ["-y", "safe-server"],
+                        "env": {"DATABASE_URL": dsn},
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
+    assert DSN_PASSWORD not in out
+    assert dsn not in out
+
+    if fmt == "json":
+        report = json.loads(out)
+        matches = [
+            f
+            for f in report["findings"]
+            if f["rule_id"] == "SEC-STATIC-SECRET-IN-CONFIG"
+        ]
+        assert matches
+        assert matches[0]["severity"] == "HIGH"
+        assert "DATABASE_URL=****" in matches[0]["message"]
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_scan_safe_dsn_reference_not_flagged(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    monkeypatch.setenv("DB_PASS", DSN_PASSWORD)
+    config_path = tmp_path / "mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "safe-db": {
+                        "command": "npx",
+                        "args": ["-y", "safe-server"],
+                        "env": {
+                            "DATABASE_URL": (
+                                "postgres://admin:${DB_PASS}@db.internal:5432/prod"
+                            )
+                        },
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" not in out
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_scan_flags_secret_value_under_custom_key(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    config_path = tmp_path / "mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "custom-server": {
+                        "command": "npx",
+                        "args": ["-y", "safe-server"],
+                        "env": {"CUSTOM_FIELD": SECRET_VALUE},
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
+    assert SECRET_VALUE not in out
+
+    if fmt == "json":
+        report = json.loads(out)
+        matches = [
+            f
+            for f in report["findings"]
+            if f["rule_id"] == "SEC-STATIC-SECRET-IN-CONFIG"
+        ]
+        assert matches
+        assert matches[0]["severity"] == "HIGH"
 
 
 def test_scan_detects_unsafe_shell_wrapper(
@@ -405,6 +523,10 @@ def test_yaml_configs_parsed_and_scanned(
     report = json.loads(out)
     assert exit_code == 0
     assert report["summary"]["scanned_files_count"] == 1
+
+
+def test_package_version_is_0_2_0() -> None:
+    assert verity.__version__ == "0.2.0"
 
 
 def test_default_active_bridge_template_parses() -> None:

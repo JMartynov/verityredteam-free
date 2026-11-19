@@ -76,7 +76,7 @@ def render_scan_terminal(report_data: dict[str, Any]) -> str:
 
     table = Table(title="Findings", show_header=True, header_style="bold")
     table.add_column("Severity")
-    table.add_column("Rule")
+    table.add_column("Rule", no_wrap=True)
     table.add_column("Title")
     table.add_column("Location")
 

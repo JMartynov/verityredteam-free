@@ -8,6 +8,7 @@ import os
 import platform
 import re
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -26,6 +27,28 @@ class MultiClientConfigScanner:
     SECRET_VALUE_PATTERNS = re.compile(
         r"(sk-[a-zA-Z0-9_-]{20,}|ghp_[a-zA-Z0-9]{30,}|eyJ[a-zA-Z0-9_-]{20,})",
     )
+    DSN_CREDENTIAL_PATTERN = re.compile(
+        r"(?:postgres(?:ql)?|mysql|mariadb|mongodb(?:\+srv)?|redis(?:s)?|amqps?|mssql|"
+        r"snowflake|https?)://[^/\s:@]+:([^/\s@]+)@",
+        re.IGNORECASE,
+    )
+
+    @classmethod
+    def is_secret_env_entry(cls, key: str, raw_value: Any) -> bool:
+        """Return True when an env entry holds a plaintext secret or credential DSN."""
+        text = str(raw_value).strip() if raw_value is not None else ""
+        if not text or text.startswith("${") or text.startswith("$"):
+            return False
+        if cls.SECRET_KEY_PATTERNS.search(str(key)):
+            return True
+        if cls.SECRET_VALUE_PATTERNS.search(text):
+            return True
+        dsn_match = cls.DSN_CREDENTIAL_PATTERN.search(text)
+        if dsn_match:
+            pwd = dsn_match.group(1)
+            if pwd and not pwd.startswith("${") and not pwd.startswith("$"):
+                return True
+        return False
 
     @classmethod
     def get_standard_client_paths(
