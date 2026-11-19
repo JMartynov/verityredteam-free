@@ -65,6 +65,6 @@ Hide
 Type "clear"
 Enter
 Show
-Type "verity test --demo --target sqlite-basic"
+Type "verity test --demo"
 Enter
 Sleep 4.5s

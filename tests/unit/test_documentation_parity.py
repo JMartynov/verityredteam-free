@@ -21,6 +21,10 @@ _FENCE_RE = re.compile(r"```(?P<lang>[A-Za-z0-9_+-]*)\r?\n(?P<body>.*?)```", re.
 _LINK_RE = re.compile(r"!?\[[^\]]*\]\((?P<target>[^)]+)\)")
 _STALE_PACKAGE_RE = re.compile(r"\bverity-core\b")
 _SHELL_LANGS = {"bash", "sh", "console", "shell"}
+_SNAPSHOT_DIR = REPO_ROOT / "tests" / "e2e_containers" / "snapshots"
+_DEMO_TAPE_PATH = REPO_ROOT / "docs" / "assets" / "demo.tape"
+_DEMO_GIF_PATH = REPO_ROOT / "docs" / "assets" / "demo.gif"
+_ELLIPSIS_RULE_RE = re.compile(r"\b(?:VERITY|SEC)-[A-Z0-9_-]*…")
 
 _BADGE_LINE_RE = re.compile(
     r"^\[!\[(?P<alt>[^\]]*)\]\((?P<image>[^)]+)\)\]\((?P<target>[^)]+)\)\s*$"
@@ -168,6 +172,22 @@ def _split_command_line(line: str) -> list[str] | None:
     if not tokens or tokens[0] != "verity":
         return None
     return tokens
+
+
+def _extract_text_block(markdown: str, anchor: str) -> str:
+    assert anchor in markdown, f"README must contain the anchor {anchor!r}"
+    start = markdown.index(anchor)
+    for match in _FENCE_RE.finditer(markdown, start):
+        if (match.group("lang") or "").lower() == "text":
+            return match.group("body")
+    pytest.fail(f"No fenced text block after anchor {anchor!r}")
+
+
+def _assert_matches_snapshot(block: str, snapshot_name: str) -> None:
+    snapshot = (_SNAPSHOT_DIR / snapshot_name).read_text(encoding="utf-8")
+    assert block.rstrip("\n") == snapshot.rstrip("\n"), (
+        f"README block must match {snapshot_name} verbatim"
+    )
 
 
 def _extract_verity_commands(markdown: str) -> list[list[str]]:
@@ -331,3 +351,37 @@ def test_readme_documents_free_capabilities() -> None:
         assert rule_id in text, f"README must document rule {rule_id}"
     for cwe in DEMO_CWES:
         assert cwe in text, f"README must document demo CWE {cwe}"
+
+
+def test_readme_workstation_table_matches_snapshot() -> None:
+    text = README_PATH.read_text(encoding="utf-8")
+    block = _extract_text_block(text, "Verified Result:")
+    _assert_matches_snapshot(block, "01_workstation_scan.txt")
+
+
+def test_readme_schema_table_matches_snapshot() -> None:
+    text = README_PATH.read_text(encoding="utf-8")
+    block = _extract_text_block(text, "Offline schema screen output")
+    _assert_matches_snapshot(block, "02_schema_scan.txt")
+
+
+def test_readme_has_no_ellipsized_rule_ids() -> None:
+    text = README_PATH.read_text(encoding="utf-8")
+    match = _ELLIPSIS_RULE_RE.search(text)
+    assert match is None, f"README contains an ellipsized rule ID: {match.group(0)!r}"
+    for rule_id in STATIC_RULE_IDS:
+        assert rule_id in text, f"README must document rule {rule_id}"
+
+
+def test_demo_tape_scene4_uses_full_demo() -> None:
+    text = _DEMO_TAPE_PATH.read_text(encoding="utf-8")
+    marker = "# Scene 4:"
+    assert marker in text, "demo.tape must keep the Scene 4 marker"
+    scene4 = text.split(marker, 1)[1]
+    assert 'Type "verity test --demo"' in scene4
+    assert "--target" not in scene4
+
+
+def test_demo_gif_present_and_not_stale() -> None:
+    assert _DEMO_GIF_PATH.is_file(), "docs/assets/demo.gif must exist"
+    assert "docs/assets/demo.gif" in README_PATH.read_text(encoding="utf-8")

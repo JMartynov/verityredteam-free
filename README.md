@@ -78,34 +78,35 @@ Verity Scan Report
 │ INFO           │     0 │
 └────────────────┴───────┘
                                               Findings                                              
-┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Severity ┃ Rule                       ┃ Title                       ┃ Location                   ┃
-┡━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│  HIGH    │ SEC-STATIC-SECRET-IN-CONF… │ Plaintext Secret in         │ /root/.config/Claude/clau… │
-│          │                            │ Configuration: GITHUB_TOKEN │                            │
-│  HIGH    │ SEC-STATIC-SECRET-IN-CONF… │ Plaintext Secret in         │ /root/.cursor/mcp.json:-   │
-│          │                            │ Configuration:              │                            │
-│          │                            │ OPENAI_API_KEY              │                            │
-│  HIGH    │ SEC-STATIC-SECRET-IN-CONF… │ Plaintext Secret in         │ /root/.cursor/mcp.json:-   │
-│          │                            │ Configuration:              │                            │
-│          │                            │ DATABASE_PASSWORD           │                            │
-│  MEDIUM  │ SEC-STATIC-UNSAFE-SHELL-W… │ Direct Shell Execution      │ /root/.cursor/mcp.json:-   │
-│          │                            │ Wrapper                     │                            │
-│  HIGH    │ VULN-CVE-2025-6514         │ Known Vulnerability:        │ /root/.cursor/mcp.json:-   │
-│          │                            │ mcp-remote exposed to OS    │                            │
-│          │                            │ command injection via       │                            │
-│          │                            │ untrusted MCP server        │                            │
-│          │                            │ connections                 │                            │
-│  HIGH    │ VULN-GHSA-6xpm-ggf7-wc3p   │ Known Vulnerability:        │ /root/.cursor/mcp.json:-   │
-│          │                            │ mcp-remote exposed to OS    │                            │
-│          │                            │ command injection via       │                            │
-│          │                            │ untrusted MCP server        │                            │
-│          │                            │ connections                 │                            │
-│  HIGH    │ SEC-STATIC-SECRET-IN-CONF… │ Plaintext Secret in         │ /root/.continue/config.ya… │
-│          │                            │ Configuration: API_KEY      │                            │
-│  MEDIUM  │ SEC-STATIC-UNSAFE-SHELL-W… │ Direct Shell Execution      │ /root/.continue/config.ya… │
-│          │                            │ Wrapper                     │                            │
-└──────────┴────────────────────────────┴─────────────────────────────┴────────────────────────────┘
+┏━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Severity ┃ Rule                            ┃ Title                    ┃ Location                 ┃
+┡━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.config/Claude/cl… │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ GITHUB_TOKEN             │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ OPENAI_API_KEY           │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ DATABASE_PASSWORD        │                          │
+│  MEDIUM  │ SEC-STATIC-UNSAFE-SHELL-WRAPPER │ Direct Shell Execution   │ /root/.cursor/mcp.json:- │
+│          │                                 │ Wrapper                  │                          │
+│  HIGH    │ VULN-CVE-2025-6514              │ Known Vulnerability:     │ /root/.cursor/mcp.json:- │
+│          │                                 │ mcp-remote exposed to OS │                          │
+│          │                                 │ command injection via    │                          │
+│          │                                 │ untrusted MCP server     │                          │
+│          │                                 │ connections              │                          │
+│  HIGH    │ VULN-GHSA-6xpm-ggf7-wc3p        │ Known Vulnerability:     │ /root/.cursor/mcp.json:- │
+│          │                                 │ mcp-remote exposed to OS │                          │
+│          │                                 │ command injection via    │                          │
+│          │                                 │ untrusted MCP server     │                          │
+│          │                                 │ connections              │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.continue/config.… │
+│          │                                 │ Configuration: API_KEY   │                          │
+│  MEDIUM  │ SEC-STATIC-UNSAFE-SHELL-WRAPPER │ Direct Shell Execution   │ /root/.continue/config.… │
+│          │                                 │ Wrapper                  │                          │
+└──────────┴─────────────────────────────────┴──────────────────────────┴──────────────────────────┘
 Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.
 ```
 
@@ -208,18 +209,19 @@ Verity Scan Report
 │ INFO           │     0 │
 └────────────────┴───────┘
                                               Findings                                              
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Severity   ┃ Rule                       ┃ Title                       ┃ Location                 ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│  CRITICAL  │ VERITY-STATIC-INJECTION-O… │ Prompt Injection            │ query_customer_records:- │
-│            │                            │ Instruction Override        │                          │
-│  HIGH      │ VERITY-STATIC-TOOL-POISON… │ Tool Poisoning / Secondary  │ query_customer_records:- │
-│            │                            │ Shadow Functionality        │                          │
-│  HIGH      │ VERITY-STATIC-EXFIL-WEBHO… │ Out-of-Band Data            │ query_customer_records:- │
-│            │                            │ Exfiltration Endpoint       │                          │
-│  HIGH      │ VERITY-STATIC-METADATA-SS… │ Cloud Instance Metadata     │ fetch_docs:-             │
-│            │                            │ Service SSRF                │                          │
-└────────────┴────────────────────────────┴─────────────────────────────┴──────────────────────────┘
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Severity   ┃ Rule                             ┃ Title                  ┃ Location                ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  CRITICAL  │ VERITY-STATIC-INJECTION-OVERRIDE │ Prompt Injection       │ query_customer_records… │
+│            │                                  │ Instruction Override   │                         │
+│  HIGH      │ VERITY-STATIC-TOOL-POISONING     │ Tool Poisoning /       │ query_customer_records… │
+│            │                                  │ Secondary Shadow       │                         │
+│            │                                  │ Functionality          │                         │
+│  HIGH      │ VERITY-STATIC-EXFIL-WEBHOOK      │ Out-of-Band Data       │ query_customer_records… │
+│            │                                  │ Exfiltration Endpoint  │                         │
+│  HIGH      │ VERITY-STATIC-METADATA-SSRF      │ Cloud Instance         │ fetch_docs:-            │
+│            │                                  │ Metadata Service SSRF  │                         │
+└────────────┴──────────────────────────────────┴────────────────────────┴─────────────────────────┘
 Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.
 ```
 
