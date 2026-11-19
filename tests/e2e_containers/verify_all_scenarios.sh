@@ -305,6 +305,102 @@ for path in sys.argv[1:]:
 print("scenario 2 json assertions passed")
 PY
 
+LIVE_CFG="$OUT_DIR/live_probe_mcp.json"
+cat > "$LIVE_CFG" <<'JSON'
+{
+  "mcpServers": {
+    "vuln-stdio": {
+      "command": "python3",
+      "args": ["/opt/fixtures/vuln_stdio_mcp.py"]
+    },
+    "clean-stdio": {
+      "command": "python3",
+      "args": ["/opt/fixtures/clean_stdio_mcp.py"]
+    },
+    "vuln-sse": {
+      "type": "sse",
+      "url": "http://target-sse-lab:8000/sse"
+    },
+    "dead-server": {
+      "command": "python3",
+      "args": ["/opt/fixtures/does_not_exist.py"]
+    }
+  }
+}
+JSON
+
+set +e
+verity scan --config-file "$LIVE_CFG" --live-probe --format json \
+  --output "$OUT_DIR/live_probe.json" --fail-on-findings \
+  > "$OUT_DIR/s2_live_json.txt" 2>&1
+LIVE_RC=$?
+set -e
+if [ "$LIVE_RC" -ne 1 ]; then
+  cat "$OUT_DIR/s2_live_json.txt" >&2 || true
+  fail "live probe json expected exit 1 but got $LIVE_RC"
+fi
+pass "live probe json exited 1"
+
+verity scan --config-file "$LIVE_CFG" --live-probe --format terminal \
+  --output "$OUT_DIR/live_probe.txt" > "$OUT_DIR/s2_live_term.txt" 2>&1 || true
+[ -s "$OUT_DIR/live_probe.txt" ] || fail "live_probe.txt empty"
+
+expect_exit 0 "static only live-probe config" "$OUT_DIR/s2_static_only.txt" \
+  verity scan --config-file "$LIVE_CFG" --format json \
+  --output "$OUT_DIR/static_only.json"
+
+CLEAN_CFG="$OUT_DIR/clean_only_mcp.json"
+cat > "$CLEAN_CFG" <<'JSON'
+{
+  "mcpServers": {
+    "clean-stdio": {
+      "command": "python3",
+      "args": ["/opt/fixtures/clean_stdio_mcp.py"]
+    }
+  }
+}
+JSON
+verity scan --config-file "$CLEAN_CFG" --live-probe --format json \
+  --output "$OUT_DIR/clean_live.json" > "$OUT_DIR/s2_clean_live.txt" 2>&1 || true
+
+python3 - "$OUT_DIR/live_probe.json" "$OUT_DIR/static_only.json" \
+  "$OUT_DIR/s2_live_json.txt" "$OUT_DIR/clean_live.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+EXPECTED = {
+    "VERITY-STATIC-INJECTION-OVERRIDE",
+    "VERITY-STATIC-TOOL-POISONING",
+    "VERITY-STATIC-EXFIL-WEBHOOK",
+    "VERITY-STATIC-METADATA-SSRF",
+}
+
+live = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+findings = live.get("findings", []) if isinstance(live, dict) else live
+rule_ids = {str(f.get("rule_id", "")) for f in findings}
+missing = EXPECTED - rule_ids
+assert not missing, f"live_probe.json missing rules: {missing}; got {sorted(rule_ids)}"
+
+static = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+static_findings = static.get("findings", []) if isinstance(static, dict) else static
+assert static_findings == [], f"static-only expected empty findings: {static_findings}"
+
+stderr_text = Path(sys.argv[3]).read_text(encoding="utf-8")
+assert "dead-server" in stderr_text, f"missing dead-server warning: {stderr_text}"
+
+clean = json.loads(Path(sys.argv[4]).read_text(encoding="utf-8"))
+clean_findings = clean.get("findings", []) if isinstance(clean, dict) else clean
+clean_static = [
+    f
+    for f in clean_findings
+    if str(f.get("rule_id", "")).startswith("VERITY-STATIC-")
+]
+assert not clean_static, f"clean-stdio produced static findings: {clean_static}"
+print("scenario 2 live probe assertions passed")
+PY
+pass "scenario 2 live probe complete"
+
 expect_exit 1 "schema scan" "$OUT_DIR/s2_schema.txt" \
   verity scan --schema-file /opt/fixtures/vendor_tools.json \
   --config-file "$OUT_DIR/empty_mcp.json" --offline --fail-on-findings

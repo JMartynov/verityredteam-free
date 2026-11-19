@@ -289,6 +289,7 @@ def _scrub_secrets(finding: dict[str, Any], secrets: list[str]) -> dict[str, Any
 def _collect_config_findings(
     config_file: str | None,
     offline: bool = False,
+    live_probe: bool = False,
 ) -> tuple[list[dict[str, Any]], set[str]]:
     from verity.discovery.auditor import ConsolidatedSecurityAuditor
     from verity.discovery.config_scanner import MultiClientConfigScanner
@@ -373,13 +374,26 @@ def _collect_config_findings(
                             secrets.append(pem_value)
 
             if auditor is not None:
+                record = None
                 try:
-                    record = auditor.audit_server(config, live_probe=False)
+                    record = auditor.audit_server(config, live_probe=live_probe)
+                except Exception as exc:
+                    if live_probe:
+                        print(
+                            f"Live probe failed for {config.server_name}: {exc}",
+                            file=sys.stderr,
+                        )
+                if record is not None:
+                    if live_probe:
+                        probe_error = getattr(record, "live_probe_error", None)
+                        if probe_error:
+                            print(
+                                f"Live probe failed for {config.server_name}: {probe_error}",
+                                file=sys.stderr,
+                            )
                     for audit_finding in record.findings:
                         finding = _normalize_finding(audit_finding)
                         findings.append(_scrub_secrets(finding, secrets))
-                except Exception:
-                    pass
 
             tool_dict = {"name": config.server_name, **raw_config}
             for match in evaluator.scan_tool(tool_dict):
@@ -405,6 +419,13 @@ def _collect_config_findings(
             continue
         seen.add(key)
         deduped.append(finding)
+
+    if live_probe:
+        deduped.sort(
+            key=lambda f: _SEVERITY_RANK.get(
+                _as_severity(f.get("severity")), len(_SEVERITY_ORDER)
+            )
+        )
 
     return deduped, scanned_files
 
@@ -457,7 +478,9 @@ def _collect_scan_data(
 
     try:
         config_findings, config_files = _collect_config_findings(
-            args.config_file, offline=getattr(args, "offline", False)
+            args.config_file,
+            offline=getattr(args, "offline", False),
+            live_probe=getattr(args, "live_probe", False),
         )
         findings.extend(config_findings)
         scanned_files.update(config_files)
@@ -906,6 +929,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--offline",
         action="store_true",
         help="Disable remote snapshot fetching and use local caches only.",
+    )
+    scan.add_argument(
+        "--live-probe",
+        action="store_true",
+        help=(
+            "Actively probe configured MCP servers to fingerprint live "
+            "capabilities (opt-in, slower)."
+        ),
     )
     scan.set_defaults(func=_cmd_scan)
 

@@ -92,6 +92,16 @@ class StdioDiscoveryTransport(BaseDiscoveryTransport):
 
             # Read initialize response
             init_resp = self._read_jsonrpc_response(proc, timeout=self.timeout_seconds / 2)
+            if init_resp is None and proc.poll() is not None:
+                elapsed = (time.perf_counter() - start_time) * 1000.0
+                return LiveServerCapability(
+                    server_name=config.server_name,
+                    is_responsive=False,
+                    error_message=(
+                        f"Server process exited with code {proc.returncode}"
+                    ),
+                    response_time_ms=elapsed,
+                )
             protocol_v = "2024-11-05"
             if init_resp and "result" in init_resp:
                 protocol_v = init_resp["result"].get("protocolVersion", protocol_v)
@@ -185,5 +195,7 @@ class StdioDiscoveryTransport(BaseDiscoveryTransport):
                         return json.loads(line_str)
                     except Exception:
                         pass
+            elif proc.poll() is not None:
+                break
             time.sleep(0.05)
         return None

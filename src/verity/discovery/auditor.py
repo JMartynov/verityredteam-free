@@ -17,6 +17,7 @@ from verity.discovery.models import (
     LiveServerCapability,
     SecurityAuditFinding,
     ServerAuditRecord,
+    TransportType,
 )
 from verity.discovery.transports.base import BaseDiscoveryTransport
 from verity.discovery.transports.stdio import StdioDiscoveryTransport
@@ -246,9 +247,28 @@ class ConsolidatedSecurityAuditor:
         match_layer = "NONE"
         tools_exposed: list[str] = []
 
-        if live_probe and config.command and not config.is_disabled:
-            live_cap = self.transport.inspect(config)
-            if live_cap.is_responsive and live_cap.tools:
+        live_probe_error: str | None = None
+
+        if live_probe and not config.is_disabled:
+            if config.command:
+                live_cap = self.transport.inspect(config)
+            elif config.url and config.transport_type in (
+                TransportType.SSE,
+                TransportType.HTTP,
+            ):
+                from verity.discovery.transports.sse import (
+                    HttpSseDiscoveryTransport,
+                )
+
+                http_transport = HttpSseDiscoveryTransport(
+                    timeout_seconds=self.transport.timeout_seconds
+                )
+                live_cap = http_transport.inspect(config)
+
+            if live_cap is not None and not live_cap.is_responsive:
+                live_probe_error = live_cap.error_message or "target unreachable"
+
+            if live_cap is not None and live_cap.is_responsive and live_cap.tools:
                 tools_exposed = [t.get("name", "") for t in live_cap.tools if isinstance(t, dict)]
                 match_res = self.matcher.match_live_capability(live_cap, config)
                 if match_res.matched:
@@ -257,6 +277,33 @@ class ConsolidatedSecurityAuditor:
                     matched_ver = match_res.matched_version
                     confidence = match_res.confidence_score
                     match_layer = match_res.match_layer
+
+                from verity.scanner.static_rules import StaticRuleEvaluator
+
+                evaluator = StaticRuleEvaluator()
+                for tool in live_cap.tools:
+                    if not isinstance(tool, dict):
+                        continue
+                    for rule_match in evaluator.scan_tool(tool):
+                        findings.append(
+                            SecurityAuditFinding(
+                                issue_id=rule_match.rule_id,
+                                severity=FindingSeverity(rule_match.severity.value),
+                                title=rule_match.title,
+                                description=rule_match.description,
+                                cwe_ids=(rule_match.cwe_id,)
+                                if rule_match.cwe_id
+                                else (),
+                                remediation=rule_match.remediation,
+                                redacted_evidence=rule_match.matched_snippet,
+                                vulnerable_tools=(rule_match.target_name,)
+                                if rule_match.target_name
+                                else (),
+                                server_name=config.server_name,
+                                client_type=config.client_type,
+                                config_path=config.config_path,
+                            )
+                        )
 
         static_match = self.matcher.match_static_config(config)
         if not matched_pkg:
@@ -341,6 +388,7 @@ class ConsolidatedSecurityAuditor:
             tools_exposed=tuple(tools_exposed),
             findings=tuple(findings),
             highest_severity=highest,
+            live_probe_error=live_probe_error,
         )
 
     def audit_all(

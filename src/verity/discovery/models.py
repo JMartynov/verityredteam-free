@@ -156,6 +156,7 @@ class ServerAuditRecord:
     tools_exposed: tuple[str, ...] = ()
     findings: tuple[SecurityAuditFinding, ...] = ()
     highest_severity: FindingSeverity = FindingSeverity.INFO
+    live_probe_error: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Serialize live server capabilities to a dictionary."""
