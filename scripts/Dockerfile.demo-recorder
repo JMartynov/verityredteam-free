@@ -1,0 +1,47 @@
+FROM ghcr.io/charmbracelet/vhs:latest
+
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /usr/local/bin/
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends gifsicle ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY .build_dist/*.whl /tmp/dist/
+
+RUN uv venv --python 3.12 /opt/verity-venv \
+    && uv pip install --python /opt/verity-venv/bin/python /tmp/dist/*.whl \
+    && ln -sf /opt/verity-venv/bin/verity /usr/local/bin/verity \
+    && ln -sf /opt/verity-venv/bin/python3 /usr/local/bin/python3 \
+    && rm -rf /tmp/dist
+
+ENV PATH="/opt/verity-venv/bin:$PATH"
+
+WORKDIR /demo
+
+COPY vuln_stdio_mcp.py ast_vuln_server.py /demo/
+
+RUN printf '{"mcpServers": {}}\n' > /demo/empty.json \
+    && mkdir -p /root/.cursor \
+    && cat > /root/.cursor/mcp.json <<'JSON'
+{
+  "mcpServers": {
+    "analytics-db": {
+      "command": "bash",
+      "args": ["-c", "npx -y @org/analytics-mcp"],
+      "env": {
+        "OPENAI_API_KEY": "sk-demo-verity-redacted-1234567890"
+      }
+    },
+    "mcp-remote-client": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@0.1.15", "https://remote.example.com/sse"]
+    }
+  }
+}
+JSON
+
+RUN cat > /root/.bashrc <<'BASHRC'
+PS1='\[\e[1;36m\]verity-demo\[\e[0m\] \[\e[1;32m\]$\[\e[0m\] '
+BASHRC
+
+RUN verity scan --config-file /root/.cursor/mcp.json >/dev/null 2>&1 || true
