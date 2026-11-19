@@ -481,6 +481,117 @@ def main(out_path: str) -> None:
 if __name__ == "__main__":
     main(sys.argv[1])
 PY
+
+# Scenario 6b: rug-pull detection (CLI baseline + MCP JSON-RPC)
+RUG_PULL_BASELINE="$OUT_DIR/rug_pull_baseline.json"
+
+expect_exit 0 "rug-pull baseline save" "$OUT_DIR/s6_rug_save.txt" \
+  env RUG_PULL_MODE=0 verity test \
+  --command "python3 /opt/fixtures/rug_pull_mcp.py" \
+  --save-baseline "$RUG_PULL_BASELINE"
+[ -s "$RUG_PULL_BASELINE" ] || fail "rug-pull baseline file empty"
+python3 -m json.tool "$RUG_PULL_BASELINE" > /dev/null || fail "invalid rug-pull baseline JSON"
+
+expect_exit 0 "rug-pull baseline pass" "$OUT_DIR/s6_rug_pass.txt" \
+  env RUG_PULL_MODE=0 verity test \
+  --command "python3 /opt/fixtures/rug_pull_mcp.py" \
+  --baseline "$RUG_PULL_BASELINE"
+grep -q "PASS" "$OUT_DIR/s6_rug_pass.txt" || fail "rug-pull baseline re-verify missing PASS"
+
+expect_exit 1 "rug-pull baseline mutated" "$OUT_DIR/s6_rug_fail.json" \
+  verity test \
+  --command "env RUG_PULL_MODE=1 python3 /opt/fixtures/rug_pull_mcp.py" \
+  --baseline "$RUG_PULL_BASELINE" --format json
+grep -q "RUG_PULL_DETECTED" "$OUT_DIR/s6_rug_fail.json" \
+  || fail "rug-pull mutated missing RUG_PULL_DETECTED"
+grep -q "query_docs" "$OUT_DIR/s6_rug_fail.json" \
+  || fail "rug-pull mutated missing query_docs"
+
+python3 - "$RUG_PULL_BASELINE" <<'PY'
+import json
+import os
+import subprocess
+import sys
+
+BASELINE_PATH = sys.argv[1]
+
+
+def rpc(proc, message):
+    assert proc.stdin is not None and proc.stdout is not None
+    proc.stdin.write(json.dumps(message) + "\n")
+    proc.stdin.flush()
+    line = proc.stdout.readline()
+    if not line:
+        raise RuntimeError("no response from verity serve --transport stdio")
+    return json.loads(line)
+
+
+def extract_payload(response):
+    result = response.get("result") or {}
+    content = result.get("content") if isinstance(result, dict) else None
+    if isinstance(content, list):
+        for item in content:
+            if isinstance(item, dict) and isinstance(item.get("text"), str):
+                try:
+                    return json.loads(item["text"])
+                except Exception:
+                    continue
+    if isinstance(result, dict) and "rug_pull_detected" in result:
+        return result
+    return {}
+
+
+env = dict(os.environ)
+env["RUG_PULL_MODE"] = "1"
+
+proc = subprocess.Popen(
+    ["verity", "serve", "--transport", "stdio"],
+    stdin=subprocess.PIPE,
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    text=True,
+    env=env,
+)
+try:
+    rpc(proc, {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}})
+    with open(BASELINE_PATH, "r", encoding="utf-8") as fh:
+        authorized = json.load(fh)
+    response = rpc(
+        proc,
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "verity_security_scan",
+                "arguments": {
+                    "action": "detect_rug_pull",
+                    "options": {
+                        "command": "env",
+                        "args": [
+                            "RUG_PULL_MODE=1",
+                            "python3",
+                            "/opt/fixtures/rug_pull_mcp.py",
+                        ],
+                        "authorized_hashes": authorized,
+                    },
+                },
+            },
+        },
+    )
+    payload = extract_payload(response)
+    assert payload.get("ok") is True, payload
+    assert payload.get("rug_pull_detected") is True, payload
+    names = {finding.get("tool_name") for finding in payload.get("drift_findings", [])}
+    assert "query_docs" in names, payload
+finally:
+    proc.terminate()
+    try:
+        proc.wait(timeout=5)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+PY
+
 pass "scenario 6 complete"
 
 # ---------------- Final leak scan + snapshot export ----------------

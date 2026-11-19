@@ -555,8 +555,169 @@ def _probe_config(config: Any, transport: Any, name: str) -> dict[str, Any]:
     }
 
 
+def _run_rug_pull_cli(
+    config: Any,
+    transport: Any,
+    results: list[dict[str, Any]],
+    save_baseline: str | None,
+    baseline: str | None,
+) -> None:
+    """Handle --save-baseline / --baseline for a probed MCP endpoint."""
+    if not save_baseline and not baseline:
+        return
+
+    from verity.ucp.engine import UnknownCapabilityProfiler
+
+    result_name = "rug_pull_baseline_save" if save_baseline else "rug_pull_baseline"
+
+    try:
+        capability = transport.inspect(config)
+    except Exception as exc:
+        results.append(
+            {
+                "name": result_name,
+                "status": "FAIL",
+                "message": f"Rug-pull probe failed: {exc}",
+                "details": None,
+                "severity": "CRITICAL" if baseline else None,
+            }
+        )
+        return
+
+    if not getattr(capability, "is_responsive", True):
+        results.append(
+            {
+                "name": result_name,
+                "status": "FAIL",
+                "message": (
+                    "Target unreachable: "
+                    f"{getattr(capability, 'error_message', '') or 'unknown'}"
+                ),
+                "details": None,
+                "severity": "CRITICAL" if baseline else None,
+            }
+        )
+        return
+
+    tools = [t for t in getattr(capability, "tools", []) or [] if isinstance(t, dict)]
+
+    if save_baseline:
+        profiles = UnknownCapabilityProfiler.profile_toolset(tools)
+        hashes = {name: p.canonical_hash for name, p in profiles.items()}
+        try:
+            path = Path(save_baseline)
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(
+                json.dumps(hashes, indent=2, sort_keys=True), encoding="utf-8"
+            )
+            results.append(
+                {
+                    "name": "rug_pull_baseline_save",
+                    "status": "PASS",
+                    "message": (
+                        f"Saved trusted baseline for {len(hashes)} tool(s) "
+                        f"to {save_baseline}."
+                    ),
+                    "details": str(path),
+                    "severity": None,
+                }
+            )
+        except Exception as exc:
+            results.append(
+                {
+                    "name": "rug_pull_baseline_save",
+                    "status": "FAIL",
+                    "message": f"Failed to write baseline file '{save_baseline}': {exc}",
+                    "details": None,
+                    "severity": None,
+                }
+            )
+
+    if baseline:
+        try:
+            authorized_raw = json.loads(Path(baseline).read_text(encoding="utf-8"))
+            if not isinstance(authorized_raw, dict):
+                raise ValueError("baseline must be a JSON object")
+            for key, value in authorized_raw.items():
+                if not isinstance(key, str) or not isinstance(value, str):
+                    raise ValueError(
+                        "baseline must map string tool names to string hashes"
+                    )
+            authorized = authorized_raw
+        except Exception as exc:
+            results.append(
+                {
+                    "name": "rug_pull_baseline",
+                    "status": "FAIL",
+                    "message": f"Failed to load baseline file '{baseline}': {exc}",
+                    "details": None,
+                    "severity": "CRITICAL",
+                }
+            )
+            return
+
+        drift = [
+            r
+            for r in UnknownCapabilityProfiler.detect_rug_pull(
+                authorized_hashes=authorized, current_tools=tools
+            )
+            if r.is_rug_pull
+        ]
+        if drift:
+            affected = ", ".join(sorted({r.tool_name for r in drift}))
+            results.append(
+                {
+                    "name": "rug_pull_baseline",
+                    "status": "FAIL",
+                    "message": f"RUG_PULL_DETECTED: tool definition drift for: {affected}",
+                    "details": "RUG_PULL_DETECTED",
+                    "severity": "CRITICAL",
+                }
+            )
+        else:
+            results.append(
+                {
+                    "name": "rug_pull_baseline",
+                    "status": "PASS",
+                    "message": "No tool definition drift detected against baseline.",
+                    "details": None,
+                    "severity": None,
+                }
+            )
+
+
 def _cmd_test(args: argparse.Namespace) -> int:
     results: list[dict[str, Any]] = []
+
+    baseline_flags = bool(args.save_baseline or args.baseline)
+    baseline_endpoint_missing = baseline_flags and not (args.url or args.command)
+    baseline_both = bool(args.save_baseline and args.baseline)
+
+    if baseline_endpoint_missing:
+        results.append(
+            {
+                "name": "rug_pull_baseline",
+                "status": "FAIL",
+                "message": (
+                    "--save-baseline/--baseline require --command or --url."
+                ),
+                "details": None,
+                "severity": None,
+            }
+        )
+
+    if baseline_both:
+        results.append(
+            {
+                "name": "rug_pull_baseline",
+                "status": "FAIL",
+                "message": (
+                    "--save-baseline and --baseline are mutually exclusive."
+                ),
+                "details": None,
+                "severity": None,
+            }
+        )
 
     if args.demo:
         try:
@@ -657,7 +818,12 @@ def _cmd_test(args: argparse.Namespace) -> int:
             transport_type=TransportType.SSE,
             url=args.url,
         )
-        results.append(_probe_config(config, HttpSseDiscoveryTransport(), "sse_transport_probe"))
+        sse_transport = HttpSseDiscoveryTransport()
+        results.append(_probe_config(config, sse_transport, "sse_transport_probe"))
+        if not baseline_both:
+            _run_rug_pull_cli(
+                config, sse_transport, results, args.save_baseline, args.baseline
+            )
 
     if args.command:
         from verity.discovery.models import ClientType, DiscoveredServerConfig, TransportType
@@ -671,7 +837,12 @@ def _cmd_test(args: argparse.Namespace) -> int:
             command=parts[0] if parts else "",
             args=tuple(parts[1:]) if len(parts) > 1 else (),
         )
-        results.append(_probe_config(config, StdioDiscoveryTransport(), "stdio_transport_probe"))
+        stdio_transport = StdioDiscoveryTransport()
+        results.append(_probe_config(config, stdio_transport, "stdio_transport_probe"))
+        if not baseline_both:
+            _run_rug_pull_cli(
+                config, stdio_transport, results, args.save_baseline, args.baseline
+            )
 
     _emit(_render_test(results, args.format), args.output)
 
@@ -728,6 +899,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output format.",
     )
     test.add_argument("--output", default=None, help="Write output to this path.")
+    test.add_argument(
+        "--save-baseline",
+        default=None,
+        help="Probe the MCP target and save its canonical tool hashes to this JSON path.",
+    )
+    test.add_argument(
+        "--baseline",
+        default=None,
+        help="Compare the MCP target's canonical tool hashes against this JSON baseline.",
+    )
     test.set_defaults(func=_cmd_test)
 
     serve = subparsers.add_parser("serve", help="Serve the Verity MCP server.")

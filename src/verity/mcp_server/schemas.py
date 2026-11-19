@@ -25,6 +25,8 @@ UNIFIED_TOOL_DEFINITIONS = [
                         "full_audit",
                         "scan_ast_code",
                         "call_target_tool",
+                        "detect_rug_pull",
+                        "snapshot_baseline",
                     ],
                     "description": "Reconnaissance action to perform.",
                 },
@@ -79,6 +81,24 @@ UNIFIED_TOOL_DEFINITIONS = [
                             "type": "string",
                             "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO"],
                             "default": "INFO",
+                        },
+                        "authorized_hashes": {
+                            "type": "object",
+                            "additionalProperties": {"type": "string"},
+                            "description": (
+                                "Map of tool_name -> canonical SHA-256 hash "
+                                "(for detect_rug_pull)."
+                            ),
+                        },
+                        "baseline_path": {
+                            "type": "string",
+                            "description": "Path to a JSON baseline hash map.",
+                        },
+                        "save_baseline": {
+                            "type": "boolean",
+                            "description": (
+                                "When true, save current canonical hashes to baseline_path."
+                            ),
                         },
                     },
                 },

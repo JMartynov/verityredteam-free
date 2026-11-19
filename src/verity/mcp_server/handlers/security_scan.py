@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 import logging
+from pathlib import Path
 from typing import Any
 
 logger = logging.getLogger("verity.mcp_server.tools")
@@ -56,9 +58,173 @@ class SecurityScanHandlerMixin:
             res["action"] = action
             return res
 
+        if action in ("detect_rug_pull", "snapshot_baseline"):
+            return self._execute_rug_pull_action(action, options)
+
         return {
             "ok": False,
             "error": f"Unsupported action '{action}' for verity_security_scan",
+        }
+
+    def _resolve_scan_tools(
+        self, options: dict[str, Any]
+    ) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
+        if "tools" in options and options["tools"] is not None:
+            tools = options["tools"]
+            if not isinstance(tools, list):
+                return [], {
+                    "ok": False,
+                    "error": "options['tools'] must be a list of tool definitions.",
+                }
+            return [t for t in tools if isinstance(t, dict)], None
+
+        if options.get("command") or options.get("url"):
+            discovery = self._discover_mcp_endpoints(options)
+            if not discovery.get("ok") or not discovery.get("is_responsive", True):
+                return [], {
+                    "ok": False,
+                    "error": (
+                        discovery.get("error")
+                        or discovery.get("error_message")
+                        or "Target MCP server is not responsive"
+                    ),
+                }
+            return [t for t in discovery.get("tools", []) if isinstance(t, dict)], None
+
+        return [], None
+
+    def _execute_rug_pull_action(
+        self, action: str, options: dict[str, Any]
+    ) -> dict[str, Any]:
+        from verity.ucp.engine import UnknownCapabilityProfiler
+
+        tools, discovery_error = self._resolve_scan_tools(options)
+        if discovery_error is not None:
+            discovery_error["action"] = action
+            return discovery_error
+
+        profiles = UnknownCapabilityProfiler.profile_toolset(tools)
+        current_hashes = {name: p.canonical_hash for name, p in profiles.items()}
+
+        baseline_path = options.get("baseline_path")
+        save_baseline = bool(options.get("save_baseline")) or action == "snapshot_baseline"
+
+        if save_baseline:
+            saved_path = baseline_path
+            if baseline_path:
+                path = Path(baseline_path)
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(
+                    json.dumps(current_hashes, indent=2, sort_keys=True),
+                    encoding="utf-8",
+                )
+                saved_path = str(path)
+            return {
+                "ok": True,
+                "action": action,
+                "baseline_saved": True,
+                "baseline_path": saved_path,
+                "rug_pull_detected": False,
+                "authorized_hashes": current_hashes,
+                "current_hashes": current_hashes,
+                "drift_findings": [],
+            }
+
+        authorized_hashes = options.get("authorized_hashes")
+        if authorized_hashes is not None:
+            if not isinstance(authorized_hashes, dict):
+                return {
+                    "ok": False,
+                    "action": action,
+                    "error": (
+                        "options['authorized_hashes'] must be a dictionary "
+                        "mapping tool names to SHA-256 hashes."
+                    ),
+                }
+            for key, value in authorized_hashes.items():
+                if not isinstance(key, str) or not isinstance(value, str):
+                    return {
+                        "ok": False,
+                        "action": action,
+                        "error": (
+                            "options['authorized_hashes'] must map string "
+                            "tool names to string SHA-256 hashes."
+                        ),
+                    }
+
+        if authorized_hashes is None:
+            if not baseline_path:
+                return {
+                    "ok": False,
+                    "action": action,
+                    "error": (
+                        "Either 'authorized_hashes' or 'baseline_path' must be "
+                        "provided for rug-pull detection."
+                    ),
+                }
+            try:
+                raw = json.loads(Path(baseline_path).read_text(encoding="utf-8"))
+            except Exception as exc:
+                return {
+                    "ok": False,
+                    "action": action,
+                    "error": f"Failed to load baseline file '{baseline_path}': {exc}",
+                }
+            if not isinstance(raw, dict):
+                return {
+                    "ok": False,
+                    "action": action,
+                    "error": (
+                        f"Baseline file '{baseline_path}' must contain a JSON "
+                        "object mapping tool names to hashes."
+                    ),
+                }
+            for key, value in raw.items():
+                if not isinstance(key, str) or not isinstance(value, str):
+                    return {
+                        "ok": False,
+                        "action": action,
+                        "error": (
+                            f"Baseline file '{baseline_path}' must map string "
+                            "tool names to string SHA-256 hashes."
+                        ),
+                    }
+            authorized_hashes = raw
+
+        results = UnknownCapabilityProfiler.detect_rug_pull(
+            authorized_hashes=authorized_hashes,
+            current_tools=tools,
+        )
+
+        drift_findings: list[dict[str, Any]] = []
+        for r in results:
+            if not r.is_rug_pull:
+                continue
+            if "unauthorized_tool_injected" in r.changed_fields:
+                change_type = "ADDED"
+            elif "tool_removed" in r.changed_fields:
+                change_type = "REMOVED"
+            else:
+                change_type = "MUTATED"
+            drift_findings.append(
+                {
+                    "tool_name": r.tool_name,
+                    "change_type": change_type,
+                    "authorized_hash": r.authorized_hash,
+                    "current_hash": r.current_hash,
+                    "changed_fields": list(r.changed_fields),
+                    "details": r.details,
+                    "is_rug_pull": True,
+                }
+            )
+
+        return {
+            "ok": True,
+            "action": action,
+            "rug_pull_detected": len(drift_findings) > 0,
+            "authorized_hashes": authorized_hashes,
+            "current_hashes": current_hashes,
+            "drift_findings": drift_findings,
         }
 
     def _full_audit_pipeline(self, options: dict[str, Any]) -> dict[str, Any]:
