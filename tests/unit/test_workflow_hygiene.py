@@ -13,6 +13,15 @@ import yaml
 WORKFLOW_PATH = (
     Path(__file__).resolve().parents[2] / ".github" / "workflows" / "workflow.yaml"
 )
+E2E_CONTAINERS_WORKFLOW_PATH = (
+    Path(__file__).resolve().parents[2]
+    / ".github"
+    / "workflows"
+    / "e2e-containers.yml"
+)
+FULL_TESTS_WORKFLOW_PATH = (
+    Path(__file__).resolve().parents[2] / ".github" / "workflows" / "full-tests.yml"
+)
 RELEASE_FIXTURE_PATH = (
     Path(__file__).resolve().parent / "fixtures" / "gh_release_v0.2.0.json"
 )
@@ -263,3 +272,75 @@ def test_recorded_v020_release_fixture() -> None:
     assert "https://pypi.org/project/verity-redteam-core/0.2.0/" in body
     assert "verity-redteam-core==0.2.0" in body
     assert "INSTALL_SOURCE=pypi" in body
+
+
+def _schedule_crons(workflow_path: Path) -> list[str]:
+    """Return the cron strings declared under ``on.schedule``."""
+    workflow = load_workflow(workflow_path)
+    raw = _raw_on(workflow)
+    assert isinstance(raw, dict), f"{workflow_path} must define an 'on' mapping"
+    schedule = raw.get("schedule")
+    assert isinstance(schedule, list), f"{workflow_path} must define on.schedule"
+    return [
+        entry["cron"]
+        for entry in schedule
+        if isinstance(entry, dict) and isinstance(entry.get("cron"), str)
+    ]
+
+
+def test_e2e_containers_has_nightly_schedule() -> None:
+    """Assert e2e-containers declares the nightly 0 4 * * * schedule."""
+    workflow = load_workflow(E2E_CONTAINERS_WORKFLOW_PATH)
+    raw = _raw_on(workflow)
+    assert isinstance(raw, dict), "e2e-containers must define an 'on' mapping"
+    schedule = raw.get("schedule")
+    assert isinstance(schedule, list), "e2e-containers must define on.schedule"
+    assert {"cron": "0 4 * * *"} in schedule
+
+
+def test_e2e_containers_preserves_existing_triggers() -> None:
+    """Assert workflow_dispatch, v* tag push and pull_request paths remain."""
+    workflow = load_workflow(E2E_CONTAINERS_WORKFLOW_PATH)
+    raw = _raw_on(workflow)
+    assert isinstance(raw, dict), "e2e-containers must define an 'on' mapping"
+    assert "workflow_dispatch" in raw
+    push = raw.get("push")
+    assert isinstance(push, dict), "push trigger must remain a mapping"
+    assert push.get("tags") == ["v*"]
+    pull_request = raw.get("pull_request")
+    assert isinstance(pull_request, dict), "pull_request trigger must remain"
+    paths = pull_request.get("paths")
+    assert isinstance(paths, list), "pull_request.paths must remain a list"
+    assert set(paths) == {"src/**", "README.md", "tests/e2e_containers/**"}
+
+
+def test_schedule_offset_differs_from_full_tests() -> None:
+    """Assert e2e-containers runs at 0 4 * * * and full-tests at 0 3 * * *."""
+    e2e_crons = _schedule_crons(E2E_CONTAINERS_WORKFLOW_PATH)
+    full_crons = _schedule_crons(FULL_TESTS_WORKFLOW_PATH)
+    assert "0 4 * * *" in e2e_crons
+    assert "0 3 * * *" in full_crons
+    assert set(e2e_crons).isdisjoint(full_crons)
+
+
+def test_e2e_containers_runs_container_suite() -> None:
+    """Assert the job still runs the container suite with INSTALL_SOURCE=wheel."""
+    workflow = load_workflow(E2E_CONTAINERS_WORKFLOW_PATH)
+    jobs = workflow.get("jobs")
+    assert isinstance(jobs, dict), "e2e-containers must define jobs"
+    job = jobs.get("e2e-containers")
+    assert isinstance(job, dict), "e2e-containers job must exist"
+    steps = job.get("steps")
+    assert isinstance(steps, list), "e2e-containers job must define steps"
+    matching = [
+        step
+        for step in steps
+        if isinstance(step, dict)
+        and "bash ./tests/e2e_containers/run_e2e.sh" in str(step.get("run", ""))
+    ]
+    assert matching, "e2e-containers must run the container E2E suite"
+    assert any(
+        isinstance(step.get("env"), dict)
+        and step["env"].get("INSTALL_SOURCE") == "wheel"
+        for step in matching
+    ), "container E2E suite must run with INSTALL_SOURCE=wheel"
