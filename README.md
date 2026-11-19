@@ -1,5 +1,10 @@
 # Verity RedTeam Free (`verity-redteam-core`)
 
+[![PyPI](https://img.shields.io/pypi/v/verity-redteam-core.svg)](https://pypi.org/project/verity-redteam-core/)
+[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://pypi.org/project/verity-redteam-core/)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![CI](https://github.com/JMartynov/verityredteam-free/actions/workflows/ci.yml/badge.svg)](https://github.com/JMartynov/verityredteam-free/actions/workflows/ci.yml)
+
 Catch poisoned MCP servers, leaked workstation secrets, prompt-injected SQL, and remote code execution hidden inside AI agent tools — before your IDE agent runs them.
 Offline, deterministic, zero Docker, zero API keys, Apache-2.0.
 

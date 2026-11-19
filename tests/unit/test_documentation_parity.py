@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import re
 import shlex
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,37 @@ _FENCE_RE = re.compile(r"```(?P<lang>[A-Za-z0-9_+-]*)\r?\n(?P<body>.*?)```", re.
 _LINK_RE = re.compile(r"!?\[[^\]]*\]\((?P<target>[^)]+)\)")
 _STALE_PACKAGE_RE = re.compile(r"\bverity-core\b")
 _SHELL_LANGS = {"bash", "sh", "console", "shell"}
+
+_BADGE_LINE_RE = re.compile(
+    r"^\[!\[(?P<alt>[^\]]*)\]\((?P<image>[^)]+)\)\]\((?P<target>[^)]+)\)\s*$"
+)
+_PYPROJECT_PATH = REPO_ROOT / "pyproject.toml"
+_HERO_LINE_LIMIT = 8
+_TAGLINE_PREFIX = "Catch poisoned MCP servers"
+
+_HERO_BADGES: dict[str, tuple[str, str]] = {
+    "pypi": (
+        "https://img.shields.io/pypi/v/verity-redteam-core.svg",
+        "https://pypi.org/project/verity-redteam-core/",
+    ),
+    "python": (
+        "https://img.shields.io/badge/python-3.12%2B-blue.svg",
+        "https://pypi.org/project/verity-redteam-core/",
+    ),
+    "license": (
+        "https://img.shields.io/badge/License-Apache_2.0-blue.svg",
+        "LICENSE",
+    ),
+    "ci": (
+        "https://github.com/JMartynov/verityredteam-free/actions/workflows/ci.yml/badge.svg",
+        "https://github.com/JMartynov/verityredteam-free/actions/workflows/ci.yml",
+    ),
+}
+
+_HERO_BADGE_CASES = [
+    pytest.param(image, target, id=name)
+    for name, (image, target) in _HERO_BADGES.items()
+]
 
 STATIC_RULE_IDS = (
     "VERITY-STATIC-INJECTION-OVERRIDE",
@@ -95,6 +127,19 @@ def _collect_cli_surface() -> dict[str, dict[str, Any]]:
     return surface
 
 
+def _readme_hero_lines() -> list[str]:
+    return README_PATH.read_text(encoding="utf-8").splitlines()[:_HERO_LINE_LIMIT]
+
+
+def _parse_badge_lines(lines: list[str]) -> dict[str, tuple[str, int]]:
+    parsed: dict[str, tuple[str, int]] = {}
+    for index, line in enumerate(lines):
+        match = _BADGE_LINE_RE.match(line)
+        if match is not None:
+            parsed[match.group("image")] = (match.group("target"), index)
+    return parsed
+
+
 def _split_command_line(line: str) -> list[str] | None:
     line = line.strip()
     if not line or line.startswith("#"):
@@ -167,6 +212,87 @@ def test_no_stale_package_references() -> None:
         assert not _STALE_PACKAGE_RE.search(text), (
             f"{path.name} references the retired 'verity-core' package"
         )
+
+
+@pytest.mark.parametrize(("image", "target"), _HERO_BADGE_CASES)
+def test_readme_hero_badges_present_and_valid(image: str, target: str) -> None:
+    hero_lines = _readme_hero_lines()
+    hero_text = "\n".join(hero_lines)
+
+    h1_index = next(
+        (index for index, line in enumerate(hero_lines) if line.startswith("# ")),
+        None,
+    )
+    tagline_index = next(
+        (
+            index
+            for index, line in enumerate(hero_lines)
+            if line.startswith(_TAGLINE_PREFIX)
+        ),
+        None,
+    )
+    assert h1_index is not None, "README hero must open with an H1 title"
+    assert tagline_index is not None, "README hero tagline must stay within 8 lines"
+    assert h1_index < tagline_index
+
+    parsed = _parse_badge_lines(hero_lines)
+    assert len(parsed) == len(_HERO_BADGES), (
+        f"README hero must show {len(_HERO_BADGES)} badges, found {len(parsed)}"
+    )
+    badge_line_count = sum(
+        1 for line in hero_lines if _BADGE_LINE_RE.match(line) is not None
+    )
+    assert badge_line_count == len(_HERO_BADGES), (
+        f"README hero must contain exactly {len(_HERO_BADGES)} badge lines, "
+        f"found {badge_line_count}"
+    )
+    hero_images = [img for img, _ in _HERO_BADGES.values()]
+    assert set(parsed) == set(hero_images), (
+        "README hero badges mismatch: expected "
+        f"{hero_images!r}, found {sorted(parsed)!r}"
+    )
+    badge_indices = [parsed[img][1] for img in hero_images]
+    assert badge_indices == sorted(badge_indices), (
+        "README hero badges must appear in order: " + ", ".join(_HERO_BADGES)
+    )
+    assert image in parsed, f"README hero is missing the badge {image!r}"
+    actual_target, badge_index = parsed[image]
+    assert actual_target == target
+    assert h1_index < badge_index < tagline_index
+    assert _LINK_RE.search(hero_lines[badge_index]) is not None
+
+    if not target.startswith(("http://", "https://", "mailto:", "#")):
+        assert (REPO_ROOT / target).is_file(), (
+            f"Badge target {target!r} does not resolve"
+        )
+
+    assert not _STALE_PACKAGE_RE.search(hero_text)
+    assert (REPO_ROOT / ".github" / "workflows" / "ci.yml").is_file()
+
+
+def test_readme_hero_badges_match_wheel_metadata() -> None:
+    with _PYPROJECT_PATH.open("rb") as handle:
+        pyproject = tomllib.load(handle)
+    project = pyproject.get("project", {})
+    hero_text = "\n".join(_readme_hero_lines())
+
+    name = project.get("name")
+    assert name == "verity-redteam-core"
+    assert f"img.shields.io/pypi/v/{name}.svg" in hero_text
+
+    requires_python = project.get("requires-python", "")
+    floor = re.match(r">=?\s*(\d+)\.(\d+)", requires_python)
+    assert floor is not None, f"Unparsable requires-python: {requires_python!r}"
+    major, minor = floor.groups()
+    assert f"python-{major}.{minor}%2B" in hero_text, (
+        f"README Python badge must advertise {major}.{minor}+"
+    )
+
+    license_field = project.get("license", "")
+    if isinstance(license_field, dict):
+        license_field = license_field.get("text", "")
+    assert license_field == "Apache-2.0"
+    assert "License-Apache_2.0" in hero_text
 
 
 def test_demo_asset_is_retired_svg_replaced_by_gif() -> None:
