@@ -1,13 +1,13 @@
 [build-system]
-requires = ["setuptools>=75.0.0"]
+requires = ["setuptools>=77.0.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "verity-redteam-core"
-version = "0.1.0"
+version = "0.2.0"
 description = "Verity RedTeam Free — Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server"
 readme = "README.md"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
 requires-python = ">=3.12,<3.15"
 dependencies = [
     "packaging>=24.0",
