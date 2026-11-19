@@ -22,6 +22,24 @@ E2E_CONTAINERS_WORKFLOW_PATH = (
 FULL_TESTS_WORKFLOW_PATH = (
     Path(__file__).resolve().parents[2] / ".github" / "workflows" / "full-tests.yml"
 )
+WORKFLOWS_DIR = Path(__file__).resolve().parents[2] / ".github" / "workflows"
+ALL_WORKFLOW_PATHS = (
+    WORKFLOWS_DIR / "ci.yml",
+    WORKFLOWS_DIR / "full-tests.yml",
+    WORKFLOWS_DIR / "workflow.yaml",
+    WORKFLOWS_DIR / "e2e-containers.yml",
+)
+CHECKOUT_ACTION = "actions/checkout"
+SETUP_UV_ACTION = "astral-sh/setup-uv"
+EXPECTED_CHECKOUT_REF = f"{CHECKOUT_ACTION}@v5"
+EXPECTED_SETUP_UV_REF = f"{SETUP_UV_ACTION}@v6"
+FORBIDDEN_ACTION_FRAGMENTS = ("checkout@v4", "setup-uv@v4", "setup-uv@v5")
+EXPECTED_JOB_NAMES = {
+    "test-and-build",
+    "full-tests",
+    "pypi-publish",
+    "e2e-containers",
+}
 RELEASE_FIXTURE_PATH = (
     Path(__file__).resolve().parent / "fixtures" / "gh_release_v0.2.0.json"
 )
@@ -344,3 +362,108 @@ def test_e2e_containers_runs_container_suite() -> None:
         and step["env"].get("INSTALL_SOURCE") == "wheel"
         for step in matching
     ), "container E2E suite must run with INSTALL_SOURCE=wheel"
+
+
+def _iter_uses(workflow: dict[str, Any]) -> list[str]:
+    """Return every ``uses:`` reference declared across all workflow jobs."""
+    jobs = workflow.get("jobs")
+    if not isinstance(jobs, dict):
+        return []
+    refs: list[str] = []
+    for job in jobs.values():
+        if not isinstance(job, dict):
+            continue
+        steps = job.get("steps")
+        if not isinstance(steps, list):
+            continue
+        for step in steps:
+            if not isinstance(step, dict):
+                continue
+            uses = step.get("uses")
+            if isinstance(uses, str):
+                refs.append(uses)
+    return refs
+
+
+def _references(action: str, workflow: dict[str, Any]) -> list[str]:
+    """Return every ``uses:`` entry that targets ``action`` (pinned or not)."""
+    return [
+        uses
+        for uses in _iter_uses(workflow)
+        if uses == action or uses.startswith(f"{action}@")
+    ]
+
+
+def _action_refs(action: str) -> set[str]:
+    """Return the distinct ``action@ref`` pins used across all workflows."""
+    refs: set[str] = set()
+    for path in ALL_WORKFLOW_PATHS:
+        refs.update(_references(action, load_workflow(path)))
+    return refs
+
+
+def _workflow_files() -> list[Path]:
+    """Return every YAML manifest under the workflows directory."""
+    return sorted(
+        path
+        for path in WORKFLOWS_DIR.rglob("*")
+        if path.is_file() and path.suffix in {".yml", ".yaml"}
+    )
+
+
+@pytest.mark.parametrize("workflow_path", ALL_WORKFLOW_PATHS, ids=lambda p: p.name)
+def test_checkout_pin_is_v5(workflow_path: Path) -> None:
+    """Assert every checkout use in each workflow is pinned to v5."""
+    refs = _references(CHECKOUT_ACTION, load_workflow(workflow_path))
+    assert refs, f"{workflow_path.name} must use {CHECKOUT_ACTION}"
+    assert all(ref == EXPECTED_CHECKOUT_REF for ref in refs), refs
+
+
+@pytest.mark.parametrize("workflow_path", ALL_WORKFLOW_PATHS, ids=lambda p: p.name)
+def test_setup_uv_pin_is_v6(workflow_path: Path) -> None:
+    """Assert every setup-uv use in each workflow is pinned to v6."""
+    refs = _references(SETUP_UV_ACTION, load_workflow(workflow_path))
+    assert refs, f"{workflow_path.name} must use {SETUP_UV_ACTION}"
+    assert all(ref == EXPECTED_SETUP_UV_REF for ref in refs), refs
+
+
+def test_no_legacy_action_pins_remain() -> None:
+    """Assert no deprecated action pins remain anywhere under workflows."""
+    offenders: list[str] = []
+    for path in sorted(WORKFLOWS_DIR.rglob("*")):
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        for fragment in FORBIDDEN_ACTION_FRAGMENTS:
+            if fragment in text:
+                offenders.append(f"{path}: {fragment}")
+    assert not offenders, offenders
+
+
+def test_no_floating_action_refs() -> None:
+    """Assert no action reference uses a floating @main or @master branch."""
+    offenders: list[str] = []
+    for path in _workflow_files():
+        for uses in _iter_uses(load_workflow(path)):
+            if uses.strip().lower().endswith(("@main", "@master")):
+                offenders.append(f"{path.name}: {uses}")
+    assert not offenders, offenders
+
+
+def test_action_pin_parity() -> None:
+    """Assert each action uses exactly one pin across all four workflows."""
+    checkout_refs = _action_refs(CHECKOUT_ACTION)
+    setup_uv_refs = _action_refs(SETUP_UV_ACTION)
+    assert checkout_refs == {EXPECTED_CHECKOUT_REF}, checkout_refs
+    assert setup_uv_refs == {EXPECTED_SETUP_UV_REF}, setup_uv_refs
+
+
+def test_workflows_parse_and_expose_expected_jobs() -> None:
+    """Assert all workflows parse and declare the expected set of jobs."""
+    found: set[str] = set()
+    for path in ALL_WORKFLOW_PATHS:
+        jobs = load_workflow(path).get("jobs")
+        assert isinstance(jobs, dict), f"{path.name} must define jobs"
+        found.update(name for name in jobs if isinstance(name, str))
+    missing = EXPECTED_JOB_NAMES - found
+    assert not missing, missing
