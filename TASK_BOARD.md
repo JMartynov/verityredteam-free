@@ -39,6 +39,24 @@ flowchart TD
         M9["M9: Dynamic Narrow Screencast GIF<br/>(VHS in Docker, ~860x440, 4 live scenarios)"]
         M10["M10: Customer-Focused README &amp; Parity Guard<br/>(6 pain points, verified outputs, CI doc parity)"]
         M11["M11: Credential Hardening, Polish &amp; v0.2.0 PyPI<br/>(DSN + value secrets, SPDX license, no_wrap, live PyPI)"]
+        M12["M12: Real Streaming SSE &amp; Streamable HTTP Transport<br/>(text/event-stream, mcp-session-id, FastMCP E2E)"]
+        M13["M13: Expose UCP Rug-Pull Detection<br/>(verity_security_scan action, --baseline CLI, mutable server E2E)"]
+        M14["M14: True End-to-End VERITY_OFFLINE &amp; Air-Gapped Mode<br/>(Zero sockets in offline, expired-cache/baseline, --network none E2E)"]
+        M15["M15: Flag Unpinned MCP Packages<br/>(SEC-STATIC-UNPINNED-PACKAGE, no guessed version, real npm E2E)"]
+        M16["M16: Detect AWS / PEM / Cloud Tokens in Config Values<br/>(Shared credential registry, scrubbing, container E2E)"]
+        M17["M17: Dialect-Aware SqlSecurityGuard<br/>(read=dialect, --dialect CLI &amp; verity_database_guard)"]
+        M18["M18: Sync SARIF Driver Version with verity.__version__<br/>(Replace hardcoded 0.1.0, container SARIF E2E)"]
+        M19["M19: Opt-In --live-probe Flag on verity scan<br/>(Fleet-wide live capability &amp; schema auditing)"]
+        M20["M20: Add README.md Hero Badge Row<br/>(PyPI, Python 3.12+, Apache-2.0, CI &amp; parity guard)"]
+        M21["M21: Sync README Tables, demo.tape Scene 4 &amp; demo.gif<br/>(Un-ellipsized v0.2.0 snapshots &amp; 4-target demo GIF)"]
+        M22["M22: GitHub Release for v0.2.0 &amp; Workflow Guard<br/>(Guard duplicate PyPI trigger, publish v0.2.0 notes)"]
+        M23["M23: Remove Stale 'Not Yet on PyPI' Caveat<br/>(Direct PyPI quickstart, collapsible source build)"]
+        M24["M24: Container E2E for DSN, CUSTOM_FIELD &amp; Live DVMCP<br/>(DATABASE_URL DSN, sk- leak checks, live DVMCP stdio)"]
+        M25["M25: Nightly schedule Trigger on e2e-containers.yml<br/>(cron 0 4 * * * upstream drift detection)"]
+        M26["M26: Upgrade actions/checkout &amp; setup-uv Pins<br/>(Node-24-ready pins across all 4 workflows)"]
+        M27["M27: Guard uv build in run_e2e.sh When INSTALL_SOURCE=pypi<br/>(Skip wheel build in PyPI mode, purge stale wheels)"]
+        M28["M28: Fix Retired verity-core Name in AGENTS.md<br/>(Update AGENTS.md &amp; extend doc parity guard)"]
+        M29["M29: Exact GitHub Project #5 Item Links Across TASK_BOARD.md<br/>(Backfill M1-M11 PVTI_... IDs &amp; parity guard)"]
     end
 
     M1 --> M2
@@ -72,6 +90,24 @@ flowchart TD
 | **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Done` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
 | **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Done` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
 | **M11** | **Credential Detection Hardening, Packaging/Display Polish & `v0.2.0` PyPI Release** | DSN & value-pattern secret checks, SPDX license, `Rule` `no_wrap=True`, `v0.2.0` publish + live PyPI E2E | [M11_credential_hardening_polish_and_v020_release.md](docs/tasks/M11_credential_hardening_polish_and_v020_release.md) | `Done` | [View Item #M11](https://github.com/users/JMartynov/projects/5) |
+| **M12** | **Real Streaming SSE (`text/event-stream`) & Streamable HTTP Transport Support** | Incremental SSE frame parser, Streamable HTTP `mcp-session-id`, legacy SSE endpoint, unit tests & real `FastMCP` E2E | [M12_streaming_sse_streamable_http_transport.md](docs/tasks/M12_streaming_sse_streamable_http_transport.md) | `Todo` | [View Item #M12](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPNQ0`) |
+| **M13** | **Expose UCP Rug-Pull Detection (`detect_rug_pull`) in `verity_security_scan` & CLI** | `detect_rug_pull` MCP action, `verity test --save-baseline`/`--baseline`, unit tests & mutable server E2E | [M13_expose_ucp_rug_pull_detection.md](docs/tasks/M13_expose_ucp_rug_pull_detection.md) | `Todo` | [View Item #M13](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPQE0`) |
+| **M14** | **True End-to-End `VERITY_OFFLINE` & Air-Gapped Cold-Start Baseline Support** | Zero-socket `VERITY_OFFLINE` across `data_fetcher`/matchers, expired-cache/baseline, unit tests & `--network none` E2E | [M14_true_offline_airgapped_mode.md](docs/tasks/M14_true_offline_airgapped_mode.md) | `Todo` | [View Item #M14](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPSWU`) |
+| **M15** | **Flag Unpinned MCP Packages (`SEC-STATIC-UNPINNED-PACKAGE`) Instead of Guessing Latest Version** | Return `None` for unpinned version, emit `SEC-STATIC-UNPINNED-PACKAGE`, unit tests & real `mcp-remote` E2E | [M15_unpinned_mcp_package_detection.md](docs/tasks/M15_unpinned_mcp_package_detection.md) | `Todo` | [View Item #M15](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPUAU`) |
+| **M16** | **Detect AWS `AKIA…` Keys, PEM Private Keys & Cloud Tokens in MCP Config Values** | Shared credential pattern registry, extended key names, full scrubbing, unit tests & container E2E | [M16_cloud_credential_pattern_detection.md](docs/tasks/M16_cloud_credential_pattern_detection.md) | `Todo` | [View Item #M16](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPito`) |
+| **M17** | **Dialect-Aware `SqlSecurityGuard` (`--dialect` CLI & `verity_database_guard` Support)** | Pass `read=dialect` (default `postgres`), expose `--dialect` on `verity test --sql` & `verity_database_guard`, unit tests & SQLite/MySQL E2E | [M17_dialect_aware_sql_security_guard.md](docs/tasks/M17_dialect_aware_sql_security_guard.md) | `Todo` | [View Item #M17](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQV5Y`) |
+| **M18** | **Sync SARIF Exporter Driver Version with `verity.__version__`** | Replace hardcoded `"0.1.0"` in `_stdlib_sarif_exporter` with `verity.__version__`, unit tests & container SARIF E2E | [M18_sarif_driver_version_sync.md](docs/tasks/M18_sarif_driver_version_sync.md) | `Todo` | [View Item #M18](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQWdQ`) |
+| **M19** | **Opt-In `--live-probe` Flag on `verity scan` for Fleet-Wide Live Capability Auditing** | Expose `--live-probe` on `verity scan`, thread into `auditor.audit_server()`, isolate dead servers, unit tests & container E2E | [M19_scan_live_probe_flag.md](docs/tasks/M19_scan_live_probe_flag.md) | `Todo` | [View Item #M19](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQWho`) |
+| **M20** | **Add `README.md` Hero Badge Row (PyPI, License, Python 3.12+, CI) & Parity Guard** | Add 4-badge Hero row above tagline in `README.md`, doc parity guard & wheel metadata container check | [M20_readme_hero_badges.md](docs/tasks/M20_readme_hero_badges.md) | `Todo` | [View Item #M20](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQWlY`) |
+| **M21** | **Sync `README.md` Verbatim Tables, `demo.tape` Scene 4 & `demo.gif` to `v0.2.0` Un-Ellipsized Output** | Sync two ellipsized README tables to snapshots `01`/`02`, run full `verity test --demo` in Scene 4, re-record `demo.gif` & parity tests | [M21_sync_demo_gif_and_readme_tables.md](docs/tasks/M21_sync_demo_gif_and_readme_tables.md) | `Todo` | [View Item #M21](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQWqY`) |
+| **M22** | **Publish GitHub Release for `v0.2.0` & Guard Duplicate PyPI Workflow Trigger** | Guard `.github/workflows/workflow.yaml` duplicate PyPI upload, publish `v0.2.0` GitHub Release notes, workflow unit test & PyPI E2E | [M22_github_release_v020_and_workflow_guard.md](docs/tasks/M22_github_release_v020_and_workflow_guard.md) | `Todo` | [View Item #M22](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQWuQ`) |
+| **M23** | **Remove Stale "If the package is not yet on PyPI…" Caveat from `README.md`** | Make PyPI primary install path, move source build into `<details>`, add parity test & cold PyPI container check | [M23_remove_stale_pypi_caveat.md](docs/tasks/M23_remove_stale_pypi_caveat.md) | `Todo` | [View Item #M23](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQWx4`) |
+| **M24** | **Extend Container E2E (`verify_all_scenarios.sh`) for DSN Credentials, `CUSTOM_FIELD=sk-…` & Live DVMCP `stdio` Probing** | Add `DATABASE_URL` DSN + safe twin, `CUSTOM_FIELD=sk-…` leak assertions, and live DVMCP `verity test --command` probing | [M24_container_e2e_dsn_and_live_dvmcp.md](docs/tasks/M24_container_e2e_dsn_and_live_dvmcp.md) | `Todo` | [View Item #M24](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQW1E`) |
+| **M25** | **Add Nightly `schedule` Trigger (`cron: '0 4 * * *'`) to `e2e-containers.yml`** | Add nightly `0 4 * * *` cron trigger to `e2e-containers.yml` and workflow hygiene unit test | [M25_nightly_e2e_containers_cron.md](docs/tasks/M25_nightly_e2e_containers_cron.md) | `Todo` | [View Item #M25](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQW4w`) |
+| **M26** | **Upgrade `actions/checkout` and `astral-sh/setup-uv` Pins Across All GitHub Actions Workflows** | Upgrade `actions/checkout` and `astral-sh/setup-uv` to Node-24-ready versions across all 4 workflows + unit test | [M26_upgrade_github_actions_pins.md](docs/tasks/M26_upgrade_github_actions_pins.md) | `Todo` | [View Item #M26](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQW9A`) |
+| **M27** | **Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi`** | Guard `uv build` behind `INSTALL_SOURCE=wheel`, clean stale wheels, unit test & dual-mode container E2E | [M27_guard_uv_build_in_run_e2e.md](docs/tasks/M27_guard_uv_build_in_run_e2e.md) | `Todo` | [View Item #M27](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXBQ`) |
+| **M28** | **Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard** | Replace `verity-core` with `verity-redteam-core` in `AGENTS.md` and extend `test_no_stale_package_references` | [M28_fix_agents_md_retired_package_name.md](docs/tasks/M28_fix_agents_md_retired_package_name.md) | `Todo` | [View Item #M28](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXFA`) |
+| **M29** | **Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`)** | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard | [M29_exact_task_board_project_links.md](docs/tasks/M29_exact_task_board_project_links.md) | `Todo` | [View Item #M29](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXJA`) |
 
 ---
 
@@ -543,3 +579,336 @@ Harden secret detection for DSN credential URLs (`postgres://user:pass@...`) and
 - [x] DSN credentials and `SECRET_VALUE_PATTERNS` under arbitrary env keys are flagged and scrubbed cleanly across all formats, with `${VAR}` placeholders exempt.
 - [x] `uv build` produces `0.2.0` with zero `SetuptoolsDeprecationWarning`, and `terminal.py` renders un-ellipsized rule IDs.
 - [x] `verity-redteam-core==0.2.0` is published on PyPI and `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh` passes across all 4 clean containers.
+
+---
+
+### M12: Real Streaming SSE (`text/event-stream`) & Streamable HTTP Transport Support
+
+#### Task Spec
+- [`docs/tasks/M12_streaming_sse_streamable_http_transport.md`](docs/tasks/M12_streaming_sse_streamable_http_transport.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKPNQ0`)
+
+#### Context
+Upgrade `HttpSseDiscoveryTransport` (`src/verity/discovery/transports/sse.py`) from read-to-EOF `json.loads()` to an incremental `text/event-stream` frame parser supporting Streamable HTTP (`initialize` + `mcp-session-id` + `tools/list`) and legacy HTTP+SSE (`event: endpoint`), while preserving the finite `application/json` fallback.
+
+#### Key Deliverables
+- Stdlib incremental `text/event-stream` & Streamable HTTP support in `src/verity/discovery/transports/sse.py` (zero new runtime dependencies).
+- Unit & local integration test suite `tests/unit/test_sse_transport.py` covering streaming `POST /mcp`, `mcp-session-id`, legacy `GET /sse` + `event: endpoint`, multi-line `data:` / keepalive, finite JSON fallback, bounded timeouts, and `verity test --url` CLI.
+- Real-server acceptance scenario in `tests/e2e_containers/` running an actual `FastMCP` Streamable HTTP server (poisoned -> exit `1` with `VERITY-STATIC-*` IDs; clean -> exit `0`).
+
+#### Acceptance Criteria
+- [ ] `HttpSseDiscoveryTransport` parses incremental `text/event-stream` frames with bounded timeout and never hangs waiting for EOF.
+- [ ] `tests/unit/test_sse_transport.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [ ] Real `FastMCP` server acceptance scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+
+---
+
+### M13: Expose UCP Rug-Pull Detection (`detect_rug_pull`) in `verity_security_scan` & CLI
+
+#### Task Spec
+- [`docs/tasks/M13_expose_ucp_rug_pull_detection.md`](docs/tasks/M13_expose_ucp_rug_pull_detection.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKPQE0`)
+
+#### Context
+Expose `UnknownCapabilityProfiler.detect_rug_pull()` (`src/verity/ucp/engine.py`) directly to IDE agents via `verity_security_scan(action="detect_rug_pull")` and to CLI/CI users via `verity test --save-baseline` / `--baseline`, with unit tests and a real mutable MCP server E2E scenario.
+
+#### Key Deliverables
+- `detect_rug_pull` action in `src/verity/mcp_server/handlers/security_scan.py` & `schemas.py` (non-breaking).
+- `--save-baseline <path>` and `--baseline <path>` flags on `verity test` in `src/verity/cli.py`.
+- Unit/integration test suite `tests/unit/test_rug_pull_exposure.py` + real mutable MCP server E2E scenario in `tests/e2e_containers/verify_all_scenarios.sh`.
+
+#### Acceptance Criteria
+- [ ] `verity_security_scan(action="detect_rug_pull")` and `verity test --save-baseline` / `--baseline` detect added, removed, and description-mutated tools cleanly.
+- [ ] `tests/unit/test_rug_pull_exposure.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [ ] Real mutable MCP server rug-pull scenario (CLI + `verity serve` JSON-RPC) passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+
+---
+
+### M14: True End-to-End `VERITY_OFFLINE` & Air-Gapped Cold-Start Baseline Support
+
+#### Task Spec
+- [`docs/tasks/M14_true_offline_airgapped_mode.md`](docs/tasks/M14_true_offline_airgapped_mode.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKPSWU`)
+
+#### Context
+Enforce `VERITY_OFFLINE=1` / `verity scan --offline` across `data_fetcher.py`, `FingerprintMatcher`, and `VulnerabilityIndex` so air-gapped scans never attempt outbound network calls, serve expired local caches cleanly, and resolve local baselines transparently.
+
+#### Key Deliverables
+- Centralized `_is_offline()` short-circuiting in `src/verity/data_fetcher.py`, `src/verity/fingerprint/matcher.py`, and `src/verity/lookup/index.py`.
+- Unit/integration test suite `tests/unit/test_offline_airgap.py` asserting zero network sockets when `VERITY_OFFLINE=1`.
+- Real air-gapped container acceptance scenario (`docker run --rm --network none`) inside `tests/e2e_containers/`.
+
+#### Acceptance Criteria
+- [ ] `VERITY_OFFLINE=1` makes zero outbound network calls across all data/matching layers and serves expired caches cleanly.
+- [ ] `tests/unit/test_offline_airgap.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [ ] Real `--network none` container acceptance scenario completes in `<3s` with zero network errors inside `tests/e2e_containers/run_e2e.sh`.
+
+---
+
+### M15: Flag Unpinned MCP Packages (`SEC-STATIC-UNPINNED-PACKAGE`) Instead of Guessing Latest Version
+
+#### Task Spec
+- [`docs/tasks/M15_unpinned_mcp_package_detection.md`](docs/tasks/M15_unpinned_mcp_package_detection.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKPUAU`)
+
+#### Context
+Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/matcher.py`) from silently substituting `versions[-1].version` or `"1.0.0"` when a package is unpinned, and emit `SEC-STATIC-UNPINNED-PACKAGE` (`MEDIUM`) for floating `npx`/`uvx`/`@latest` configs in `ConsolidatedSecurityAuditor`.
+
+#### Key Deliverables
+- Unpinned version handling (`matched_version=None`) in `src/verity/discovery/matcher.py`.
+- `SEC-STATIC-UNPINNED-PACKAGE` advisory (and skipping guessed-version OSV queries) in `src/verity/discovery/auditor.py`.
+- Unit/integration test suite `tests/unit/test_unpinned_package_detection.py` + real pinned vs. unpinned `mcp-remote` E2E scenario in `tests/e2e_containers/verify_all_scenarios.sh`.
+
+#### Acceptance Criteria
+- [ ] Unpinned `npx`/`uvx`/`@latest` configs emit `SEC-STATIC-UNPINNED-PACKAGE` with no fabricated version OSV lookups; pinned (`@0.1.15`, `==1.2.0`) and local scripts produce zero false positives.
+- [ ] `tests/unit/test_unpinned_package_detection.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [ ] Real pinned vs. unpinned `mcp-remote` acceptance scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+
+---
+
+### M16: Detect AWS `AKIA…` Keys, PEM Private Keys & Cloud Tokens in MCP Config Values
+
+#### Task Spec
+- [`docs/tasks/M16_cloud_credential_pattern_detection.md`](docs/tasks/M16_cloud_credential_pattern_detection.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKPito`)
+
+#### Context
+`MultiClientConfigScanner.SECRET_VALUE_PATTERNS` only covers `sk-`, `ghp_`, `eyJ`, and `SECRET_KEY_PATTERNS` misses `AWS_ACCESS_KEY_ID`, so AWS keys and PEM private keys in MCP `env` blocks are neither flagged nor scrubbed, even though `static_rules.py` already knows those shapes.
+
+#### Key Deliverables
+- Shared credential pattern registry reused by `config_scanner.py` and `static_rules.py` (AKIA/ASIA, PEM, Slack, Google, existing shapes) + extended key-name patterns.
+- Full `****` scrubbing of matched values (incl. multi-line PEM) in all report formats.
+- `tests/unit/test_credential_patterns.py` + container E2E scenario with a real AWS MCP server config and leak scan.
+
+#### Acceptance Criteria
+- [ ] AWS, PEM, Slack, and Google credentials are flagged as `SEC-STATIC-SECRET-IN-CONFIG` regardless of env key name and fully redacted; `${VAR}` references and benign values produce zero findings.
+- [ ] `tests/unit/test_credential_patterns.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [ ] Container E2E scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh` with zero raw secret leaks.
+
+---
+
+### M17: Dialect-Aware `SqlSecurityGuard` (`--dialect` CLI & `verity_database_guard` Support)
+
+#### Task Spec
+- [`docs/tasks/M17_dialect_aware_sql_security_guard.md`](docs/tasks/M17_dialect_aware_sql_security_guard.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQV5Y`)
+
+#### Context
+`SqlSecurityGuard.validate_single_select_statement()` (`src/verity/mcp_library/sql_guard.py`) hardcodes `read="postgres"` in all four `sqlglot.tokenize` and `sqlglot.parse` calls (lines 90, 119, 133, 136), causing non-Postgres syntax (MySQL backticks, T-SQL brackets/`TOP`, Snowflake/DuckDB `QUALIFY`, BigQuery `EXCEPT`) to be mis-tokenized or falsely rejected.
+
+#### Key Deliverables
+- `dialect: str = "postgres"` parameter on `SqlSecurityGuard.validate_single_select_statement()` passed to all `sqlglot` calls with allowlist validation (`postgres`, `mysql`, `sqlite`, `duckdb`, `tsql`, `bigquery`, `snowflake`).
+- `--dialect` CLI option on `verity test --sql` (`src/verity/cli.py`) and `options.dialect` support in `verity_database_guard` (`src/verity/mcp_server/handlers/database_guard.py`).
+- Unit test suite `tests/unit/test_sql_guard_dialects.py` + container E2E scenario with a real SQLite/MySQL MCP query flow.
+
+#### Acceptance Criteria
+- [ ] `SqlSecurityGuard.validate_single_select_statement()` supports all 7 dialects with `"postgres"` default (100% backward compatible) and blocks stacked/destructive queries across every dialect.
+- [ ] `tests/unit/test_sql_guard_dialects.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [ ] Container E2E scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+
+---
+
+### M18: Sync SARIF Exporter Driver Version with `verity.__version__`
+
+#### Task Spec
+- [`docs/tasks/M18_sarif_driver_version_sync.md`](docs/tasks/M18_sarif_driver_version_sync.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQWdQ`)
+
+#### Context
+`_stdlib_sarif_exporter()` (`src/verity/cli.py`, line 106) hardcodes `"version": "0.1.0"`, causing SARIF consumers (GitHub Code Scanning, DefectDojo) to attribute `0.2.0+` scan results to `0.1.0`.
+
+#### Key Deliverables
+- Reference `verity.__version__` in `_stdlib_sarif_exporter()` (`src/verity/cli.py`).
+- Unit tests in `tests/unit/test_cli_auditor_parity.py` asserting `runs[0].tool.driver.version == verity.__version__` and lockstep parity with `pyproject.toml`.
+- Container E2E SARIF export check in `tests/e2e_containers/verify_all_scenarios.sh`.
+
+#### Acceptance Criteria
+- [ ] `_stdlib_sarif_exporter()` emits `verity.__version__` with zero hardcoded version strings remaining in `src/verity/cli.py`.
+- [ ] Unit tests and container E2E SARIF version assertion pass cleanly.
+
+---
+
+### M19: Opt-In `--live-probe` Flag on `verity scan` for Fleet-Wide Live Capability Auditing
+
+#### Task Spec
+- [`docs/tasks/M19_scan_live_probe_flag.md`](docs/tasks/M19_scan_live_probe_flag.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQWho`)
+
+#### Context
+`_collect_config_findings()` (`src/verity/cli.py`, line 358) hardcodes `live_probe=False`, forcing users to run `verity test` manually per server to detect live `tools/list` poisoning or capability-fingerprinted CVEs.
+
+#### Key Deliverables
+- Opt-in `--live-probe` flag (default `False`) on `verity scan` threaded through `_cmd_scan`, `_collect_scan_data`, and `_collect_config_findings` to `auditor.audit_server(config, live_probe=live_probe)`.
+- Per-server exception isolation (`stderr` warning on dead/unreachable servers) and secret scrubbing on live findings.
+- `tests/unit/test_scan_live_probe.py` + container E2E live-probe scan scenario in `tests/e2e_containers/verify_all_scenarios.sh`.
+
+#### Acceptance Criteria
+- [ ] `verity scan --live-probe` probes configured stdio/HTTP MCP servers and surfaces live `VERITY-STATIC-*` and OSV findings across all report formats while isolating dead servers.
+- [ ] `tests/unit/test_scan_live_probe.py`, full `pytest tests/`, `ruff check src tests`, and container E2E pass cleanly.
+
+---
+
+### M20: Add `README.md` Hero Badge Row (PyPI, License, Python 3.12+, CI) & Parity Guard
+
+#### Task Spec
+- [`docs/tasks/M20_readme_hero_badges.md`](docs/tasks/M20_readme_hero_badges.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQWlY`)
+
+#### Context
+`M10` §2.1 specified a Hero badge row (`PyPI`, `Python 3.12+`, `License: Apache-2.0`, `CI`), but `README.md` currently opens with only the H1 title, tagline, and `demo.gif`.
+
+#### Key Deliverables
+- 4-badge Hero row in `README.md` (lines 1–8) linking to PyPI `verity-redteam-core`, Python `3.12+`, `LICENSE`, and `ci.yml`.
+- `test_readme_hero_badges_present_and_valid` in `tests/unit/test_documentation_parity.py` + packaged wheel metadata verification in container E2E.
+
+#### Acceptance Criteria
+- [ ] All 4 badges render above the fold in `README.md` with valid targets and zero stale `verity-core` references.
+- [ ] `tests/unit/test_documentation_parity.py` and container E2E wheel-metadata parity check pass cleanly.
+
+---
+
+### M21: Sync `README.md` Verbatim Tables, `demo.tape` Scene 4 & `demo.gif` to `v0.2.0` Un-Ellipsized Output
+
+#### Task Spec
+- [`docs/tasks/M21_sync_demo_gif_and_readme_tables.md`](docs/tasks/M21_sync_demo_gif_and_readme_tables.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQWqY`)
+
+#### Context
+Two embedded terminal tables in `README.md` (lines 76–104 and 206–218) still contain pre-`M11` ellipsized rule IDs (`SEC-STATIC-SECRET-IN-CONF…`, `VERITY-STATIC-INJECTION-O…`), and `docs/assets/demo.tape` Scene 4 runs `--target sqlite-basic` instead of the full 4-target `verity test --demo` suite.
+
+#### Key Deliverables
+- Sync both `README.md` tables verbatim with `tests/e2e_containers/snapshots/01_workstation_scan.txt` and `02_schema_scan.txt`.
+- Update `docs/assets/demo.tape` Scene 4 to `verity test --demo` and re-record `docs/assets/demo.gif` via `scripts/record_demo_gif.sh`.
+- Snapshot parity and no-ellipsized-rule-ID guard tests in `tests/unit/test_documentation_parity.py`.
+
+#### Acceptance Criteria
+- [ ] `README.md` tables match snapshots `01` and `02` with zero ellipsized rule IDs, and `demo.gif` is re-recorded against `0.2.0` with all 4 demo targets.
+- [ ] `tests/unit/test_documentation_parity.py`, `scripts/record_demo_gif.sh`, and container E2E pass cleanly.
+
+---
+
+### M22: Publish GitHub Release for `v0.2.0` & Guard Duplicate PyPI Workflow Trigger
+
+#### Task Spec
+- [`docs/tasks/M22_github_release_v020_and_workflow_guard.md`](docs/tasks/M22_github_release_v020_and_workflow_guard.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQWuQ`)
+
+#### Context
+`verity-redteam-core==0.2.0` is live on PyPI and tagged `v0.2.0`, but zero GitHub Releases exist on `JMartynov/verityredteam-free`, and `.github/workflows/workflow.yaml` triggers on both `push: tags: ["v*"]` and `release: types: [published]`, which risks a duplicate PyPI upload failure when publishing a GitHub Release.
+
+#### Key Deliverables
+- Duplicate-upload guard in `.github/workflows/workflow.yaml` + unit test in `tests/unit/test_workflow_hygiene.py`.
+- Official `v0.2.0` GitHub Release on `JMartynov/verityredteam-free` summarizing `M7`–`M11`, verified via `gh release view v0.2.0` and `INSTALL_SOURCE=pypi` container E2E.
+
+#### Acceptance Criteria
+- [ ] `.github/workflows/workflow.yaml` is guarded against duplicate PyPI uploads and `tests/unit/test_workflow_hygiene.py` passes.
+- [ ] GitHub Release `v0.2.0` is published and verified alongside `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh`.
+
+---
+
+### M23: Remove Stale "If the package is not yet on PyPI…" Caveat from `README.md`
+
+#### Task Spec
+- [`docs/tasks/M23_remove_stale_pypi_caveat.md`](docs/tasks/M23_remove_stale_pypi_caveat.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQWx4`)
+
+#### Context
+`README.md` (lines 17–24) still leads with *"If the package is not yet on PyPI, install from source or from a built wheel:"* even though `verity-redteam-core==0.2.0` is live on PyPI.
+
+#### Key Deliverables
+- Remove the stale caveat in `README.md`, keep PyPI (`uvx`/`pip`) as the primary quickstart, and move contributor source-build instructions into a collapsible `<details>` block.
+- Add `test_readme_has_no_stale_pypi_caveat` in `tests/unit/test_documentation_parity.py` + cold `INSTALL_SOURCE=pypi` container verification.
+
+#### Acceptance Criteria
+- [ ] `README.md` contains no `"not yet on PyPI"` caveat, `tests/unit/test_documentation_parity.py` guards against regression, and `INSTALL_SOURCE=pypi` container E2E passes.
+
+---
+
+### M24: Extend Container E2E (`verify_all_scenarios.sh`) for DSN Credentials, `CUSTOM_FIELD=sk-…` & Live DVMCP `stdio` Probing
+
+#### Task Spec
+- [`docs/tasks/M24_container_e2e_dsn_and_live_dvmcp.md`](docs/tasks/M24_container_e2e_dsn_and_live_dvmcp.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQW1E`)
+
+#### Context
+`M11` added DSN credential detection (`DATABASE_URL=postgres://user:pass@...`) and arbitrary-key value secret detection (`CUSTOM_FIELD=sk-...`), and `M8` §4 Scenario 2 specified live `stdio` probing of DVMCP, but `tests/e2e_containers/verify_all_scenarios.sh` currently checks only classic env key names and static `--path /opt/dvmcp`.
+
+#### Key Deliverables
+- Add `DATABASE_URL` DSN (with embedded password + safe `${DB_PASS}` twin) and `CUSTOM_FIELD=sk-...` to Scenario 1 in `tests/e2e_containers/verify_all_scenarios.sh` and `SECRETS=( ... )` leak assertions.
+- Add live `verity test --command "python3 /opt/dvmcp/..."` `stdio` probing in `verify_all_scenarios.sh`.
+- Unit parity tests in `tests/unit/test_cli_auditor_parity.py`.
+
+#### Acceptance Criteria
+- [ ] Container E2E verifies `DATABASE_URL` DSN flagging/exemption, `CUSTOM_FIELD=sk-...` detection, zero raw leaks across all outputs/snapshots, and live DVMCP `stdio` probing.
+
+---
+
+### M25: Add Nightly `schedule` Trigger (`cron: '0 4 * * *'`) to `e2e-containers.yml`
+
+#### Task Spec
+- [`docs/tasks/M25_nightly_e2e_containers_cron.md`](docs/tasks/M25_nightly_e2e_containers_cron.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQW4w`)
+
+#### Context
+`.github/workflows/e2e-containers.yml` lacks a scheduled trigger, so upstream drift in PyPI dependencies, `mcp-remote@0.1.15`, DVMCP, or Docker base images is not caught between PRs/tags.
+
+#### Key Deliverables
+- Add `schedule: - cron: '0 4 * * *'` to `.github/workflows/e2e-containers.yml` (one hour after `full-tests.yml` at `0 3 * * *`).
+- Add YAML trigger assertions in `tests/unit/test_workflow_hygiene.py`.
+
+#### Acceptance Criteria
+- [ ] `.github/workflows/e2e-containers.yml` includes `cron: '0 4 * * *'` while preserving existing triggers, and `tests/unit/test_workflow_hygiene.py` passes.
+
+---
+
+### M26: Upgrade `actions/checkout` and `astral-sh/setup-uv` Pins Across All GitHub Actions Workflows
+
+#### Task Spec
+- [`docs/tasks/M26_upgrade_github_actions_pins.md`](docs/tasks/M26_upgrade_github_actions_pins.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQW9A`)
+
+#### Context
+`.github/workflows/ci.yml`, `full-tests.yml`, `workflow.yaml`, and `e2e-containers.yml` still pin `actions/checkout@v4` (4/4) and `astral-sh/setup-uv@v4` (3/4), emitting GitHub Actions Node 20 deprecation warnings.
+
+#### Key Deliverables
+- Upgrade `actions/checkout` and `astral-sh/setup-uv` consistently to Node-24-ready versions across all 4 workflows.
+- Add pin consistency assertions in `tests/unit/test_workflow_hygiene.py`.
+
+#### Acceptance Criteria
+- [ ] All 4 workflows use consistent Node-24-ready `actions/checkout` and `astral-sh/setup-uv` pins with zero `@v4` references remaining, and `tests/unit/test_workflow_hygiene.py` passes.
+
+---
+
+### M27: Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi`
+
+#### Task Spec
+- [`docs/tasks/M27_guard_uv_build_in_run_e2e.md`](docs/tasks/M27_guard_uv_build_in_run_e2e.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQXBQ`)
+
+#### Context
+`tests/e2e_containers/run_e2e.sh` (lines 21–36) runs `uv build` and stages `${wheels[0]}` into `.wheel_stage/` even when `INSTALL_SOURCE=pypi`, wasting build time and risking stale wheel selection if `dist/` was not cleaned.
+
+#### Key Deliverables
+- Guard `uv build` and wheel staging in `tests/e2e_containers/run_e2e.sh` behind `if [ "$INSTALL_SOURCE" = "wheel" ]; then ... fi` while keeping `.wheel_stage/` present for Docker build context and cleaning stale wheels before building.
+- Add `tests/unit/test_e2e_runner_hygiene.py` verifying both `wheel` and `pypi` branches.
+
+#### Acceptance Criteria
+- [ ] `INSTALL_SOURCE=pypi` skips `uv build`, `INSTALL_SOURCE=wheel` purges stale wheels before building, and `tests/unit/test_e2e_runner_hygiene.py` plus both container E2E modes pass.
+
+---
+
+### M28: Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard
+
+#### Task Spec
+- [`docs/tasks/M28_fix_agents_md_retired_package_name.md`](docs/tasks/M28_fix_agents_md_retired_package_name.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQXFA`)
+
+#### Context
+`AGENTS.md` still references the retired package name `verity-core` on lines 5 and 12 (and hardcodes `"Tasks M1–M6"`), because `test_no_stale_package_references` in `tests/unit/test_documentation_parity.py` scans only `README.md` and `docs/extensibility.md`.
+
+#### Key Deliverables
+- Replace `verity-core` with `verity-redteam-core` and update the task board pointer in `AGENTS.md`.
+- Extend `test_no_stale_package_references` in `tests/unit/test_documentation_parity.py` to include `AGENTS.md`.
+
+#### Acceptance Criteria
+- [ ] `AGENTS.md` contains zero `verity-core` occurrences and `tests/unit/test_documentation_parity.py` guards `README.md`, `docs/extensibility.md`, and `AGENTS.md`.
+
+---
+
+### M29: Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`)
+
+#### Task Spec
+- [`docs/tasks/M29_exact_task_board_project_links.md`](docs/tasks/M29_exact_task_board_project_links.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKQXJA`)
+
+#### Context
+Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Project #5 root URL without exact `PVTI_…` item identifiers, unlike `M12`–`M29`.
+
+#### Key Deliverables
+- Harvest canonical `PVTI_…` item IDs from `gh project item-list 5 --owner JMartynov --format json` and backfill `M1`–`M11` in the `TASK_BOARD.md` Task Matrix and detailed sections.
+- Add dynamic task-board parity tests in `tests/unit/test_documentation_parity.py` asserting every discovered `M<N>` row has a unique `PVTI_…` ID and a valid spec link.
+
+#### Acceptance Criteria
+- [ ] Every row `M1`–`M29` in `TASK_BOARD.md` carries its exact, verified `PVTI_…` item ID in both the Task Matrix and detailed section, and `tests/unit/test_documentation_parity.py` passes.
