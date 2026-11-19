@@ -594,6 +594,87 @@ PY
 
 pass "scenario 6 complete"
 
+# ---------------- Scenario 7: unpinned MCP package detection (M15) ----------------
+UNPINNED_CFG="$OUT_DIR/unpinned_mcp.json"
+cat > "$UNPINNED_CFG" <<'JSON'
+{
+  "mcpServers": {
+    "mcp-remote-pinned": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@0.1.15", "https://remote.example.com/sse"]
+    },
+    "mcp-remote-unpinned": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://remote.example.com/sse"]
+    },
+    "local-clean-server": {
+      "command": "python3",
+      "args": ["/opt/fixtures/clean_stdio_mcp.py"]
+    }
+  }
+}
+JSON
+
+expect_exit 1 "unpinned package detection" "$OUT_DIR/s7_unpinned.txt" \
+  verity scan --config-file "$UNPINNED_CFG" --format json \
+  --output "$OUT_DIR/unpinned_check.json" --fail-on-findings
+
+python3 - "$OUT_DIR/unpinned_check.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+findings = report.get("findings", []) if isinstance(report, dict) else report
+assert isinstance(findings, list), findings
+
+unpinned = [
+    f for f in findings if f.get("rule_id") == "SEC-STATIC-UNPINNED-PACKAGE"
+]
+assert len(unpinned) == 1, f"expected one unpinned finding: {unpinned}"
+finding = unpinned[0]
+assert finding.get("severity") == "MEDIUM", finding
+assert finding.get("remediation"), finding
+assert "0.1.15" not in json.dumps(finding), finding
+
+vuln = [f for f in findings if f.get("rule_id") == "VULN-CVE-2025-6514"]
+assert vuln, f"mcp-remote-pinned missing VULN-CVE-2025-6514: {findings}"
+assert "0.1.15" in json.dumps(vuln[0]), vuln[0]
+
+for item in findings:
+    blob = json.dumps(item)
+    assert "npx mcp-remote" in blob or "0.1.15" in blob, item
+print("scenario 7 assertions passed")
+PY
+
+LOCAL_ONLY_CFG="$OUT_DIR/local_only_mcp.json"
+cat > "$LOCAL_ONLY_CFG" <<'JSON'
+{
+  "mcpServers": {
+    "local-clean-server": {
+      "command": "python3",
+      "args": ["/opt/fixtures/clean_stdio_mcp.py"]
+    }
+  }
+}
+JSON
+
+expect_exit 0 "local clean server no findings" "$OUT_DIR/s7_local.txt" \
+  verity scan --config-file "$LOCAL_ONLY_CFG" --format json \
+  --output "$OUT_DIR/local_only_check.json" --fail-on-findings
+
+python3 - "$OUT_DIR/local_only_check.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+findings = report.get("findings", []) if isinstance(report, dict) else report
+assert findings == [], f"local-clean-server produced findings: {findings}"
+print("scenario 7 local clean assertion passed")
+PY
+pass "scenario 7 complete"
+
 # ---------------- Final leak scan + snapshot export ----------------
 scan_for_leaks "$OUT_DIR"
 

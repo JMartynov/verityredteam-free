@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import logging
+import shlex
 from pathlib import Path
 from typing import Any
 
 from verity.discovery.config_scanner import MultiClientConfigScanner
-from verity.discovery.matcher import HybridDiscoveryMatcher
+from verity.discovery.matcher import HybridDiscoveryMatcher, is_floating_version
 from verity.discovery.models import (
     ClientType,
     ConsolidatedAuditReport,
@@ -22,6 +23,125 @@ from verity.discovery.transports.stdio import StdioDiscoveryTransport
 from verity.lookup.engine import VulnerabilityLookupEngine
 
 logger = logging.getLogger("verity.discovery.auditor")
+
+_FLOATING_RUNNERS = frozenset({"npx", "uvx", "pipx", "bunx"})
+_SHELL_INTERPRETERS = frozenset({"sh", "bash", "zsh", "cmd", "powershell"})
+_RUNNER_VALUE_FLAGS = frozenset(
+    {"--from", "-p", "--package", "--spec", "--with", "--python"}
+)
+_RUNNER_PACKAGE_FLAGS = frozenset({"--from", "-p", "--package", "--spec"})
+_RUNNER_SUBCOMMANDS = frozenset({"run"})
+_LOCAL_PATH_PREFIXES = ("/", "./", "../", "~/")
+_LOCAL_PATH_SUFFIXES = (".py", ".js", ".ts", ".mjs", ".cjs")
+
+
+def _is_url_token(token: str) -> bool:
+    return "://" in token
+
+
+def _is_local_path_token(token: str) -> bool:
+    text = token.strip()
+    if not text:
+        return False
+    if text.startswith(_LOCAL_PATH_PREFIXES):
+        return True
+    return text.lower().endswith(_LOCAL_PATH_SUFFIXES)
+
+
+def _command_basename(command: str | None) -> str:
+    if not command:
+        return ""
+    return Path(command.strip()).name.lower()
+
+
+def _shell_tokens(config: DiscoveredServerConfig) -> list[str] | None:
+    """Extract the command tokens from a shell ``-c`` style invocation."""
+    args = list(config.args)
+    for index, arg in enumerate(args):
+        if arg in ("-c", "-lc", "/c") and index + 1 < len(args):
+            try:
+                return shlex.split(args[index + 1])
+            except ValueError:
+                return None
+    return None
+
+
+def _runner_tokens(config: DiscoveredServerConfig) -> tuple[str, list[str]] | None:
+    """Return ``(runner_name, tokens)`` when the config invokes a floating runner."""
+    base = _command_basename(config.command)
+    if base in _FLOATING_RUNNERS:
+        return base, list(config.args)
+    if base in _SHELL_INTERPRETERS:
+        tokens = _shell_tokens(config)
+        if not tokens:
+            return None
+        runner = Path(tokens[0]).name.lower()
+        if runner in _FLOATING_RUNNERS:
+            return runner, tokens[1:]
+    return None
+
+
+def _is_package_candidate(token: str) -> bool:
+    """Return True when ``token`` can name a runnable package."""
+    return bool(
+        token
+        and not token.startswith("-")
+        and not _is_url_token(token)
+        and not _is_local_path_token(token)
+    )
+
+
+def _extract_package_token(runner: str, tokens: list[str]) -> str | None:
+    """Return the executed package specifier for a floating runner invocation."""
+    positional: str | None = None
+    index = 0
+    while index < len(tokens):
+        token = tokens[index]
+        index += 1
+        if not token:
+            continue
+        if token.startswith("-"):
+            flag, sep, inline_value = token.partition("=")
+            value: str | None = inline_value if sep else None
+            if value is None and flag in _RUNNER_VALUE_FLAGS and index < len(tokens):
+                value = tokens[index]
+                index += 1
+            if (
+                flag in _RUNNER_PACKAGE_FLAGS
+                and value
+                and _is_package_candidate(value)
+            ):
+                return value
+            continue
+        if runner == "pipx" and token in _RUNNER_SUBCOMMANDS:
+            continue
+        if positional is None and _is_package_candidate(token):
+            positional = token
+    return positional
+
+
+def _detect_unpinned_runner(
+    config: DiscoveredServerConfig,
+) -> tuple[str, str] | None:
+    """Return ``(runner, package_token)`` when a floating runner is unpinned."""
+    invocation = _runner_tokens(config)
+    if invocation is None:
+        return None
+    runner, tokens = invocation
+    package_token = _extract_package_token(runner, tokens)
+    if not package_token:
+        return None
+    _name, version = HybridDiscoveryMatcher._split_specifier(package_token)
+    if version is not None and not is_floating_version(version):
+        return None
+    return runner, package_token
+
+
+def _pinned_example(runner: str, package_token: str) -> str:
+    name, _version = HybridDiscoveryMatcher._split_specifier(package_token)
+    if runner in ("uvx", "pipx"):
+        return f"{name}==<version>"
+    return f"{name}@<version>"
 
 
 class ConsolidatedSecurityAuditor:
@@ -89,6 +209,34 @@ class ConsolidatedSecurityAuditor:
                 )
             )
 
+        unpinned_runner = _detect_unpinned_runner(config)
+        if unpinned_runner is not None:
+            runner_name, package_token = unpinned_runner
+            findings.append(
+                SecurityAuditFinding(
+                    issue_id="SEC-STATIC-UNPINNED-PACKAGE",
+                    severity=FindingSeverity.MEDIUM,
+                    title="Unpinned MCP Package Execution",
+                    description=(
+                        f"Server is launched with floating runner '{runner_name}' "
+                        f"without a pinned version for '{package_token}'. Each "
+                        "start may fetch and execute a different, unverified "
+                        "release, exposing the client to typosquatting, package "
+                        "takeover, and supply-chain compromise."
+                    ),
+                    server_name=config.server_name,
+                    client_type=config.client_type,
+                    config_path=config.config_path,
+                    cwe_ids=("CWE-1104", "CWE-829"),
+                    remediation=(
+                        "Pin an exact package version (e.g. "
+                        f"'{_pinned_example(runner_name, package_token)}') or run "
+                        "a locally audited path."
+                    ),
+                    redacted_evidence=f"{runner_name} {package_token}",
+                )
+            )
+
         # 2. Capability Probing & Fingerprint Matching
         live_cap: LiveServerCapability | None = None
         matched_pkg = None
@@ -126,8 +274,10 @@ class ConsolidatedSecurityAuditor:
 
 
         # 3. Correlate with OSV Vulnerability Database
-        if matched_pkg and self.vuln_engine:
-            lookup_res = self.vuln_engine.query(identifier=matched_pkg, version=matched_ver)
+        if matched_pkg and matched_ver and self.vuln_engine:
+            lookup_res = self.vuln_engine.query(
+                identifier=matched_pkg, version=matched_ver
+            )
             if lookup_res.vulnerabilities:
                 for v in lookup_res.vulnerabilities:
                     vuln_tools = tuple(v.vulnerable_tools)
@@ -273,11 +423,12 @@ class ConsolidatedSecurityAuditor:
             lines.append("| - | *No MCP servers discovered* | - | - | - | - | - |")
         else:
             for s in report.server_records:
-                ident = (
-                    f"`{s.matched_package}@{s.matched_version}`"
-                    if s.matched_package
-                    else "*Unknown Package*"
-                )
+                if s.matched_package and s.matched_version:
+                    ident = f"`{s.matched_package}@{s.matched_version}`"
+                elif s.matched_package:
+                    ident = f"`{s.matched_package}` (unpinned)"
+                else:
+                    ident = "*Unknown Package*"
                 conf_str = f"{int(s.confidence_score * 100)}%" if s.confidence_score else "0%"
                 sev_badge = f"**{s.highest_severity.value}**"
                 f_count = str(len(s.findings))

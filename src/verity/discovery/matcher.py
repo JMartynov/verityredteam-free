@@ -11,6 +11,19 @@ from verity.fingerprint.models import FingerprintMatchResult
 
 logger = logging.getLogger("verity.discovery.matcher")
 
+_FLOATING_VERSION_MARKERS = frozenset({"", "*", "latest", "next", "canary"})
+_FLOATING_VERSION_PREFIXES = ("^", "~", ">", "<")
+
+
+def is_floating_version(version: str | None) -> bool:
+    """Return True when ``version`` does not pin an exact release."""
+    if version is None:
+        return True
+    text = version.strip().lower()
+    if text in _FLOATING_VERSION_MARKERS:
+        return True
+    return text.startswith(_FLOATING_VERSION_PREFIXES)
+
 
 class HybridDiscoveryMatcher:
     """Combines Tier 1 exact cryptographic matching with Tier 2 topological graph matching."""
@@ -39,6 +52,8 @@ class HybridDiscoveryMatcher:
         """Split a package token into ``(name, version)`` for ``@`` and ``==`` specifiers."""
         text = token.strip()
         if not text:
+            return text, None
+        if "://" in text:
             return text, None
         if "==" in text:
             name, _, version = text.partition("==")
@@ -85,21 +100,19 @@ class HybridDiscoveryMatcher:
 
         target_version: str | None = None
         for clean_token, version in parsed_tokens:
-            if not version:
+            if is_floating_version(version):
                 continue
             spec = self.matcher.fast_index.find_package_by_hint_or_alias(clean_token)
             if spec and spec.package_name == matched_spec.package_name:
                 target_version = version
 
-        matched_v = target_version or (
-            matched_spec.versions[-1].version if matched_spec.versions else "1.0.0"
-        )
+        is_pinned = target_version is not None
         return FingerprintMatchResult(
             matched=True,
             package_name=matched_spec.package_name,
             purl=matched_spec.purl,
-            matched_version=matched_v,
-            confidence_score=0.85,
+            matched_version=target_version if is_pinned else None,
+            confidence_score=0.85 if is_pinned else 0.65,
             match_layer="STATIC_CONFIG_MATCH",
             matched_tool_count=(
                 len(matched_spec.versions[-1].tool_signatures)
