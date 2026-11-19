@@ -4,8 +4,8 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Completed — Wave 2 (M7–M10 Verified)  
-> **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Target (Wave 2 `M7`–`M10`)  
+> **Status**: Active — Release Polish & `v0.2.0` PyPI Publish (`M11`)  
+> **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Release (`M7`–`M11`)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
 
@@ -38,6 +38,7 @@ flowchart TD
         M8["M8: Empty-Container E2E Verification Suite<br/>(Wheel/PyPI install, real + fixture MCP targets)"]
         M9["M9: Dynamic Narrow Screencast GIF<br/>(VHS in Docker, ~860x440, 4 live scenarios)"]
         M10["M10: Customer-Focused README &amp; Parity Guard<br/>(6 pain points, verified outputs, CI doc parity)"]
+        M11["M11: Credential Hardening, Polish &amp; v0.2.0 PyPI<br/>(DSN + value secrets, SPDX license, no_wrap, live PyPI)"]
     end
 
     M1 --> M2
@@ -51,6 +52,7 @@ flowchart TD
     M8 --> M9
     M8 --> M10
     M9 --> M10
+    M10 --> M11
 ```
 
 ---
@@ -69,6 +71,7 @@ flowchart TD
 | **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Done` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
 | **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Done` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
 | **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Done` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
+| **M11** | **Credential Detection Hardening, Packaging/Display Polish & `v0.2.0` PyPI Release** | DSN & value-pattern secret checks, SPDX license, `Rule` `no_wrap=True`, `v0.2.0` publish + live PyPI E2E | [M11_credential_hardening_polish_and_v020_release.md](docs/tasks/M11_credential_hardening_polish_and_v020_release.md) | `In Progress` | [View Item #M11](https://github.com/users/JMartynov/projects/5) |
 
 ---
 
@@ -520,3 +523,23 @@ uv run ruff check src tests
 - [x] All 6 customer pain points include exact commands, verbatim `M8`-verified outputs, and clear value explanations.
 - [x] `README.md` hero displays animated `docs/assets/demo.gif` and accurately reflects all Free features without stale mocks.
 - [x] `tests/unit/test_documentation_parity.py` passes alongside full `pytest` and `ruff` checks.
+
+---
+
+### M11: Credential Detection Hardening, Packaging/Display Polish & `v0.2.0` PyPI Release
+
+#### Task Spec
+- [`docs/tasks/M11_credential_hardening_polish_and_v020_release.md`](docs/tasks/M11_credential_hardening_polish_and_v020_release.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKNnNg`)
+
+#### Context
+Harden secret detection for DSN credential URLs (`postgres://user:pass@...`) and `SECRET_VALUE_PATTERNS` under arbitrary env keys, modernize `pyproject.toml` SPDX license to eliminate `SetuptoolsDeprecationWarning`, prevent rule-ID ellipsis in narrow terminals (`no_wrap=True`), bump to `0.2.0`, publish via PyPI Trusted Publishing, and verify cold live PyPI installs via `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh`.
+
+#### Key Deliverables
+- `MultiClientConfigScanner.DSN_CREDENTIAL_PATTERN` and `is_secret_env_entry()` shared across `config_scanner.py`, `auditor.py`, and `cli.py` (with `${VAR}` exemptions including `${DB_PASS}` inside DSN URLs).
+- `pyproject.toml` (`setuptools>=77.0.0`, `license = "Apache-2.0"`, `version = "0.2.0"`), `src/verity/__init__.py` (`0.2.0`), `terminal.py` (`no_wrap=True` on `Rule`), and parity unit tests.
+- Git push `main` + tag `v0.2.0` -> PyPI Trusted Publishing + `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh`.
+
+#### Acceptance Criteria
+- [ ] DSN credentials and `SECRET_VALUE_PATTERNS` under arbitrary env keys are flagged and scrubbed cleanly across all formats, with `${VAR}` placeholders exempt.
+- [ ] `uv build` produces `0.2.0` with zero `SetuptoolsDeprecationWarning`, and `terminal.py` renders un-ellipsized rule IDs.
+- [ ] `verity-redteam-core==0.2.0` is published on PyPI and `INSTALL_SOURCE=pypi ./tests/e2e_containers/run_e2e.sh` passes across all 4 clean containers.
