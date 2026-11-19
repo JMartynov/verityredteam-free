@@ -4,14 +4,14 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Completed (v0.1.0-alpha Released)  
-> **Target Baseline**: `v0.1.0-alpha` (Free Core) / `v0.3.0` (Enterprise Pro)  
+> **Status**: Active — Wave 2 (Customer Experience, Ground-Zero Verification & Launch Polish)  
+> **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Target (Wave 2 `M7`–`M10`)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
 
 ---
 
-## 🗺️ High-Level Roadmap & 6-Task Migration Pipeline
+## 🗺️ High-Level Roadmap & 10-Task Delivery Pipeline
 
 ```mermaid
 flowchart TD
@@ -33,26 +33,42 @@ flowchart TD
         M6["M6: CI/CD &amp; Launch Readiness<br/>(GitHub Actions matrix, wheel build, multi-tier regression)"]
     end
 
+    subgraph Phase5["Phase 5: Customer Experience &amp; Ground-Zero Verification"]
+        M7["M7: CLI Parity, Auditor Wiring &amp; YAML Configs<br/>(Secret scrubbing, shell wrappers, OSV CVEs, YAML)"]
+        M8["M8: Empty-Container E2E Verification Suite<br/>(Wheel/PyPI install, real + fixture MCP targets)"]
+        M9["M9: Dynamic Narrow Screencast GIF<br/>(VHS in Docker, ~860x440, 4 live scenarios)"]
+        M10["M10: Customer-Focused README &amp; Parity Guard<br/>(6 pain points, verified outputs, CI doc parity)"]
+    end
+
     M1 --> M2
     M1 --> M3
     M2 --> M4
     M3 --> M4
     M4 --> M5
     M5 --> M6
+    M6 --> M7
+    M7 --> M8
+    M8 --> M9
+    M8 --> M10
+    M9 --> M10
 ```
 
 ---
 
 ## 📋 Task Matrix & Status Overview
 
-| Task Key | Task Title | Architectural Scope | Status | GitHub Project #5 Item |
-| :---: | :--- | :--- | :---: | :---: |
-| **M1** | **Plugin Foundation & Core MCP Server** | Plugin protocols, entry points, stdlib JSON-RPC MCP server | `Done` | [View Item #M1](https://github.com/users/JMartynov/projects/5) |
-| **M2** | **Workstation Discovery & Static Screening** | 9-client scanner, 13-rule StaticRuleEvaluator, fingerprinting, OSV cache | `Done` | [View Item #M2](https://github.com/users/JMartynov/projects/5) |
-| **M3** | **Deterministic SQL AST Guard** | Cohesive 245-line `SqlSecurityGuard` (`sqlglot`), Pro Snowflake guard | `Done` | [View Item #M3](https://github.com/users/JMartynov/projects/5) |
-| **M4** | **Link `verity-pro` to `verity-core` via `uv` Workspace** | `[tool.uv.sources]`, `src/verity_pro/` packaging, remove duplicated core | `Done` | [View Item #M4](https://github.com/users/JMartynov/projects/5) |
-| **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | `Done` | [View Item #M5](https://github.com/users/JMartynov/projects/5) |
-| **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
+| Task Key | Task Title | Architectural Scope | Task Spec | Status | GitHub Project #5 Item |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| **M1** | **Plugin Foundation & Core MCP Server** | Plugin protocols, entry points, stdlib JSON-RPC MCP server | Inline below | `Done` | [View Item #M1](https://github.com/users/JMartynov/projects/5) |
+| **M2** | **Workstation Discovery & Static Screening** | 9-client scanner, 13-rule StaticRuleEvaluator, fingerprinting, OSV cache | Inline below | `Done` | [View Item #M2](https://github.com/users/JMartynov/projects/5) |
+| **M3** | **Deterministic SQL AST Guard** | Cohesive 245-line `SqlSecurityGuard` (`sqlglot`), Pro Snowflake guard | Inline below | `Done` | [View Item #M3](https://github.com/users/JMartynov/projects/5) |
+| **M4** | **Link `verity-pro` to `verity-core` via `uv` Workspace** | `[tool.uv.sources]`, `src/verity_pro/` packaging, remove duplicated core | Inline below | `Done` | [View Item #M4](https://github.com/users/JMartynov/projects/5) |
+| **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | Inline below | `Done` | [View Item #M5](https://github.com/users/JMartynov/projects/5) |
+| **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | Inline below | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
+| **M7** | **CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support** | Wire secret scrubbing, shell wrappers, OSV CVEs & YAML parsing into `verity scan` | [M7_cli_parity_and_auditor_wiring.md](docs/tasks/M7_cli_parity_and_auditor_wiring.md) | `Todo` | [View Item #M7](https://github.com/users/JMartynov/projects/5) |
+| **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Todo` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
+| **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Todo` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
+| **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Todo` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
 
 ---
 
@@ -383,3 +399,124 @@ Automate quality gates on both repositories and prepare public launch assets. En
 - [ ] `uv build` produces a valid installable wheel (`dist/verity_core-*.whl`).
 - [ ] Pro unit and acceptance suites pass with zero regressions.
 - [ ] Public documentation accurately reflects the open-core boundary and quickstart workflow.
+
+---
+
+## 🚀 Wave 2: Customer Experience, Ground-Zero Verification & Launch Polish
+
+---
+
+### M7: CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support
+
+#### Task Spec
+- [`docs/tasks/M7_cli_parity_and_auditor_wiring.md`](docs/tasks/M7_cli_parity_and_auditor_wiring.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKMCKw`)
+
+#### Context
+Today `verity scan` (`src/verity/cli.py`) bypasses `ConsolidatedSecurityAuditor` (`src/verity/discovery/auditor.py`), silently skips `.continue/config.yaml` and `librechat.yaml`, leaves a stale `--server`/`--vuln` template in `src/verity/discovery/active_bridge.py`, and checks only `"sarif"`/`"sarif_export"` in `_load_sarif_exporter()`. Fixing these CLI parity gaps first guarantees every customer-facing promise passes ground-zero verification in `M8` and `M10`.
+
+#### Key Deliverables
+- Wire `ConsolidatedSecurityAuditor` into `verity scan` (workstation default & `--config-file`) for plaintext secret scrubbing (`SEC-STATIC-SECRET-IN-CONFIG`), raw shell wrapper checks (`SEC-STATIC-UNSAFE-SHELL-WRAPPER`), Passport fingerprinting, and offline OSV CVE correlation (`VULN-*`).
+- Add YAML parsing support for `.continue/config.yaml` and `librechat.yaml` in `config_scanner.py` and `cli.py`.
+- Replace stale `ActiveExploitBridge.DEFAULT_CLI_COMMAND_TEMPLATE` flags with valid `verity` CLI syntax and align `_load_sarif_exporter()` entry-point discovery.
+- Add unit tests covering secret non-leakage across all output formats (`terminal`, `json`, `markdown`, `html`), shell wrappers, OSV CVEs, YAML configs, and `--fail-on-findings`.
+
+#### Verification
+```bash
+cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
+uv run ruff check src tests
+uv run pytest tests/ -q
+
+cd /Users/ivan/Project/3t.tools.intellij/verityredteam
+uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -q
+```
+
+#### Acceptance Criteria
+- [ ] `verity scan` reports scrubbed config secrets (`****`), shell wrappers, static schema findings, and offline OSV CVEs.
+- [ ] Raw config secrets never appear unmasked in `terminal`, `json`, `markdown`, or `html` output.
+- [ ] YAML configs for Continue and LibreChat parse cleanly via `scan_all()` and `--config-file`.
+- [ ] Zero Pro imports exist in `verityredteam-free`, and Pro MCP agent tests pass with zero regressions.
+
+---
+
+### M8: Ground-Zero Empty-Container E2E Customer Verification Suite
+
+#### Task Spec
+- [`docs/tasks/M8_empty_container_e2e_verification.md`](docs/tasks/M8_empty_container_e2e_verification.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKMCQA`)
+
+#### Context
+Validate every customer workflow from scratch inside empty Docker containers with zero pre-installed `verity`, zero editable host mounts, and zero host caches — installing `verity-redteam-core` (`INSTALL_SOURCE=wheel` or `pypi`) alongside both real public vulnerable MCP packages and self-contained vulnerable fixtures.
+
+#### Key Deliverables
+- 4-container verification matrix under `tests/e2e_containers/`: `customer-pip` (`python:3.12-slim-bookworm`), `customer-uvx` (`ghcr.io/astral-sh/uv:python3.12-bookworm-slim`), `customer-full-workstation` (`ubuntu:24.04`), and isolated `target-sse-lab`.
+- Ground-zero setup of pinned real targets (`mcp-remote@0.1.15` for `CVE-2025-6514`, pinned DVMCP) AND deterministic fixtures (stdio/SSE poisoned servers, unsafe AST handlers, realistic IDE configs, adversarial SQL corpus).
+- `tests/e2e_containers/verify_all_scenarios.sh` exercising all 6 customer scenarios (workstation scan, live stdio/SSE probing, SQL AST guard CLI + Python API, Python AST CI gate, 4-target `--demo`, `verity serve` HTTP `/health` & stdio JSON-RPC) and exporting sanitized output snapshots under `tests/e2e_containers/snapshots/`.
+- Opt-in `.github/workflows/e2e-containers.yml` keeping `.github/workflows/ci.yml` strictly zero-Docker.
+
+#### Verification
+```bash
+cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
+uv build
+INSTALL_SOURCE=wheel docker compose -f tests/e2e_containers/docker-compose.verify.yml build --no-cache
+INSTALL_SOURCE=wheel docker compose -f tests/e2e_containers/docker-compose.verify.yml up --abort-on-container-exit --exit-code-from customer-pip
+docker compose -f tests/e2e_containers/docker-compose.verify.yml down -v
+```
+
+#### Acceptance Criteria
+- [ ] Clean-room install succeeds from fresh wheel (and supports `INSTALL_SOURCE=pypi`) with zero host repo mounts.
+- [ ] Both public vulnerable MCP packages and deterministic fixtures install from scratch and trigger expected findings/exit codes.
+- [ ] All 6 scenarios pass end-to-end and produce sanitized verbatim snapshots for `M10`.
+
+---
+
+### M9: Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)
+
+#### Task Spec
+- [`docs/tasks/M9_dynamic_narrow_demo_gif.md`](docs/tasks/M9_dynamic_narrow_demo_gif.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKMCU4`)
+
+#### Context
+Replace the static, oversized SVG ([`docs/assets/demo.svg`](docs/assets/demo.svg), `1285 × 1975.6 px`, stale `verity-core` name) with a genuinely animated, narrow terminal screencast GIF (`docs/assets/demo.gif`) recorded reproducibly via Charmbracelet VHS in Docker from live `verity` runs.
+
+#### Key Deliverables
+- `docs/assets/demo.tape` configured at narrow compact geometry (`Width 860`, `Height 440`, `FontSize 14`, `Framerate 18`) covering 4 dynamic ~6s scenes: workstation config/secret scan, live `stdio` poisoned MCP probe, SQL AST injection block vs. pass, and `--demo` + Python AST CI gate.
+- `scripts/record_demo_gif.sh` running VHS inside Docker against freshly installed `verity-redteam-core` + `M8` fixtures and optimizing output via `gifsicle -O3 --lossy=30 --colors 128`.
+- Generated `docs/assets/demo.gif` (`< 2.5 MB`, `width <= 900 px`, `height <= 480 px`, `n_frames >= 100`).
+
+#### Verification
+```bash
+cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
+./scripts/record_demo_gif.sh
+python3 -c 'from PIL import Image; im=Image.open("docs/assets/demo.gif"); assert im.is_animated and im.n_frames>=100 and im.size[0]<=900 and im.size[1]<=480'
+```
+
+#### Acceptance Criteria
+- [ ] `docs/assets/demo.gif` animates smoothly across all 4 live scenarios with crisp, unwrapped Rich tables.
+- [ ] Dimensions stay compact (`<= 900 × 480 px`), file size is `< 2.5 MB`, and zero stale `verity-core` references remain.
+- [ ] Fully reproducible from `docs/assets/demo.tape` via `./scripts/record_demo_gif.sh`.
+
+---
+
+### M10: Customer-Focused `README.md` Restructure & CLI Documentation Parity Test
+
+#### Task Spec
+- [`docs/tasks/M10_customer_readme_restructure_and_parity.md`](docs/tasks/M10_customer_readme_restructure_and_parity.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhKMCYw`)
+
+#### Context
+Transform `README.md` from an 89-line internal open-core note into a customer-centered product guide focused on real developer/AppSec pain points, exact commands, container-verified outputs from `M8`, and the narrow animated `docs/assets/demo.gif` from `M9`, guarded by an automated CLI documentation parity test.
+
+#### Key Deliverables
+- Restructured `README.md` with: `uvx`/`pip` install, `demo.gif` hero, 6 pain-point-to-solution walkthroughs (using verbatim `M8` snapshots), full Free capability tables (9 clients, 13 static rules, 9 AST rules, `SqlSecurityGuard` Python API, formats & exit codes), GitHub Actions CI snippet, `verity serve` MCP JSON setup, and honest Free vs. Enterprise matrix.
+- Move plugin `entry_points` boilerplate out to `docs/extensibility.md` and retire static `docs/assets/demo.svg`.
+- Add `tests/unit/test_documentation_parity.py` asserting all README `verity` subcommands/flags/choices match `src/verity/cli.py`, zero stale `verity-core` install commands remain, and all local links/assets exist.
+
+#### Verification
+```bash
+cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
+uv run pytest tests/unit/test_documentation_parity.py -q
+uv run pytest tests/ -q
+uv run ruff check src tests
+```
+
+#### Acceptance Criteria
+- [ ] All 6 customer pain points include exact commands, verbatim `M8`-verified outputs, and clear value explanations.
+- [ ] `README.md` hero displays animated `docs/assets/demo.gif` and accurately reflects all Free features without stale mocks.
+- [ ] `tests/unit/test_documentation_parity.py` passes alongside full `pytest` and `ruff` checks.
