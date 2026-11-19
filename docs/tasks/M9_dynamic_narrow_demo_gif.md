@@ -2,7 +2,7 @@
 
 - **Task ID**: `M9`
 - **Priority**: `P1`
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: `M7`, `M8`
 - **Blocks**: `M10`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
@@ -81,11 +81,11 @@ PY
 
 ## 6. Acceptance Criteria
 
-- [ ] `docs/assets/demo.gif` is a genuinely animated multi-frame GIF (`is_animated == True`, `n_frames >= 100`, smooth typing + scene transitions across all 4 scenes).
-- [ ] Geometry is narrow and crisp (`width <= 900 px`, `height <= 480 px`, targeting `860 × 440 px`) with zero wrapped/broken Rich table borders.
-- [ ] File size is `< 2.5 MB` after `gifsicle` optimization.
-- [ ] All commands shown in the GIF use valid `verity` / `verity-redteam-core` syntax (zero stale `verity-core` references) and record live output from real CLI execution.
-- [ ] `./scripts/record_demo_gif.sh` cleanly regenerates `docs/assets/demo.gif` from `docs/assets/demo.tape` inside Docker with zero host dependencies beyond Docker.
+- [x] `docs/assets/demo.gif` is a genuinely animated multi-frame GIF (`is_animated == True`, `n_frames >= 100`, smooth typing + scene transitions across all 4 scenes).
+- [x] Geometry is narrow and crisp (`width <= 900 px`, `height <= 480 px`, targeting `860 × 440 px`) with zero wrapped/broken Rich table borders.
+- [x] File size is `< 2.5 MB` after `gifsicle` optimization.
+- [x] All commands shown in the GIF use valid `verity` / `verity-redteam-core` syntax (zero stale `verity-core` references) and record live output from real CLI execution.
+- [x] `./scripts/record_demo_gif.sh` cleanly regenerates `docs/assets/demo.gif` from `docs/assets/demo.tape` inside Docker with zero host dependencies beyond Docker.
 
 ---
 

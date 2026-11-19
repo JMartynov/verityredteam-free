@@ -67,7 +67,7 @@ flowchart TD
 | **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | Inline below | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
 | **M7** | **CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support** | Wire secret scrubbing, shell wrappers, OSV CVEs & YAML parsing into `verity scan` | [M7_cli_parity_and_auditor_wiring.md](docs/tasks/M7_cli_parity_and_auditor_wiring.md) | `Done` | [View Item #M7](https://github.com/users/JMartynov/projects/5) |
 | **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Done` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
-| **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Todo` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
+| **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Done` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
 | **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Todo` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
 
 ---
@@ -489,9 +489,9 @@ python3 -c 'from PIL import Image; im=Image.open("docs/assets/demo.gif"); assert
 ```
 
 #### Acceptance Criteria
-- [ ] `docs/assets/demo.gif` animates smoothly across all 4 live scenarios with crisp, unwrapped Rich tables.
-- [ ] Dimensions stay compact (`<= 900 × 480 px`), file size is `< 2.5 MB`, and zero stale `verity-core` references remain.
-- [ ] Fully reproducible from `docs/assets/demo.tape` via `./scripts/record_demo_gif.sh`.
+- [x] `docs/assets/demo.gif` animates smoothly across all 4 live scenarios with crisp, unwrapped Rich tables.
+- [x] Dimensions stay compact (`<= 900 × 480 px`), file size is `< 2.5 MB`, and zero stale `verity-core` references remain.
+- [x] Fully reproducible from `docs/assets/demo.tape` via `./scripts/record_demo_gif.sh`.
 
 ---
 
