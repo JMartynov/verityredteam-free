@@ -19,6 +19,10 @@ from verity.reporting import (
     render_test_markdown,
     render_test_terminal,
 )
+from verity.scanner.credential_patterns import (
+    CREDENTIAL_VALUE_PATTERNS,
+    PEM_PRIVATE_KEY_BLOCK_PATTERN,
+)
 
 _SEVERITY_ORDER = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO")
 _SEVERITY_RANK = {sev: idx for idx, sev in enumerate(_SEVERITY_ORDER)}
@@ -259,16 +263,24 @@ def _render_test(results: list[dict[str, Any]], fmt: str) -> str:
     return render_test_terminal(results)
 
 
+def _collect_redaction_targets(text: str, secrets: list[str]) -> list[str]:
+    """Return every explicit secret and credential-pattern match in ``text``."""
+    targets = {secret for secret in secrets if secret and secret in text}
+    for match in PEM_PRIVATE_KEY_BLOCK_PATTERN.finditer(text):
+        targets.add(match.group(0))
+    for pattern in CREDENTIAL_VALUE_PATTERNS:
+        for match in pattern.finditer(text):
+            targets.add(match.group(0))
+    return sorted(targets, key=len, reverse=True)
+
+
 def _scrub_secrets(finding: dict[str, Any], secrets: list[str]) -> dict[str, Any]:
     """Replace any known plaintext secret values with ``****`` in string fields."""
-    if not secrets:
-        return finding
     scrubbed: dict[str, Any] = {}
     for key, value in finding.items():
         if isinstance(value, str):
-            for secret in secrets:
-                if secret and secret in value:
-                    value = value.replace(secret, "****")
+            for secret in _collect_redaction_targets(value, secrets):
+                value = value.replace(secret, "****")
         scrubbed[key] = value
     return scrubbed
 
@@ -352,6 +364,12 @@ def _collect_config_findings(
                         pwd = dsn_match.group(1)
                         if len(pwd) >= 4 and pwd not in secrets:
                             secrets.append(pwd)
+                    for pem_match in PEM_PRIVATE_KEY_BLOCK_PATTERN.finditer(
+                        candidate_text
+                    ):
+                        pem_value = pem_match.group(0)
+                        if pem_value and pem_value not in secrets:
+                            secrets.append(pem_value)
 
             if auditor is not None:
                 try:

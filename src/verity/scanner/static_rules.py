@@ -18,6 +18,7 @@ import unicodedata
 from dataclasses import asdict, dataclass, field
 from typing import Any, ClassVar
 
+from verity.scanner.credential_patterns import CREDENTIAL_VALUE_PATTERNS
 from verity.scanner.models import ScannerSeverity
 
 
@@ -280,14 +281,11 @@ class StaticRuleEvaluator:
             title="Sensitive Credential Value or Key Block",
             description="Metadata contains embedded private keys, adjacent assigned API credentials, or sensitive path references.",
             patterns=(
-                re.compile(
-                    r"-----BEGIN (RSA |OPENSSH |EC |DSA |PRIVATE KEY|ENCRYPTED PRIVATE KEY)-----"
-                ),
                 # Proximity match: credential key followed immediately (<=24 chars) by an actual assigned token
                 re.compile(
                     r"(?i)\b(api[_\-]?key|secret[_\-]?key|access[_\-]?token)\s*[:=]\s*['\"][A-Za-z0-9_\-]{16,}['\"]"
                 ),
-                re.compile(r"\b(AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|sk-[A-Za-z0-9]{48})\b"),
+                *CREDENTIAL_VALUE_PATTERNS,
                 re.compile(r"(?i)(/etc/passwd|/etc/shadow)"),
                 re.compile(r"(?i)(~|/home/[^/]+)/\.ssh/(id_rsa|id_ed25519|authorized_keys)"),
                 re.compile(r"(?i)(~|/home/[^/]+)/\.aws/(credentials|config)"),

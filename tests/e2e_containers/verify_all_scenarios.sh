@@ -47,6 +47,9 @@ SECRETS=(
   "ghp_VerityE2eSecretToken1234567890abcdef"
   "sk-continue-yaml-secret-8888888888"
   "sk-exported-host-env-should-not-flag"
+  "AKIAVERITYE2ETEST0001"
+  "verityE2eFakeSecretKey0000000000000000000"
+  "MIIVerityFakeKeyMaterial"
 )
 
 scan_for_leaks() {
@@ -84,6 +87,23 @@ cat > "$HOME/.cursor/mcp.json" <<'JSON'
       "args": ["mcp-server-fetch"],
       "env": {
         "OPENAI_API_KEY": "${OPENAI_API_KEY}"
+      }
+    },
+    "aws-kb-retrieval": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-aws-kb-retrieval"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "AKIAVERITYE2ETEST0001",
+        "AWS_SECRET_ACCESS_KEY": "verityE2eFakeSecretKey0000000000000000000",
+        "PRIVATE_KEY_PEM": "-----BEGIN RSA PRIVATE KEY-----\nMIIVerityFakeKeyMaterial\n-----END RSA PRIVATE KEY-----"
+      }
+    },
+    "aws-kb-safe": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-aws-kb-retrieval"],
+      "env": {
+        "AWS_ACCESS_KEY_ID": "${AWS_ACCESS_KEY_ID}",
+        "AWS_SECRET_ACCESS_KEY": "$AWS_SECRET_ACCESS_KEY"
       }
     }
   }
@@ -185,6 +205,52 @@ for finding in secret_findings:
         f"safe-env-server incorrectly flagged: {finding}"
     )
 print("scenario 1 assertions passed")
+PY
+
+expect_exit 1 "scan aws credentials --fail-on-findings" "$OUT_DIR/s1_aws.txt" \
+  verity scan --config-file "$HOME/.cursor/mcp.json" --format json \
+  --output "$OUT_DIR/aws_scan.json" --fail-on-findings
+verity scan --format markdown --output "$OUT_DIR/aws_scan.md" \
+  > "$OUT_DIR/s1_aws_md.txt" 2>&1 || true
+[ -s "$OUT_DIR/aws_scan.json" ] || fail "aws_scan.json empty"
+[ -s "$OUT_DIR/aws_scan.md" ] || fail "aws_scan.md empty"
+
+python3 - "$OUT_DIR/aws_scan.json" "$OUT_DIR/aws_scan.md" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+findings = report.get("findings", []) if isinstance(report, dict) else report
+secret_findings = [
+    f for f in findings if f.get("rule_id") == "SEC-STATIC-SECRET-IN-CONFIG"
+]
+blob = json.dumps(secret_findings)
+for key in ("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "PRIVATE_KEY_PEM"):
+    matching = [
+        f
+        for f in secret_findings
+        if key in json.dumps(f) and "****" in str(f.get("message", ""))
+    ]
+    assert matching, f"missing per-key finding with '****' for {key}: {blob}"
+for raw in (
+    "AKIAVERITYE2ETEST0001",
+    "verityE2eFakeSecretKey0000000000000000000",
+    "MIIVerityFakeKeyMaterial",
+):
+    assert raw not in blob, f"raw secret leaked into findings: {raw}"
+assert "aws-kb-safe" not in blob, f"safe twin incorrectly flagged: {blob}"
+
+json_text = Path(sys.argv[1]).read_text(encoding="utf-8")
+md_text = Path(sys.argv[2]).read_text(encoding="utf-8")
+for needle in (
+    "-----BEGIN RSA PRIVATE KEY-----",
+    "MIIVerityFakeKeyMaterial",
+):
+    assert needle not in json_text, f"raw PEM leaked into aws_scan.json: {needle}"
+    assert needle not in md_text, f"raw PEM leaked into aws_scan.md: {needle}"
+
+print("scenario 1 AWS credential assertions passed")
 PY
 
 scan_for_leaks "$OUT_DIR"

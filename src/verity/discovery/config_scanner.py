@@ -13,6 +13,10 @@ from typing import Any
 import yaml
 
 from verity.discovery.models import ClientType, DiscoveredServerConfig, TransportType
+from verity.scanner.credential_patterns import (
+    CREDENTIAL_VALUE_PATTERNS,
+    is_placeholder_value,
+)
 
 logger = logging.getLogger("verity.discovery.config_scanner")
 
@@ -21,11 +25,12 @@ class MultiClientConfigScanner:
     """Discovers, parses, and normalizes MCP client configurations across all supported tools."""
 
     SECRET_KEY_PATTERNS = re.compile(
-        r"(api[_-]?key|secret|token|password|bearer|auth|jwt|private[_-]?key)",
+        r"(api[_-]?key|secret|token|password|bearer|auth|jwt|private[_-]?key"
+        r"|access[_-]?key|aws_secret|credentials?|client[_-]?secret)",
         re.IGNORECASE,
     )
     SECRET_VALUE_PATTERNS = re.compile(
-        r"(sk-[a-zA-Z0-9_-]{20,}|ghp_[a-zA-Z0-9]{30,}|eyJ[a-zA-Z0-9_-]{20,})",
+        "|".join(pattern.pattern for pattern in CREDENTIAL_VALUE_PATTERNS)
     )
     DSN_CREDENTIAL_PATTERN = re.compile(
         r"(?:postgres(?:ql)?|mysql|mariadb|mongodb(?:\+srv)?|redis(?:s)?|amqps?|mssql|"
@@ -39,9 +44,11 @@ class MultiClientConfigScanner:
         text = str(raw_value).strip() if raw_value is not None else ""
         if not text or text.startswith("${") or text.startswith("$"):
             return False
+        if is_placeholder_value(text):
+            return False
         if cls.SECRET_KEY_PATTERNS.search(str(key)):
             return True
-        if cls.SECRET_VALUE_PATTERNS.search(text):
+        if any(pattern.search(text) for pattern in CREDENTIAL_VALUE_PATTERNS):
             return True
         dsn_match = cls.DSN_CREDENTIAL_PATTERN.search(text)
         if dsn_match:
