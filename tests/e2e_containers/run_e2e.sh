@@ -18,19 +18,24 @@ cd "$REPO_ROOT"
 rm -rf "$BUILD_DIST"
 mkdir -p "$BUILD_DIST" "$SCRIPT_DIR/snapshots"
 
-uv build
+if [ "$INSTALL_SOURCE" = "wheel" ]; then
+  rm -f "$REPO_ROOT"/dist/verity_redteam_core-*.whl
+  rm -f "$BUILD_DIST"/verity_redteam_core-*.whl
 
-shopt -s nullglob
-wheels=("$REPO_ROOT"/dist/verity_redteam_core-*.whl)
-shopt -u nullglob
+  uv build
 
-if [ "${#wheels[@]}" -eq 0 ]; then
-  echo "uv build did not produce a verity_redteam_core wheel" >&2
-  exit 1
+  shopt -s nullglob
+  wheels=("$REPO_ROOT"/dist/verity_redteam_core-*.whl)
+  shopt -u nullglob
+
+  if [ "${#wheels[@]}" -eq 0 ]; then
+    echo "uv build did not produce a verity_redteam_core wheel" >&2
+    exit 1
+  fi
+
+  cp "${wheels[0]}" "$BUILD_DIST/"
+  echo "Staged wheel: ${wheels[0]}"
 fi
-
-cp "${wheels[0]}" "$BUILD_DIST/"
-echo "Staged wheel: ${wheels[0]}"
 
 docker compose -f "$COMPOSE_FILE" build --no-cache \
   --build-arg INSTALL_SOURCE="$INSTALL_SOURCE"
