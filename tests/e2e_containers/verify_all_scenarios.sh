@@ -50,6 +50,8 @@ SECRETS=(
   "AKIAVERITYE2ETEST0001"
   "verityE2eFakeSecretKey0000000000000000000"
   "MIIVerityFakeKeyMaterial"
+  "EmbeddedDsnPassw0rdE2e"
+  "sk-custom-field-e2e-secret-7777777777"
 )
 
 scan_for_leaks() {
@@ -76,6 +78,21 @@ cat > "$HOME/.cursor/mcp.json" <<'JSON'
       "env": {
         "OPENAI_API_KEY": "sk-live-verity-e2e-secret-9999999999",
         "DATABASE_PASSWORD": "SuperSecretDbPassword123"
+      }
+    },
+    "db-analytics": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "postgres://analytics:EmbeddedDsnPassw0rdE2e@db.internal:5432/analytics",
+        "CUSTOM_FIELD": "sk-custom-field-e2e-secret-7777777777"
+      }
+    },
+    "db-safe": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "DATABASE_URL": "postgres://analytics:${DB_PASS}@db.internal:5432/analytics"
       }
     },
     "mcp-remote-client": {
@@ -251,6 +268,43 @@ for needle in (
     assert needle not in md_text, f"raw PEM leaked into aws_scan.md: {needle}"
 
 print("scenario 1 AWS credential assertions passed")
+PY
+
+expect_exit 1 "dsn scan --fail-on-findings" "$OUT_DIR/s1_dsn.txt" \
+  verity scan --config-file "$HOME/.cursor/mcp.json" --format json \
+  --output "$OUT_DIR/dsn_scan.json" --fail-on-findings
+verity scan --format markdown --output "$OUT_DIR/dsn_scan.md" \
+  > "$OUT_DIR/s1_dsn_md.txt" 2>&1 || true
+[ -s "$OUT_DIR/dsn_scan.json" ] || fail "dsn_scan.json empty"
+[ -s "$OUT_DIR/dsn_scan.md" ] || fail "dsn_scan.md empty"
+
+python3 - "$OUT_DIR/dsn_scan.json" "$OUT_DIR/dsn_scan.md" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+report = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+findings = report.get("findings", []) if isinstance(report, dict) else report
+secret_findings = [
+    f for f in findings if f.get("rule_id") == "SEC-STATIC-SECRET-IN-CONFIG"
+]
+blob = json.dumps(secret_findings)
+for key in ("DATABASE_URL", "CUSTOM_FIELD"):
+    matching = [
+        f
+        for f in secret_findings
+        if key in json.dumps(f) and "****" in str(f.get("message", ""))
+    ]
+    assert matching, f"missing per-key finding with '****' for {key}: {blob}"
+assert "db-safe" not in blob, f"db-safe incorrectly flagged: {blob}"
+
+json_text = Path(sys.argv[1]).read_text(encoding="utf-8")
+md_text = Path(sys.argv[2]).read_text(encoding="utf-8")
+for raw in ("EmbeddedDsnPassw0rdE2e", "sk-custom-field-e2e-secret-7777777777"):
+    assert raw not in blob, f"raw secret leaked into findings: {raw}"
+    assert raw not in json_text, f"raw secret leaked into dsn_scan.json: {raw}"
+    assert raw not in md_text, f"raw secret leaked into dsn_scan.md: {raw}"
+print("scenario 1 DSN assertions passed")
 PY
 
 scan_for_leaks "$OUT_DIR"
@@ -479,6 +533,140 @@ Path(sys.argv[2]).write_text(
     json.dumps({"total_findings": total}, indent=2), encoding="utf-8"
 )
 print(f"dvmcp total_findings={total}")
+PY
+
+DVMCP_SHIM_DIR="/tmp/dvmcp_shim"
+DVMCP_CHALLENGE="/opt/dvmcp/challenges/easy/challenge2/server.py"
+mkdir -p "$DVMCP_SHIM_DIR/mcp/server"
+: > "$DVMCP_SHIM_DIR/mcp/__init__.py"
+: > "$DVMCP_SHIM_DIR/mcp/server/__init__.py"
+cat > "$DVMCP_SHIM_DIR/mcp/server/fastmcp.py" <<'PY'
+"""Minimal stdlib-only FastMCP stdio shim for live DVMCP probing."""
+import inspect
+import json
+import sys
+
+
+class FastMCP:
+    def __init__(self, name="dvmcp", **kwargs):
+        self.name = name
+        self._tools = []
+        self._prompts = []
+        self._resources = []
+
+    def tool(self, *args, **kwargs):
+        def decorator(func):
+            self._tools.append(func)
+            return func
+
+        return decorator
+
+    def prompt(self, *args, **kwargs):
+        def decorator(func):
+            self._prompts.append(func)
+            return func
+
+        return decorator
+
+    def resource(self, *args, **kwargs):
+        def decorator(func):
+            self._resources.append(func)
+            return func
+
+        return decorator
+
+    def _tool_spec(self, func):
+        sig = inspect.signature(func)
+        props = {name: {"type": "string"} for name in sig.parameters}
+        return {
+            "name": func.__name__,
+            "description": inspect.getdoc(func) or "",
+            "inputSchema": {"type": "object", "properties": props},
+        }
+
+    def run(self, transport="stdio"):
+        for line in sys.stdin:
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                request = json.loads(line)
+            except ValueError:
+                continue
+            method = request.get("method")
+            req_id = request.get("id")
+            if method == "initialize":
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "protocolVersion": "2024-11-05",
+                        "capabilities": {"tools": {"listChanged": False}},
+                        "serverInfo": {"name": self.name, "version": "1.0.0"},
+                    },
+                }
+            elif method == "notifications/initialized":
+                continue
+            elif method == "tools/list":
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {"tools": [self._tool_spec(f) for f in self._tools]},
+                }
+            elif method == "prompts/list":
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "prompts": [
+                            {"name": f.__name__, "description": (f.__doc__ or "")}
+                            for f in self._prompts
+                        ]
+                    },
+                }
+            elif method == "resources/list":
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "result": {
+                        "resources": [
+                            {"uri": f"dvmcp://{f.__name__}", "name": f.__name__}
+                            for f in self._resources
+                        ]
+                    },
+                }
+            else:
+                response = {
+                    "jsonrpc": "2.0",
+                    "id": req_id,
+                    "error": {"code": -32601, "message": f"Unknown method: {method}"},
+                }
+            sys.stdout.write(json.dumps(response) + "\n")
+            sys.stdout.flush()
+PY
+
+expect_exit 1 "dvmcp live stdio probe" "$OUT_DIR/s4_dvmcp_live.txt" \
+  verity test --command "env PYTHONPATH=$DVMCP_SHIM_DIR python3 $DVMCP_CHALLENGE"
+grep -q "FAIL" "$OUT_DIR/s4_dvmcp_live.txt" || fail "dvmcp live probe missing FAIL"
+tr -d '[:space:]' < "$OUT_DIR/s4_dvmcp_live.txt" | grep -q "VERITY-STATIC-" \
+  || fail "dvmcp live probe missing VERITY-STATIC-* rule ids"
+
+expect_exit 1 "dvmcp live stdio probe json" "$OUT_DIR/s4_dvmcp_live_json.txt" \
+  verity test --command "env PYTHONPATH=$DVMCP_SHIM_DIR python3 $DVMCP_CHALLENGE" \
+  --format json --output "$OUT_DIR/dvmcp_live.json"
+
+python3 - "$OUT_DIR/dvmcp_live.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+data = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+results = data if isinstance(data, list) else data.get("results", [])
+failed = [r for r in results if str(r.get("status", "")).upper() == "FAIL"]
+assert failed, f"no FAIL results in dvmcp_live.json: {data}"
+blob = json.dumps(failed)
+assert "VERITY-STATIC-" in blob, f"missing VERITY-STATIC-* rule ids: {blob}"
+print("scenario 4 dvmcp live assertions passed")
 PY
 
 expect_exit 0 "clean ast scan" "$OUT_DIR/s4_clean.txt" \

@@ -687,3 +687,268 @@ def test_load_auto_single_fetch_when_snapshot_missing(
     result = index.load_auto(directory=tmp_path)
     assert len(calls) == 1
     assert result == 0
+
+
+M24_DSN_PASSWORD = "SuperSecretDbPassword123"
+M24_CUSTOM_SECRET = "sk-live-custom-field-0123456789abcdef"
+
+_M24_DSN_SCHEMES = (
+    "postgres",
+    "postgresql",
+    "mysql",
+    "mariadb",
+    "mongodb",
+    "mongodb+srv",
+    "redis",
+    "rediss",
+    "amqp",
+    "amqps",
+    "mssql",
+    "snowflake",
+    "https",
+)
+
+
+def _write_env_config(path: Path, env: dict[str, str]) -> None:
+    path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "target": {
+                        "command": "python3",
+                        "args": ["/opt/fixtures/clean_stdio_mcp.py"],
+                        "env": env,
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
+def _m24_finding(secret_dsn: str, prefix: str = "Detected") -> dict[str, object]:
+    return {
+        "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+        "severity": "HIGH",
+        "title": f"{prefix} {secret_dsn}",
+        "message": f"DSN {secret_dsn} password leaked",
+        "file_path": "mcp.json",
+        "line_number": 1,
+        "remediation": "Use env",
+    }
+
+
+def _render_m24_finding(finding: dict[str, object]) -> dict[str, str]:
+    from verity.reporting import (
+        render_scan_html,
+        render_scan_markdown,
+        render_scan_terminal,
+    )
+
+    report = {"summary": {"total_findings": 1}, "findings": [finding]}
+    return {
+        "terminal": render_scan_terminal(report),
+        "json": json.dumps(finding),
+        "markdown": render_scan_markdown(report),
+        "html": render_scan_html(report),
+    }
+
+
+def _assert_m24_scrubbed_across_formats(
+    finding: dict[str, object], *forbidden: str
+) -> None:
+    scrubbed = cli._scrub_secrets(finding, [])
+    for rendered_fmt, text in _render_m24_finding(scrubbed).items():
+        assert "****" in text, rendered_fmt
+        for needle in forbidden:
+            assert needle not in text, rendered_fmt
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_m24_scan_flags_and_scrubs_embedded_dsn_password(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    dsn = f"postgres://app:{M24_DSN_PASSWORD}@db:5432/app"
+    config_path = tmp_path / "mcp.json"
+    _write_env_config(config_path, {"DATABASE_URL": dsn})
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
+    assert M24_DSN_PASSWORD not in out
+    assert dsn not in out
+    if fmt == "json":
+        assert "****" in out
+
+    _assert_m24_scrubbed_across_formats(_m24_finding(dsn), M24_DSN_PASSWORD, dsn)
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+@pytest.mark.parametrize("reference", ["${DB_PASS}", "$DB_PASS"])
+def test_m24_scan_dsn_reference_not_flagged(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+    reference: str,
+) -> None:
+    monkeypatch.setenv("DB_PASS", M24_DSN_PASSWORD)
+    dsn = f"postgres://app:{reference}@db:5432/app"
+    config_path = tmp_path / "mcp.json"
+    _write_env_config(config_path, {"DATABASE_URL": dsn})
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" not in out
+    assert M24_DSN_PASSWORD not in out
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_m24_scan_flags_and_scrubs_custom_field_value_pattern(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    config_path = tmp_path / "mcp.json"
+    _write_env_config(config_path, {"CUSTOM_FIELD": M24_CUSTOM_SECRET})
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
+    assert "CUSTOM_FIELD" in out
+    assert M24_CUSTOM_SECRET not in out
+    if fmt == "json":
+        assert "****" in out
+
+    _assert_m24_scrubbed_across_formats(
+        _m24_finding(M24_CUSTOM_SECRET), M24_CUSTOM_SECRET
+    )
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_m24_short_dsn_passwords_scrubbed_without_word_corruption(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    mysql_dsn = "mysql://user:pass@host/db"
+    mongo_dsn = "mongodb+srv://user:pass@cluster/db"
+    config_path = tmp_path / "mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "short-mysql": {
+                        "command": "python3",
+                        "args": ["/opt/fixtures/clean_stdio_mcp.py"],
+                        "env": {"DATABASE_URL": mysql_dsn},
+                    },
+                    "short-mongo": {
+                        "command": "python3",
+                        "args": ["/opt/fixtures/clean_stdio_mcp.py"],
+                        "env": {"DATABASE_URL": mongo_dsn},
+                    },
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
+    assert mysql_dsn not in out
+    assert mongo_dsn not in out
+    assert "Plaintext" in out
+    if fmt == "json":
+        assert "****" in out
+
+    finding = {
+        "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+        "severity": "HIGH",
+        "title": f"Plaintext password in config: {mysql_dsn}",
+        "message": f"DSN {mongo_dsn} password leaked",
+        "file_path": "mcp.json",
+        "line_number": 1,
+        "remediation": "Use env",
+    }
+    _assert_m24_scrubbed_across_formats(finding, mysql_dsn, mongo_dsn)
+    for rendered_fmt, text in _render_m24_finding(
+        cli._scrub_secrets(finding, [])
+    ).items():
+        assert "password" in text, rendered_fmt
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_m24_benign_dsn_values_not_flagged(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    config_path = tmp_path / "mcp.json"
+    _write_env_config(
+        config_path,
+        {
+            "DATABASE_URL": "postgres://app@db:5432/app",
+            "REDIS_URL": "redis://cache:6379/0",
+            "DB_POOL_SIZE": "10",
+        },
+    )
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" not in out
+    if fmt == "json":
+        assert json.loads(out)["findings"] == []
+
+
+@pytest.mark.parametrize("fmt", ["terminal", "json", "markdown", "html"])
+def test_m24_dsn_detection_masking_parity(
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    offline_audit: dict[str, SimpleNamespace],
+    fmt: str,
+) -> None:
+    password = "ParitySecretPassword123"
+    servers: dict[str, dict[str, object]] = {}
+
+    for index, scheme in enumerate(_M24_DSN_SCHEMES):
+        dsn = f"{scheme}://app:{password}@db.internal:5432/db"
+        assert MultiClientConfigScanner.is_secret_env_entry("DATABASE_URL", dsn)
+
+        scrubbed = cli._scrub_secrets({"message": f"DSN {dsn} password detected"}, [])
+        assert dsn not in scrubbed["message"]
+        assert password not in scrubbed["message"]
+        assert "****" in scrubbed["message"]
+        assert "password detected" in scrubbed["message"]
+
+        _assert_m24_scrubbed_across_formats(_m24_finding(dsn), password, dsn)
+
+        servers[f"dsn-{index}"] = {
+            "command": "python3",
+            "args": ["/opt/fixtures/clean_stdio_mcp.py"],
+            "env": {"DATABASE_URL": dsn},
+        }
+
+    config_path = tmp_path / "mcp.json"
+    config_path.write_text(json.dumps({"mcpServers": servers}), encoding="utf-8")
+
+    exit_code = cli.main(["scan", "--config-file", str(config_path), "--format", fmt])
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    assert "SEC-STATIC-SECRET-IN-CONFIG" in out
+    assert password not in out
+    if fmt == "json":
+        assert "****" in out

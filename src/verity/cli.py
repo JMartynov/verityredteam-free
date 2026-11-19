@@ -23,6 +23,7 @@ from verity.reporting import (
 from verity.scanner.credential_patterns import (
     CREDENTIAL_VALUE_PATTERNS,
     PEM_PRIVATE_KEY_BLOCK_PATTERN,
+    is_placeholder_value,
 )
 
 _SEVERITY_ORDER = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO")
@@ -266,12 +267,18 @@ def _render_test(results: list[dict[str, Any]], fmt: str) -> str:
 
 def _collect_redaction_targets(text: str, secrets: list[str]) -> list[str]:
     """Return every explicit secret and credential-pattern match in ``text``."""
+    from verity.discovery.config_scanner import MultiClientConfigScanner
+
     targets = {secret for secret in secrets if secret and secret in text}
     for match in PEM_PRIVATE_KEY_BLOCK_PATTERN.finditer(text):
         targets.add(match.group(0))
     for pattern in CREDENTIAL_VALUE_PATTERNS:
         for match in pattern.finditer(text):
             targets.add(match.group(0))
+    for dsn_match in MultiClientConfigScanner.DSN_CREDENTIAL_PATTERN.finditer(text):
+        pwd = dsn_match.group(1)
+        if pwd and not pwd.startswith("$") and not is_placeholder_value(pwd):
+            targets.add(dsn_match.group(0))
     return sorted(targets, key=len, reverse=True)
 
 
@@ -364,7 +371,7 @@ def _collect_config_findings(
                     )
                     if dsn_match:
                         pwd = dsn_match.group(1)
-                        if len(pwd) >= 4 and pwd not in secrets:
+                        if len(pwd) >= 6 and pwd not in secrets:
                             secrets.append(pwd)
                     for pem_match in PEM_PRIVATE_KEY_BLOCK_PATTERN.finditer(
                         candidate_text
