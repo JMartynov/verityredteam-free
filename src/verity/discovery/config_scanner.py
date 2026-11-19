@@ -9,6 +9,8 @@ import platform
 import re
 from pathlib import Path
 
+import yaml
+
 from verity.discovery.models import ClientType, DiscoveredServerConfig, TransportType
 
 logger = logging.getLogger("verity.discovery.config_scanner")
@@ -186,6 +188,50 @@ class MultiClientConfigScanner:
         return re.sub(r"\$\{([a-zA-Z0-9_]+)\}|\$([a-zA-Z0-9_]+)", replace_match, val)
 
     @classmethod
+    def _parse_file_data(cls, file_path: Path) -> object:
+        """Parse JSON or YAML config file contents."""
+        content = file_path.read_text(encoding="utf-8")
+        if file_path.suffix.lower() in (".yaml", ".yml"):
+            return yaml.safe_load(content)
+        return json.loads(content)
+
+    @classmethod
+    def _collect_specs(cls, value: object, pairs: list[tuple[str, dict]]) -> None:
+        if isinstance(value, dict):
+            for name, spec in value.items():
+                if isinstance(spec, dict):
+                    pairs.append((str(name), spec))
+        elif isinstance(value, list):
+            for idx, spec in enumerate(value):
+                if isinstance(spec, dict):
+                    name = str(spec.get("name") or f"server-{idx}")
+                    pairs.append((name, spec))
+
+    @classmethod
+    def _extract_server_specs(cls, data: object) -> list[tuple[str, dict]]:
+        """Extract (server_name, spec) pairs from a parsed MCP config document."""
+        if not isinstance(data, dict):
+            return []
+
+        pairs: list[tuple[str, dict]] = []
+        for key in ("mcpServers", "mcp_servers", "servers", "context_servers"):
+            cls._collect_specs(data.get(key), pairs)
+
+        experimental = data.get("experimental")
+        if isinstance(experimental, dict):
+            cls._collect_specs(experimental.get("modelContextProtocolServers"), pairs)
+
+        if not pairs and "command" not in data:
+            for name, spec in data.items():
+                if isinstance(spec, dict) and any(
+                    k in spec
+                    for k in ("command", "url", "args", "env", "transport", "type", "disabled")
+                ):
+                    pairs.append((str(name), spec))
+
+        return pairs
+
+    @classmethod
     def parse_config_file(
         cls,
         path: str | Path,
@@ -197,37 +243,23 @@ class MultiClientConfigScanner:
             return []
 
         try:
-            content = file_path.read_text(encoding="utf-8")
-            data = json.loads(content)
+            data = cls._parse_file_data(file_path)
         except Exception as exc:
-            logger.debug("Failed parsing JSON config %s: %s", file_path, exc)
+            logger.debug("Failed parsing config %s: %s", file_path, exc)
             return []
 
         discovered: list[DiscoveredServerConfig] = []
 
-        # Standard formats: "mcpServers", "mcp_servers", "servers"
-        server_dict = (
-            data.get("mcpServers")
-            or data.get("mcp_servers")
-            or data.get("servers")
-            or (data if isinstance(data, dict) and "command" not in data else {})
-        )
-
-        if not isinstance(server_dict, dict):
-            return []
-
-        for name, spec in server_dict.items():
-            if not isinstance(spec, dict):
-                continue
-
+        for name, spec in cls._extract_server_specs(data):
             command = spec.get("command")
-            args = tuple(spec.get("args", []))
+            raw_args = spec.get("args", [])
+            args = tuple(raw_args) if isinstance(raw_args, (list, tuple)) else ()
             raw_env = spec.get("env", {})
             url = spec.get("url")
             disabled = bool(spec.get("disabled", False) or spec.get("is_disabled", False))
 
             # Determine transport type
-            if url:
+            if isinstance(url, str) and url:
                 transport = TransportType.SSE if "sse" in url.lower() else TransportType.HTTP
             elif command:
                 transport = TransportType.STDIO
@@ -242,6 +274,9 @@ class MultiClientConfigScanner:
 
             env_keys = tuple(sorted(env_cleaned.keys()))
 
+            raw_config = dict(spec)
+            raw_config["env"] = dict(raw_env) if isinstance(raw_env, dict) else {}
+
             discovered.append(
                 DiscoveredServerConfig(
                     client_type=client_type,
@@ -251,10 +286,10 @@ class MultiClientConfigScanner:
                     env=env_cleaned,
                     env_keys=env_keys,
                     transport_type=transport,
-                    url=url,
+                    url=url if isinstance(url, str) else None,
                     config_path=str(file_path.resolve()),
                     is_disabled=disabled,
-                    raw_config=spec,
+                    raw_config=raw_config,
                 )
             )
 
