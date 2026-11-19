@@ -19,7 +19,10 @@ pip install verity-redteam-core
 uvx --from verity-redteam-core verity scan
 ```
 
-If the package is not yet on PyPI, install from source or from a built wheel:
+<details>
+<summary>Install from source (contributors)</summary>
+
+Contributors can build the wheel from a clone:
 
 ```bash
 git clone https://github.com/JMartynov/verityredteam-free.git
@@ -27,6 +30,8 @@ cd verityredteam-free
 uv build
 pip install dist/*.whl
 ```
+
+</details>
 
 Run your first three checks in five seconds:
 

@@ -226,6 +226,26 @@ def test_readme_cli_commands_are_valid() -> None:
             )
 
 
+def test_readme_has_no_stale_pypi_caveat() -> None:
+    text = README_PATH.read_text(encoding="utf-8").lower()
+    assert "not yet on pypi" not in text
+
+
+def test_readme_documents_pypi_quickstart() -> None:
+    text = README_PATH.read_text(encoding="utf-8")
+    assert "pip install verity-redteam-core" in text
+    assert "uvx --from verity-redteam-core" in text
+
+    summary = "<summary>Install from source (contributors)</summary>"
+    assert summary in text
+    summary_index = text.index(summary)
+    details_open = text.rindex("<details>", 0, summary_index)
+    details_close = text.index("</details>", summary_index)
+    assert details_open < summary_index < details_close
+    assert text.index("pip install verity-redteam-core") < details_open
+    assert "dist/*.whl" in text[details_open:details_close]
+
+
 def test_no_stale_package_references() -> None:
     for path in (README_PATH, EXTENSIBILITY_PATH):
         text = path.read_text(encoding="utf-8")
