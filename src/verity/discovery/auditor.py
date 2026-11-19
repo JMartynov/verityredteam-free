@@ -47,12 +47,21 @@ class ConsolidatedSecurityAuditor:
         """Perform complete security assessment of a single discovered MCP server."""
         findings: list[SecurityAuditFinding] = []
 
+        raw_env: dict[str, Any] = {}
+        if isinstance(config.raw_config, dict):
+            candidate_env = config.raw_config.get("env")
+            if isinstance(candidate_env, dict):
+                raw_env = candidate_env
+
         # 1. Static Configuration Findings (Hardcoded Secrets & Unsafe Shells)
         for k, v in config.env.items():
+            raw_value = raw_env.get(k, v)
+            raw_text = str(raw_value) if raw_value is not None else ""
+            is_env_reference = raw_text.startswith("${") or raw_text.startswith("$")
             if (
-                MultiClientConfigScanner.SECRET_KEY_PATTERNS.search(k)
+                not is_env_reference
+                and MultiClientConfigScanner.SECRET_KEY_PATTERNS.search(k)
                 and v
-                and not v.startswith("${")
             ):
                 findings.append(
                     SecurityAuditFinding(

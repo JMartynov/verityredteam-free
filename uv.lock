@@ -635,6 +635,7 @@ dependencies = [
     { name = "mcp-fingerprints" },
     { name = "mcp-vulnerabilities" },
     { name = "packaging" },
+    { name = "pyyaml" },
     { name = "rich" },
     { name = "sqlglot" },
 ]
@@ -651,6 +652,7 @@ requires-dist = [
     { name = "mcp-vulnerabilities", specifier = ">=1.2.2" },
     { name = "packaging", specifier = ">=24.0" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.0.0" },
+    { name = "pyyaml", specifier = ">=6.0" },
     { name = "rich", specifier = ">=13.7.0" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.15.0" },
     { name = "sqlglot", specifier = ">=25.0.0" },

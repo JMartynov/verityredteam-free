@@ -41,7 +41,7 @@ class ActiveExploitPlan:
 class ActiveExploitBridge:
     """Constructs deterministic VAIB red-team test plans for discovered vulnerable MCP servers."""
 
-    DEFAULT_CLI_COMMAND_TEMPLATE = "verity test --server '{package}' --vuln '{vuln_id}'"
+    DEFAULT_CLI_COMMAND_TEMPLATE = "verity test --command 'npx -y {package}'"
 
     @classmethod
     def generate_plans_for_record(

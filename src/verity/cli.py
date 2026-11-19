@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import importlib.metadata
 import json
+import os
 import shlex
 import sys
 from pathlib import Path
@@ -43,14 +44,100 @@ def _pro_plugin_available() -> bool:
     return bool(_iter_plugin_entry_points())
 
 
+def _stdlib_sarif_exporter(report: dict[str, Any]) -> dict[str, Any]:
+    """Serialize a normalized scan report into SARIF v2.1.0."""
+    rules: list[dict[str, Any]] = []
+    results: list[dict[str, Any]] = []
+    seen_rules: set[str] = set()
+
+    for finding in report.get("findings", []) or []:
+        rule_id = str(finding.get("rule_id") or "UNKNOWN")
+        title = str(finding.get("title") or rule_id)
+        message = str(finding.get("message") or "")
+        if rule_id not in seen_rules:
+            seen_rules.add(rule_id)
+            rules.append(
+                {
+                    "id": rule_id,
+                    "name": title,
+                    "shortDescription": {"text": title},
+                    "fullDescription": {"text": message},
+                    "help": {"text": str(finding.get("remediation") or "")},
+                }
+            )
+
+        severity = str(finding.get("severity") or "INFO").upper()
+        if severity in ("CRITICAL", "HIGH"):
+            level = "error"
+        elif severity in ("LOW", "INFO"):
+            level = "note"
+        else:
+            level = "warning"
+
+        results.append(
+            {
+                "ruleId": rule_id,
+                "level": level,
+                "message": {"text": f"{title}: {message}".strip()},
+                "locations": [
+                    {
+                        "physicalLocation": {
+                            "artifactLocation": {
+                                "uri": str(finding.get("file_path") or "mcp_config.json")
+                            },
+                            "region": {"startLine": 1},
+                        }
+                    }
+                ],
+            }
+        )
+
+    return {
+        "$schema": (
+            "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/"
+            "Schemata/sarif-schema-2.1.0.json"
+        ),
+        "version": "2.1.0",
+        "runs": [
+            {
+                "tool": {
+                    "driver": {
+                        "name": "Verity MCP Security Scanner",
+                        "version": "0.1.0",
+                        "informationUri": (
+                            "https://github.com/JMartynov/verityredteam-free"
+                        ),
+                        "rules": rules,
+                    }
+                },
+                "results": results,
+            }
+        ],
+    }
+
+
 def _load_sarif_exporter() -> Any:
-    """Return the SARIF exporter callable registered by ``verity-pro`` (if any)."""
-    for ep in _iter_plugin_entry_points():
+    """Return a SARIF exporter callable from a ``verity.plugins`` entry point."""
+    entry_points = _iter_plugin_entry_points()
+    for ep in entry_points:
         if getattr(ep, "name", "") in ("sarif", "sarif_export"):
             try:
                 return ep.load()
             except Exception:  # pragma: no cover - defensive
                 return None
+
+    for ep in entry_points:
+        try:
+            loaded = ep.load()
+        except Exception:
+            continue
+        for attr in ("export_sarif", "sarif_exporter"):
+            candidate = getattr(loaded, attr, None)
+            if callable(candidate):
+                return candidate
+
+    if _pro_plugin_available():
+        return _stdlib_sarif_exporter
     return None
 
 
@@ -85,13 +172,33 @@ def _normalize_finding(record: Any) -> dict[str, Any]:
     else:  # pragma: no cover - defensive
         data = dict(getattr(record, "__dict__", {}))
 
+    cwe_ids = data.get("cwe_ids")
+    if isinstance(cwe_ids, (list, tuple)) and cwe_ids:
+        cwe_id = ", ".join(str(c) for c in cwe_ids if c)
+    else:
+        cwe_id = str(_field(data, "cwe_id", "cve_id"))
+
+    base_message = str(_field(data, "message", "description"))
+    evidence = str(_field(data, "redacted_evidence", "evidence"))
+    if evidence:
+        if not base_message:
+            message = evidence
+        elif evidence not in base_message:
+            message = f"{base_message} ({evidence})"
+        else:
+            message = base_message
+    else:
+        message = base_message
+
     return {
-        "rule_id": str(_field(data, "rule_id")),
-        "cwe_id": str(_field(data, "cwe_id")),
+        "rule_id": str(_field(data, "rule_id", "issue_id")),
+        "cwe_id": cwe_id,
         "severity": _as_severity(_field(data, "severity")),
         "title": str(_field(data, "title")),
-        "message": str(_field(data, "message", "description")),
-        "file_path": str(_field(data, "file_path", "target_name")),
+        "message": message,
+        "file_path": str(
+            _field(data, "file_path", "config_path", "target_name", "server_name")
+        ),
         "line_number": _field(data, "line_number", default="-") or "-",
         "remediation": str(_field(data, "remediation")),
     }
@@ -152,9 +259,25 @@ def _render_test(results: list[dict[str, Any]], fmt: str) -> str:
     return render_test_terminal(results)
 
 
+def _scrub_secrets(finding: dict[str, Any], secrets: list[str]) -> dict[str, Any]:
+    """Replace any known plaintext secret values with ``****`` in string fields."""
+    if not secrets:
+        return finding
+    scrubbed: dict[str, Any] = {}
+    for key, value in finding.items():
+        if isinstance(value, str):
+            for secret in secrets:
+                if secret and secret in value:
+                    value = value.replace(secret, "****")
+        scrubbed[key] = value
+    return scrubbed
+
+
 def _collect_config_findings(
     config_file: str | None,
+    offline: bool = False,
 ) -> tuple[list[dict[str, Any]], set[str]]:
+    from verity.discovery.auditor import ConsolidatedSecurityAuditor
     from verity.discovery.config_scanner import MultiClientConfigScanner
     from verity.scanner.static_rules import StaticRuleEvaluator
 
@@ -166,29 +289,100 @@ def _collect_config_findings(
         path = Path(config_file)
         if not path.is_file():
             raise FileNotFoundError(f"Config file not found: {config_file}")
+        content = path.read_text(encoding="utf-8")
         try:
-            raw = json.loads(path.read_text(encoding="utf-8"))
-        except json.JSONDecodeError as exc:
+            if path.suffix.lower() in (".yaml", ".yml"):
+                import yaml
+
+                raw = yaml.safe_load(content)
+            else:
+                raw = json.loads(content)
+        except Exception as exc:
+            raise ValueError(f"Invalid config file {config_file}: {exc}") from exc
+        if not isinstance(raw, (dict, list)):
             raise ValueError(
-                f"Invalid JSON in config file {config_file}: {exc}"
-            ) from exc
-        if not isinstance(raw, dict):
-            raise ValueError(f"Config file must contain a JSON object: {config_file}")
+                f"Config file must contain a JSON/YAML object or list: {config_file}"
+            )
         configs = scanner.parse_config_file(config_file)
         scanned_files.add(str(config_file))
     else:
         configs, files = scanner.scan_all()
         scanned_files.update(files)
 
-    findings: list[dict[str, Any]] = []
-    for config in configs:
-        raw = getattr(config, "raw_config", None)
-        if not isinstance(raw, dict):
+    previous_offline = os.environ.get("VERITY_OFFLINE")
+    if offline:
+        os.environ["VERITY_OFFLINE"] = "1"
+
+    try:
+        findings: list[dict[str, Any]] = []
+        auditor = None
+        if configs:
+            try:
+                auditor = ConsolidatedSecurityAuditor()
+            except Exception:
+                auditor = None
+
+        for config in configs:
+            raw_config = getattr(config, "raw_config", None)
+            if not isinstance(raw_config, dict):
+                raw_config = {}
+
+            candidate_env: dict[str, Any] = {}
+            raw_env = raw_config.get("env")
+            if isinstance(raw_env, dict):
+                candidate_env.update(raw_env)
+            candidate_env.update(getattr(config, "env", {}) or {})
+
+            secrets: list[str] = []
+            for key, value in candidate_env.items():
+                text = str(value) if value is not None else ""
+                if (
+                    text
+                    and len(text) >= 4
+                    and not text.startswith("${")
+                    and not text.startswith("$")
+                    and (
+                        MultiClientConfigScanner.SECRET_KEY_PATTERNS.search(str(key))
+                        or MultiClientConfigScanner.SECRET_VALUE_PATTERNS.search(text)
+                    )
+                ):
+                    secrets.append(text)
+
+            if auditor is not None:
+                try:
+                    record = auditor.audit_server(config, live_probe=False)
+                    for audit_finding in record.findings:
+                        finding = _normalize_finding(audit_finding)
+                        findings.append(_scrub_secrets(finding, secrets))
+                except Exception:
+                    pass
+
+            tool_dict = {"name": config.server_name, **raw_config}
+            for match in evaluator.scan_tool(tool_dict):
+                finding = _normalize_finding(match)
+                findings.append(_scrub_secrets(finding, secrets))
+    finally:
+        if offline:
+            if previous_offline is None:
+                os.environ.pop("VERITY_OFFLINE", None)
+            else:
+                os.environ["VERITY_OFFLINE"] = previous_offline
+
+    deduped: list[dict[str, Any]] = []
+    seen: set[tuple[Any, ...]] = set()
+    for finding in findings:
+        key = (
+            finding.get("rule_id"),
+            finding.get("file_path"),
+            finding.get("title"),
+            finding.get("message"),
+        )
+        if key in seen:
             continue
-        tool_dict = {"name": config.server_name, **raw}
-        for match in evaluator.scan_tool(tool_dict):
-            findings.append(_normalize_finding(match))
-    return findings, scanned_files
+        seen.add(key)
+        deduped.append(finding)
+
+    return deduped, scanned_files
 
 
 def _collect_schema_findings(
@@ -238,7 +432,9 @@ def _collect_scan_data(
     duration_ms = 0.0
 
     try:
-        config_findings, config_files = _collect_config_findings(args.config_file)
+        config_findings, config_files = _collect_config_findings(
+            args.config_file, offline=getattr(args, "offline", False)
+        )
         findings.extend(config_findings)
         scanned_files.update(config_files)
     except Exception as exc:  # pragma: no cover - defensive
@@ -500,6 +696,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--fail-on-findings",
         action="store_true",
         help="Return exit code 1 when findings are detected.",
+    )
+    scan.add_argument(
+        "--offline",
+        action="store_true",
+        help="Disable remote snapshot fetching and use local caches only.",
     )
     scan.set_defaults(func=_cmd_scan)
 

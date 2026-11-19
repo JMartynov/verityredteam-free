@@ -34,63 +34,76 @@ class HybridDiscoveryMatcher:
             min_confidence_threshold=min_confidence,
         )
 
+    @staticmethod
+    def _split_specifier(token: str) -> tuple[str, str | None]:
+        """Split a package token into ``(name, version)`` for ``@`` and ``==`` specifiers."""
+        text = token.strip()
+        if not text:
+            return text, None
+        if "==" in text:
+            name, _, version = text.partition("==")
+            return name, version or None
+        if text.startswith("@"):
+            body = text[1:]
+            if "@" in body:
+                name_part, _, version = body.partition("@")
+                return "@" + name_part, version or None
+            return text, None
+        if "@" in text:
+            name, _, version = text.partition("@")
+            return name, version or None
+        return text, None
+
     def match_static_config(
         self,
         config: DiscoveredServerConfig,
     ) -> FingerprintMatchResult:
         """Match static configuration against package naming heuristics and aliases in O(1) time."""
-        server_name = config.server_name
-        target_version: str | None = None
-        clean_server_name = server_name
+        tokens: list[str] = [config.server_name]
+        tokens.extend(config.args)
+        if config.command:
+            tokens.append(Path(config.command).name)
 
-        if "@" in server_name:
-            if server_name.startswith("@"):
-                parts = server_name[1:].split("@")
-                clean_server_name = "@" + parts[0]
-                if len(parts) > 1:
-                    target_version = parts[1]
-            else:
-                parts = server_name.split("@")
-                clean_server_name = parts[0]
-                if len(parts) > 1:
-                    target_version = parts[1]
+        parsed_tokens: list[tuple[str, str | None]] = []
+        matched_spec = None
+        for token in tokens:
+            clean_token, version = self._split_specifier(token)
+            if not clean_token:
+                continue
+            parsed_tokens.append((clean_token, version))
+            if matched_spec is None:
+                matched_spec = self.matcher.fast_index.find_package_by_hint_or_alias(
+                    clean_token
+                )
 
-        # 1. Fast O(1) lookup by server name
-        spec = self.matcher.fast_index.find_package_by_hint_or_alias(clean_server_name)
-
-        # 2. Fast lookup by tokens in args (e.g. npx @modelcontextprotocol/server-postgres@0.1.0)
-        if config.args:
-            for arg in config.args:
-                clean_arg = arg
-                # If scoped e.g. @scope/pkg@version or pkg@version
-                if arg.startswith("@"):
-                    parts = arg[1:].split("@")
-                    clean_arg = "@" + parts[0]
-                    if len(parts) > 1:
-                        target_version = parts[1]
-                elif "@" in arg:
-                    parts = arg.split("@")
-                    clean_arg = parts[0]
-                    if len(parts) > 1:
-                        target_version = parts[1]
-
-                if not spec:
-                    spec = self.matcher.fast_index.find_package_by_hint_or_alias(clean_arg)
-
-        if spec:
-            matched_v = target_version or (spec.versions[-1].version if spec.versions else "1.0.0")
+        if matched_spec is None:
             return FingerprintMatchResult(
-                matched=True,
-                package_name=spec.package_name,
-                purl=spec.purl,
-                matched_version=matched_v,
-                confidence_score=0.85,
-                match_layer="STATIC_CONFIG_MATCH",
-                matched_tool_count=(len(spec.versions[-1].tool_signatures) if spec.versions else 0),
+                matched=False,
+                match_layer="NONE",
+                confidence_score=0.0,
             )
 
+        target_version: str | None = None
+        for clean_token, version in parsed_tokens:
+            if not version:
+                continue
+            spec = self.matcher.fast_index.find_package_by_hint_or_alias(clean_token)
+            if spec and spec.package_name == matched_spec.package_name:
+                target_version = version
+
+        matched_v = target_version or (
+            matched_spec.versions[-1].version if matched_spec.versions else "1.0.0"
+        )
         return FingerprintMatchResult(
-            matched=False,
-            match_layer="NONE",
-            confidence_score=0.0,
+            matched=True,
+            package_name=matched_spec.package_name,
+            purl=matched_spec.purl,
+            matched_version=matched_v,
+            confidence_score=0.85,
+            match_layer="STATIC_CONFIG_MATCH",
+            matched_tool_count=(
+                len(matched_spec.versions[-1].tool_signatures)
+                if matched_spec.versions
+                else 0
+            ),
         )

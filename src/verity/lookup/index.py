@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -124,6 +125,17 @@ class VulnerabilityIndex:
         )
         return count
 
+    @staticmethod
+    def _existing_cache_snapshot() -> Path | None:
+        """Return an existing on-disk vulnerabilities cache path, if any."""
+        try:
+            from verity.data_fetcher import _get_cache_dir
+
+            cache_path = _get_cache_dir() / "vulnerabilities.json.gz"
+        except Exception:
+            return None
+        return cache_path if cache_path.is_file() else None
+
     def load_auto(
         self, directory: str | Path = "data/vulnerabilities", force_refresh: bool = False
     ) -> int:
@@ -131,12 +143,20 @@ class VulnerabilityIndex:
         p = Path(directory)
         if p.is_dir() and any(p.glob("*.json")):
             return self.load_from_directory(p)
+
+        offline = os.environ.get("VERITY_OFFLINE", "").lower() in ("1", "true", "yes")
+        if offline:
+            cached = self._existing_cache_snapshot()
+            if cached is not None:
+                return self.load_from_snapshot(cached)
+            return 0
+
         from verity.data_fetcher import fetch_vulnerabilities_snapshot
 
         snapshot = fetch_vulnerabilities_snapshot(force_refresh=force_refresh)
         if snapshot:
             return self.load_from_snapshot(snapshot)
-        return self.load_from_directory(p)
+        return 0
 
     def index_vulnerability(self, vuln: OsvVulnerability) -> None:
         """Add a single OsvVulnerability record to all in-memory indexes."""
