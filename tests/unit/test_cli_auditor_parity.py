@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import shlex
+import tomllib
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -616,6 +617,34 @@ def test_scan_sarif_stdlib_fallback(
     data = json.loads(out)
     assert data["version"] == "2.1.0"
     assert data["runs"]
+    assert data["runs"][0]["tool"]["driver"]["version"] == verity.__version__
+
+
+def test_sarif_driver_version_matches_package(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    tmp_path: Path,
+    offline_audit: dict[str, SimpleNamespace],
+) -> None:
+    monkeypatch.setattr(
+        cli, "_iter_plugin_entry_points", lambda: [_FakeSarifEntryPoint()]
+    )
+    config_path = tmp_path / "mcp.json"
+    config_path.write_text(json.dumps({"mcpServers": {}}), encoding="utf-8")
+
+    exit_code = cli.main(
+        ["scan", "--config-file", str(config_path), "--format", "sarif"]
+    )
+    out = capsys.readouterr().out
+    assert exit_code == 0
+    data = json.loads(out)
+    assert data["runs"][0]["tool"]["driver"]["version"] == verity.__version__
+
+
+def test_sarif_driver_version_matches_pyproject() -> None:
+    pyproject_path = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    pyproject = tomllib.loads(pyproject_path.read_text(encoding="utf-8"))
+    assert pyproject["project"]["version"] == verity.__version__
 
 
 def test_load_auto_offline_skips_http(

@@ -11,6 +11,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+import verity
 from verity.reporting import (
     render_scan_html,
     render_scan_markdown,
@@ -107,7 +108,7 @@ def _stdlib_sarif_exporter(report: dict[str, Any]) -> dict[str, Any]:
                 "tool": {
                     "driver": {
                         "name": "Verity MCP Security Scanner",
-                        "version": "0.1.0",
+                        "version": verity.__version__,
                         "informationUri": (
                             "https://github.com/JMartynov/verityredteam-free"
                         ),
