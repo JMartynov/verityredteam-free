@@ -1,0 +1,31 @@
+FROM ubuntu:24.04
+
+ARG INSTALL_SOURCE=wheel
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        python3 python3-venv python3-pip git curl ca-certificates nodejs npm \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN npm install --prefix /opt/npm-targets mcp-remote@0.1.15
+
+RUN git clone --depth 1 https://github.com/harishsg993010/damn-vulnerable-mcp-server.git /opt/dvmcp
+
+RUN python3 -m venv /opt/verity-venv
+ENV PATH="/opt/verity-venv/bin:$PATH"
+
+COPY .build_dist /tmp/dist
+
+RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
+        /opt/verity-venv/bin/pip install --no-cache-dir verity-redteam-core; \
+    else \
+        /opt/verity-venv/bin/pip install --no-cache-dir /tmp/dist/*.whl; \
+    fi
+
+COPY fixtures/ /opt/fixtures/
+COPY verify_all_scenarios.sh /opt/verify_all_scenarios.sh
+RUN chmod +x /opt/verify_all_scenarios.sh
+
+CMD ["/opt/verify_all_scenarios.sh"]

@@ -1,0 +1,59 @@
+name: verity-e2e
+
+services:
+  target-sse-lab:
+    build:
+      context: .
+      dockerfile: Dockerfile.target-sse-lab
+    networks:
+      - verity-e2e-net
+    healthcheck:
+      test:
+        - CMD
+        - python3
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  customer-pip:
+    build:
+      context: .
+      dockerfile: Dockerfile.customer-pip
+      args:
+        INSTALL_SOURCE: ${INSTALL_SOURCE:-wheel}
+    networks:
+      - verity-e2e-net
+    depends_on:
+      target-sse-lab:
+        condition: service_healthy
+    volumes:
+      - ./snapshots:/snapshots
+
+  customer-uvx:
+    build:
+      context: .
+      dockerfile: Dockerfile.customer-uvx
+      args:
+        INSTALL_SOURCE: ${INSTALL_SOURCE:-wheel}
+    networks:
+      - verity-e2e-net
+    depends_on:
+      - target-sse-lab
+
+  customer-full-workstation:
+    build:
+      context: .
+      dockerfile: Dockerfile.customer-workstation
+      args:
+        INSTALL_SOURCE: ${INSTALL_SOURCE:-wheel}
+    networks:
+      - verity-e2e-net
+    depends_on:
+      target-sse-lab:
+        condition: service_healthy
+
+networks:
+  verity-e2e-net:
+    driver: bridge

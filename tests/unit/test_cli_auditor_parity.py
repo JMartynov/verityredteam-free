@@ -15,6 +15,7 @@ from verity.discovery.active_bridge import ActiveExploitBridge
 from verity.discovery.config_scanner import MultiClientConfigScanner
 from verity.discovery.models import ClientType
 from verity.lookup.index import VulnerabilityIndex
+from verity.reporting import render_test_terminal
 
 SECRET_VALUE = "sk-super-secret-value-9876543210"
 
@@ -305,6 +306,52 @@ def test_scan_matches_osv_cves(
     )
     capsys.readouterr()
     assert exit_code == 1
+
+
+def test_probe_config_includes_rule_ids_in_message_and_details(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from verity.scanner import static_rules
+
+    rule_ids = [
+        "VERITY-STATIC-METADATA-SSRF",
+        "VERITY-STATIC-INJECTION-OVERRIDE",
+        "VERITY-STATIC-TOOL-POISONING",
+    ]
+
+    class _FakeEvaluator:
+        def scan_tool(self, tool: object) -> list[SimpleNamespace]:
+            return [
+                SimpleNamespace(
+                    rule_id=rule_id,
+                    severity="HIGH",
+                    title=rule_id,
+                    message=f"{rule_id} matched",
+                )
+                for rule_id in rule_ids
+            ]
+
+    monkeypatch.setattr(static_rules, "StaticRuleEvaluator", _FakeEvaluator)
+
+    class _FakeTransport:
+        def inspect(self, config: object) -> SimpleNamespace:
+            return SimpleNamespace(
+                is_responsive=True, tools=[{"name": "poisoned-tool"}]
+            )
+
+    result = cli._probe_config(SimpleNamespace(), _FakeTransport(), "probe")
+
+    expected_details = "; ".join(sorted(rule_ids))
+    assert result["status"] == "FAIL"
+    assert result["details"] == expected_details
+    assert expected_details in result["message"]
+    for rule_id in rule_ids:
+        assert rule_id in result["details"]
+        assert rule_id in result["message"]
+
+    flattened = "".join(render_test_terminal([result]).split())
+    for rule_id in rule_ids:
+        assert rule_id in flattened
 
 
 def test_yaml_configs_parsed_and_scanned(

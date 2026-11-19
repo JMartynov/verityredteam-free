@@ -1,0 +1,451 @@
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "result": {
+    "tools": [
+      {
+        "name": "verity_security_scan",
+        "description": "Comprehensive MCP security reconnaissance, client environment inspection, O(1) passport fingerprinting, and OSV vulnerability evaluation.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "discover_endpoints",
+                "scan_client_configs",
+                "fingerprint_server",
+                "lookup_vulnerabilities",
+                "full_audit",
+                "scan_ast_code",
+                "call_target_tool"
+              ],
+              "description": "Reconnaissance action to perform."
+            },
+            "options": {
+              "type": "object",
+              "description": "Action-specific configuration and payload options.",
+              "properties": {
+                "transport": {
+                  "type": "string",
+                  "enum": [
+                    "stdio",
+                    "sse",
+                    "http"
+                  ],
+                  "default": "stdio"
+                },
+                "command": {
+                  "type": "string",
+                  "description": "Executable command for stdio"
+                },
+                "args": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Target endpoint URL for SSE/HTTP"
+                },
+                "timeout_seconds": {
+                  "type": "number",
+                  "default": 5.0
+                },
+                "sandbox_root": {
+                  "type": "string",
+                  "description": "Root directory for client configs"
+                },
+                "clients": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "prompts": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                },
+                "name_hint": {
+                  "type": "string"
+                },
+                "package_name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "purl": {
+                  "type": "string"
+                },
+                "tool": {
+                  "type": "string",
+                  "description": "Target tool name to invoke (for call_target_tool)"
+                },
+                "tool_name": {
+                  "type": "string",
+                  "description": "Alias for target tool name (for call_target_tool)"
+                },
+                "arguments": {
+                  "type": "object",
+                  "description": "Arguments to pass to target tool (for call_target_tool)"
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Target source file or directory for AST scan"
+                },
+                "min_severity": {
+                  "type": "string",
+                  "enum": [
+                    "CRITICAL",
+                    "HIGH",
+                    "MEDIUM",
+                    "LOW",
+                    "INFO"
+                  ],
+                  "default": "INFO"
+                }
+              }
+            }
+          },
+          "required": [
+            "action"
+          ]
+        }
+      },
+      {
+        "name": "verity_database_guard",
+        "description": "Validates SQL/NoSQL queries, enforces least-privilege projection allowlists, and inspects warehouse security policies.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "validate_sql_query",
+                "validate_snowflake_policy",
+                "apply_projection_mask",
+                "sanitize_inputs"
+              ],
+              "description": "Database security enforcement action to execute."
+            },
+            "options": {
+              "type": "object",
+              "description": "Guard options and payload data.",
+              "properties": {
+                "sql_query": {
+                  "type": "string",
+                  "description": "Raw SQL query to validate"
+                },
+                "session_tenant": {
+                  "type": "string",
+                  "description": "Authenticated tenant context"
+                },
+                "engine": {
+                  "type": "string",
+                  "enum": [
+                    "postgres",
+                    "mysql",
+                    "mongodb",
+                    "snowflake"
+                  ],
+                  "default": "postgres"
+                },
+                "row_data": {
+                  "type": "object",
+                  "description": "Database document/row to mask"
+                },
+                "allowed_columns": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Safe projection column allowlist"
+                },
+                "requested_role": {
+                  "type": "string",
+                  "description": "Warehouse session role"
+                },
+                "stage_path": {
+                  "type": "string",
+                  "description": "Warehouse stage path"
+                },
+                "query_tag": {
+                  "type": "string",
+                  "description": "Attribution query tag"
+                },
+                "search_pattern": {
+                  "type": "string",
+                  "description": "Search pattern to sanitize"
+                }
+              }
+            }
+          },
+          "required": [
+            "action"
+          ]
+        }
+      },
+      {
+        "name": "verity_database_oracle",
+        "description": "Evaluates observed MCP tool interactions against ground-truth security oracles and live database state.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "generate_attack_proposal",
+                "verify_tool_response",
+                "check_canary_proof"
+              ],
+              "description": "Verification oracle action."
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "condition_id": {
+                  "type": "string",
+                  "description": "Vulnerability condition ID"
+                },
+                "package_name": {
+                  "type": "string",
+                  "description": "Target package name"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Target package version"
+                },
+                "cve_id": {
+                  "type": "string",
+                  "description": "Specific CVE ID"
+                },
+                "tool_response": {
+                  "type": "object",
+                  "description": "Observed tool response"
+                },
+                "mcp_arguments": {
+                  "type": "object",
+                  "description": "Arguments sent to tool"
+                },
+                "profile": {
+                  "type": "string",
+                  "enum": [
+                    "vulnerable",
+                    "secure"
+                  ],
+                  "default": "vulnerable"
+                },
+                "canary_token": {
+                  "type": "string",
+                  "description": "Canary token string"
+                },
+                "audit_event_id": {
+                  "type": "string",
+                  "description": "Audit trace ID"
+                }
+              }
+            }
+          },
+          "required": [
+            "action"
+          ]
+        }
+      },
+      {
+        "name": "verity_remediation_ops",
+        "description": "Generates verified remediation patches, safe projection configs, and secure wrapper policies for MCP servers.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "action": {
+              "type": "string",
+              "enum": [
+                "explain_vulnerability_remediation",
+                "generate_guard_patch",
+                "generate_wrapper_config"
+              ],
+              "description": "Remediation action to perform."
+            },
+            "options": {
+              "type": "object",
+              "properties": {
+                "vulnerability_id": {
+                  "type": "string",
+                  "description": "CVE or Advisory ID"
+                },
+                "package_name": {
+                  "type": "string",
+                  "description": "Target package name"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Target package version"
+                },
+                "server_framework": {
+                  "type": "string",
+                  "enum": [
+                    "python",
+                    "typescript",
+                    "generic"
+                  ],
+                  "default": "python"
+                },
+                "tool_schema": {
+                  "type": "object",
+                  "description": "Vulnerable tool definition"
+                }
+              }
+            }
+          },
+          "required": [
+            "action"
+          ]
+        }
+      },
+      {
+        "name": "discover_mcp_endpoints",
+        "description": "Connect to target MCP server and discover tools safely with a 5s watchdog.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "transport": {
+              "type": "string",
+              "enum": [
+                "stdio",
+                "sse",
+                "http"
+              ],
+              "default": "stdio"
+            },
+            "command": {
+              "type": "string"
+            },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "url": {
+              "type": "string"
+            },
+            "timeout_seconds": {
+              "type": "number",
+              "default": 5.0
+            }
+          },
+          "required": [
+            "transport"
+          ]
+        }
+      },
+      {
+        "name": "discover_client_environment",
+        "description": "Scan client configs across workstations and detect plaintext secrets.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sandbox_root": {
+              "type": "string"
+            },
+            "clients": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "fingerprint_mcp_server",
+        "description": "Match MCP tool schemas against on-board passports via O(1) multi-index.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "prompts": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "name_hint": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "tools"
+          ]
+        }
+      },
+      {
+        "name": "lookup_mcp_vulnerabilities",
+        "description": "Query on-board OSV vulnerability advisories evaluating SemVer constraints.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "package_name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "purl": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      {
+        "name": "audit_and_generate_exploit_plan",
+        "description": "Generate deterministic VAIB red-team exploit plans for vulnerable servers.",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "package_name": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "cve_id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "package_name",
+            "version"
+          ]
+        }
+      }
+    ]
+  }
+}

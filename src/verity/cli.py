@@ -527,11 +527,17 @@ def _probe_config(config: Any, transport: Any, name: str) -> dict[str, Any]:
             (f["severity"] for f in findings),
             key=lambda sev: _SEVERITY_RANK.get(sev, len(_SEVERITY_ORDER)),
         )
+        details = "; ".join(sorted({f["rule_id"] for f in findings if f["rule_id"]}))
+        message = (
+            f"{len(findings)} static finding(s) on exposed capabilities: {details}"
+            if details
+            else f"{len(findings)} static finding(s) on exposed capabilities."
+        )
         return {
             "name": name,
             "status": "FAIL",
-            "message": f"{len(findings)} static finding(s) on exposed capabilities.",
-            "details": "; ".join(sorted({f["rule_id"] for f in findings if f["rule_id"]})),
+            "message": message,
+            "details": details,
             "severity": worst,
         }
 

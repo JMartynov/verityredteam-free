@@ -1,0 +1,23 @@
+FROM python:3.12-slim-bookworm
+
+ARG INSTALL_SOURCE=wheel
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates curl \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY .build_dist /tmp/dist
+
+RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
+        pip install --no-cache-dir verity-redteam-core; \
+    else \
+        pip install --no-cache-dir /tmp/dist/*.whl; \
+    fi
+
+RUN git clone --depth 1 https://github.com/harishsg993010/damn-vulnerable-mcp-server.git /opt/dvmcp
+
+COPY fixtures/ /opt/fixtures/
+COPY verify_all_scenarios.sh /opt/verify_all_scenarios.sh
+RUN chmod +x /opt/verify_all_scenarios.sh
+
+CMD ["/opt/verify_all_scenarios.sh"]

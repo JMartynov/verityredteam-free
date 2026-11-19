@@ -1,0 +1,102 @@
+{
+  "summary": {
+    "scanned_files_count": 3,
+    "total_findings": 8,
+    "scan_duration_ms": 0.0,
+    "error_count": 0,
+    "severity_counts": {
+      "CRITICAL": 0,
+      "HIGH": 6,
+      "MEDIUM": 2,
+      "LOW": 0,
+      "INFO": 0
+    }
+  },
+  "findings": [
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: GITHUB_TOKEN",
+      "message": "Env variable 'GITHUB_TOKEN' contains unredacted credential. (GITHUB_TOKEN=****)",
+      "file_path": "/root/.config/Claude/claude_desktop_config.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${GITHUB_TOKEN}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: OPENAI_API_KEY",
+      "message": "Env variable 'OPENAI_API_KEY' contains unredacted credential. (OPENAI_API_KEY=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${OPENAI_API_KEY}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: DATABASE_PASSWORD",
+      "message": "Env variable 'DATABASE_PASSWORD' contains unredacted credential. (DATABASE_PASSWORD=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${DATABASE_PASSWORD}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-UNSAFE-SHELL-WRAPPER",
+      "cwe_id": "",
+      "severity": "MEDIUM",
+      "title": "Direct Shell Execution Wrapper",
+      "message": "Server launched via raw shell interpreter 'bash', increasing injection risk. (command: bash)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Invoke server binary directly without shell interpreter."
+    },
+    {
+      "rule_id": "VULN-CVE-2025-6514",
+      "cwe_id": "CVE-2025-6514",
+      "severity": "HIGH",
+      "title": "Known Vulnerability: mcp-remote exposed to OS command injection via untrusted MCP server connections",
+      "message": "mcp-remote is exposed to OS command injection when connecting to untrusted MCP servers due to crafted input from the authorization_endpoint response URL (Matched version 0.1.15 in advisory CVE-2025-6514)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Upgrade to fixed version or apply sandbox."
+    },
+    {
+      "rule_id": "VULN-GHSA-6xpm-ggf7-wc3p",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Known Vulnerability: mcp-remote exposed to OS command injection via untrusted MCP server connections",
+      "message": "mcp-remote is exposed to OS command injection when connecting to untrusted MCP servers due to crafted input from the authorization_endpoint response URL (Matched version 0.1.15 in advisory GHSA-6xpm-ggf7-wc3p)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Upgrade to fixed version or apply sandbox."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: API_KEY",
+      "message": "Env variable 'API_KEY' contains unredacted credential. (API_KEY=****)",
+      "file_path": "/root/.continue/config.yaml",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${API_KEY}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-UNSAFE-SHELL-WRAPPER",
+      "cwe_id": "",
+      "severity": "MEDIUM",
+      "title": "Direct Shell Execution Wrapper",
+      "message": "Server launched via raw shell interpreter 'sh', increasing injection risk. (command: sh)",
+      "file_path": "/root/.continue/config.yaml",
+      "line_number": "-",
+      "remediation": "Invoke server binary directly without shell interpreter."
+    }
+  ],
+  "scanned_files": [
+    "/root/.config/Claude/claude_desktop_config.json",
+    "/root/.continue/config.yaml",
+    "/root/.cursor/mcp.json"
+  ]
+}

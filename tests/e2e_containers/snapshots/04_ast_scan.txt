@@ -1,0 +1,26 @@
+# Verity Scan Report
+
+## Summary
+
+| Metric | Value |
+| --- | --- |
+| Scanned files | 2 |
+| Total findings | 3 |
+| Duration (ms) | 0.43 |
+| CRITICAL | 2 |
+| HIGH | 1 |
+| MEDIUM | 0 |
+| LOW | 0 |
+| INFO | 0 |
+
+## Findings
+
+| Severity | Rule | CWE | Title | Location | Remediation |
+| --- | --- | --- | --- | --- | --- |
+| CRITICAL | VERITY-AST-CWE-94-EVAL | CWE-94 | Unsafe Dynamic Code Evaluation (eval/exec) | /opt/fixtures/ast_vuln_server.py:13 | Replace dynamic eval/exec with a strict AST whitelist parser (e.g. SafeMathEvaluator) or isolated non-evaluating expression evaluator. |
+| CRITICAL | VERITY-AST-CWE-78-SHELL | CWE-78 | Command Injection via shell=True Subprocess | /opt/fixtures/ast_vuln_server.py:18 | Set 'shell=False' and pass arguments as a validated list of tokens: ['executable', 'arg1', 'arg2']. |
+| HIGH | VERITY-AST-CWE-502-YAML | CWE-502 | Insecure YAML Deserialization (yaml.load without SafeLoader) | /opt/fixtures/ast_vuln_server.py:24 | Always use yaml.safe_load() or specify Loader=yaml.SafeLoader. |
+
+---
+
+_Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports._
