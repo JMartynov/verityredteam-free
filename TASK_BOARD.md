@@ -79,17 +79,17 @@ flowchart TD
 
 | Task Key | Task Title | Architectural Scope | Task Spec | Status | GitHub Project #5 Item |
 | :---: | :--- | :--- | :--- | :---: | :---: |
-| **M1** | **Plugin Foundation & Core MCP Server** | Plugin protocols, entry points, stdlib JSON-RPC MCP server | Inline below | `Done` | [View Item #M1](https://github.com/users/JMartynov/projects/5) |
-| **M2** | **Workstation Discovery & Static Screening** | 9-client scanner, 13-rule StaticRuleEvaluator, fingerprinting, OSV cache | Inline below | `Done` | [View Item #M2](https://github.com/users/JMartynov/projects/5) |
-| **M3** | **Deterministic SQL AST Guard** | Cohesive 245-line `SqlSecurityGuard` (`sqlglot`), Pro Snowflake guard | Inline below | `Done` | [View Item #M3](https://github.com/users/JMartynov/projects/5) |
-| **M4** | **Link `verity-pro` to `verity-core` via `uv` Workspace** | `[tool.uv.sources]`, `src/verity_pro/` packaging, remove duplicated core | Inline below | `Done` | [View Item #M4](https://github.com/users/JMartynov/projects/5) |
-| **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | Inline below | `Done` | [View Item #M5](https://github.com/users/JMartynov/projects/5) |
-| **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | Inline below | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
-| **M7** | **CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support** | Wire secret scrubbing, shell wrappers, OSV CVEs & YAML parsing into `verity scan` | [M7_cli_parity_and_auditor_wiring.md](docs/tasks/M7_cli_parity_and_auditor_wiring.md) | `Done` | [View Item #M7](https://github.com/users/JMartynov/projects/5) |
-| **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Done` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
-| **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Done` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
-| **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Done` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
-| **M11** | **Credential Detection Hardening, Packaging/Display Polish & `v0.2.0` PyPI Release** | DSN & value-pattern secret checks, SPDX license, `Rule` `no_wrap=True`, `v0.2.0` publish + live PyPI E2E | [M11_credential_hardening_polish_and_v020_release.md](docs/tasks/M11_credential_hardening_polish_and_v020_release.md) | `Done` | [View Item #M11](https://github.com/users/JMartynov/projects/5) |
+| **M1** | **Plugin Foundation & Core MCP Server** | Plugin protocols, entry points, stdlib JSON-RPC MCP server | Inline below | `Done` | [View Item #M1](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhJQ99Q`) |
+| **M2** | **Workstation Discovery & Static Screening** | 9-client scanner, 13-rule StaticRuleEvaluator, fingerprinting, OSV cache | Inline below | `Done` | [View Item #M2](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhJQ-AE`) |
+| **M3** | **Deterministic SQL AST Guard** | Cohesive 245-line `SqlSecurityGuard` (`sqlglot`), Pro Snowflake guard | Inline below | `Done` | [View Item #M3](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhJQ-DA`) |
+| **M4** | **Link `verity-pro` to `verity-core` via `uv` Workspace** | `[tool.uv.sources]`, `src/verity_pro/` packaging, remove duplicated core | Inline below | `Done` | [View Item #M4](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhJQ-Gg`) |
+| **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | Inline below | `Done` | [View Item #M5](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhJQ-I8`) |
+| **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | Inline below | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhJQ-Mo`) |
+| **M7** | **CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support** | Wire secret scrubbing, shell wrappers, OSV CVEs & YAML parsing into `verity scan` | [M7_cli_parity_and_auditor_wiring.md](docs/tasks/M7_cli_parity_and_auditor_wiring.md) | `Done` | [View Item #M7](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKMCKw`) |
+| **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Done` | [View Item #M8](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKMCQA`) |
+| **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Done` | [View Item #M9](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKMCU4`) |
+| **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Done` | [View Item #M10](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKMCYw`) |
+| **M11** | **Credential Detection Hardening, Packaging/Display Polish & `v0.2.0` PyPI Release** | DSN & value-pattern secret checks, SPDX license, `Rule` `no_wrap=True`, `v0.2.0` publish + live PyPI E2E | [M11_credential_hardening_polish_and_v020_release.md](docs/tasks/M11_credential_hardening_polish_and_v020_release.md) | `Done` | [View Item #M11](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKNnNg`) |
 | **M12** | **Real Streaming SSE (`text/event-stream`) & Streamable HTTP Transport Support** | Incremental SSE frame parser, Streamable HTTP `mcp-session-id`, legacy SSE endpoint, unit tests & real `FastMCP` E2E | [M12_streaming_sse_streamable_http_transport.md](docs/tasks/M12_streaming_sse_streamable_http_transport.md) | `Done` | [View Item #M12](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPNQ0`) |
 | **M13** | **Expose UCP Rug-Pull Detection (`detect_rug_pull`) in `verity_security_scan` & CLI** | `detect_rug_pull` MCP action, `verity test --save-baseline`/`--baseline`, unit tests & mutable server E2E | [M13_expose_ucp_rug_pull_detection.md](docs/tasks/M13_expose_ucp_rug_pull_detection.md) | `Done` | [View Item #M13](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPQE0`) |
 | **M14** | **True End-to-End `VERITY_OFFLINE` & Air-Gapped Cold-Start Baseline Support** | Zero-socket `VERITY_OFFLINE` across `data_fetcher`/matchers, expired-cache/baseline, unit tests & `--network none` E2E | [M14_true_offline_airgapped_mode.md](docs/tasks/M14_true_offline_airgapped_mode.md) | `Done` | [View Item #M14](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKPSWU`) |
@@ -120,6 +120,7 @@ flowchart TD
 #### Master Plan Reference
 - [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md) (Phase 1, Task PRO-1 & PRO-2; Phase 2, Task FREE-1 & FREE-5)
 - [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md) (Gap #1: Zero-framework stdlib JSON-RPC 2.0; Gap #2: Decouple 5 hardcoded Pro imports)
+- GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhJQ99Q`
 
 #### Context
 Decouple Pro internals behind Python `importlib.metadata.entry_points(group="verity.plugins")` and pure-stdlib JSON-RPC 2.0 MCP server (`server.py`, NO `FastMCP`/`click`/`pydantic` bloat). Establishes the foundational runtime abstraction barrier so that `verity-core` can run completely standalone without any proprietary or heavy external dependencies, while allowing `verity-pro` to dynamically register enterprise extensions when present.
@@ -178,6 +179,7 @@ Decouple Pro internals behind Python `importlib.metadata.entry_points(group="ver
 #### Master Plan Reference
 - [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md) (Phase 2, Task FREE-2 & FREE-3)
 - [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md) (Gap #4: Cover all 13 exact `VERITY-STATIC-*` rules; Gap #2: Parameterize `active_bridge.py`)
+- GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhJQ-AE`
 
 #### Context
 Deliver the 5-second single-player audit: 9-client workstation secret scanning, 13-rule sub-millisecond `StaticRuleEvaluator`, O(1) fingerprinting, and OSV CVE lookup. Provides instantaneous developer value without requiring any Docker containers, databases, or cloud accounts.
@@ -244,6 +246,7 @@ Deliver the 5-second single-player audit: 9-client workstation secret scanning, 
 #### Master Plan Reference
 - [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md) (Phase 2, Task FREE-4)
 - [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md) (Gap #5: Move 245-line `SqlSecurityGuard` intact; keep Snowflake in Pro)
+- GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhJQ-DA`
 
 #### Context
 Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while keeping `SnowflakeSecurityGuard` strictly in Pro. Establishes a clean division: deterministic SQL AST validation (Free) vs. cloud data warehouse RBAC and time-travel policies (Pro).
@@ -289,6 +292,7 @@ Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while k
 #### Master Plan Reference
 - [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md) (Phase 3, Task PRO-3, PRO-4 & PRO-5)
 - [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md) (Gap #3: Namespace collision resolution, single-source core)
+- GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhJQ-Gg`
 
 #### Context
 Eliminate duplicate code in `verityredteam` by mounting `verityredteam-free` as an editable dependency via `[tool.uv.sources]` and moving Pro-only modules into `src/verity_pro/`. Resolves Python namespace collisions between the two repositories and creates a seamless local developer workspace.
@@ -350,6 +354,7 @@ Eliminate duplicate code in `verityredteam` by mounting `verityredteam-free` as 
 #### Master Plan Reference
 - [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md) (Phase 2, Task FREE-6 & FREE-7; Section 8: PLG Strategy)
 - [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md) (Gap #6: Net-new CLI reporting and zero-Docker synthetic targets)
+- GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhJQ-I8`
 
 #### Context
 Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test --demo`, `verity serve`) with Rich terminal Pass/Fail tables and subtle Pro upgrade prompts. Provides the viral developer adoption hook while cleanly funneling enterprise users to Pro.
@@ -401,6 +406,7 @@ Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test
 #### Master Plan Reference
 - [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md) (Phase 3, Task PRO-5; Section 9: Safety Matrix)
 - [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md) (Section 3: Gated Verification Matrix)
+- GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhJQ-Mo`
 
 #### Context
 Automate quality gates on both repositories and prepare public launch assets. Ensures continuous regression defense across both Open Core and Enterprise Pro, verifying wheel packaging and public documentation.

@@ -107,6 +107,67 @@ KEY_FLAGS = (
     "--transport",
 )
 
+TASK_BOARD_PATH = REPO_ROOT / "TASK_BOARD.md"
+_PROJECT_5_URL = "https://github.com/users/JMartynov/projects/5"
+_PROJECT_ITEM_ID_RE = re.compile(r"PVTI_[A-Za-z0-9_-]{10,}")
+_TASK_MATRIX_ROW_RE = re.compile(r"^\| \*\*M(?P<number>\d+)\*\* \|")
+_TASK_SECTION_RE = re.compile(r"^### M(?P<number>\d+):", re.MULTILINE)
+_INLINE_SPEC_MARKER = "Inline below"
+
+
+def _parse_task_matrix_rows(text: str) -> dict[int, dict[str, Any]]:
+    rows: dict[int, dict[str, Any]] = {}
+    for line in text.splitlines():
+        match = _TASK_MATRIX_ROW_RE.match(line)
+        if match is None:
+            continue
+        number = int(match.group("number"))
+        assert number not in rows, (
+            f"TASK_BOARD.md defines the Task Matrix row M{number} twice"
+        )
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        rows[number] = {
+            "line": line,
+            "cells": cells,
+            "spec": cells[3] if len(cells) > 3 else "",
+            "item_ids": _PROJECT_ITEM_ID_RE.findall(line),
+        }
+    return rows
+
+
+def _parse_task_sections(text: str) -> dict[int, str]:
+    matches = list(_TASK_SECTION_RE.finditer(text))
+    sections: dict[int, str] = {}
+    for index, match in enumerate(matches):
+        number = int(match.group("number"))
+        assert number not in sections, (
+            f"TASK_BOARD.md defines the detailed section M{number} twice"
+        )
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(text)
+        sections[number] = text[match.start() : end]
+    return sections
+
+
+def _single_project_item_id(text: str, label: str) -> str:
+    item_ids = _PROJECT_ITEM_ID_RE.findall(text)
+    assert len(item_ids) == 1, (
+        f"{label} must state exactly one PVTI_... item id, found {item_ids!r}"
+    )
+    return item_ids[0]
+
+
+_TASK_BOARD_TEXT = TASK_BOARD_PATH.read_text(encoding="utf-8")
+_TASK_MATRIX_ROWS = _parse_task_matrix_rows(_TASK_BOARD_TEXT)
+_TASK_SECTIONS = _parse_task_sections(_TASK_BOARD_TEXT)
+_TASK_MATRIX_ROW_CASES = [
+    pytest.param(number, row, id=f"M{number}")
+    for number, row in sorted(_TASK_MATRIX_ROWS.items())
+]
+_TASK_SECTION_CASES = [
+    pytest.param(number, section, id=f"M{number}")
+    for number, section in sorted(_TASK_SECTIONS.items())
+]
+
 
 def _find_subparsers(
     parser: argparse.ArgumentParser,
@@ -489,3 +550,108 @@ def test_demo_tape_scene4_uses_full_demo() -> None:
 def test_demo_gif_present_and_not_stale() -> None:
     assert _DEMO_GIF_PATH.is_file(), "docs/assets/demo.gif must exist"
     assert "docs/assets/demo.gif" in README_PATH.read_text(encoding="utf-8")
+
+
+def test_task_board_defines_matrix_rows_and_sections() -> None:
+    assert _TASK_MATRIX_ROWS, "TASK_BOARD.md must define Task Matrix rows"
+    assert _TASK_SECTIONS, "TASK_BOARD.md must define detailed M<n> sections"
+
+
+@pytest.mark.parametrize(("number", "row"), _TASK_MATRIX_ROW_CASES)
+def test_task_matrix_rows_carry_project_item_ids(
+    number: int, row: dict[str, Any]
+) -> None:
+    item_ids = row["item_ids"]
+    assert len(item_ids) == 1, (
+        f"Matrix row M{number} must carry exactly one PVTI_... item id, "
+        f"found {item_ids!r}"
+    )
+    assert _PROJECT_ITEM_ID_RE.fullmatch(item_ids[0]), (
+        f"Matrix row M{number} item id {item_ids[0]!r} is malformed"
+    )
+
+
+@pytest.mark.parametrize(("number", "row"), _TASK_MATRIX_ROW_CASES)
+def test_task_matrix_rows_link_to_project_5(
+    number: int, row: dict[str, Any]
+) -> None:
+    item_id = _single_project_item_id(row["line"], f"Matrix row M{number}")
+    expected = f"[View Item #M{number}]({_PROJECT_5_URL}) (`{item_id}`)"
+    assert row["cells"][-1] == expected, (
+        f"Matrix row M{number} must render its Project #5 cell as {expected!r}"
+    )
+
+
+@pytest.mark.parametrize(("number", "row"), _TASK_MATRIX_ROW_CASES)
+def test_task_matrix_spec_links_resolve(
+    number: int, row: dict[str, Any]
+) -> None:
+    spec = row["spec"]
+    if spec.strip() == _INLINE_SPEC_MARKER:
+        assert number in _TASK_SECTIONS, (
+            f"Matrix row M{number} uses 'Inline below' without a matching "
+            f"'### M{number}:' section"
+        )
+        return
+    match = _LINK_RE.search(spec)
+    assert match is not None, (
+        f"Matrix row M{number} spec {spec!r} is neither a link nor 'Inline below'"
+    )
+    target = match.group("target").strip().split()[0].strip("\"'")
+    assert not target.startswith(("http://", "https://", "mailto:", "#")), (
+        f"Matrix row M{number} spec must resolve to a repository file, "
+        f"got {target!r}"
+    )
+    resolved = (TASK_BOARD_PATH.parent / target).resolve()
+    assert resolved.is_file(), (
+        f"Matrix row M{number} spec link {target!r} does not resolve to a file"
+    )
+    tasks_dir = (TASK_BOARD_PATH.parent / "docs" / "tasks").resolve()
+    assert tasks_dir in resolved.parents and resolved.suffix == ".md", (
+        f"Matrix row M{number} spec link {target!r} must target docs/tasks/*.md"
+    )
+
+
+@pytest.mark.parametrize(("number", "section"), _TASK_SECTION_CASES)
+def test_detailed_sections_carry_project_item_ids(
+    number: int, section: str
+) -> None:
+    item_id = _single_project_item_id(section, f"Detailed section M{number}")
+    assert _PROJECT_ITEM_ID_RE.fullmatch(item_id), (
+        f"Detailed section M{number} item id {item_id!r} is malformed"
+    )
+
+
+def test_matrix_and_detailed_sections_are_in_sync() -> None:
+    assert set(_TASK_MATRIX_ROWS) == set(_TASK_SECTIONS), (
+        "Task Matrix rows and detailed M<n> sections must cover the same tasks"
+    )
+    for number in sorted(_TASK_MATRIX_ROWS):
+        matrix_id = _single_project_item_id(
+            _TASK_MATRIX_ROWS[number]["line"], f"Matrix row M{number}"
+        )
+        section_id = _single_project_item_id(
+            _TASK_SECTIONS[number], f"Detailed section M{number}"
+        )
+        assert matrix_id == section_id, (
+            f"Detailed section M{number} must state the matrix item id "
+            f"{matrix_id!r}, found {section_id!r}"
+        )
+
+
+def test_project_item_ids_are_unique() -> None:
+    matrix_ids: list[str] = [
+        _single_project_item_id(row["line"], f"Matrix row M{number}")
+        for number, row in sorted(_TASK_MATRIX_ROWS.items())
+    ]
+    assert len(matrix_ids) == len(set(matrix_ids)), (
+        "Task Matrix rows must not repeat a PVTI_... item id"
+    )
+
+    section_ids: list[str] = [
+        _single_project_item_id(section, f"Detailed section M{number}")
+        for number, section in sorted(_TASK_SECTIONS.items())
+    ]
+    assert len(section_ids) == len(set(section_ids)), (
+        "Detailed sections must not repeat a PVTI_... item id"
+    )
