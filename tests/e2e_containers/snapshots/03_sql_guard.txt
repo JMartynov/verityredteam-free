@@ -1,0 +1,35 @@
+                                        Verity Test Results                                         
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Check              ┃ Severity ┃ Message                                                 ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  FAIL  │ sql_security_guard │ HIGH     │ Prohibited SQL keyword detected in read query:          │
+│        │                    │          │ 'DELETE'.                                               │
+└────────┴────────────────────┴──────────┴─────────────────────────────────────────────────────────┘
+Passed: 0  Failed: 1
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.
+                                        Verity Test Results                                         
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Check              ┃ Severity ┃ Message                                                 ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  FAIL  │ sql_security_guard │ HIGH     │ Access to internal database catalog 'PG_SHADOW' is      │
+│        │                    │          │ prohibited.                                             │
+└────────┴────────────────────┴──────────┴─────────────────────────────────────────────────────────┘
+Passed: 0  Failed: 1
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.
+                                        Verity Test Results                                         
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Check              ┃ Severity ┃ Message                                                 ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  PASS  │ sql_security_guard │ -        │ Query passed read-only and parameterization validation. │
+└────────┴────────────────────┴──────────┴─────────────────────────────────────────────────────────┘
+Passed: 1  Failed: 0
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.
+                                        Verity Test Results                                         
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Check              ┃ Severity ┃ Message                                                 ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  FAIL  │ sql_security_guard │ HIGH     │ Stacked queries with semicolons are strictly            │
+│        │                    │          │ prohibited.                                             │
+└────────┴────────────────────┴──────────┴─────────────────────────────────────────────────────────┘
+Passed: 0  Failed: 1
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.

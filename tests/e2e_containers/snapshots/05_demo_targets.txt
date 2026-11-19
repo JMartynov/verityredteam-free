@@ -1,0 +1,48 @@
+                                        Verity Test Results                                         
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Check                          ┃ Severity ┃ Message                                     ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  PASS  │ SQLite Basic Target            │ CWE-89   │ Vulnerable breached=True, Secure            │
+│        │                                │          │ defended=True — {'payload': "' OR '1'='1",  │
+│        │                                │          │ 'vulnerable_result': {'rows': [{'id': 1,    │
+│        │                                │          │ 'username': 'alice', 'role': 'user'},       │
+│        │                                │          │ {'id': 2, 'username': 'bob', 'role':        │
+│        │                                │          │ 'user'}, {'id': 3, 'username': 'admin',     │
+│        │                                │          │ 'role': 'admin'}], 'count': 3},             │
+│        │                                │          │ 'secure_result': {'rows': [], 'count': 0}}  │
+│  PASS  │ PostgreSQL Multi-Tenant Target │ CWE-639  │ Vulnerable breached=True, Secure            │
+│        │                                │          │ defended=True — {'session_tenant':          │
+│        │                                │          │ 'tenant-a', 'requested_invoice':            │
+│        │                                │          │ 'inv_b_cyber', 'vulnerable_result':         │
+│        │                                │          │ {'invoice': {'invoice_id': 'inv_b_cyber',   │
+│        │                                │          │ 'tenant_id': 'tenant-b', 'amount': 1337.0,  │
+│        │                                │          │ 'status': 'overdue', 'password_hash':       │
+│        │                                │          │ 'FAKE-PW-HASH-B-CYBER'}}, 'secure_result':  │
+│        │                                │          │ {'invoice': None}}                          │
+│  PASS  │ MongoDB NoSQL Target           │ CWE-943  │ Vulnerable breached=True, Secure            │
+│        │                                │          │ defended=True — {'payload': {'username':    │
+│        │                                │          │ {'$ne': None}}, 'vulnerable_result':        │
+│        │                                │          │ {'matches': [{'username': 'alice', 'role':  │
+│        │                                │          │ 'user', 'email': 'alice@example.com',       │
+│        │                                │          │ 'secret': 'alice-secret'}, {'username':     │
+│        │                                │          │ 'bob', 'role': 'user', 'email':             │
+│        │                                │          │ 'bob@example.com', 'secret': 'bob-secret'}, │
+│        │                                │          │ {'username': 'admin', 'role': 'admin',      │
+│        │                                │          │ 'email': 'admin@example.com', 'secret':     │
+│        │                                │          │ 'FLAG{mongo_admin_secret}'}]},              │
+│        │                                │          │ 'secure_result': {'error': 'operator        │
+│        │                                │          │ payloads are not permitted', 'matches':     │
+│        │                                │          │ []}}                                        │
+│  PASS  │ MCP Code Execution Target      │ CWE-94   │ Vulnerable breached=True, Secure            │
+│        │                                │          │ defended=True — {'payload':                 │
+│        │                                │          │ "__import__('math').sqrt(16)",              │
+│        │                                │          │ 'vulnerable_result': {'expression':         │
+│        │                                │          │ "__import__('math').sqrt(16)", 'result':    │
+│        │                                │          │ 4.0}, 'secure_result': {'error':            │
+│        │                                │          │ 'expression must be a numeric literal',     │
+│        │                                │          │ 'expression':                               │
+│        │                                │          │ "__import__('math').sqrt(16)", 'result':    │
+│        │                                │          │ None}}                                      │
+└────────┴────────────────────────────────┴──────────┴─────────────────────────────────────────────┘
+Passed: 4  Failed: 0
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.

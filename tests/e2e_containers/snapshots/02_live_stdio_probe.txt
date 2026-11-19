@@ -1,0 +1,12 @@
+                                        Verity Test Results                                         
+┏━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Status ┃ Check                 ┃ Severity ┃ Message                                              ┃
+┡━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  FAIL  │ stdio_transport_probe │ CRITICAL │ 4 static finding(s) on exposed capabilities:         │
+│        │                       │          │ VERITY-STATIC-EXFIL-WEBHOOK;                         │
+│        │                       │          │ VERITY-STATIC-INJECTION-OVERRIDE;                    │
+│        │                       │          │ VERITY-STATIC-METADATA-SSRF;                         │
+│        │                       │          │ VERITY-STATIC-TOOL-POISONING                         │
+└────────┴───────────────────────┴──────────┴──────────────────────────────────────────────────────┘
+Passed: 0  Failed: 1
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.

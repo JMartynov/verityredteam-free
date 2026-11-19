@@ -1,0 +1,28 @@
+Verity Scan Report
+         Summary          
+┏━━━━━━━━━━━━━━━━┳━━━━━━━┓
+┃ Metric         ┃ Value ┃
+┡━━━━━━━━━━━━━━━━╇━━━━━━━┩
+│ Scanned files  │     2 │
+│ Total findings │     4 │
+│ Duration (ms)  │   0.0 │
+│ CRITICAL       │     1 │
+│ HIGH           │     3 │
+│ MEDIUM         │     0 │
+│ LOW            │     0 │
+│ INFO           │     0 │
+└────────────────┴───────┘
+                                              Findings                                              
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Severity   ┃ Rule                       ┃ Title                       ┃ Location                 ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│  CRITICAL  │ VERITY-STATIC-INJECTION-O… │ Prompt Injection            │ query_customer_records:- │
+│            │                            │ Instruction Override        │                          │
+│  HIGH      │ VERITY-STATIC-TOOL-POISON… │ Tool Poisoning / Secondary  │ query_customer_records:- │
+│            │                            │ Shadow Functionality        │                          │
+│  HIGH      │ VERITY-STATIC-EXFIL-WEBHO… │ Out-of-Band Data            │ query_customer_records:- │
+│            │                            │ Exfiltration Endpoint       │                          │
+│  HIGH      │ VERITY-STATIC-METADATA-SS… │ Cloud Instance Metadata     │ fetch_docs:-             │
+│            │                            │ Service SSRF                │                          │
+└────────────┴────────────────────────────┴─────────────────────────────┴──────────────────────────┘
+Upgrade to Verity Pro for Snowflake RBAC guards, live DB canary oracles, and SARIF CI/CD exports.

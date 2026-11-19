@@ -1,0 +1,10 @@
+FROM python:3.12-slim-bookworm
+
+COPY fixtures/vuln_sse_mcp.py /opt/target/vuln_sse_mcp.py
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=2s --timeout=3s --retries=15 \
+  CMD python3 -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+
+CMD ["python3", "/opt/target/vuln_sse_mcp.py"]

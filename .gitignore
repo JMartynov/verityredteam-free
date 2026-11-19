@@ -12,3 +12,4 @@ build/
 .aider*
 .worktrees/
 /artifacts/
+tests/e2e_containers/.build_dist/

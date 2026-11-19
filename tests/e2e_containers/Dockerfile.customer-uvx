@@ -1,0 +1,9 @@
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+
+ARG INSTALL_SOURCE=wheel
+ENV INSTALL_SOURCE=${INSTALL_SOURCE}
+
+COPY .build_dist /tmp/dist
+COPY fixtures/ /opt/fixtures/
+
+CMD ["sh", "-c", "set -eu; if [ \"$INSTALL_SOURCE\" = \"pypi\" ]; then PKG=verity-redteam-core; else PKG=$(ls /tmp/dist/*.whl | head -n 1); fi; echo \"Using package: $PKG\"; uvx --from \"$PKG\" verity --help; uvx --from \"$PKG\" verity test --demo; if uvx --from \"$PKG\" verity test --sql \"SELECT id FROM users; DROP TABLE users;--\"; then echo 'SQLi was not rejected' >&2; exit 1; fi; uvx --from \"$PKG\" verity test --sql \"SELECT id FROM users\"; if uvx --from \"$PKG\" verity scan --schema-file /opt/fixtures/vendor_tools.json --offline --fail-on-findings; then echo 'schema scan did not flag findings' >&2; exit 1; fi; echo 'customer-uvx OK'"]
