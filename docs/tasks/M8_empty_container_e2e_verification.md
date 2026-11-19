@@ -2,7 +2,7 @@
 
 - **Task ID**: `M8`
 - **Priority**: `P0`
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: `M7`
 - **Blocks**: `M9`, `M10`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
@@ -144,12 +144,12 @@ docker compose -f tests/e2e_containers/docker-compose.verify.yml down -v
 
 ## 7. Acceptance Criteria
 
-- [ ] Containers start strictly empty (no mounted host repo source, no host user IDE configs, no pre-installed `verity`).
-- [ ] `INSTALL_SOURCE=wheel` passes across all 4 containers (`customer-pip`, `customer-uvx`, `customer-full-workstation`, `target-sse-lab`); `INSTALL_SOURCE=pypi` is cleanly parameterized and documented.
-- [ ] Both pinned public targets (`mcp-remote@0.1.15`, DVMCP) and self-contained vulnerable fixtures install cleanly from scratch inside the containers and are caught by `verity`.
-- [ ] All 6 customer scenarios execute end-to-end with verified exit codes, expected rule IDs/CWEs, and zero raw secret leaks.
-- [ ] Sanitized output snapshots are saved under `tests/e2e_containers/snapshots/` for `M10`.
-- [ ] Core `.github/workflows/ci.yml` remains zero-Docker; container suite runs via `.github/workflows/e2e-containers.yml`.
+- [x] Containers start strictly empty (no mounted host repo source, no host user IDE configs, no pre-installed `verity`).
+- [x] `INSTALL_SOURCE=wheel` passes across all 4 containers (`customer-pip`, `customer-uvx`, `customer-full-workstation`, `target-sse-lab`); `INSTALL_SOURCE=pypi` is cleanly parameterized and documented.
+- [x] Both pinned public targets (`mcp-remote@0.1.15`, DVMCP) and self-contained vulnerable fixtures install cleanly from scratch inside the containers and are caught by `verity`.
+- [x] All 6 customer scenarios execute end-to-end with verified exit codes, expected rule IDs/CWEs, and zero raw secret leaks.
+- [x] Sanitized output snapshots are saved under `tests/e2e_containers/snapshots/` for `M10`.
+- [x] Core `.github/workflows/ci.yml` remains zero-Docker; container suite runs via `.github/workflows/e2e-containers.yml`.
 
 ---
 

@@ -66,7 +66,7 @@ flowchart TD
 | **M5** | **Net-New Free CLI & 4 In-Memory Synthetic Targets** | `verity scan`, `test --demo`, `serve`, Rich tables, 4 zero-Docker targets | Inline below | `Done` | [View Item #M5](https://github.com/users/JMartynov/projects/5) |
 | **M6** | **CI/CD & Launch Readiness** | Multi-platform GitHub Actions matrix, `uv build` wheel, Pro regression | Inline below | `Done` | [View Item #M6](https://github.com/users/JMartynov/projects/5) |
 | **M7** | **CLI Parity, `ConsolidatedSecurityAuditor` Wiring & YAML Config Support** | Wire secret scrubbing, shell wrappers, OSV CVEs & YAML parsing into `verity scan` | [M7_cli_parity_and_auditor_wiring.md](docs/tasks/M7_cli_parity_and_auditor_wiring.md) | `Done` | [View Item #M7](https://github.com/users/JMartynov/projects/5) |
-| **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Todo` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
+| **M8** | **Ground-Zero Empty-Container E2E Customer Verification Suite** | Clean-room Docker matrix (`wheel`/`pypi`), real + fixture MCP targets, 6 scenarios | [M8_empty_container_e2e_verification.md](docs/tasks/M8_empty_container_e2e_verification.md) | `Done` | [View Item #M8](https://github.com/users/JMartynov/projects/5) |
 | **M9** | **Dynamic, Narrow Terminal Screencast GIF (Charmbracelet VHS in Docker)** | Reproducible VHS `.tape` (`~860x440`), 4 live scenes, `gifsicle`-optimized `demo.gif` | [M9_dynamic_narrow_demo_gif.md](docs/tasks/M9_dynamic_narrow_demo_gif.md) | `Todo` | [View Item #M9](https://github.com/users/JMartynov/projects/5) |
 | **M10** | **Customer-Focused `README.md` Restructure & CLI Documentation Parity Test** | Pain-point-first README with container-verified outputs, `demo.gif`, CI parity test | [M10_customer_readme_restructure_and_parity.md](docs/tasks/M10_customer_readme_restructure_and_parity.md) | `Todo` | [View Item #M10](https://github.com/users/JMartynov/projects/5) |
 
@@ -462,9 +462,9 @@ docker compose -f tests/e2e_containers/docker-compose.verify.yml down -v
 ```
 
 #### Acceptance Criteria
-- [ ] Clean-room install succeeds from fresh wheel (and supports `INSTALL_SOURCE=pypi`) with zero host repo mounts.
-- [ ] Both public vulnerable MCP packages and deterministic fixtures install from scratch and trigger expected findings/exit codes.
-- [ ] All 6 scenarios pass end-to-end and produce sanitized verbatim snapshots for `M10`.
+- [x] Clean-room install succeeds from fresh wheel (and supports `INSTALL_SOURCE=pypi`) with zero host repo mounts.
+- [x] Both public vulnerable MCP packages and deterministic fixtures install from scratch and trigger expected findings/exit codes.
+- [x] All 6 scenarios pass end-to-end and produce sanitized verbatim snapshots for `M10`.
 
 ---
 
