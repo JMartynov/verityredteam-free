@@ -2,7 +2,7 @@
 
 - **Task ID**: `M7`
 - **Priority**: `P0`
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: None (`M1`–`M6` completed)
 - **Blocks**: `M8`, `M9`, `M10`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
@@ -93,13 +93,13 @@ uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -q
 
 ## 4. Acceptance Criteria
 
-- [ ] `verity scan` (default workstation discovery and `--config-file`) invokes `ConsolidatedSecurityAuditor` and reports `SEC-STATIC-SECRET-IN-CONFIG`, `SEC-STATIC-UNSAFE-SHELL-WRAPPER`, static tool schema matches, and OSV CVE findings.
-- [ ] Raw secret values from `config.env` never leak unredacted into `terminal`, `json`, `markdown`, or `html` outputs.
-- [ ] `.continue/config.yaml` and `librechat.yaml` are parsed accurately in both `MultiClientConfigScanner.parse_config_file()` and `verity scan --config-file`.
-- [ ] `ActiveExploitBridge.DEFAULT_CLI_COMMAND_TEMPLATE` references only valid `verity` CLI flags present in `src/verity/cli.py`.
-- [ ] `_load_sarif_exporter()` cleanly handles both `sarif`/`sarif_export` and `pro` entry points while returning `PRO_FEATURE_REQUIRED` (exit `2`) when Pro is absent.
-- [ ] Zero Pro/proprietary imports (`verity_pro`, `verity_lite`, `snowflake_guard`, `customer_lab`) exist in `verityredteam-free`.
-- [ ] `uv run ruff check src tests` and `uv run pytest tests/ -q` pass 100%, and `verityredteam` Pro MCP agent tests pass with zero regressions.
+- [x] `verity scan` (default workstation discovery and `--config-file`) invokes `ConsolidatedSecurityAuditor` and reports `SEC-STATIC-SECRET-IN-CONFIG`, `SEC-STATIC-UNSAFE-SHELL-WRAPPER`, static tool schema matches, and OSV CVE findings.
+- [x] Raw secret values from `config.env` never leak unredacted into `terminal`, `json`, `markdown`, or `html` outputs.
+- [x] `.continue/config.yaml` and `librechat.yaml` are parsed accurately in both `MultiClientConfigScanner.parse_config_file()` and `verity scan --config-file`.
+- [x] `ActiveExploitBridge.DEFAULT_CLI_COMMAND_TEMPLATE` references only valid `verity` CLI flags present in `src/verity/cli.py`.
+- [x] `_load_sarif_exporter()` cleanly handles both `sarif`/`sarif_export` and `pro` entry points while returning `PRO_FEATURE_REQUIRED` (exit `2`) when Pro is absent.
+- [x] Zero Pro/proprietary imports (`verity_pro`, `verity_lite`, `snowflake_guard`, `customer_lab`) exist in `verityredteam-free`.
+- [x] `uv run ruff check src tests` and `uv run pytest tests/ -q` pass 100%, and `verityredteam` Pro MCP agent tests pass with zero regressions.
 
 ---
 
