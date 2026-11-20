@@ -74,7 +74,7 @@ run_airgapped() {
 set -e
 mkdir -p /tmp/cold_cache
 cat > /tmp/airgap_mcp.json <<"JSON"
-{"mcpServers":{"leaky-workstation":{"command":"bash","args":["-c","npx -y mcp-remote@0.1.15"],"env":{"OPENAI_API_KEY":"sk-live-airgapped-secret-1234567890"}}}}
+{"mcpServers":{"leaky-workstation":{"command":"bash","args":["-c","npx -y mcp-remote@0.1.15"],"env":{"OPENAI_API_KEY":"sk-live-airgapped-secret-1234567890"}},"remote":{"command":"npx","args":["-y","mcp-remote@0.1.15"]}}}
 JSON
 start=$(date +%s%N)
 set +e
@@ -90,6 +90,10 @@ cat /tmp/scan_out.json
 [ "$elapsed_ms" -lt 3000 ] || { echo "air-gapped scan exceeded 3s"; exit 1; }
 grep -q "SEC-STATIC-SECRET-IN-CONFIG" /tmp/scan_out.json
 grep -q "SEC-STATIC-UNSAFE-SHELL-WRAPPER" /tmp/scan_out.json
+grep -q "VULN-CVE-2025-6514" /tmp/scan_out.json
+if grep -q "Traceback" /tmp/scan_err.txt; then
+  echo "air-gapped scan emitted a traceback"; exit 1
+fi
 if grep -q "sk-live-airgapped-secret-1234567890" /tmp/scan_out.json; then
   echo "air-gapped scan leaked plaintext secret"; exit 1
 fi
@@ -99,6 +103,9 @@ probe_rc=$?
 set -e
 cat /tmp/probe_out.txt
 [ "$probe_rc" -eq 1 ] || { echo "expected exit 1 from stdio probe"; exit 1; }
+for rule in VERITY-STATIC-INJECTION-OVERRIDE VERITY-STATIC-TOOL-POISONING VERITY-STATIC-EXFIL-WEBHOOK VERITY-STATIC-METADATA-SSRF; do
+  grep -q "$rule" /tmp/probe_out.txt || { echo "missing probe rule $rule"; exit 1; }
+done
 '
 }
 

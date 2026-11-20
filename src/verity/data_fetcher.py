@@ -65,27 +65,28 @@ def resolve_packaged_baseline(cached_filename: str) -> dict[str, Any] | None:
     package_name = _PACKAGE_BY_SNAPSHOT.get(cached_filename)
     if not package_name:
         return None
-    try:
-        import importlib.resources as resources
+    import importlib.resources as resources
 
-        root = resources.files(package_name)
-    except Exception:
-        return None
-    for candidate in (
-        root.joinpath(cached_filename),
-        root.joinpath("data", cached_filename),
-    ):
+    for pkg in (package_name, "verity.data"):
         try:
-            if not candidate.is_file():
-                continue
-            data = decode_snapshot_bytes(candidate.read_bytes())
-            if isinstance(data, dict):
-                logger.info(
-                    "Loaded packaged baseline %s from %s", cached_filename, package_name
-                )
-                return data
+            root = resources.files(pkg)
         except Exception:
             continue
+        for candidate in (
+            root.joinpath(cached_filename),
+            root.joinpath("data", cached_filename),
+        ):
+            try:
+                if not candidate.is_file():
+                    continue
+                data = decode_snapshot_bytes(candidate.read_bytes())
+                if isinstance(data, dict):
+                    logger.info(
+                        "Loaded packaged baseline %s from %s", cached_filename, pkg
+                    )
+                    return data
+            except Exception:
+                continue
     return None
 
 

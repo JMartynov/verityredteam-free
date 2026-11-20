@@ -665,7 +665,7 @@ def test_load_auto_offline_skips_http(
     index = VulnerabilityIndex()
     result = index.load_auto(directory=tmp_path)
     assert calls == []
-    assert result == 0
+    assert result > 0
 
 
 def test_load_auto_single_fetch_when_snapshot_missing(

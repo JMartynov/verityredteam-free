@@ -182,10 +182,39 @@ def test_load_from_directory_offline_is_network_free(
     matcher = FingerprintMatcher()
     index = VulnerabilityIndex()
 
-    assert matcher.load_from_directory(empty) == 0
-    assert index.load_from_directory(empty) == 0
-    assert matcher.load_from_directory(missing) == 0
-    assert index.load_from_directory(missing) == 0
+    assert matcher.load_from_directory(empty) > 0
+    assert index.load_from_directory(empty) > 0
+    assert matcher.load_from_directory(missing) > 0
+    assert index.load_from_directory(missing) > 0
+
+
+def test_offline_cold_start_uses_packaged_baseline_and_detects_cve(
+    airgap: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    config_path = tmp_path / "cold_mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "remote": {
+                        "command": "npx",
+                        "args": ["-y", "mcp-remote@0.1.15"],
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(
+        ["scan", "--config-file", str(config_path), "--offline", "--format", "json"]
+    )
+    out = capsys.readouterr().out
+    report = json.loads(out)
+    rule_ids = {f["rule_id"] for f in report["findings"]}
+
+    assert exit_code == 0
+    assert "VULN-CVE-2025-6514" in rule_ids
 
 
 def test_online_fetch_still_performs_http(
