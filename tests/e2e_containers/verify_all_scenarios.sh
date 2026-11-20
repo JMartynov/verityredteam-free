@@ -1148,6 +1148,32 @@ PY
 
 pass "scenario 8 complete"
 
+# ---------------- Scenario 9: SARIF version parity ----------------
+expect_exit 2 "scan --format sarif requires pro" "$OUT_DIR/s9_sarif_pro.txt" \
+  verity scan --config-file "$OUT_DIR/empty_mcp.json" --format sarif
+grep -q "verity-pro" "$OUT_DIR/s9_sarif_pro.txt" || fail "sarif pro gate message missing"
+
+python3 - <<'PY'
+import verity
+import verity.cli
+import verity.scanner.models
+
+assert (
+    verity.cli._stdlib_sarif_exporter({"findings": []})["runs"][0]["tool"]["driver"][
+        "version"
+    ]
+    == verity.__version__
+)
+assert (
+    verity.scanner.models.ScanReport(target_path=".").to_sarif()["runs"][0]["tool"][
+        "driver"
+    ]["semanticVersion"]
+    == verity.__version__
+)
+print("sarif version parity assertions passed")
+PY
+pass "sarif version parity complete"
+
 # ---------------- Final leak scan + snapshot export ----------------
 scan_for_leaks "$OUT_DIR"
 

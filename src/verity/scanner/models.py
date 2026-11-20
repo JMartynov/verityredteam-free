@@ -6,6 +6,8 @@ from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from typing import Any
 
+import verity
+
 
 class ScannerSeverity(StrEnum):
     """Vulnerability severity levels for static code analysis."""
@@ -170,7 +172,7 @@ class ScanReport:
                     "tool": {
                         "driver": {
                             "name": "Verity-AST-Scanner",
-                            "semanticVersion": "0.2.0",
+                            "semanticVersion": verity.__version__,
                             "informationUri": "https://github.com/JMartynov/verityredteam",
                             "rules": list(rules_map.values()),
                         }
