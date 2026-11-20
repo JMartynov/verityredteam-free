@@ -2,14 +2,21 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
-import os
+import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
 
 from mcp_vulnerabilities.models import OsvVulnerability
+
+from verity.lookup.sqlite_cache import (
+    SqliteIndexReader,
+    build_sqlite_cache,
+    open_valid_cache,
+)
 
 logger = logging.getLogger("verity.lookup.index")
 
@@ -30,6 +37,46 @@ class VulnerabilityIndex:
         self._trigram_to_packages: dict[str, set[str]] = defaultdict(set)
         self._all_packages: set[str] = set()
         self._is_loaded: bool = False
+        self._sqlite_reader: SqliteIndexReader | None = None
+
+    def _reset_state(self) -> None:
+        """Reset all in-memory indexes and detach any SQLite reader."""
+        if self._sqlite_reader is not None:
+            self._sqlite_reader.close()
+            self._sqlite_reader = None
+        self._by_id = {}
+        self._by_package_name = defaultdict(list)
+        self._by_purl = defaultdict(list)
+        self._by_alias = defaultdict(list)
+        self._by_tool = defaultdict(list)
+        self._by_cwe = defaultdict(list)
+        self._trigram_to_packages = defaultdict(set)
+        self._all_packages = set()
+        self._is_loaded = False
+
+    def close(self) -> None:
+        """Release any resources held by the index."""
+        if self._sqlite_reader is not None:
+            self._sqlite_reader.close()
+            self._sqlite_reader = None
+
+    def __del__(self) -> None:
+        with contextlib.suppress(Exception):
+            self.close()
+
+    def _attach_sqlite_reader(self, reader: SqliteIndexReader, path: Path) -> int:
+        """Attach a SQLite reader as the backing store and return its vuln count."""
+        self._reset_state()
+        self._sqlite_reader = reader
+        self._is_loaded = True
+        logger.info(
+            "VulnerabilityIndex loaded %d advisories across %d packages "
+            "from SQLite cache %s",
+            reader.total_vulnerabilities,
+            reader.total_packages,
+            path,
+        )
+        return reader.total_vulnerabilities
 
     @property
     def is_loaded(self) -> bool:
@@ -39,11 +86,15 @@ class VulnerabilityIndex:
     @property
     def total_vulnerabilities(self) -> int:
         """Return total number of indexed vulnerabilities."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.total_vulnerabilities
         return len(self._by_id)
 
     @property
     def total_packages(self) -> int:
         """Return total number of distinct indexed package names."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.total_packages
         return len(self._all_packages)
 
     def load_from_directory(self, directory: str | Path) -> int:
@@ -93,18 +144,68 @@ class VulnerabilityIndex:
         )
         return count
 
+    @staticmethod
+    def _parse_snapshot_records(
+        data: dict[str, Any],
+    ) -> list[tuple[OsvVulnerability, dict[str, Any]]]:
+        """Parse snapshot payload into (vuln, raw_dict) pairs, skipping invalid entries."""
+        records: list[tuple[OsvVulnerability, dict[str, Any]]] = []
+        vulns_map = data.get("vulnerabilities", {})
+        if not isinstance(vulns_map, dict):
+            return records
+        for _, vuln_dict in vulns_map.items():
+            if isinstance(vuln_dict, dict) and vuln_dict.get("id"):
+                try:
+                    vuln = OsvVulnerability.from_dict(vuln_dict)
+                except Exception as exc:
+                    logger.debug("Failed to index snapshot record: %s", exc)
+                    continue
+                records.append((vuln, vuln_dict))
+        return records
+
+    def _load_records(
+        self, records: list[tuple[OsvVulnerability, dict[str, Any]]]
+    ) -> int:
+        """Index parsed records into the in-memory structures."""
+        count = 0
+        for vuln, _ in records:
+            self.index_vulnerability(vuln)
+            count += 1
+        return count
+
     def load_from_snapshot(self, snapshot_data: dict[str, Any] | str | Path | bytes) -> int:
         """Load and index all OSV vulnerabilities directly from a snapshot payload or file."""
         import gzip
 
         if isinstance(snapshot_data, (str, Path)):
             path = Path(snapshot_data)
+            reader = open_valid_cache(path)
+            if reader is not None:
+                return self._attach_sqlite_reader(reader, path)
+
             if str(path).endswith(".gz"):
                 with gzip.open(path, "rt", encoding="utf-8") as f:
                     data = json.load(f)
             else:
                 data = json.loads(path.read_text(encoding="utf-8"))
-        elif isinstance(snapshot_data, bytes):
+
+            records = self._parse_snapshot_records(data)
+            build_sqlite_cache(path, records)
+            reader = open_valid_cache(path)
+            if reader is not None:
+                return self._attach_sqlite_reader(reader, path)
+
+            self._reset_state()
+            count = self._load_records(records)
+            self._is_loaded = True
+            logger.info(
+                "VulnerabilityIndex loaded %d advisories across %d packages from snapshot",
+                len(self._by_id),
+                len(self._all_packages),
+            )
+            return count
+
+        if isinstance(snapshot_data, bytes):
             try:
                 data = json.loads(gzip.decompress(snapshot_data).decode("utf-8"))
             except Exception:
@@ -114,17 +215,9 @@ class VulnerabilityIndex:
         else:
             raise ValueError(f"Unsupported snapshot type: {type(snapshot_data)}")
 
-        vulns_map = data.get("vulnerabilities", {})
-        count = 0
-        for _, vuln_dict in vulns_map.items():
-            if isinstance(vuln_dict, dict) and vuln_dict.get("id"):
-                try:
-                    vuln = OsvVulnerability.from_dict(vuln_dict)
-                    self.index_vulnerability(vuln)
-                    count += 1
-                except Exception as exc:
-                    logger.debug("Failed to index snapshot record: %s", exc)
-
+        records = self._parse_snapshot_records(data)
+        self._reset_state()
+        count = self._load_records(records)
         self._is_loaded = True
         logger.info(
             "VulnerabilityIndex loaded %d advisories across %d packages from snapshot",
@@ -147,18 +240,32 @@ class VulnerabilityIndex:
         cached = self._existing_cache_snapshot()
         if cached is not None:
             try:
-                return self.load_from_snapshot(cached)
+                loaded = self.load_from_snapshot(cached)
+                if loaded > 0:
+                    return loaded
             except Exception as exc:
-                logger.debug("Failed to load cached snapshot %s: %s", cached, exc)
+                logger.warning("Failed to load cached snapshot %s: %s", cached, exc)
 
         try:
             from verity.data_fetcher import resolve_packaged_baseline
         except Exception:
-            return 0
+            resolve_packaged_baseline = None  # type: ignore[assignment]
 
-        packaged = resolve_packaged_baseline("vulnerabilities.json.gz")
-        if packaged:
-            return self.load_from_snapshot(packaged)
+        if resolve_packaged_baseline is not None:
+            packaged = resolve_packaged_baseline("vulnerabilities.json.gz")
+            if packaged:
+                try:
+                    loaded = self.load_from_snapshot(packaged)
+                    if loaded > 0:
+                        return loaded
+                except Exception as exc:
+                    logger.warning("Failed to load packaged baseline: %s", exc)
+
+        logger.warning(
+            "Offline mode: no cached or packaged baseline vulnerability data "
+            "available (0 advisories loaded); vulnerability lookups will "
+            "return 0 matches."
+        )
         return 0
 
     def load_auto(
@@ -169,14 +276,35 @@ class VulnerabilityIndex:
         if p.is_dir() and any(p.glob("*.json")):
             return self.load_from_directory(p)
 
-        offline = os.environ.get("VERITY_OFFLINE", "").lower() in ("1", "true", "yes")
-        if offline:
+        from verity.data_fetcher import _is_offline
+
+        if _is_offline():
             return self._load_offline_fallback()
 
-        from verity.data_fetcher import fetch_vulnerabilities_snapshot
+        from verity.data_fetcher import DEFAULT_TTL_SECONDS, fetch_vulnerabilities_snapshot
+
+        if not force_refresh:
+            cached = self._existing_cache_snapshot()
+            if cached is not None:
+                try:
+                    if (time.time() - cached.stat().st_mtime) < DEFAULT_TTL_SECONDS:
+                        loaded = self.load_from_snapshot(cached)
+                        if loaded > 0 and self._is_loaded:
+                            return loaded
+                except Exception as exc:
+                    logger.warning("Failed to load cached snapshot %s: %s", cached, exc)
 
         snapshot = fetch_vulnerabilities_snapshot(force_refresh=force_refresh)
         if snapshot:
+            cached_after = self._existing_cache_snapshot()
+            if cached_after is not None:
+                reader = open_valid_cache(cached_after)
+                if reader is None:
+                    records = self._parse_snapshot_records(snapshot)
+                    build_sqlite_cache(cached_after, records)
+                    reader = open_valid_cache(cached_after)
+                if reader is not None:
+                    return self._attach_sqlite_reader(reader, cached_after)
             return self.load_from_snapshot(snapshot)
         return 0
 
@@ -230,6 +358,8 @@ class VulnerabilityIndex:
 
     def get_by_package_name(self, package_name: str) -> list[OsvVulnerability]:
         """Fetch all vulnerabilities for an exact package name."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.get_by_package_name(package_name)
         norm = package_name.strip().lower()
         if norm in self._by_package_name:
             return list(self._by_package_name[norm])
@@ -241,11 +371,15 @@ class VulnerabilityIndex:
 
     def get_by_purl(self, purl: str) -> list[OsvVulnerability]:
         """Fetch all vulnerabilities for a Package URL."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.get_by_purl(purl)
         base_purl = purl.strip().lower().split("@")[0]
         return list(self._by_purl.get(base_purl, []))
 
     def get_by_id_or_alias(self, identifier: str) -> list[OsvVulnerability]:
         """Fetch vulnerabilities matching a CVE/GHSA ID or alias."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.get_by_id_or_alias(identifier)
         norm = identifier.strip().upper()
         if norm in self._by_id:
             return [self._by_id[norm]]
@@ -253,16 +387,22 @@ class VulnerabilityIndex:
 
     def get_by_tool(self, tool_name: str) -> list[OsvVulnerability]:
         """Fetch all vulnerabilities exposing the specified tool name."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.get_by_tool(tool_name)
         norm = tool_name.strip().lower()
         return list(self._by_tool.get(norm, []))
 
     def get_by_cwe(self, cwe_id: str) -> list[OsvVulnerability]:
         """Fetch all vulnerabilities categorized under the given CWE identifier."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.get_by_cwe(cwe_id)
         norm = cwe_id.strip().upper()
         return list(self._by_cwe.get(norm, []))
 
     def search_packages(self, query: str, limit: int = 50) -> list[str]:
         """Search packages using fast trigram & substring matching (grep-style)."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.search_packages(query, limit=limit)
         clean_q = query.strip().lower()
         if not clean_q:
             return sorted(self._all_packages)[:limit]
@@ -282,4 +422,6 @@ class VulnerabilityIndex:
 
     def get_all_packages(self) -> list[str]:
         """Return a sorted list of all indexed package names."""
+        if self._sqlite_reader is not None:
+            return self._sqlite_reader.get_all_packages()
         return sorted(self._all_packages)

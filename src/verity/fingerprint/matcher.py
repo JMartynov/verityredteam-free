@@ -39,12 +39,24 @@ class FingerprintMatcher(UpstreamFingerprintMatcher):
             cached = resolve_cached_snapshot("passports.json.gz")
             if cached is not None:
                 try:
-                    return self.load_from_snapshot(cached)
+                    loaded = self.load_from_snapshot(cached)
+                    if loaded > 0:
+                        return loaded
                 except Exception as exc:  # pragma: no cover - defensive
-                    logger.debug("Failed to load cached passports snapshot: %s", exc)
+                    logger.warning("Failed to load cached passports snapshot: %s", exc)
             packaged = resolve_packaged_baseline("passports.json.gz")
             if packaged:
-                return self.load_from_snapshot(packaged)
+                try:
+                    loaded = self.load_from_snapshot(packaged)
+                    if loaded > 0:
+                        return loaded
+                except Exception as exc:  # pragma: no cover - defensive
+                    logger.warning("Failed to load packaged passports baseline: %s", exc)
+            logger.warning(
+                "Offline mode: no cached or packaged baseline fingerprint data "
+                "available (0 passports loaded); fingerprint lookups will "
+                "return 0 matches."
+            )
             return 0
 
         try:

@@ -343,6 +343,30 @@ def _collect_config_findings(
             except Exception:
                 auditor = None
 
+        if auditor is not None:
+            from verity.data_fetcher import _is_offline
+
+            if _is_offline():
+                vuln_engine = getattr(auditor, "vuln_engine", None)
+                vuln_index = getattr(vuln_engine, "index", None)
+                vuln_total = getattr(vuln_index, "total_vulnerabilities", None)
+
+                matcher = getattr(auditor, "matcher", None)
+                inner_matcher = getattr(matcher, "matcher", None)
+                fast_index = getattr(inner_matcher, "fast_index", None)
+                passport_total = getattr(fast_index, "packages", None)
+                passport_count = (
+                    len(passport_total) if passport_total is not None else None
+                )
+
+                if vuln_total == 0 or passport_count == 0:
+                    print(
+                        "Warning: offline mode has no cached or packaged "
+                        "baseline data; vulnerability/fingerprint lookups will "
+                        "return 0 matches.",
+                        file=sys.stderr,
+                    )
+
         for config in configs:
             raw_config = getattr(config, "raw_config", None)
             if not isinstance(raw_config, dict):

@@ -166,12 +166,13 @@ def test_offline_uses_expired_cache_and_detects_cve(
     exit_code = cli.main(
         ["scan", "--config-file", str(config_path), "--offline", "--format", "json"]
     )
-    out = capsys.readouterr().out
-    report = json.loads(out)
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
     rule_ids = {f["rule_id"] for f in report["findings"]}
 
     assert exit_code == 0
     assert "VULN-CVE-2025-6514" in rule_ids
+    assert "offline mode has no cached or packaged baseline data" not in captured.err
 
 
 def test_load_from_directory_offline_is_network_free(
@@ -211,12 +212,13 @@ def test_offline_cold_start_uses_packaged_baseline_and_detects_cve(
     exit_code = cli.main(
         ["scan", "--config-file", str(config_path), "--offline", "--format", "json"]
     )
-    out = capsys.readouterr().out
-    report = json.loads(out)
+    captured = capsys.readouterr()
+    report = json.loads(captured.out)
     rule_ids = {f["rule_id"] for f in report["findings"]}
 
     assert exit_code == 0
     assert "VULN-CVE-2025-6514" in rule_ids
+    assert "offline mode has no cached or packaged baseline data" not in captured.err
 
 
 def test_create_ssl_context_without_certifi_enforces_verification(
@@ -285,6 +287,152 @@ def test_offline_fetch_never_network_and_logs_notice(
     assert result is None
     assert capsys.readouterr().out == ""
     assert any("Offline mode" in record.message for record in caplog.records)
+
+
+def test_offline_vulnerability_index_warns_when_no_baseline(
+    airgap: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    monkeypatch.setattr(
+        data_fetcher, "resolve_packaged_baseline", lambda name: None
+    )
+
+    index = VulnerabilityIndex()
+    with caplog.at_level(logging.WARNING, logger="verity.lookup.index"):
+        loaded = index.load_from_directory(airgap / "missing_kb")
+
+    assert loaded == 0
+    messages = [r.message for r in caplog.records]
+    assert any(
+        "Offline mode" in m
+        and "no cached or packaged baseline" in m
+        and "0 matches" in m
+        for m in messages
+    )
+
+    caplog.clear()
+    auto_index = VulnerabilityIndex()
+    with caplog.at_level(logging.WARNING, logger="verity.lookup.index"):
+        auto_loaded = auto_index.load_auto(airgap / "missing_kb")
+
+    assert auto_loaded == 0
+    auto_messages = [r.message for r in caplog.records]
+    assert any(
+        "Offline mode" in m
+        and "no cached or packaged baseline" in m
+        and "0 matches" in m
+        for m in auto_messages
+    )
+
+
+def test_offline_fingerprint_matcher_warns_when_no_baseline(
+    airgap: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    monkeypatch.setattr(
+        data_fetcher, "resolve_packaged_baseline", lambda name: None
+    )
+
+    matcher = FingerprintMatcher()
+    with caplog.at_level(logging.WARNING, logger="verity.fingerprint.matcher"):
+        loaded = matcher.load_from_directory(airgap / "missing_kb")
+
+    assert loaded == 0
+    messages = [r.message for r in caplog.records]
+    assert any(
+        "Offline mode" in m
+        and "no cached or packaged baseline" in m
+        and "0 matches" in m
+        for m in messages
+    )
+
+    caplog.clear()
+    auto_matcher = FingerprintMatcher()
+    with caplog.at_level(logging.WARNING, logger="verity.fingerprint.matcher"):
+        auto_loaded = auto_matcher.load_auto(airgap / "missing_kb")
+
+    assert auto_loaded == 0
+    auto_messages = [r.message for r in caplog.records]
+    assert any(
+        "Offline mode" in m
+        and "no cached or packaged baseline" in m
+        and "0 matches" in m
+        for m in auto_messages
+    )
+
+
+def test_offline_cli_warns_on_stderr_when_no_baseline(
+    airgap: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        data_fetcher, "resolve_packaged_baseline", lambda name: None
+    )
+
+    config_path = tmp_path / "no_baseline_mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "remote": {
+                        "command": "npx",
+                        "args": ["-y", "mcp-remote@0.1.15"],
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(
+        ["scan", "--config-file", str(config_path), "--offline", "--format", "json"]
+    )
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "offline mode has no cached or packaged baseline data" in captured.err
+    report = json.loads(captured.out)
+    assert "findings" in report
+
+
+def test_env_offline_without_flag_warns_on_stderr_when_no_baseline(
+    airgap: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setattr(
+        data_fetcher, "resolve_packaged_baseline", lambda name: None
+    )
+
+    config_path = tmp_path / "env_offline_mcp.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "mcpServers": {
+                    "remote": {
+                        "command": "npx",
+                        "args": ["-y", "mcp-remote@0.1.15"],
+                    }
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    exit_code = cli.main(
+        ["scan", "--config-file", str(config_path), "--format", "json"]
+    )
+    captured = capsys.readouterr()
+
+    assert exit_code == 0
+    assert "offline mode has no cached or packaged baseline data" in captured.err
+    report = json.loads(captured.out)
+    assert "findings" in report
 
 
 def test_offline_corrupted_cache_is_handled_gracefully(
