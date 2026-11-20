@@ -4,7 +4,7 @@
 
 **Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)  
 **Companion Enterprise Repo**: `/Users/ivan/Project/3t.tools.intellij/verityredteam` (`verity-pro` & `verity_lite`)  
-**Task Board**: [GitHub Project #5 (`Verity RedTeam Free Task Board`)](https://github.com/users/JMartynov/projects/5) & [`TASK_BOARD.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/TASK_BOARD.md)  
+**Task Board**: [GitHub Project #5 (`Verity RedTeam Free Task Board`)](https://github.com/users/JMartynov/projects/5) & [TASK_BOARD.md](TASK_BOARD.md)  
 **Master Architecture Specs**:
 - [`../verityredteam/docs/plans/open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)
 - [`../verityredteam/docs/plans/architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)

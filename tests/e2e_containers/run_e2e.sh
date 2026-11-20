@@ -18,10 +18,13 @@ cd "$REPO_ROOT"
 rm -rf "$BUILD_DIST"
 mkdir -p "$BUILD_DIST" "$SCRIPT_DIR/snapshots"
 
-mkdir -p "$BUILD_DIST/docs/.github/workflows"
+mkdir -p "$BUILD_DIST/docs/.github/workflows" "$BUILD_DIST/docs/docs"
 cp "$REPO_ROOT/README.md" "$BUILD_DIST/docs/README.md"
 cp "$REPO_ROOT/LICENSE" "$BUILD_DIST/docs/LICENSE"
 cp "$REPO_ROOT/.github/workflows/ci.yml" "$BUILD_DIST/docs/.github/workflows/ci.yml"
+cp "$REPO_ROOT/AGENTS.md" "$BUILD_DIST/docs/AGENTS.md"
+cp "$REPO_ROOT/docs/extensibility.md" "$BUILD_DIST/docs/docs/extensibility.md"
+cp "$REPO_ROOT/TASK_BOARD.md" "$BUILD_DIST/docs/TASK_BOARD.md"
 
 if [ "$INSTALL_SOURCE" = "wheel" ]; then
   rm -f "$REPO_ROOT"/dist/verity_redteam_core-*.whl

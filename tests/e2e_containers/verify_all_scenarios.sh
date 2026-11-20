@@ -1318,6 +1318,44 @@ print("docs-metadata parity assertions passed")
 PY
 pass "docs-metadata parity complete"
 
+# ---------------- Scenario 11: AGENTS.md & doc-link parity (M28) ----------------
+python3 - <<'PY'
+import re
+from pathlib import Path
+
+docs_dir = Path("/opt/docs") if Path("/opt/docs/README.md").is_file() else Path("/tmp/dist/docs")
+
+for rel in ("README.md", "AGENTS.md", "docs/extensibility.md", "TASK_BOARD.md"):
+    assert (docs_dir / rel).is_file(), f"missing doc: {docs_dir / rel}"
+
+for rel in ("README.md", "AGENTS.md", "docs/extensibility.md"):
+    text = (docs_dir / rel).read_text(encoding="utf-8")
+    assert re.search(r"\bverity-core\b", text) is None, f"stale verity-core in {rel}"
+
+agents_text = (docs_dir / "AGENTS.md").read_text(encoding="utf-8")
+assert "verity-redteam-core" in agents_text, "AGENTS.md missing verity-redteam-core"
+
+link_re = re.compile(r"!?\[[^\]]*\]\((?P<target>[^)]+)\)")
+task_board_links = []
+for match in link_re.finditer(agents_text):
+    target = match.group("target").strip()
+    if "TASK_BOARD.md" not in target:
+        continue
+    assert not target.startswith("file://"), f"file:// link in AGENTS.md: {target}"
+    assert not re.match(r"^[a-zA-Z][a-zA-Z0-9+.-]*://", target), (
+        f"absolute URL link in AGENTS.md: {target}"
+    )
+    path_part = target.split("#", 1)[0]
+    assert (docs_dir / path_part).resolve().is_file(), (
+        f"broken TASK_BOARD.md link in AGENTS.md: {target}"
+    )
+    task_board_links.append(target)
+assert task_board_links, "AGENTS.md has no TASK_BOARD.md link"
+
+print("AGENTS.md & doc-link parity assertions passed")
+PY
+pass "AGENTS.md & doc-link parity complete"
+
 # ---------------- Final leak scan + snapshot export ----------------
 scan_for_leaks "$OUT_DIR"
 
