@@ -7,12 +7,16 @@ services:
       dockerfile: Dockerfile.target-sse-lab
     networks:
       - verity-e2e-net
+    expose:
+      - "8000"
+      - "8001"
+      - "8002"
     healthcheck:
       test:
         - CMD
         - python3
         - -c
-        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"
+        - "import urllib.request; [urllib.request.urlopen(f'http://127.0.0.1:{p}/health', timeout=2) for p in (8000, 8001, 8002)]"
       interval: 2s
       timeout: 3s
       retries: 15
@@ -40,7 +44,8 @@ services:
     networks:
       - verity-e2e-net
     depends_on:
-      - target-sse-lab
+      target-sse-lab:
+        condition: service_healthy
 
   customer-full-workstation:
     build:

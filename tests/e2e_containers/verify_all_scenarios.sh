@@ -333,6 +333,53 @@ tr -s '[:space:]' ' ' < "$OUT_DIR/s2_sse.txt" | grep -q "static finding(s)" \
 expect_exit 1 "sse vuln probe json" "$OUT_DIR/s2_sse.json" \
   verity test --url "http://target-sse-lab:8000/sse" --format json
 
+start_ns=$(date +%s%N)
+expect_exit 1 "fastmcp streamable-http poisoned probe json" "$OUT_DIR/s2_fastmcp_poisoned.json" \
+  verity test --url "http://target-sse-lab:8001/mcp" --format json
+end_ns=$(date +%s%N)
+elapsed_ms=$(( (end_ns - start_ns) / 1000000 ))
+[ "$elapsed_ms" -lt 5000 ] || fail "fastmcp poisoned probe took ${elapsed_ms}ms (>=5000ms)"
+pass "fastmcp poisoned probe completed in ${elapsed_ms}ms (<5000ms)"
+
+expect_exit 0 "fastmcp streamable-http clean probe json" "$OUT_DIR/s2_fastmcp_clean.json" \
+  verity test --url "http://target-sse-lab:8002/mcp" --format json
+
+python3 - "$OUT_DIR/s2_fastmcp_poisoned.json" "$OUT_DIR/s2_fastmcp_clean.json" <<'PY'
+import json
+import sys
+from pathlib import Path
+
+EXPECTED = {
+    "VERITY-STATIC-INJECTION-OVERRIDE",
+    "VERITY-STATIC-EXFIL-WEBHOOK",
+    "VERITY-STATIC-METADATA-SSRF",
+}
+
+poisoned = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
+poisoned_results = (
+    poisoned if isinstance(poisoned, list) else poisoned.get("results", [])
+)
+failed = [
+    r for r in poisoned_results if str(r.get("status", "")).upper() == "FAIL"
+]
+assert failed, f"fastmcp poisoned: no FAIL results: {poisoned}"
+for result in failed:
+    details = str(result.get("details") or "")
+    message = str(result.get("message") or "")
+    for rule in EXPECTED:
+        assert rule in details, f"fastmcp poisoned details missing {rule}: {details}"
+        assert rule in message, f"fastmcp poisoned message missing {rule}: {message}"
+
+clean = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
+clean_results = clean if isinstance(clean, list) else clean.get("results", [])
+assert clean_results, f"fastmcp clean: no results: {clean}"
+for result in clean_results:
+    assert str(result.get("status", "")).upper() == "PASS", (
+        f"fastmcp clean: non-PASS result: {result}"
+    )
+print("scenario 2 fastmcp streamable-http assertions passed")
+PY
+
 python3 - "$OUT_DIR/s2_stdio.json" "$OUT_DIR/s2_sse.json" <<'PY'
 import json
 import sys
