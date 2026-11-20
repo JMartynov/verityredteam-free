@@ -18,13 +18,14 @@ cd "$REPO_ROOT"
 rm -rf "$BUILD_DIST"
 mkdir -p "$BUILD_DIST" "$SCRIPT_DIR/snapshots"
 
-mkdir -p "$BUILD_DIST/docs/.github/workflows" "$BUILD_DIST/docs/docs"
-cp "$REPO_ROOT/README.md" "$BUILD_DIST/docs/README.md"
-cp "$REPO_ROOT/LICENSE" "$BUILD_DIST/docs/LICENSE"
-cp "$REPO_ROOT/.github/workflows/ci.yml" "$BUILD_DIST/docs/.github/workflows/ci.yml"
-cp "$REPO_ROOT/AGENTS.md" "$BUILD_DIST/docs/AGENTS.md"
-cp "$REPO_ROOT/docs/extensibility.md" "$BUILD_DIST/docs/docs/extensibility.md"
-cp "$REPO_ROOT/TASK_BOARD.md" "$BUILD_DIST/docs/TASK_BOARD.md"
+if [ -f "$REPO_ROOT/README.md" ]; then
+  mkdir -p "$BUILD_DIST/docs/.github/workflows" "$BUILD_DIST/docs/docs"
+  for doc_rel in README.md LICENSE .github/workflows/ci.yml AGENTS.md docs/extensibility.md TASK_BOARD.md; do
+    if [ -f "$REPO_ROOT/$doc_rel" ]; then
+      cp "$REPO_ROOT/$doc_rel" "$BUILD_DIST/docs/$doc_rel"
+    fi
+  done
+fi
 
 if [ "$INSTALL_SOURCE" = "wheel" ]; then
   rm -f "$REPO_ROOT"/dist/verity_redteam_core-*.whl
