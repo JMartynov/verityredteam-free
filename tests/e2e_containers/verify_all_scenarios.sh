@@ -1136,14 +1136,16 @@ conn.close()
 PY
 
 expect_exit 0 "dialect mysql backticks" "$OUT_DIR/s8_mysql.txt" \
-  verity test --sql 'SELECT `id`, `name` FROM `users` LIMIT 1' --dialect mysql
-grep -q "PASS" "$OUT_DIR/s8_mysql.txt" || fail "dialect mysql missing PASS"
-grep -q "mysql" "$OUT_DIR/s8_mysql.txt" || fail "dialect mysql detail missing mysql"
+  verity test --sql 'SELECT `id`, `name` FROM `users` LIMIT 1' --dialect mysql \
+  --format json --output "$OUT_DIR/s8_mysql.json"
+grep -q '"status": "PASS"' "$OUT_DIR/s8_mysql.json" || fail "dialect mysql missing PASS"
+grep -q '#dialect=mysql' "$OUT_DIR/s8_mysql.json" || fail "dialect mysql detail missing mysql"
 
 expect_exit 0 "dialect sqlite limit offset" "$OUT_DIR/s8_sqlite.txt" \
-  verity test --sql "SELECT id, name FROM users LIMIT 1 OFFSET 0" --dialect sqlite
-grep -q "PASS" "$OUT_DIR/s8_sqlite.txt" || fail "dialect sqlite missing PASS"
-grep -q "sqlite" "$OUT_DIR/s8_sqlite.txt" || fail "dialect sqlite detail missing sqlite"
+  verity test --sql "SELECT id, name FROM users LIMIT 1 OFFSET 0" --dialect sqlite \
+  --format json --output "$OUT_DIR/s8_sqlite.json"
+grep -q '"status": "PASS"' "$OUT_DIR/s8_sqlite.json" || fail "dialect sqlite missing PASS"
+grep -q '#dialect=sqlite' "$OUT_DIR/s8_sqlite.json" || fail "dialect sqlite detail missing sqlite"
 
 python3 - "$DEMO_DB" <<'PY'
 import sqlite3
@@ -1166,6 +1168,8 @@ expect_exit 1 "dialect stacked regression mysql" "$OUT_DIR/s8_stack_mysql.txt" \
   verity test --sql "SELECT 1; DROP TABLE users" --dialect mysql
 expect_exit 1 "dialect stacked regression sqlite" "$OUT_DIR/s8_stack_sqlite.txt" \
   verity test --sql "SELECT 1; DROP TABLE users" --dialect sqlite
+expect_exit 1 "dialect stacked regression tsql" "$OUT_DIR/s8_stack_tsql.txt" \
+  verity test --sql "SELECT 1; DROP TABLE users" --dialect tsql
 
 python3 - "$OUT_DIR/s8_mcp.json" <<'PY'
 import json
@@ -1228,8 +1232,32 @@ def main(out_path: str) -> None:
         assert payload.get("ok") is True, payload
         assert payload.get("verdict") == "ALLOWED", payload
         assert payload.get("dialect") == "tsql", payload
+
+        blocked_response = rpc(
+            proc,
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {
+                    "name": "verity_database_guard",
+                    "arguments": {
+                        "action": "validate_sql_query",
+                        "options": {
+                            "sql_query": "SELECT 1; DROP TABLE users",
+                            "dialect": "tsql",
+                        },
+                    },
+                },
+            },
+        )
+        blocked_payload = extract_payload(blocked_response)
+        assert blocked_payload.get("ok") is False, blocked_payload
+        assert blocked_payload.get("verdict") == "BLOCKED", blocked_payload
+        assert blocked_payload.get("dialect") == "tsql", blocked_payload
+
         with open(out_path, "w", encoding="utf-8") as fh:
-            json.dump(payload, fh, indent=2)
+            json.dump({"allowed": payload, "blocked": blocked_payload}, fh, indent=2)
     finally:
         proc.terminate()
         try:
