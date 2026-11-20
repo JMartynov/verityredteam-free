@@ -336,9 +336,16 @@ def test_fail_on_findings_live_only(tmp_path, capsys, fake_auditor):
 
 
 def test_offline_live_probe_env_restored(
-    tmp_path, capsys, fake_auditor, monkeypatch
+    tmp_path, capsys, patch_auditor, monkeypatch
 ):
     monkeypatch.delenv("VERITY_OFFLINE", raising=False)
+    seen: list[str | None] = []
+
+    def audit_impl(config, live_probe):
+        seen.append(os.environ.get("VERITY_OFFLINE"))
+        return _fake_record(config, [])
+
+    patch_auditor(audit_impl)
     cfg = _write_config(
         tmp_path, {"srv": {"command": "npx", "args": ["-y", "safe-server"]}}
     )
@@ -354,13 +361,22 @@ def test_offline_live_probe_env_restored(
             "json",
         ],
     )
+    assert seen, "audit_server callback did not run"
+    assert all(value == "1" for value in seen), seen
     assert "VERITY_OFFLINE" not in os.environ
 
 
 def test_offline_live_probe_restores_prior_value(
-    tmp_path, capsys, fake_auditor, monkeypatch
+    tmp_path, capsys, patch_auditor, monkeypatch
 ):
     monkeypatch.setenv("VERITY_OFFLINE", "0")
+    seen: list[str | None] = []
+
+    def audit_impl(config, live_probe):
+        seen.append(os.environ.get("VERITY_OFFLINE"))
+        return _fake_record(config, [])
+
+    patch_auditor(audit_impl)
     cfg = _write_config(
         tmp_path, {"srv": {"command": "npx", "args": ["-y", "safe-server"]}}
     )
@@ -376,6 +392,8 @@ def test_offline_live_probe_restores_prior_value(
         ]
     )
     capsys.readouterr()
+    assert seen, "audit_server callback did not run"
+    assert all(value == "1" for value in seen), seen
     assert os.environ["VERITY_OFFLINE"] == "0"
 
 

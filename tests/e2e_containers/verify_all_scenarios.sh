@@ -422,6 +422,10 @@ cat > "$LIVE_CFG" <<'JSON'
       "type": "sse",
       "url": "http://target-sse-lab:8000/sse"
     },
+    "mcp-remote-pinned": {
+      "command": "npx",
+      "args": ["-y", "mcp-remote@0.1.15", "https://remote.example.com/sse"]
+    },
     "dead-server": {
       "command": "python3",
       "args": ["/opt/fixtures/does_not_exist.py"]
@@ -475,6 +479,7 @@ EXPECTED = {
     "VERITY-STATIC-TOOL-POISONING",
     "VERITY-STATIC-EXFIL-WEBHOOK",
     "VERITY-STATIC-METADATA-SSRF",
+    "VULN-CVE-2025-6514",
 }
 
 live = json.loads(Path(sys.argv[1]).read_text(encoding="utf-8"))
@@ -485,7 +490,14 @@ assert not missing, f"live_probe.json missing rules: {missing}; got {sorted(rule
 
 static = json.loads(Path(sys.argv[2]).read_text(encoding="utf-8"))
 static_findings = static.get("findings", []) if isinstance(static, dict) else static
-assert static_findings == [], f"static-only expected empty findings: {static_findings}"
+static_live_rules = [
+    f
+    for f in static_findings
+    if str(f.get("rule_id", "")).startswith("VERITY-STATIC-")
+]
+assert not static_live_rules, (
+    f"static-only expected no VERITY-STATIC-* findings: {static_live_rules}"
+)
 
 stderr_text = Path(sys.argv[3]).read_text(encoding="utf-8")
 assert "dead-server" in stderr_text, f"missing dead-server warning: {stderr_text}"
