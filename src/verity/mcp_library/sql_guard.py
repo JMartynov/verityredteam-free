@@ -7,6 +7,7 @@ from typing import Any
 
 import sqlglot
 from sqlglot import exp
+from sqlglot.errors import ParseError, TokenError
 from sqlglot.tokens import TokenType
 
 SUPPORTED_DIALECTS: tuple[str, ...] = (
@@ -23,6 +24,10 @@ SUPPORTED_DIALECTS: tuple[str, ...] = (
 class SqlSecurityError(Exception):
     """Raised when an unsafe or unparameterized SQL operation is detected."""
 
+    def __init__(self, message: str = "", *, rule_id: str | None = None) -> None:
+        super().__init__(message)
+        self.rule_id: str | None = rule_id
+
 
 class SqlSecurityGuard:
     """Security guard providing parameterization checks, tenant scoping, and column projections."""
@@ -33,9 +38,6 @@ class SqlSecurityGuard:
         re.compile(r"\{\s*\}", re.IGNORECASE),  # Python str.format() placeholders in queries
         re.compile(r"'\s*\+\s*", re.IGNORECASE),  # String concatenation with quotes
         re.compile(r"\+\s*'", re.IGNORECASE),
-        re.compile(r";\s*--", re.IGNORECASE),  # SQL comment injection attempts
-        re.compile(r";\s*DROP\s+", re.IGNORECASE),  # Stacked destructive commands
-        re.compile(r";\s*DELETE\s+", re.IGNORECASE),
     )
 
     @classmethod
@@ -43,10 +45,15 @@ class SqlSecurityGuard:
         cls,
         query: str,
         params: tuple[Any, ...] | list[Any] | dict[str, Any] | None = None,
+        dialect: str = "postgres",
     ) -> None:
         """Verify that a SQL query uses parameter placeholders rather than raw concatenation."""
         if not isinstance(query, str) or not query.strip():
             raise SqlSecurityError("SQL query must be a non-empty string.")
+
+        if not isinstance(dialect, str) or not dialect.strip():
+            raise SqlSecurityError("SQL dialect must be a non-empty string.")
+        normalized_dialect = dialect.strip().lower()
 
         for pattern in cls.DANGEROUS_SQL_PATTERNS:
             if pattern.search(query):
@@ -55,6 +62,39 @@ class SqlSecurityGuard:
                     f"stacked queries prohibited: {query[:50]}"
                 )
                 raise SqlSecurityError(msg)
+
+        # Token-aware statement boundary detection using the requested dialect
+        try:
+            tokens = sqlglot.tokenize(query, read=normalized_dialect)
+        except (ValueError, TokenError) as exc:
+            raise SqlSecurityError(
+                "Unable to tokenize SQL query for dialect "
+                f"'{normalized_dialect}': {exc}"
+            ) from exc
+
+        for idx, token in enumerate(tokens):
+            if token.token_type == TokenType.SEMICOLON and (
+                idx < len(tokens) - 1 or bool(token.comments)
+            ):
+                raise SqlSecurityError(
+                    "Stacked queries with semicolons are strictly prohibited.",
+                    rule_id="DISALLOW_STACKED_QUERIES",
+                )
+
+        try:
+            stmts = [
+                stmt
+                for stmt in sqlglot.parse(query, read=normalized_dialect)
+                if stmt is not None
+            ]
+        except (ParseError, TokenError):
+            stmts = []
+
+        if len(stmts) > 1:
+            raise SqlSecurityError(
+                "Stacked queries with semicolons are strictly prohibited.",
+                rule_id="DISALLOW_STACKED_QUERIES",
+            )
 
     @classmethod
     def apply_projection(
