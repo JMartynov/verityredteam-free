@@ -165,6 +165,19 @@ JSON
 
 export OPENAI_API_KEY=sk-exported-host-env-should-not-flag
 
+# ---------------- PyPI version assertion ----------------
+if pip show verity-redteam-core > "$OUT_DIR/pip_show.txt" 2>&1; then
+  if grep -qE '^Version: 0\.2\.0$' "$OUT_DIR/pip_show.txt"; then
+    pass "pip show verity-redteam-core reports Version: 0.2.0"
+  else
+    cat "$OUT_DIR/pip_show.txt" >&2 || true
+    fail "pip show verity-redteam-core version mismatch"
+  fi
+else
+  cat "$OUT_DIR/pip_show.txt" >&2 || true
+  fail "pip show verity-redteam-core failed"
+fi
+
 # ---------------- Scenario 1: workstation scan ----------------
 cd "$WORK_DIR"
 verity scan --format json --output "$OUT_DIR/workstation_all.json" \
@@ -309,6 +322,18 @@ PY
 
 scan_for_leaks "$OUT_DIR"
 pass "scenario 1 complete"
+
+for f in \
+  "$OUT_DIR/workstation_scan.txt" \
+  "$OUT_DIR/workstation_terminal.txt" \
+  "$OUT_DIR/workstation_all.json" \
+  "$OUT_DIR/scan.md" \
+  "$OUT_DIR/scan.html"; do
+  if grep -qiF "not yet on PyPI" "$f"; then
+    fail "stale 'not yet on PyPI' caveat found in $f"
+  fi
+done
+pass "scan outputs contain no stale PyPI caveat"
 
 # ---------------- Scenario 2: live vulnerable probes ----------------
 expect_exit 1 "stdio vuln probe" "$OUT_DIR/s2_stdio.txt" \
@@ -762,6 +787,18 @@ for item in data:
 print("demo json assertions passed")
 PY
 pass "scenario 5 complete"
+
+for f in \
+  "$OUT_DIR/demo.txt" \
+  "$OUT_DIR/demo_html.txt" \
+  "$OUT_DIR/demo.html" \
+  "$OUT_DIR/demo_json.txt" \
+  "$OUT_DIR/demo.json"; do
+  if grep -qiF "not yet on PyPI" "$f"; then
+    fail "stale 'not yet on PyPI' caveat found in $f"
+  fi
+done
+pass "demo outputs contain no stale PyPI caveat"
 
 # ---------------- Scenario 6: IDE MCP server mode ----------------
 verity serve --transport http --host 127.0.0.1 --port 8765 \

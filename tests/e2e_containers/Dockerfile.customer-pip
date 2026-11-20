@@ -9,7 +9,7 @@ RUN apt-get update \
 COPY .build_dist /tmp/dist
 
 RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
-        pip install --no-cache-dir verity-redteam-core; \
+        pip install --no-cache-dir "verity-redteam-core==0.2.0"; \
     else \
         pip install --no-cache-dir /tmp/dist/*.whl; \
     fi
