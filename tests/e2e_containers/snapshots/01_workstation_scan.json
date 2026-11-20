@@ -1,13 +1,13 @@
 {
   "summary": {
     "scanned_files_count": 3,
-    "total_findings": 8,
+    "total_findings": 18,
     "scan_duration_ms": 0.0,
     "error_count": 0,
     "severity_counts": {
       "CRITICAL": 0,
-      "HIGH": 6,
-      "MEDIUM": 2,
+      "HIGH": 11,
+      "MEDIUM": 7,
       "LOW": 0,
       "INFO": 0
     }
@@ -22,6 +22,16 @@
       "file_path": "/root/.config/Claude/claude_desktop_config.json",
       "line_number": "-",
       "remediation": "Replace hardcoded value with reference '${GITHUB_TOKEN}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-UNPINNED-PACKAGE",
+      "cwe_id": "CWE-1104, CWE-829",
+      "severity": "MEDIUM",
+      "title": "Unpinned MCP Package Execution",
+      "message": "Server is launched with floating runner 'npx' without a pinned version for '@modelcontextprotocol/server-github'. Each start may fetch and execute a different, unverified release, exposing the client to typosquatting, package takeover, and supply-chain compromise. (npx @modelcontextprotocol/server-github)",
+      "file_path": "/root/.config/Claude/claude_desktop_config.json",
+      "line_number": "-",
+      "remediation": "Pin an exact package version (e.g. '@modelcontextprotocol/server-github@<version>') or run a locally audited path."
     },
     {
       "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
@@ -54,6 +64,46 @@
       "remediation": "Invoke server binary directly without shell interpreter."
     },
     {
+      "rule_id": "SEC-STATIC-UNPINNED-PACKAGE",
+      "cwe_id": "CWE-1104, CWE-829",
+      "severity": "MEDIUM",
+      "title": "Unpinned MCP Package Execution",
+      "message": "Server is launched with floating runner 'npx' without a pinned version for '@org/analytics-mcp'. Each start may fetch and execute a different, unverified release, exposing the client to typosquatting, package takeover, and supply-chain compromise. (npx @org/analytics-mcp)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Pin an exact package version (e.g. '@org/analytics-mcp@<version>') or run a locally audited path."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: DATABASE_URL",
+      "message": "Env variable 'DATABASE_URL' contains unredacted credential. (DATABASE_URL=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${DATABASE_URL}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: CUSTOM_FIELD",
+      "message": "Env variable 'CUSTOM_FIELD' contains unredacted credential. (CUSTOM_FIELD=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${CUSTOM_FIELD}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-UNPINNED-PACKAGE",
+      "cwe_id": "CWE-1104, CWE-829",
+      "severity": "MEDIUM",
+      "title": "Unpinned MCP Package Execution",
+      "message": "Server is launched with floating runner 'npx' without a pinned version for '@modelcontextprotocol/server-postgres'. Each start may fetch and execute a different, unverified release, exposing the client to typosquatting, package takeover, and supply-chain compromise. (npx @modelcontextprotocol/server-postgres)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Pin an exact package version (e.g. '@modelcontextprotocol/server-postgres@<version>') or run a locally audited path."
+    },
+    {
       "rule_id": "VULN-CVE-2025-6514",
       "cwe_id": "CVE-2025-6514",
       "severity": "HIGH",
@@ -72,6 +122,56 @@
       "file_path": "/root/.cursor/mcp.json",
       "line_number": "-",
       "remediation": "Upgrade to fixed version or apply sandbox."
+    },
+    {
+      "rule_id": "SEC-STATIC-UNPINNED-PACKAGE",
+      "cwe_id": "CWE-1104, CWE-829",
+      "severity": "MEDIUM",
+      "title": "Unpinned MCP Package Execution",
+      "message": "Server is launched with floating runner 'uvx' without a pinned version for 'mcp-server-fetch'. Each start may fetch and execute a different, unverified release, exposing the client to typosquatting, package takeover, and supply-chain compromise. (uvx mcp-server-fetch)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Pin an exact package version (e.g. 'mcp-server-fetch==<version>') or run a locally audited path."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: AWS_ACCESS_KEY_ID",
+      "message": "Env variable 'AWS_ACCESS_KEY_ID' contains unredacted credential. (AWS_ACCESS_KEY_ID=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${AWS_ACCESS_KEY_ID}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: AWS_SECRET_ACCESS_KEY",
+      "message": "Env variable 'AWS_SECRET_ACCESS_KEY' contains unredacted credential. (AWS_SECRET_ACCESS_KEY=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${AWS_SECRET_ACCESS_KEY}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+      "cwe_id": "",
+      "severity": "HIGH",
+      "title": "Plaintext Secret in Configuration: PRIVATE_KEY_PEM",
+      "message": "Env variable 'PRIVATE_KEY_PEM' contains unredacted credential. (PRIVATE_KEY_PEM=****)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Replace hardcoded value with reference '${PRIVATE_KEY_PEM}'."
+    },
+    {
+      "rule_id": "SEC-STATIC-UNPINNED-PACKAGE",
+      "cwe_id": "CWE-1104, CWE-829",
+      "severity": "MEDIUM",
+      "title": "Unpinned MCP Package Execution",
+      "message": "Server is launched with floating runner 'npx' without a pinned version for '@modelcontextprotocol/server-aws-kb-retrieval'. Each start may fetch and execute a different, unverified release, exposing the client to typosquatting, package takeover, and supply-chain compromise. (npx @modelcontextprotocol/server-aws-kb-retrieval)",
+      "file_path": "/root/.cursor/mcp.json",
+      "line_number": "-",
+      "remediation": "Pin an exact package version (e.g. '@modelcontextprotocol/server-aws-kb-retrieval@<version>') or run a locally audited path."
     },
     {
       "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",

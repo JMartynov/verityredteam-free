@@ -74,11 +74,11 @@ Verity Scan Report
 ┃ Metric         ┃ Value ┃
 ┡━━━━━━━━━━━━━━━━╇━━━━━━━┩
 │ Scanned files  │     3 │
-│ Total findings │     8 │
+│ Total findings │    18 │
 │ Duration (ms)  │   0.0 │
 │ CRITICAL       │     0 │
-│ HIGH           │     6 │
-│ MEDIUM         │     2 │
+│ HIGH           │    11 │
+│ MEDIUM         │     7 │
 │ LOW            │     0 │
 │ INFO           │     0 │
 └────────────────┴───────┘
@@ -89,6 +89,8 @@ Verity Scan Report
 │  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.config/Claude/cl… │
 │          │                                 │ Configuration:           │                          │
 │          │                                 │ GITHUB_TOKEN             │                          │
+│  MEDIUM  │ SEC-STATIC-UNPINNED-PACKAGE     │ Unpinned MCP Package     │ /root/.config/Claude/cl… │
+│          │                                 │ Execution                │                          │
 │  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
 │          │                                 │ Configuration:           │                          │
 │          │                                 │ OPENAI_API_KEY           │                          │
@@ -97,6 +99,16 @@ Verity Scan Report
 │          │                                 │ DATABASE_PASSWORD        │                          │
 │  MEDIUM  │ SEC-STATIC-UNSAFE-SHELL-WRAPPER │ Direct Shell Execution   │ /root/.cursor/mcp.json:- │
 │          │                                 │ Wrapper                  │                          │
+│  MEDIUM  │ SEC-STATIC-UNPINNED-PACKAGE     │ Unpinned MCP Package     │ /root/.cursor/mcp.json:- │
+│          │                                 │ Execution                │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ DATABASE_URL             │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ CUSTOM_FIELD             │                          │
+│  MEDIUM  │ SEC-STATIC-UNPINNED-PACKAGE     │ Unpinned MCP Package     │ /root/.cursor/mcp.json:- │
+│          │                                 │ Execution                │                          │
 │  HIGH    │ VULN-CVE-2025-6514              │ Known Vulnerability:     │ /root/.cursor/mcp.json:- │
 │          │                                 │ mcp-remote exposed to OS │                          │
 │          │                                 │ command injection via    │                          │
@@ -107,6 +119,19 @@ Verity Scan Report
 │          │                                 │ command injection via    │                          │
 │          │                                 │ untrusted MCP server     │                          │
 │          │                                 │ connections              │                          │
+│  MEDIUM  │ SEC-STATIC-UNPINNED-PACKAGE     │ Unpinned MCP Package     │ /root/.cursor/mcp.json:- │
+│          │                                 │ Execution                │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ AWS_ACCESS_KEY_ID        │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ AWS_SECRET_ACCESS_KEY    │                          │
+│  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.cursor/mcp.json:- │
+│          │                                 │ Configuration:           │                          │
+│          │                                 │ PRIVATE_KEY_PEM          │                          │
+│  MEDIUM  │ SEC-STATIC-UNPINNED-PACKAGE     │ Unpinned MCP Package     │ /root/.cursor/mcp.json:- │
+│          │                                 │ Execution                │                          │
 │  HIGH    │ SEC-STATIC-SECRET-IN-CONFIG     │ Plaintext Secret in      │ /root/.continue/config.… │
 │          │                                 │ Configuration: API_KEY   │                          │
 │  MEDIUM  │ SEC-STATIC-UNSAFE-SHELL-WRAPPER │ Direct Shell Execution   │ /root/.continue/config.… │

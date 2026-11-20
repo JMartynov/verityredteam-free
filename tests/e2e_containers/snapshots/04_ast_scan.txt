@@ -6,7 +6,7 @@
 | --- | --- |
 | Scanned files | 2 |
 | Total findings | 3 |
-| Duration (ms) | 0.34 |
+| Duration (ms) | 0.3 |
 | CRITICAL | 2 |
 | HIGH | 1 |
 | MEDIUM | 0 |

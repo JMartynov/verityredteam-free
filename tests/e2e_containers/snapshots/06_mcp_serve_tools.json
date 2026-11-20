@@ -18,7 +18,9 @@
                 "lookup_vulnerabilities",
                 "full_audit",
                 "scan_ast_code",
-                "call_target_tool"
+                "call_target_tool",
+                "detect_rug_pull",
+                "snapshot_baseline"
               ],
               "description": "Reconnaissance action to perform."
             },
@@ -119,6 +121,21 @@
                     "INFO"
                   ],
                   "default": "INFO"
+                },
+                "authorized_hashes": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Map of tool_name -> canonical SHA-256 hash (for detect_rug_pull)."
+                },
+                "baseline_path": {
+                  "type": "string",
+                  "description": "Path to a JSON baseline hash map."
+                },
+                "save_baseline": {
+                  "type": "boolean",
+                  "description": "When true, save current canonical hashes to baseline_path."
                 }
               }
             }
@@ -165,6 +182,20 @@
                     "snowflake"
                   ],
                   "default": "postgres"
+                },
+                "dialect": {
+                  "type": "string",
+                  "enum": [
+                    "postgres",
+                    "mysql",
+                    "sqlite",
+                    "duckdb",
+                    "tsql",
+                    "bigquery",
+                    "snowflake"
+                  ],
+                  "default": "postgres",
+                  "description": "SQL dialect applied when validating the query"
                 },
                 "row_data": {
                   "type": "object",
