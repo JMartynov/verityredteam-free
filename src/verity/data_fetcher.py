@@ -150,11 +150,8 @@ def _create_ssl_context() -> ssl.SSLContext:
 
         return ssl.create_default_context(cafile=certifi.where())
     except Exception:
-        pass
-    ctx = ssl.create_default_context()
-    ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE
-    return ctx
+        logger.debug("certifi unavailable; using OS trust store for TLS verification")
+    return ssl.create_default_context()
 
 
 def fetch_remote_snapshot(

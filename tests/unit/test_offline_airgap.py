@@ -7,6 +7,8 @@ import json
 import logging
 import os
 import socket
+import ssl
+import sys
 import time
 import urllib.request
 from pathlib import Path
@@ -215,6 +217,17 @@ def test_offline_cold_start_uses_packaged_baseline_and_detects_cve(
 
     assert exit_code == 0
     assert "VULN-CVE-2025-6514" in rule_ids
+
+
+def test_create_ssl_context_without_certifi_enforces_verification(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setitem(sys.modules, "certifi", None)
+
+    ctx = data_fetcher._create_ssl_context()
+
+    assert ctx.verify_mode == ssl.CERT_REQUIRED
+    assert ctx.check_hostname is True
 
 
 def test_online_fetch_still_performs_http(
