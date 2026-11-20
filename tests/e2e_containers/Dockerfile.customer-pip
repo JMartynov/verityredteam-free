@@ -10,7 +10,7 @@ COPY .build_dist /tmp/dist
 RUN cp -r /tmp/dist/docs /opt/docs
 
 RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
-        pip install --no-cache-dir "verity-redteam-core==0.2.0"; \
+        pip install --no-cache-dir "verity-redteam-core==0.2.1"; \
     else \
         pip install --no-cache-dir /tmp/dist/*.whl; \
     fi
