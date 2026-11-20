@@ -18,6 +18,11 @@ cd "$REPO_ROOT"
 rm -rf "$BUILD_DIST"
 mkdir -p "$BUILD_DIST" "$SCRIPT_DIR/snapshots"
 
+mkdir -p "$BUILD_DIST/docs/.github/workflows"
+cp "$REPO_ROOT/README.md" "$BUILD_DIST/docs/README.md"
+cp "$REPO_ROOT/LICENSE" "$BUILD_DIST/docs/LICENSE"
+cp "$REPO_ROOT/.github/workflows/ci.yml" "$BUILD_DIST/docs/.github/workflows/ci.yml"
+
 if [ "$INSTALL_SOURCE" = "wheel" ]; then
   rm -f "$REPO_ROOT"/dist/verity_redteam_core-*.whl
   rm -f "$BUILD_DIST"/verity_redteam_core-*.whl

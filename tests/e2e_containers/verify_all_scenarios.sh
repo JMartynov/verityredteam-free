@@ -1270,6 +1270,54 @@ print("sarif version parity assertions passed")
 PY
 pass "sarif version parity complete"
 
+# ---------------- Scenario 10: docs-metadata parity (M20) ----------------
+python3 - <<'PY'
+import re
+from importlib.metadata import metadata
+from pathlib import Path
+
+from packaging.specifiers import SpecifierSet
+from packaging.version import Version
+
+import verity
+
+docs_dir = Path("/opt/docs") if Path("/opt/docs/README.md").is_file() else Path("/tmp/dist/docs")
+
+assert (docs_dir / "README.md").is_file(), docs_dir
+assert (docs_dir / "LICENSE").is_file(), docs_dir
+assert (docs_dir / ".github" / "workflows" / "ci.yml").is_file(), docs_dir
+
+m = metadata("verity-redteam-core")
+assert m["Name"] == "verity-redteam-core", m["Name"]
+assert m["Version"] == verity.__version__, (m["Version"], verity.__version__)
+
+requires_python = m.get("Requires-Python") or ""
+assert re.search(r">=\s*3\.12\b", requires_python), requires_python
+spec = SpecifierSet(requires_python)
+assert Version("3.12") in spec, requires_python
+assert Version("3.11") not in spec, requires_python
+
+license_val = m.get("License") or m.get("License-Expression") or ""
+assert license_val == "Apache-2.0", license_val
+
+readme_text = (docs_dir / "README.md").read_text(encoding="utf-8")
+hero_lines = readme_text.splitlines()[:8]
+
+expected_badges = [
+    "[![PyPI](https://img.shields.io/pypi/v/verity-redteam-core.svg)](https://pypi.org/project/verity-redteam-core/)",
+    "[![Python 3.12+](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://pypi.org/project/verity-redteam-core/)",
+    "[![License: Apache-2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)",
+    "[![CI](https://github.com/JMartynov/verityredteam-free/actions/workflows/ci.yml/badge.svg)](https://github.com/JMartynov/verityredteam-free/actions/workflows/ci.yml)",
+]
+for badge in expected_badges:
+    assert badge in hero_lines, f"missing badge in hero: {badge}"
+
+assert re.search(r"\bverity-core\b", readme_text) is None, "stale verity-core reference"
+
+print("docs-metadata parity assertions passed")
+PY
+pass "docs-metadata parity complete"
+
 # ---------------- Final leak scan + snapshot export ----------------
 scan_for_leaks "$OUT_DIR"
 
