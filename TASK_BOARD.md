@@ -123,6 +123,7 @@ flowchart TD
 | **M35** | **Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`)** | `DiscoveredServerConfig.headers` (redacted), `--header`/`--bearer-token`, `--identify-as`, differential `--detect-bait-and-switch` | Inline below | `Ready` | [View Item #M35](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPm8`) |
 | **M36** | **ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`)** | Explicit ANSI/BiDi/Tag/zero-width `StaticRuleEvaluator` rules, `VERITY-UCP-UNICODE-ANOMALY` wiring, `--visualize-ansi-codes` | Inline below | `Ready` | [View Item #M36](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPrY`) |
 | **M37** | **MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`)** | Expose `verify_physical_database` / `generate_safe_parameterized_query` in `schemas.py`, `DualPathRouter` + `next_recommended_actions`, `--unified-only` | Inline below | `Ready` | [View Item #M37](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPuo`) |
+| **M38** | **Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`)** | MkDocs Material portal (`mkdocs.yml`), 10 deep guides/catalogs, `scripts/build_docs_portal.py`, GitHub Pages workflow | [M38_web_documentation_portal_and_task_publisher.md](docs/tasks/M38_web_documentation_portal_and_task_publisher.md) | `In Progress` | [View Item #M38](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLOM2U`) |
 
 ---
 
@@ -1025,3 +1026,14 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 #### Context & Key Deliverables
 - Expose `verify_physical_database` and `generate_safe_parameterized_query` in `UNIFIED_TOOL_DEFINITIONS` (`schemas.py`) and honor `dialect` in `remediation.py`.
 - Wire `DualPathRouter.classify_server` + `UnknownCapabilityProfiler` + read-only `next_recommended_actions` into `security_scan.py` and add `--unified-only` to `verity serve`. (Companion Mode A/Mode B `SKILL.md` split lives in `verityredteam`.)
+
+---
+
+### M38: Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`)
+
+#### Task Spec
+- [`M38_web_documentation_portal_and_task_publisher.md`](docs/tasks/M38_web_documentation_portal_and_task_publisher.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLOM2U`)
+
+#### Context & Key Deliverables
+- Configure MkDocs Material documentation portal (`mkdocs.yml`) and GitHub Pages workflow (`.github/workflows/pages.yml`) targeting `https://jmartynov.github.io/verityredteam-free/`.
+- Deliver 10 comprehensive customer documentation pages covering installation, quickstart, CLI reference, 22-rule encyclopedia (`docs/rules/catalog.md`), SQL Security Guard, IDE/MCP setup, extensibility, milestone roadmap (`docs/roadmap/index.md`), and task changelog (`docs/changelog/tasks.md`), plus `scripts/build_docs_portal.py` (`--check`) and `tests/unit/test_documentation_parity.py` guards.

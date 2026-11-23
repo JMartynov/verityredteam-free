@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import re
 import shlex
+import subprocess
+import sys
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -655,3 +657,116 @@ def test_project_item_ids_are_unique() -> None:
     assert len(section_ids) == len(set(section_ids)), (
         "Detailed sections must not repeat a PVTI_... item id"
     )
+
+
+_PORTAL_PAGES = (
+    "docs/index.md",
+    "docs/getting-started/installation.md",
+    "docs/getting-started/quickstart.md",
+    "docs/cli/reference.md",
+    "docs/rules/catalog.md",
+    "docs/guards/sql-security-guard.md",
+    "docs/mcp/server-and-ides.md",
+    "docs/extensibility.md",
+    "docs/roadmap/index.md",
+    "docs/changelog/tasks.md",
+)
+_PORTAL_MIN_LINES = 180
+_MKDOCS_PATH = REPO_ROOT / "mkdocs.yml"
+_PORTAL_BUILDER_PATH = REPO_ROOT / "scripts" / "build_docs_portal.py"
+_PAGES_WORKFLOW_PATH = REPO_ROOT / ".github" / "workflows" / "pages.yml"
+_M38_SPEC_PATH = (
+    REPO_ROOT / "docs" / "tasks" / "M38_web_documentation_portal_and_task_publisher.md"
+)
+
+
+def test_web_documentation_portal_structure() -> None:
+    """AC-38.1: MkDocs config and all 10 portal pages exist with >= 180 lines."""
+    assert _MKDOCS_PATH.is_file(), "mkdocs.yml must exist"
+    mkdocs_text = _MKDOCS_PATH.read_text(encoding="utf-8")
+    assert "name: material" in mkdocs_text
+    assert "docs_dir: docs" in mkdocs_text
+
+    for rel_path in _PORTAL_PAGES:
+        page = REPO_ROOT / rel_path
+        assert page.is_file(), f"Missing portal page: {rel_path}"
+        lines = page.read_text(encoding="utf-8").splitlines()
+        assert len(lines) >= _PORTAL_MIN_LINES, (
+            f"{rel_path} has {len(lines)} lines; expected >= {_PORTAL_MIN_LINES}"
+        )
+        nav_rel = rel_path.removeprefix("docs/")
+        assert nav_rel in mkdocs_text, f"mkdocs.yml nav must reference {nav_rel}"
+
+
+@pytest.mark.parametrize("rel_path", _PORTAL_PAGES)
+def test_portal_page_meets_minimum_depth(rel_path: str) -> None:
+    """Every customer portal page must have at least 180 lines of documentation."""
+    page = REPO_ROOT / rel_path
+    assert page.is_file(), f"Missing portal page: {rel_path}"
+    line_count = len(page.read_text(encoding="utf-8").splitlines())
+    assert line_count >= _PORTAL_MIN_LINES, (
+        f"{rel_path} must be >= {_PORTAL_MIN_LINES} lines (got {line_count})"
+    )
+
+
+def test_rule_catalog_parity() -> None:
+    """AC-38.4: All 13 static and 9 AST rules appear with CWE & remediation in catalog."""
+    catalog = (REPO_ROOT / "docs" / "rules" / "catalog.md").read_text(encoding="utf-8")
+    for rule_id in (*STATIC_RULE_IDS, *AST_RULE_IDS):
+        assert rule_id in catalog, f"{rule_id} missing from docs/rules/catalog.md"
+    quickstart = (REPO_ROOT / "docs" / "getting-started" / "quickstart.md").read_text(
+        encoding="utf-8"
+    )
+    assert "verity scan" in quickstart
+    assert "verity test --demo" in quickstart
+    for cwe in DEMO_CWES:
+        assert cwe in quickstart, f"{cwe} missing from docs/getting-started/quickstart.md"
+
+
+def test_task_spec_and_board_parity() -> None:
+    """AC-38.3: M38 task spec and Project Board #5 item stay synced via portal generator."""
+    assert _M38_SPEC_PATH.is_file(), "M38 task spec must exist"
+    spec_text = _M38_SPEC_PATH.read_text(encoding="utf-8")
+    assert "PVTI_lAHOD-xmQM4Br351zhLOM2U" in spec_text
+    assert 38 in _TASK_MATRIX_ROWS
+    assert 38 in _TASK_SECTIONS
+    assert _PAGES_WORKFLOW_PATH.is_file(), ".github/workflows/pages.yml must exist"
+    pages_text = _PAGES_WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "actions/checkout@v5" in pages_text
+    assert "astral-sh/setup-uv@v6" in pages_text
+    assert "actions/deploy-pages@v4" in pages_text
+
+
+def test_portal_generator_check_passes_with_zero_drift() -> None:
+    """Verify scripts/build_docs_portal.py --check exits 0 with zero drift."""
+    proc = subprocess.run(
+        [sys.executable, str(_PORTAL_BUILDER_PATH), "--check"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, f"--check failed:\n{proc.stdout}\n{proc.stderr}"
+
+
+def test_benign_control_docs() -> None:
+    """AC-38.5: Customer guides have zero stale package names and benign snippets scan clean."""
+    from verity.scanner.static_rules import StaticRuleEvaluator
+
+    customer_guides = [
+        p
+        for p in _PORTAL_PAGES
+        if p not in ("docs/roadmap/index.md", "docs/changelog/tasks.md")
+    ]
+    offenders: list[str] = []
+    for rel_path in customer_guides:
+        text = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
+        if _STALE_PACKAGE_RE.search(text):
+            offenders.append(rel_path)
+    assert not offenders, f"Stale verity-core reference in customer guides: {offenders}"
+
+    benign_config = '{"mcpServers": {"notes": {"command": "uvx", "args": ["verity-redteam-core", "serve"], "env": {"API_KEY": "${YOUR_API_KEY}"}}}}'
+    matches = StaticRuleEvaluator().scan_text(
+        benign_config, target_type="config", target_name="benign", field_path="mcp.json"
+    )
+    assert matches == [], f"Benign control snippet triggered unexpected matches: {matches}"

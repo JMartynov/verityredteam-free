@@ -1,0 +1,75 @@
+site_name: Verity RedTeam Free
+site_description: Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server
+site_url: https://jmartynov.github.io/verityredteam-free/
+repo_url: https://github.com/JMartynov/verityredteam-free
+repo_name: JMartynov/verityredteam-free
+docs_dir: docs
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+  - CLI Reference:
+      - Command Reference: cli/reference.md
+  - Security Rules:
+      - Rule Catalog (22 Rules): rules/catalog.md
+  - Guards & Runtime:
+      - SQL Security Guard: guards/sql-security-guard.md
+  - MCP & IDE Integration:
+      - MCP Server & IDEs: mcp/server-and-ides.md
+      - Extensibility & Plugins: extensibility.md
+  - Roadmap & Changelog:
+      - Milestone Roadmap (M01–M38): roadmap/index.md
+      - Task Changelog (TASK-01–94): changelog/tasks.md
