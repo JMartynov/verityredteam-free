@@ -7,8 +7,9 @@ exclude = [
   '<[^>]+>',
   'YOUR_',
   'jules\.google\.com',
-  '^https://github\.com/JMartynov/verityredteam-free/(blob|tree|edit)/',
+  '^https://github\.com/JMartynov/verityredteam-free/(blob|tree|edit|raw)/',
   '^https://github\.com/users/JMartynov/projects/',
+  '^https://jmartynov\.github\.io/verityredteam-free/.+',
 ]
 exclude_path = ['site/assets', 'site/404.html']
 accept = [200, 206, 429]
