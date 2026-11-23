@@ -1,0 +1,15 @@
+exclude = [
+  '^https?://localhost',
+  '^https?://127\.0\.0\.1',
+  '^https?://0\.0\.0\.0',
+  'example\.com',
+  'example\.org',
+  '<[^>]+>',
+  'YOUR_',
+  'jules\.google\.com',
+  '^https://github\.com/users/JMartynov/projects/',
+]
+exclude_path = ['site/assets', 'site/404.html']
+accept = [200, 206, 429]
+max_retries = 3
+timeout = 20

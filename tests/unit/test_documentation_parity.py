@@ -734,7 +734,9 @@ def test_task_spec_and_board_parity() -> None:
     pages_text = _PAGES_WORKFLOW_PATH.read_text(encoding="utf-8")
     assert "actions/checkout@v5" in pages_text
     assert "astral-sh/setup-uv@v6" in pages_text
-    assert "actions/deploy-pages@v4" in pages_text
+    assert "mike deploy" in pages_text
+    assert "mike set-default" in pages_text
+    assert "lycheeverse/lychee-action" in pages_text
 
 
 def test_portal_generator_check_passes_with_zero_drift() -> None:
