@@ -109,6 +109,21 @@ flowchart TD
 | **M28** | **Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard** | Replace `verity-core` with `verity-redteam-core` in `AGENTS.md` and extend `test_no_stale_package_references` | [M28_fix_agents_md_retired_package_name.md](docs/tasks/M28_fix_agents_md_retired_package_name.md) | `Done` | [View Item #M28](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXFA`) |
 | **M29** | **Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`)** | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard | [M29_exact_task_board_project_links.md](docs/tasks/M29_exact_task_board_project_links.md) | `Done` | [View Item #M29](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXJA`) |
 
+### 🔜 Next Wave (`Ready` — Wave 1 Adoption, CI & Core SAST)
+
+> Canonical technical specs, ATDD matrices, and Board #2 tracking live in [`verityredteam/docs/tasks/`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks). Each row below tracks the mirrored `verityredteam-free` deliverable on [Project #5](https://github.com/users/JMartynov/projects/5).
+
+| Task Key | Task Title | Architectural Scope | Task Spec | Status | GitHub Project #5 Item |
+| :---: | :--- | :--- | :--- | :---: | :---: |
+| **M30** | **`uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)** | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` | Inline below | `Ready` | [View Item #M30](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPUU`) |
+| **M31** | **CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`)** | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, un-gated Core SARIF 2.1.0 | Inline below | `Ready` | [View Item #M31](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPYA`) |
+| **M32** | **Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`)** | `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action` | Inline below | `Ready` | [View Item #M32](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPcI`) |
+| **M33** | **TypeScript / JavaScript MCP SAST Scanner (`TASK-90`)** | Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring | Inline below | `Ready` | [View Item #M33](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPfA`) |
+| **M34** | **Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`)** | `InstructionFileScanner` (6 formats), `ToxicFlowAnalyzer` lethal-trifecta correlation (`VERITY-TOXIC-FLOW-*`), `--skills` / `--toxic-flows` | Inline below | `Ready` | [View Item #M34](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPjE`) |
+| **M35** | **Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`)** | `DiscoveredServerConfig.headers` (redacted), `--header`/`--bearer-token`, `--identify-as`, differential `--detect-bait-and-switch` | Inline below | `Ready` | [View Item #M35](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPm8`) |
+| **M36** | **ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`)** | Explicit ANSI/BiDi/Tag/zero-width `StaticRuleEvaluator` rules, `VERITY-UCP-UNICODE-ANOMALY` wiring, `--visualize-ansi-codes` | Inline below | `Ready` | [View Item #M36](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPrY`) |
+| **M37** | **MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`)** | Expose `verify_physical_database` / `generate_safe_parameterized_query` in `schemas.py`, `DualPathRouter` + `next_recommended_actions`, `--unified-only` | Inline below | `Ready` | [View Item #M37](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPuo`) |
+
 ---
 
 ## 🏗️ Detailed Migration Task Specifications
@@ -918,3 +933,95 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 
 #### Acceptance Criteria
 - [x] Every row `M1`–`M29` in `TASK_BOARD.md` carries its exact, verified `PVTI_…` item ID in both the Task Matrix and detailed section, and `tests/unit/test_documentation_parity.py` passes.
+
+---
+
+## 🔜 Next Wave (`Ready`) — Wave 1 Task Specifications (`M30`–`M37`)
+
+---
+
+### M30: `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)
+
+#### Canonical Task Spec
+- [`TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPUU`)
+
+#### Context & Key Deliverables
+- Add dual `[project.scripts]` (`verity` and `verity-redteam-core`) + `[project.urls]` in `pyproject.toml`, `-V`/`--version` in `src/verity/cli.py`, and quickstart updates in `README.md`.
+- Add deterministic `scripts/generate_homebrew_formula.py`, `.github/workflows/homebrew-tap.yml`, and `JMartynov/homebrew-tap` (`Formula/verity.rb`).
+
+---
+
+### M31: CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`)
+
+#### Canonical Task Spec
+- [`TASK_80_CLI_CI_PREREQUISITES_AND_BROWNFIELD_BASELINES.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_80_CLI_CI_PREREQUISITES_AND_BROWNFIELD_BASELINES.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPYA`)
+
+#### Context & Key Deliverables
+- Implement 100% stdlib `src/verity/baseline/` (`paths.py`, `fingerprint.py`, `ignore.py`, `inline.py`, `store.py`) with pre-scrubbing fingerprints, `.verityignore`, `verity.toml`, `# verity-ignore`, and `.verity-baseline.json`.
+- Add `--fail-on-severity` / `--fail-on`, multi-file `--path`, nested monorepo config discovery, and un-gated Core OASIS SARIF 2.1.0 output (`%SRCROOT%`, `partialFingerprints`, `suppressions`).
+
+---
+
+### M32: Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`)
+
+#### Canonical Task Spec
+- [`TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPcI`)
+
+#### Context & Key Deliverables
+- Add `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx` defaulting to `--offline`) and document `.pre-commit-config.yaml` / GitHub Action usage in `README.md`.
+- Ship composite `verity-scan-action@v1` (`action.yml` + self-test workflow) with `setup-uv@v6`, `VERITY_CACHE_DIR`, single-pass JSON/SARIF/summary, `${{ runner.temp }}/verity/` isolation, and `diff-pr`.
+
+---
+
+### M33: TypeScript / JavaScript MCP SAST Scanner (`TASK-90`)
+
+#### Canonical Task Spec
+- [`TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPfA`)
+
+#### Context & Key Deliverables
+- Extend `McpAstScannerEngine.scan_path()` to discover `.ts`, `.tsx`, `.js`, and `.mjs` files (skipping `node_modules`, `dist`, `build`) and reuse `mcp_fingerprints.ast_parser` (`parse_typescript_mcp_ast`) for schema + UCP profiling.
+- Add `src/verity/scanner/typescript_ast.py` and 5 deterministic `VERITY-AST-TS-*` dangerous-sink rules (`eval`/`new Function`, `vm.runInNewContext`, `child_process.exec`, `fs.readFile` traversal, SQL template interpolation).
+
+---
+
+### M34: Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`)
+
+#### Canonical Task Spec
+- [`TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPjE`)
+
+#### Context & Key Deliverables
+- Add `InstructionFileScanner` (`src/verity/scanner/instruction_scanner.py`) covering `SKILL.md`, `.cursorrules`, `.cursor/rules/*.mdc`, `CLAUDE.md`, `AGENTS.md`, and `.github/copilot-instructions.md` (including YAML frontmatter & hidden HTML comments).
+- Add deterministic `ToxicFlowAnalyzer` (`src/verity/ucp/toxic_flows.py`) flagging cross-tool/cross-server lethal trifectas (`VERITY-TOXIC-FLOW-LETHAL-TRIFECTA`) and poisoned exfiltration pairs (`VERITY-TOXIC-FLOW-POISONED-EXFIL`), wired into `verity scan --skills` / `--toxic-flows` and `ConsolidatedSecurityAuditor`.
+
+---
+
+### M35: Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`)
+
+#### Canonical Task Spec
+- [`TASK_92_AUTH_REMOTE_PROBING_AND_BAIT_SWITCH.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_92_AUTH_REMOTE_PROBING_AND_BAIT_SWITCH.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPm8`)
+
+#### Context & Key Deliverables
+- Add redacted `headers` support on `DiscoveredServerConfig` and `HttpSseDiscoveryTransport` (`sse.py`), plus `--header` / `--bearer-token` on `verity test` and `verity scan --live-probe` with full secret scrubbing.
+- Parameterize `clientInfo.name` via `--identify-as <client>` (`sse.py` + `stdio.py`) and add differential `--detect-bait-and-switch` probing across `VerityDiscovery`, `claude-desktop`, and `cursor`.
+
+---
+
+### M36: ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`)
+
+#### Canonical Task Spec
+- [`TASK_93_ANSI_TERMINAL_DECEPTION_AND_UNICODE_FINDINGS.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_93_ANSI_TERMINAL_DECEPTION_AND_UNICODE_FINDINGS.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPrY`)
+
+#### Context & Key Deliverables
+- Add explicit `StaticRuleEvaluator` rules for ANSI CSI/OSC/`\r` (`VERITY-STATIC-ANSI-ESCAPE`), BiDi overrides (`VERITY-STATIC-UNICODE-BIDI`), Unicode Tag smuggling `U+E0000–U+E007F` (`VERITY-STATIC-UNICODE-TAG-SMUGGLING`), and zero-width obfuscation.
+- Wire `ToolProfile.has_unicode_anomalies` into `ConsolidatedSecurityAuditor` (`VERITY-UCP-UNICODE-ANOMALY`) and add `--visualize-ansi-codes` to `verity scan` / `verity test`.
+
+---
+
+### M37: MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`)
+
+#### Canonical Task Spec
+- [`TASK_85_MCP_SCHEMA_DRIFT_AND_AGENT_GUIDANCE.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/tasks/TASK_85_MCP_SCHEMA_DRIFT_AND_AGENT_GUIDANCE.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPuo`)
+
+#### Context & Key Deliverables
+- Expose `verify_physical_database` and `generate_safe_parameterized_query` in `UNIFIED_TOOL_DEFINITIONS` (`schemas.py`) and honor `dialect` in `remediation.py`.
+- Wire `DualPathRouter.classify_server` + `UnknownCapabilityProfiler` + read-only `next_recommended_actions` into `security_scan.py` and add `--unified-only` to `verity serve`. (Companion Mode A/Mode B `SKILL.md` split lives in `verityredteam`.)
