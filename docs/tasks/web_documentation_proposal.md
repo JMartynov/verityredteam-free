@@ -1,6 +1,6 @@
 # Proposal: `verityredteam-free` Web Documentation Portal & Automated Task-to-Docs Pipeline
 
-> **Target Repository**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`verity-redteam-core`, Apache-2.0, Public)
+> **Target Repository**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](https://github.com/JMartynov/verityredteam-free) (`verity-redteam-core`, Apache-2.0, Public)
 > **Live GitHub Pages URL**: `https://jmartynov.github.io/verityredteam-free/`
 > **GitHub Project Board**: Board `#5` (`Verity RedTeam Free Task Board`, `PVT_kwHOD-xmQM4Br351`)
 
@@ -8,16 +8,16 @@
 
 ## 1. Research Findings: `verityredteam-free` Current State
 
-Our sub-agent inspected [`verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`README.md`, `TASK_BOARD.md`, `docs/`, `src/verity/`, and `tests/unit/test_documentation_parity.py`):
+Our sub-agent inspected [`verityredteam-free`](https://github.com/JMartynov/verityredteam-free) (`README.md`, `TASK_BOARD.md`, `docs/`, `src/verity/`, and `tests/unit/test_documentation_parity.py`):
 
 1. **Repository & Visibility**:
    - **Public** GitHub repository (`https://github.com/JMartynov/verityredteam-free`), meaning GitHub Pages is **100% free and publicly accessible** as soon as `.github/workflows/pages.yml` is pushed.
    - Currently has **4 workflows** (`ci.yml`, `full-tests.yml`, `e2e-containers.yml`, `workflow.yaml` for PyPI) and **no GitHub Pages deployment workflow**.
 2. **Existing Documentation Assets**:
-   - [`README.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/README.md) (~40 KB): Massive single-file monolith containing hero badges, CLI reference, SAST/AST rule tables, SQL Guard dialects, MCP server setup, and architecture diagrams.
-   - [`TASK_BOARD.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/TASK_BOARD.md): Milestone registry linked to GitHub Project Board `#5` (`PVTI_...` item IDs).
-   - [`docs/extensibility.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/docs/extensibility.md), [`docs/releases/v0.2.0.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/docs/releases/v0.2.0.md), [`docs/assets/demo.gif`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/docs/assets/demo.gif), and task specs in [`docs/tasks/`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/docs/tasks/).
-3. **Existing Automated Documentation Parity Guard ([`tests/unit/test_documentation_parity.py`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free/tests/unit/test_documentation_parity.py))**:
+   - [`README.md`](https://github.com/JMartynov/verityredteam-free/blob/main/README.md) (~40 KB): Massive single-file monolith containing hero badges, CLI reference, SAST/AST rule tables, SQL Guard dialects, MCP server setup, and architecture diagrams.
+   - [`TASK_BOARD.md`](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md): Milestone registry linked to GitHub Project Board `#5` (`PVTI_...` item IDs).
+   - [`docs/extensibility.md`](https://github.com/JMartynov/verityredteam-free/blob/main/docs/extensibility.md), [`docs/releases/v0.2.0.md`](https://github.com/JMartynov/verityredteam-free/blob/main/docs/releases/v0.2.0.md), [`docs/assets/demo.gif`](https://github.com/JMartynov/verityredteam-free/blob/main/docs/assets/demo.gif), and task specs in [`docs/tasks/`](https://github.com/JMartynov/verityredteam-free/blob/main/docs/tasks/).
+3. **Existing Automated Documentation Parity Guard ([`tests/unit/test_documentation_parity.py`](https://github.com/JMartynov/verityredteam-free/blob/main/tests/unit/test_documentation_parity.py))**:
    - `verityredteam-free` **already has a 177-test deterministic parity suite** that verifies `README.md`, `TASK_BOARD.md`, `docs/tasks/M*.md`, static rule IDs (`VERITY-STATIC-*`), AST rule IDs (`VERITY-AST-*`), and demo CWEs (`CWE-89`, `CWE-639`, `CWE-943`, `CWE-94`).
    - Our web documentation portal and per-task publisher can hook directly into `test_documentation_parity.py` so **no task can pass `uv run pytest` unless its web documentation page and task changelog entry are published and valid**.
 
