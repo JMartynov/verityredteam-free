@@ -56,7 +56,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M35** — Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) (Ready)
 - **M36** — ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) (Ready)
 - **M37** — MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) (Ready)
-- **M38** — Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) (In Progress)
+- **M38** — Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) (Done)
 
 ## Task Verification Matrix
 
@@ -99,7 +99,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-92 | M35 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-93 | M36 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-85 | M37 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-94 | M38 | In Progress | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-94 | M38 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 
 ## Detailed Engineering Notes
 
@@ -402,7 +402,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M38 — Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`)
 
 - **Phase:** Customer Documentation Portal
-- **Status:** In Progress
+- **Status:** Done
 - **Scope:** MkDocs Material portal (`mkdocs.yml`), 10 deep guides/catalogs, `scripts/build_docs_portal.py`, GitHub Pages workflow
 - **Task references:** TASK-94
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`

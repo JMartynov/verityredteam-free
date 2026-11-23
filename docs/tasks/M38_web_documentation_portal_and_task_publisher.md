@@ -1,7 +1,7 @@
 ---
 task_id: "TASK-94"
 title: "Web Documentation Portal & Automated Task-to-Docs Pipeline"
-status: "In Progress"
+status: "Done"
 priority: "P1"
 phase: "Documentation & Portal"
 target_repos: ["verityredteam-free"]
@@ -16,7 +16,9 @@ doc_targets: [
   "docs/rules/catalog.md",
   "docs/guards/sql-security-guard.md",
   "docs/mcp/server-and-ides.md",
-  "docs/extensibility.md"
+  "docs/extensibility.md",
+  "docs/roadmap/index.md",
+  "docs/changelog/tasks.md"
 ]
 acceptance_criteria: [
   "AC-38.1",
@@ -46,10 +48,10 @@ Deliver a comprehensive, customer-centric Web Documentation Portal using **MkDoc
 
 | Acceptance Criterion | Test Level | Target File / Function | Description | Status |
 | :--- | :--- | :--- | :--- | :--- |
-| **`AC-38.1`** | `unit` | `tests/unit/test_documentation_parity.py::test_web_documentation_portal_structure` | Verifies MkDocs configuration `mkdocs.yml` and all 8 Markdown guide pages exist with valid frontmatter. | **Ready** |
-| **`AC-38.2`** | `static` | `.github/workflows/pages.yml` | GitHub Actions workflow successfully builds MkDocs site using `uv` and publishes to GitHub Pages. | **Ready** |
-| **`AC-38.3`** | `cli-smoke` | `tests/unit/test_documentation_parity.py::test_task_spec_and_board_parity` | Verifies M38 task spec file `docs/tasks/M38_web_documentation_portal_and_task_publisher.md` maps correctly to Project Board #5 item `PVTI_lAHOD-xmQM4Br351zhLOM2U` in `TASK_BOARD.md`. | **Ready** |
-| **`AC-38.4`** | `unit` | `tests/unit/test_documentation_parity.py::test_rule_catalog_parity` | Verifies all static and AST rule IDs documented in `docs/rules/catalog.md` match engine implementation constants 1-to-1. | **Ready** |
-| **`AC-38.5`** | `unit` | `tests/unit/test_documentation_parity.py::test_benign_control_docs` | Paired Benign Control: Verifies clean codebase scan produces zero false positives across documentation search indexes and rule catalogs. | **Ready** |
+| **`AC-38.1`** | `unit` | `tests/unit/test_documentation_parity.py::test_web_documentation_portal_structure` | Verifies MkDocs configuration `mkdocs.yml` and all 10 Markdown portal pages exist with >= 180 lines. | **Done** |
+| **`AC-38.2`** | `static` | `.github/workflows/pages.yml` | GitHub Actions workflow successfully builds MkDocs site using `uv` and publishes to GitHub Pages. | **Done** |
+| **`AC-38.3`** | `cli-smoke` | `tests/unit/test_documentation_parity.py::test_task_spec_and_board_parity` | Verifies M38 task spec file `docs/tasks/M38_web_documentation_portal_and_task_publisher.md` maps correctly to Project Board #5 item `PVTI_lAHOD-xmQM4Br351zhLOM2U` in `TASK_BOARD.md`. | **Done** |
+| **`AC-38.4`** | `unit` | `tests/unit/test_documentation_parity.py::test_rule_catalog_parity` | Verifies all static and AST rule IDs documented in `docs/rules/catalog.md` match engine implementation constants 1-to-1. | **Done** |
+| **`AC-38.5`** | `unit` | `tests/unit/test_documentation_parity.py::test_benign_control_docs` | Paired Benign Control: Verifies clean customer guides have zero stale `verity-core` references and benign placeholder configs scan with zero false positives. | **Done** |
 
 <!-- synced-from: verityredteam-free/docs/tasks/M38_web_documentation_portal_and_task_publisher.md -->

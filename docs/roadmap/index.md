@@ -141,7 +141,7 @@ MkDocs Material portal plus the automated task-to-docs pipeline.
 
 | Milestone | Title | Status | Focus |
 | --- | --- | --- | --- |
-| M38 | Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) | In Progress | MkDocs Material portal (`mkdocs.yml`), 10 deep guides/catalogs, `scripts/build_docs_portal.py`, GitHub Pages workflow |
+| M38 | Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) | Done | MkDocs Material portal (`mkdocs.yml`), 10 deep guides/catalogs, `scripts/build_docs_portal.py`, GitHub Pages workflow |
 
 ## Milestone Table (M01-M38)
 
@@ -184,7 +184,7 @@ MkDocs Material portal plus the automated task-to-docs pipeline.
 | M35 | Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPm8` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
 | M36 | ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPrY` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
 | M37 | MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPuo` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M38 | Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) | Customer Documentation Portal | In Progress | `PVTI_lAHOD-xmQM4Br351zhLOM2U` | [M38_web_documentation_portal_and_task_publisher.md](../tasks/M38_web_documentation_portal_and_task_publisher.md) |
+| M38 | Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) | Customer Documentation Portal | Done | `PVTI_lAHOD-xmQM4Br351zhLOM2U` | [M38_web_documentation_portal_and_task_publisher.md](../tasks/M38_web_documentation_portal_and_task_publisher.md) |
 
 ## Documentation Guide
 
