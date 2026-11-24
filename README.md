@@ -8,6 +8,10 @@
 Catch poisoned MCP servers, leaked workstation secrets, prompt-injected SQL, and remote code execution hidden inside AI agent tools — before your IDE agent runs them.
 Offline, deterministic, zero Docker, zero API keys, Apache-2.0.
 
+[![Docs](https://img.shields.io/badge/docs-live%20portal-009688.svg)](https://jmartynov.github.io/verityredteam-free/)
+
+**[Documentation Portal](https://jmartynov.github.io/verityredteam-free/)** — [Quickstart](https://jmartynov.github.io/verityredteam-free/latest/getting-started/quickstart/) · [CLI Reference](https://jmartynov.github.io/verityredteam-free/latest/cli/reference/) · [Rule Catalog](https://jmartynov.github.io/verityredteam-free/latest/rules/catalog/) · [SQL Guard](https://jmartynov.github.io/verityredteam-free/latest/guards/sql-security-guard/) · [IDE MCP Server](https://jmartynov.github.io/verityredteam-free/latest/mcp/server-and-ides/) · [Roadmap](https://jmartynov.github.io/verityredteam-free/latest/roadmap/)
+
 ![Verity RedTeam Free Terminal Demo](docs/assets/demo.gif)
 
 ## Install & 5-Second Quickstart
