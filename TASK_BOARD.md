@@ -124,6 +124,13 @@ flowchart TD
 | **M36** | **ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`)** | Explicit ANSI/BiDi/Tag/zero-width `StaticRuleEvaluator` rules, `VERITY-UCP-UNICODE-ANOMALY` wiring, `--visualize-ansi-codes` | Inline below | `Ready` | [View Item #M36](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPrY`) |
 | **M37** | **MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`)** | Expose `verify_physical_database` / `generate_safe_parameterized_query` in `schemas.py`, `DualPathRouter` + `next_recommended_actions`, `--unified-only` | Inline below | `Ready` | [View Item #M37](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPuo`) |
 | **M38** | **Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`)** | MkDocs Material portal (`mkdocs.yml`), 10 deep guides/catalogs, `scripts/build_docs_portal.py`, GitHub Pages workflow | [M38_web_documentation_portal_and_task_publisher.md](docs/tasks/M38_web_documentation_portal_and_task_publisher.md) | `Done` | [View Item #M38](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLOM2U`) |
+| **M39** | **Python AST Real-World Rules & Import Aliases (`TASK-102`)** | Alias resolution in `visit_Call` plus real def-use CWE-22 / CWE-89 / CWE-862 rules in `src/verity/scanner/python_ast.py` | [M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md](docs/tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md) | `Ready` | [View Item #M39](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvl0M`) |
+| **M40** | **Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`)** | `_pro_plugin_available()` SARIF gate (`PRO_FEATURE_REQUIRED`, exit code `2`) and real `line_number` / `uri` in `src/verity/cli.py` | [M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md](docs/tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) | `Ready` | [View Item #M40](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmAQ`) |
+| **M41** | **Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`)** | Tier 1 / Tier 2 homepage, single auxiliary appendix, and runtime-registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`) | [M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md](docs/tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) | `Done` | [View Item #M41](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmDo`) |
+| **M42** | **Pro Features Showcase & Comparison Docs in Free (`TASK-107`)** | `docs/pro/enterprise_features.md`, Free vs Pro matrix, `PRO_FEATURE_REQUIRED` contract | [M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md](docs/tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) | `Done` | [View Item #M42](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmsE`) |
+| **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Ready` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
+| **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Ready` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
+| **M45** | **Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)** | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | `Done` | [View Item #M45](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvnMQ`) |
 
 ---
 
@@ -1037,3 +1044,83 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 #### Context & Key Deliverables
 - Configure MkDocs Material documentation portal (`mkdocs.yml`) and GitHub Pages workflow (`.github/workflows/pages.yml`) targeting `https://jmartynov.github.io/verityredteam-free/`.
 - Deliver 10 comprehensive customer documentation pages covering installation, quickstart, CLI reference, 22-rule encyclopedia (`docs/rules/catalog.md`), SQL Security Guard, IDE/MCP setup, extensibility, milestone roadmap (`docs/roadmap/index.md`), and task changelog (`docs/changelog/tasks.md`), plus `scripts/build_docs_portal.py` (`--check`) and `tests/unit/test_documentation_parity.py` guards.
+
+---
+
+## Feature Realism & Product Alignment Wave (M39–M45)
+
+Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md)
+
+### M39: Python AST Real-World Rules & Import Aliases (`TASK-102`)
+
+**Task Spec**
+- [`M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md`](docs/tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvl0M`)
+
+**Status & Deliverables**
+- **Status:** `Ready` (P0, S)
+- Resolve `self.imports` aliases in `visit_Call` before rule dispatch.
+- Real def-use rules `VERITY-AST-CWE-22-TRAVERSAL`, `VERITY-AST-CWE-89-SQLI`, and `VERITY-AST-CWE-862-BOLA` in `src/verity/scanner/python_ast.py`.
+- Paired controls guarded by `tests/unit/scanner/test_python_ast.py`.
+
+### M40: Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`)
+
+**Task Spec**
+- [`M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md`](docs/tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmAQ`)
+
+**Status & Deliverables**
+- **Status:** `Ready` (P0, XS)
+- `--format sarif` gated by `_pro_plugin_available()` in `src/verity/cli.py`; returns `PRO_FEATURE_REQUIRED` with exit code `2` and writes no artifact even when `--output` is supplied.
+- Real `file_path` propagated as `artifactLocation.uri`; real `line_number` propagated as `region.startLine` (fallback `1`).
+- Covered by `tests/unit/cli/test_sarif_pro_gate.py` and `tests/unit/cli/test_sarif_line_precision.py`.
+
+### M41: Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`)
+
+**Task Spec**
+- [`M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md`](docs/tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmDo`)
+
+**Status & Deliverables**
+- **Status:** `Done` (P0, S)
+- `docs/index.md` leads with Tier 1 (12) and Tier 2 (13), a single `Auxiliary & Benchmark Appendix (Tier 3/4)` pointer, and no bulk Tier 3/4 disclosures inline.
+- Runtime registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`) enforced by `tests/unit/test_docs_homepage_parity.py`.
+
+### M42: Pro Features Showcase & Comparison Docs in Free (`TASK-107`)
+
+**Task Spec**
+- [`M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md`](docs/tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmsE`)
+
+**Status & Deliverables**
+- **Status:** `Done` (P0, S)
+- `docs/pro/enterprise_features.md` showcases `SnowflakeSecurityGuard`, `FilterSecurityGuard`, `VolumePolicyGuard`, OASIS SARIF v2.1.0 & Compliance Bundles, Pro `verity_remediation_ops`, and Multi-Turn Socratic Red-Teaming, with the Free vs Pro matrix and `PRO_FEATURE_REQUIRED` documentation.
+- Covered by `tests/unit/test_docs_pro_features_showcase.py`.
+
+### M43: Free MCP Database Guard Pro Gating (`TASK-109-FREE`)
+
+**Task Spec**
+- [`M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md`](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvm_M`)
+
+**Status & Deliverables**
+- **Status:** `Ready` (P0, XS)
+- `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py` return `PRO_FEATURE_REQUIRED` when the `verity-pro` plugin is absent.
+- Covered by `tests/unit/mcp_server/test_database_guard_pro_gating.py`.
+
+### M44: Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)
+
+**Task Spec**
+- [`M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md`](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmgk`)
+
+**Status & Deliverables**
+- **Status:** `Ready` (P1, S)
+- `readonly_guard.py` blocks `run_sql`, `execute_sql`, `upsert`, `post_`, `put_`, `patch_`, `chmod`, and `kill` in addition to the existing destructive verbs.
+- `dual_path_router.py` removes the hardcoded `"formula": "1 + 1"` argument for unknown tools and emits a schema-driven required-argument skeleton with neutral values, or an explicit `NEEDS_ARGS` marker when a required argument cannot be synthesised safely.
+- Covered by `tests/unit/test_readonly_guard.py` and `tests/unit/test_dual_path_router.py`.
+
+### M45: Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)
+
+**Task Spec**
+- [`M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md`](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvnMQ`)
+
+**Status & Deliverables**
+- **Status:** `Done` (P0, S)
+- `README.md` leads with Tier 1 (12) / Tier 2 (13), a single auxiliary pointer, and the Pro showcase section.
+- `[Pro]` badge on `--format sarif` with `PRO_FEATURE_REQUIRED` / exit code `2`; Free formats unbadged.
+- Covered by `tests/unit/test_readme_parity.py`.
