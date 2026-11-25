@@ -235,7 +235,10 @@ class DualPathRouter:
                     w in t_name.lower()
                     for w in ("get", "read", "list", "describe", "status", "schema")
                 ):
-                    safe_args = self._generate_harmless_args(t.get("inputSchema", {}))
+                    safe_args = {
+                        **self._generate_harmless_args(t.get("inputSchema", {})),
+                        **(t.get("arguments") or {}),
+                    }
                     guard_res = ReadOnlySafetyGuard.check_call(t_name, safe_args)
                     if guard_res.verdict == SafetyVerdict.PERMITTED:
                         proposed_probes.append(
@@ -251,7 +254,10 @@ class DualPathRouter:
             # Fallback probe if no explicit read verb in name
             if not proposed_probes and tools:
                 first_tool = str(tools[0].get("name", ""))
-                safe_args = self._generate_harmless_args(tools[0].get("inputSchema", {}))
+                safe_args = {
+                    **self._generate_harmless_args(tools[0].get("inputSchema", {})),
+                    **(tools[0].get("arguments") or {}),
+                }
                 guard_res = ReadOnlySafetyGuard.check_call(first_tool, safe_args)
                 if guard_res.verdict == SafetyVerdict.PERMITTED:
                     proposed_probes.append(
@@ -270,18 +276,24 @@ class DualPathRouter:
                 tools=tools,
             )
 
+            # Caller-supplied arguments are authoritative and must win verbatim.
+            caller_args: dict[str, dict[str, Any]] = {
+                str(t.get("name", "")): dict(t.get("arguments") or {})
+                for t in tools
+                if isinstance(t, dict) and t.get("arguments")
+            }
+
             # Generate tailored harmless probes based on inferred capabilities & parameter schemas
             for profile in unknown_plan.tool_profiles.values():
                 t_name = profile.tool_name
                 safe_args = self._generate_harmless_args(profile.input_schema)
 
-                # Specialize for dynamic formula/code execution
-                if "formula" in profile.input_schema.get("properties", {}):
-                    safe_args["formula"] = "1 + 1"
-                elif "expression" in profile.input_schema.get("properties", {}):
-                    safe_args["expression"] = "1 + 1"
-                elif "doc_path" in profile.input_schema.get("properties", {}):
+                # Specialize for non-destructive document path inspection
+                if "doc_path" in profile.input_schema.get("properties", {}):
                     safe_args["doc_path"] = "README.txt"
+
+                # Caller-supplied values override every synthesized value.
+                safe_args.update(caller_args.get(t_name, {}))
 
                 guard_res = ReadOnlySafetyGuard.check_call(t_name, safe_args)
                 if guard_res.verdict == SafetyVerdict.PERMITTED:
@@ -373,13 +385,27 @@ class DualPathRouter:
         if not isinstance(props, dict):
             return args
 
+        required = set(input_schema.get("required", []) or [])
+
         for prop_name, prop_meta in props.items():
             if not isinstance(prop_meta, dict):
                 continue
-            p_type = prop_meta.get("type", "string")
+
+            # Preserve explicit schema defaults verbatim.
+            if "default" in prop_meta:
+                args[prop_name] = prop_meta["default"]
+                continue
+
+            p_type = prop_meta.get("type")
+            p_lower = prop_name.lower()
+
+            if p_type is None:
+                # Untyped/complex required parameters cannot be synthesized safely.
+                if prop_name in required:
+                    args[prop_name] = "NEEDS_ARGS"
+                continue
 
             # Prioritize explicit structural schema types
-            p_lower = prop_name.lower()
             if p_type == "boolean":
                 args[prop_name] = True
             elif p_type in ("integer", "number"):
@@ -395,11 +421,15 @@ class DualPathRouter:
                 args[prop_name] = "https://example.com"
             elif "path" in p_lower or "file" in p_lower:
                 args[prop_name] = "test.txt"
-            elif "formula" in p_lower or "expression" in p_lower:
-                args[prop_name] = "1 + 1"
             elif "id" in p_lower or "account" in p_lower or "user" in p_lower:
                 args[prop_name] = "1"
             else:
                 args[prop_name] = "test"
+
+        # Required parameters absent from `properties` cannot be synthesized
+        # safely; surface them explicitly instead of fabricating intent.
+        for req_name in input_schema.get("required", []) or []:
+            if req_name not in args:
+                args[req_name] = "NEEDS_ARGS"
 
         return args

@@ -59,7 +59,18 @@ class ReadOnlySafetyGuard:
         "execute_script",
         "exec_cmd",
         "charge_card",
+        "run_sql",
+        "execute_sql",
+        "upsert",
+        "chmod",
+        "post_",
+        "put_",
+        "patch_",
     )
+
+    # Keywords that must match on token boundaries to avoid false positives
+    # (e.g. 'put_' must not match the substring in 'get_input_schema').
+    BOUNDARY_TOOL_KEYWORDS: tuple[str, ...] = ("post_", "put_", "patch_")
 
     FORBIDDEN_ARGUMENT_PATTERNS: tuple[re.Pattern[str], ...] = (
         re.compile(r"(?i)\b(DROP\s+TABLE|DROP\s+DATABASE|TRUNCATE\s+TABLE)\b"),
@@ -94,7 +105,11 @@ class ReadOnlySafetyGuard:
         # 1. Inspect tool name
         norm_tool = tool_name.lower().replace("-", "_")
         for kw in cls.FORBIDDEN_TOOL_KEYWORDS:
-            if kw in norm_tool:
+            if kw in cls.BOUNDARY_TOOL_KEYWORDS:
+                matched = norm_tool.startswith(kw) or f"_{kw}" in norm_tool
+            else:
+                matched = kw in norm_tool
+            if matched:
                 return GuardEvaluationResult(
                     verdict=SafetyVerdict.BLOCKED,
                     tool_name=tool_name,
