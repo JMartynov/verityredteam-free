@@ -123,3 +123,37 @@ def test_guard_bypasses_check_outside_phase_1():
     res = ReadOnlySafetyGuard.check_call("delete_user", {"id": "1"}, phase="PHASE_2_MUTATION")
     assert res.verdict == SafetyVerdict.PERMITTED
     assert res.is_mutating is False
+
+
+def test_destructive_verbs_blocked():
+    """Verify M44 extended destructive verbs are blocked in Phase 1."""
+    destructive_tools = [
+        "run_sql",
+        "execute_sql",
+        "upsert_customer",
+        "post_webhook",
+        "put_record",
+        "patch_item",
+        "chmod_file",
+        "kill_process",
+        "http_put_item",
+        "api_post_event",
+        "bulk_patch_users",
+    ]
+    for tool_name in destructive_tools:
+        res = ReadOnlySafetyGuard.check_call(tool_name, {})
+        assert res.verdict == SafetyVerdict.BLOCKED, f"Expected {tool_name} to be BLOCKED"
+        assert res.is_mutating is True
+
+
+def test_readonly_tool_allowed():
+    """Verify read-only tools and non-matching substrings like input_ remain permitted."""
+    safe_tools = [
+        ("list_customers", {"limit": 10}),
+        ("get_input_schema", {}),
+        ("describe_output_format", {}),
+    ]
+    for tool_name, args in safe_tools:
+        res = ReadOnlySafetyGuard.check_call(tool_name, args)
+        assert res.verdict == SafetyVerdict.PERMITTED, f"Expected {tool_name} to be PERMITTED"
+        assert res.is_mutating is False
