@@ -36,7 +36,7 @@ verity
 | --- | --- | --- |
 | `0` | success | Completed; no blocking findings |
 | `1` | findings | Findings present with `--fail-on-findings`, or `verity test` reported a vulnerable case |
-| `2` | usage | Invalid flag, unknown command, mutually exclusive options |
+| `2` | usage / Pro gate | Invalid flag, unknown command, mutually exclusive options, or gated `[Pro]` feature (`PRO_FEATURE_REQUIRED`) |
 | `3` | config | Unreadable/invalid config, schema, dialect, or baseline file |
 | `4` | target | Target unreachable, refused, or timed out (`--url`, `--live-probe`) |
 | `5` | internal | Unhandled internal error; a stack trace is printed at `--log-level debug` |
@@ -194,9 +194,9 @@ Finding object fields:
 }
 ~~~
 
-### SARIF output
+### SARIF output (`[Pro]`)
 
-SARIF 2.1.0. One `run` per invocation, one `rule` per finding identifier, one `result` per finding.
+SARIF 2.1.0 export (`--format sarif`) is a `[Pro]` feature requiring `verity-pro`. When `verity-pro` is absent, Free emits the deterministic `PRO_FEATURE_REQUIRED` JSON payload (`"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`), exits with code `2`, and writes zero partial files even when `--output` is supplied. When `verity-pro` is installed, `--format sarif` and `ComplianceReportEngine.generate_bundle()` emit one `run` per invocation, one `rule` per finding identifier, and one `result` per finding with exact `physicalLocation.region.startLine` (falling back to `1` when line info is absent) and `artifactLocation.uri`, alongside OSV v1.6.0 records storing `AIVSS` under `database_specific.aivss`.
 
 | Field | Value |
 | --- | --- |
@@ -205,6 +205,8 @@ SARIF 2.1.0. One `run` per invocation, one `rule` per finding identifier, one `r
 | `runs[0].tool.driver.version` | scanner version |
 | `runs[0].results[].ruleId` | finding `id` |
 | `runs[0].results[].level` | `critical`/`high` → `error`, `medium` → `warning`, `low`/`info` → `note` |
+| `runs[0].results[].locations[0].physicalLocation.artifactLocation.uri` | finding `file_path` / `uri` |
+| `runs[0].results[].locations[0].physicalLocation.region.startLine` | finding `line_number` / `line` (fallback `1`) |
 | `runs[0].results[].partialFingerprints.verityFingerprint` | finding `fingerprint` |
 
 ~~~json
@@ -234,7 +236,7 @@ SARIF 2.1.0. One `run` per invocation, one `rule` per finding identifier, one `r
 | --- | --- |
 | `0` | Scan completed; no findings (or `--fail-on-findings` not set) |
 | `1` | Findings present and `--fail-on-findings` was set |
-| `2` | Usage error, including `--offline` with `--live-probe` |
+| `2` | Usage error (including `--offline` with `--live-probe`) or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
 | `3` | Invalid config, schema, or output path |
 | `4` | `--live-probe` could not reach a referenced target |
 | `5` | Internal error |
@@ -448,9 +450,11 @@ The server is unauthenticated. Bind it to loopback only; do not proxy it to untr
 
 ---
 
-## SARIF output
+## SARIF output (`[Pro]`)
 
-- Emitted as SARIF 2.1.0, suitable for GitHub code scanning, Azure DevOps, and DefectDojo.
+- Requires `verity-pro`; in Free, `--format sarif` emits `"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`, exits with code `2`, and writes no partial file even when `--output` is supplied.
+- When `verity-pro` is installed, emitted as OASIS SARIF 2.1.0 with exact `physicalLocation.region.startLine` (falling back to `1` when line info is absent) and `artifactLocation.uri`, suitable for GitHub code scanning, Azure DevOps, and DefectDojo.
+- `ComplianceReportEngine.generate_bundle()` additionally pairs SARIF 2.1.0 with OSV v1.6.0 records that store `AIVSS` under `database_specific.aivss`.
 - `tool.driver.rules` is populated once per distinct finding identifier.
 - `results[].partialFingerprints.verityFingerprint` enables deduplication across runs.
 - Severity mapping is fixed: `critical`/`high` → `error`, `medium` → `warning`, `low`/`info` → `note`.

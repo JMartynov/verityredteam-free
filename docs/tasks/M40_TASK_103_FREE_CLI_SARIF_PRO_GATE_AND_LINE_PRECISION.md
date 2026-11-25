@@ -2,7 +2,7 @@
 task_id: M40
 alias: TASK-103-FREE
 title: "Free CLI SARIF Pro Gate & Line Precision"
-status: Ready
+status: Done
 priority: P0
 size: XS
 estimate_days: 1
@@ -61,9 +61,9 @@ omitting the region or crashing.
 
 | Acceptance Criterion | Test Level | Target File / Function | Description | Status |
 | --- | --- | --- | --- | --- |
-| AC-40.1 | unit | `tests/unit/cli/test_sarif_pro_gate.py::test_sarif_requires_pro_plugin` | Free emits `PRO_FEATURE_REQUIRED`, exit code `2`, and writes no artifact; paired Pro-present control exports successfully. | Pending |
-| AC-40.2 | unit | `tests/unit/cli/test_sarif_line_precision.py::test_sarif_preserves_line` | Real source line survives export; missing location falls back to `startLine == 1`. | Pending |
-| AC-40.3 | static | `uv run ruff check src tests` | Zero lint findings. | Pending |
+| AC-40.1 | unit | `tests/unit/cli/test_sarif_pro_gate.py::test_sarif_requires_pro_plugin` | Free emits `PRO_FEATURE_REQUIRED`, exit code `2`, and writes no artifact; paired Pro-present control exports successfully. | Done |
+| AC-40.2 | unit | `tests/unit/cli/test_sarif_line_precision.py::test_sarif_preserves_line` | Real source line survives export; missing location falls back to `startLine == 1`. | Done |
+| AC-40.3 | static | `uv run ruff check src tests` | Zero lint findings. | Done |
 
 ## Validation Commands
 
@@ -74,9 +74,9 @@ uv run ruff check src tests
 
 ## Delivery Checklist
 
-- [ ] `--format sarif` returns `PRO_FEATURE_REQUIRED` with exit code `2` when the plugin is absent.
-- [ ] Gate writes no output file, including when `--output` is supplied.
-- [ ] SARIF `region.startLine` uses the real finding line.
-- [ ] SARIF `artifactLocation.uri` uses the real finding file path.
-- [ ] Missing-location fallback yields `startLine == 1`.
-- [ ] Paired test files committed and `uv run ruff check src tests` clean.
+- [x] `--format sarif` returns `PRO_FEATURE_REQUIRED` with exit code `2` when the plugin is absent.
+- [x] Gate writes no output file, including when `--output` is supplied.
+- [x] SARIF `region.startLine` uses the real finding line.
+- [x] SARIF `artifactLocation.uri` uses the real finding file path.
+- [x] Missing-location fallback yields `startLine == 1`.
+- [x] Paired test files committed and `uv run ruff check src tests` clean.

@@ -561,7 +561,7 @@ detection catches a server that changes its tools after you approved it.
 ### Output, offline mode & exit codes
 
 - `--format` supports `terminal`, `json`, `markdown`, and `html`; `--output` writes to a file.
-- `--format sarif` [Pro] — In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`.
+- `--format sarif` [Pro] — In Verity Free, `--format sarif` returns a deterministic `PRO_FEATURE_REQUIRED` JSON payload (`"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`) with exit code 2 and zero partial file writes even when `--output` is supplied; SARIF v2.1.0 export requires `verity-pro`.
 - `--offline` disables remote snapshot fetching and uses local caches only.
 - Exit codes: `0` success, `1` findings with `--fail-on-findings` (or a failing probe), `2` gated Pro-only feature such as SARIF export.
 
@@ -738,7 +738,7 @@ flowchart TD
 
 **Threat and purpose.** Security review stalls when MCP findings live only in terminal scrollback, and an attacker benefits from every finding that never reaches a tracked dashboard.
 
-**Free vs. Pro delta.** In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`, which writes the artifact atomically so a stale artifact can never be mistaken for a fresh one.
+**Free vs. Pro delta.** In Verity Free, `--format sarif` emits a deterministic `PRO_FEATURE_REQUIRED` JSON payload (`"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`) with exit code 2 and zero partial file writes even when `--output` is supplied. When `verity-pro` is installed, `--format sarif` and `ComplianceReportEngine.generate_bundle()` preserve exact `physicalLocation.region.startLine` (falling back to `startLine: 1` when line info is absent) and `artifactLocation.uri`, write the SARIF artifact atomically, and emit OSV v1.6.0 records with `AIVSS` under `database_specific.aivss`.
 
 ```python
 import json

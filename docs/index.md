@@ -250,7 +250,7 @@ verity serve --transport stdio
 | `--format html` | Free | Self-contained report for reviewers. |
 | `--format sarif` | [Pro] | OASIS SARIF v2.1.0 upload for code-scanning dashboards. |
 
-In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`.
+In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`. Specifically, Free emits `"ok": false`, `"verdict": "PRO_REQUIRED"`, and `"error": "PRO_FEATURE_REQUIRED"` with zero partial file writes even when `--output` is supplied; when `verity-pro` is installed, `--format sarif` and `ComplianceReportEngine.generate_bundle()` preserve exact `physicalLocation.region.startLine` (falling back to `startLine: 1` when line info is absent) and `artifactLocation.uri`, and OSV v1.6.0 records store `AIVSS` under `database_specific.aivss`.
 
 ---
 

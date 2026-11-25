@@ -58,7 +58,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M37** — MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) (Ready)
 - **M38** — Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) (Done)
 - **M39** — Python AST Real-World Rules & Import Aliases (`TASK-102`) (Ready)
-- **M40** — Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) (Ready)
+- **M40** — Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) (Done)
 - **M41** — Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) (Done)
 - **M42** — Pro Features Showcase & Comparison Docs in Free (`TASK-107`) (Done)
 - **M43** — Free MCP Database Guard Pro Gating (`TASK-109-FREE`) (Ready)
@@ -108,7 +108,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-85 | M37 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-94 | M38 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-102 | M39 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-103 | M40 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-103 | M40 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-104 | M41 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-107 | M42 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-109 | M43 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
@@ -432,7 +432,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M40 — Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`)
 
 - **Phase:** Future
-- **Status:** Ready
+- **Status:** Done
 - **Scope:** `_pro_plugin_available()` SARIF gate (`PRO_FEATURE_REQUIRED`, exit code `2`) and real `line_number` / `uri` in `src/verity/cli.py`
 - **Task references:** TASK-103
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`

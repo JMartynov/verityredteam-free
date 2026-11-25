@@ -205,10 +205,7 @@ a tracked dashboard. The exporter turns each finding into a stable SARIF result
 with rule metadata, locations, and remediation text so it can be uploaded,
 deduplicated, and triaged.
 
-**Free vs. Pro delta.** In Free, any attempt to export SARIF fails closed: the
-engine emits `PRO_FEATURE_REQUIRED`, exits with code 2, and writes no output
-file. Pro writes the artifact atomically, so a stale artifact can never be
-mistaken for a fresh one.
+**Free vs. Pro delta.** In Free, `--format sarif` fails closed: the engine emits the deterministic `PRO_FEATURE_REQUIRED` JSON payload (`"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`), exits with code 2, and writes zero partial files even when `--output` is supplied. When `verity-pro` is installed, `--format sarif` and `ComplianceReportEngine.generate_bundle()` preserve exact `physicalLocation.region.startLine` (falling back to `startLine: 1` when line info is absent) and `artifactLocation.uri`, write the SARIF artifact atomically, and place OSV v1.6.0 `AIVSS` metrics under `database_specific.aivss` (keeping `CVSS_V3` in top-level `severity[]`).
 
 ```python
 from verity_pro.reporting.sarif import SarifExporter
