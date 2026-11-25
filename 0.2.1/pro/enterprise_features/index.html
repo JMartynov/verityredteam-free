@@ -1925,63 +1925,93 @@ which is Pro-only.</p>
     TT -- yes --&gt; EXEC[Execute statement]</code></pre>
 <h3 id="filtersecurityguard">FilterSecurityGuard<a class="headerlink" href="#filtersecurityguard" title="Permanent link">&para;</a></h3>
 <p><strong>Threat and purpose.</strong> An agent that passes a caller-supplied filter document
-to MongoDB can inject operators such as <code>$ne</code>, <code>$where</code>, or <code>$gt</code> and widen a
-single-tenant read into a cross-tenant dump. The guard parses the filter tree,
-rejects unknown operators, and rewrites the query so the authenticated tenant
-is always enforced.</p>
+to MongoDB can inject operators such as <code>$ne</code>, <code>$where</code>, or <code>$gt</code>, exceed safe
+nesting bounds, or forge <code>tenant_id</code> to widen a single-tenant read into a
+cross-tenant dump. <code>FilterSecurityGuard</code> supports both <strong>schema-less universal
+mode</strong> (<code>allowed_fields=None</code>, no implicit default allowlist — blocking
+<code>$</code>-prefixed operators with <code>NOSQL_OPERATOR_BLOCKED</code> and nesting deeper than
+<code>max_depth=3</code> with <code>FILTER_DEPTH_EXCEEDED</code> while always binding <code>tenant_id</code>) and
+<strong>explicit allowlist mode</strong> (<code>allowed_fields={"customer_id", "status", "invoice_id"}</code>,
+blocking unknown keys with <code>FIELD_NOT_ALLOWED</code>).</p>
 <p><strong>Free vs. Pro delta.</strong> Free ships no NoSQL parser: SQL AST guarding covers SQL
-dialects only. Field allowlisting and tenant binding for document databases are
-Pro-only behaviour.</p>
+dialects only, and <code>verity_database_guard(action="validate_nosql_filter")</code>
+fails closed with <code>PRO_FEATURE_REQUIRED</code> in Free before importing any guard
+module. Dual-mode NoSQL filter inspection and tenant binding are Pro-only.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterSecurityGuard</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
-<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">FilterSecurityGuard</span><span class="p">(</span>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">allowed_fields</span><span class="o">=</span><span class="p">(</span><span class="s2">"tenant_id"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">),</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">safe_filter</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">validate_and_sanitize</span><span class="p">(</span>
-<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">filter_document</span><span class="o">=</span><span class="p">{</span><span class="s2">"tenant_id"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$ne"</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"open"</span><span class="p">},</span>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">universal_guard</span> <span class="o">=</span> <span class="n">FilterSecurityGuard</span><span class="p">()</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">universal_filter</span> <span class="o">=</span> <span class="n">universal_guard</span><span class="o">.</span><span class="n">validate_and_sanitize</span><span class="p">(</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">filter_obj</span><span class="o">=</span><span class="p">{</span><span class="s2">"custom_field"</span><span class="p">:</span> <span class="s2">"abc"</span><span class="p">,</span> <span class="s2">"tenant_id"</span><span class="p">:</span> <span class="s2">"spoofed"</span><span class="p">},</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="p">)</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="n">allowlist_guard</span> <span class="o">=</span> <span class="n">FilterSecurityGuard</span><span class="p">(</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">allowed_fields</span><span class="o">=</span><span class="p">{</span><span class="s2">"customer_id"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="s2">"invoice_id"</span><span class="p">},</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a><span class="p">)</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="n">safe_filter</span> <span class="o">=</span> <span class="n">allowlist_guard</span><span class="o">.</span><span class="n">validate_and_sanitize</span><span class="p">(</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    <span class="n">filter_obj</span><span class="o">=</span><span class="p">{</span><span class="s2">"status"</span><span class="p">:</span> <span class="s2">"OPEN"</span><span class="p">},</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invoices"</span><span class="p">,</span>
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">"filter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"tenant_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"$ne"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">},</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">}</span>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity_database_guard"</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"validate_nosql_filter"</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">"filter_obj"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"customer_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"$ne"</span><span class="p">:</span><span class="w"> </span><span class="s2">""</span><span class="p">}},</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">      </span><span class="nt">"session_tenant"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tenant-a"</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="p">}</span>
 </code></pre></div>
 <pre class="mermaid"><code>flowchart LR
-    DOC[Caller filter document] --&gt; PARSE[Parse filter tree]
-    PARSE --&gt; OPS{Operator allowed}
-    OPS -- no --&gt; REJECT[Reject query]
-    OPS -- yes --&gt; FIELDS{Fields allowlisted}
-    FIELDS -- no --&gt; REJECT
+    DOC[Caller filter document] --&gt; MCP[verity_database_guard]
+    MCP --&gt; PARSE[FilterSecurityGuard]
+    PARSE --&gt; OPS{Operator and depth safe}
+    OPS -- no --&gt; REJECT[NOSQL_OPERATOR_BLOCKED or FILTER_DEPTH_EXCEEDED]
+    OPS -- yes --&gt; FIELDS{Schema-less or allowlisted}
+    FIELDS -- no --&gt; REJECT_F[FIELD_NOT_ALLOWED]
     FIELDS -- yes --&gt; TENANT[Bind session tenant]
-    TENANT --&gt; RUN[Execute scoped read]</code></pre>
+    TENANT --&gt; RUN[Return sanitized_filter]</code></pre>
 <h3 id="volumepolicyguard">VolumePolicyGuard<a class="headerlink" href="#volumepolicyguard" title="Permanent link">&para;</a></h3>
 <p><strong>Threat and purpose.</strong> A single unbounded read can stream an entire table into
 a model context, blowing out token budgets and moving data the agent was never
-meant to see. The guard clamps the requested limit, truncates oversized
-payloads, and emits a tamper-evident hash over the evidence it releases.</p>
-<p><strong>Free vs. Pro delta.</strong> Free reports unbounded reads as findings but does not
-police response volume at runtime. Limit clamping, payload truncation, and
-evidence hashing are Pro-only.</p>
+meant to see. <code>VolumePolicyGuard</code> clamps <code>requested_limit</code> to
+<code>1..VolumePolicyGuard.MAX_ALLOWED_LIMIT</code> (<code>50</code>), enforces a 16 KB
+(<code>MAX_PAYLOAD_BYTES = 16384</code>) byte budget via <code>truncate_payload</code>, and emits a
+tamper-evident <code>sha256:...</code> digest via <code>compute_evidence_hash</code> (exposed on
+<code>verity_database_guard(action="enforce_volume_policy")</code> with <code>record_count</code>,
+<code>truncated</code>, and <code>payload_sha256</code>).</p>
+<p><strong>Free vs. Pro delta.</strong> Free reports unbounded reads as findings and gates
+<code>verity_database_guard(action="enforce_volume_policy")</code> with
+<code>PRO_FEATURE_REQUIRED</code> (returning no records and keeping the MCP server live).
+Limit clamping, payload truncation, and evidence hashing are Pro-only.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.volume</span><span class="w"> </span><span class="kn">import</span> <span class="n">VolumePolicyGuard</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">VolumePolicyGuard</span><span class="p">(</span><span class="n">max_rows</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_bytes</span><span class="o">=</span><span class="mi">65536</span><span class="p">)</span>
-<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
-<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">allowed_rows</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">clamp_limit</span><span class="p">(</span><span class="n">requested_limit</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
-<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">payload</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">truncate_payload</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">raw_payload</span><span class="p">)</span>
-<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">evidence_hash</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">compute_evidence_hash</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">VolumePolicyGuard</span><span class="p">()</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="n">allowed_rows</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">clamp_limit</span><span class="p">(</span><span class="n">requested_limit</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>  <span class="c1"># clamped to 1..50</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">records</span><span class="p">,</span> <span class="n">truncated</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">truncate_payload</span><span class="p">(</span><span class="n">records</span><span class="o">=</span><span class="p">[{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span> <span class="p">{</span><span class="s2">"id"</span><span class="p">:</span> <span class="mi">2</span><span class="p">}])</span>  <span class="c1"># 16 KB cap</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">evidence_hash</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">compute_evidence_hash</span><span class="p">(</span><span class="n">records</span><span class="o">=</span><span class="n">records</span><span class="p">)</span>  <span class="c1"># "sha256:..."</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>postgres-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity_database_guard"</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">    </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"enforce_volume_policy"</span><span class="p">,</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">    </span><span class="nt">"options"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">"records"</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">}],</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">      </span><span class="nt">"requested_limit"</span><span class="p">:</span><span class="w"> </span><span class="mi">50000</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
 </code></pre></div>
 <pre class="mermaid"><code>flowchart TD
-    REQ[Tool response] --&gt; LIMIT[Clamp row limit]
-    LIMIT --&gt; SIZE{Payload within byte cap}
-    SIZE -- no --&gt; TRUNC[Truncate payload]
-    SIZE -- yes --&gt; HASH[Compute evidence hash]
+    REQ[Tool response] --&gt; LIMIT[clamp_limit 1..50]
+    LIMIT --&gt; SIZE{Payload within 16 KB cap}
+    SIZE -- no --&gt; TRUNC[truncate_payload]
+    SIZE -- yes --&gt; HASH[compute_evidence_hash sha256:...]
     TRUNC --&gt; HASH
-    HASH --&gt; OUT[Return bounded response]</code></pre>
+    HASH --&gt; OUT[Return record_count, truncated, payload_sha256]</code></pre>
 <h2 id="compliance-sarif-reporting">Compliance &amp; SARIF Reporting<a class="headerlink" href="#compliance-sarif-reporting" title="Permanent link">&para;</a></h2>
 <p>Compliance teams need findings in the format their code-scanning dashboard
 already ingests. Free prints JSON, Markdown, HTML, and terminal summaries.

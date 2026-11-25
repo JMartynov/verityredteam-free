@@ -1475,21 +1475,21 @@ same server instance that just returned a <code>PRO_FEATURE_REQUIRED</code> resu
 <td>unit</td>
 <td><code>tests/unit/mcp_server/test_database_guard_pro_gating.py::test_pro_feature_required_and_free_action_benign</code></td>
 <td>Pro-only action returns <code>PRO_FEATURE_REQUIRED</code>; <code>validate_query</code> still succeeds on the same instance.</td>
-<td>Pending</td>
+<td>Done</td>
 </tr>
 <tr>
 <td>AC-43.2</td>
 <td>unit</td>
 <td><code>tests/unit/mcp_server/test_database_guard_pro_gating.py::test_enforce_volume_policy_gated</code></td>
 <td>Volume enforcement is gated with the structured error and performs no guard logic.</td>
-<td>Pending</td>
+<td>Done</td>
 </tr>
 <tr>
 <td>AC-43.3</td>
 <td>static</td>
 <td><code>uv run ruff check src tests</code></td>
 <td>Zero lint findings.</td>
-<td>Pending</td>
+<td>Done</td>
 </tr>
 </tbody>
 </table>
@@ -1499,12 +1499,12 @@ same server instance that just returned a <code>PRO_FEATURE_REQUIRED</code> resu
 </code></pre></div>
 <h2 id="delivery-checklist">Delivery Checklist<a class="headerlink" href="#delivery-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] <code>validate_nosql_filter</code> gated when the plugin is absent.</li>
-<li>[ ] <code>enforce_volume_policy</code> gated when the plugin is absent.</li>
-<li>[ ] Gate runs before any Pro-module import.</li>
-<li>[ ] <code>validate_query</code> remains functional on the same server instance.</li>
-<li>[ ] Structured error shape matches the documented contract.</li>
-<li>[ ] <code>uv run ruff check src tests</code> clean.</li>
+<li>[x] <code>validate_nosql_filter</code> gated when the plugin is absent.</li>
+<li>[x] <code>enforce_volume_policy</code> gated when the plugin is absent.</li>
+<li>[x] Gate runs before any Pro-module import.</li>
+<li>[x] <code>validate_query</code> remains functional on the same server instance.</li>
+<li>[x] Structured error shape matches the documented contract.</li>
+<li>[x] <code>uv run ruff check src tests</code> clean.</li>
 </ul>
 
 
