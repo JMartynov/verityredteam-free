@@ -78,6 +78,10 @@ nav:
   - MCP & IDE Integration:
       - MCP Server & IDEs: mcp/server-and-ides.md
       - Extensibility & Plugins: extensibility.md
+  - Verity Pro:
+      - Enterprise Features: pro/enterprise_features.md
+  - Reference:
+      - Auxiliary & Benchmark Appendix (Tier 3/4): reference/auxiliary_and_benchmarks.md
   - Roadmap & Changelog:
       - Milestone Roadmap (M01–M38): roadmap/index.md
       - Task Changelog (TASK-01–94): changelog/tasks.md

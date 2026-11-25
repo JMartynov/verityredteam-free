@@ -281,3 +281,8 @@ def _check_heuristic_flaws(visitor: McpAstVisitor, tree: ast.AST, source: str) -
                         msg = "BOLA flaw: cross-tenant document returned without session check."
                         visitor._add_finding(RuleCatalog.RULE_CWE_862_BOLA, node, msg)
                         break
+
+
+AST_RULE_IDS: frozenset[str] = frozenset(
+    rule.rule_id for rule in RuleCatalog.ALL_RULES
+)

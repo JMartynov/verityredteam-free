@@ -610,3 +610,8 @@ class StaticRuleEvaluator:
             scanned_resources=len(resources_list),
             duration_ms=duration_ms,
         )
+
+
+STATIC_RULE_IDS: frozenset[str] = frozenset(
+    rule.rule_id for rule in StaticRuleEvaluator.DEFAULT_RULES
+)

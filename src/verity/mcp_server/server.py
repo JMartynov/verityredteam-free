@@ -18,9 +18,17 @@ from verity.discovery.transports.stdio import StdioDiscoveryTransport
 from verity.lookup.engine import VulnerabilityLookupEngine
 from verity.mcp_server.bootstrap import ServerContext
 from verity.mcp_server.stream_logger import append_tool_call_log as _append_tool_call_log
-from verity.mcp_server.tools import TOOL_DEFINITIONS, VerityToolDispatcher
+from verity.mcp_server.tools import (
+    TOOL_DEFINITIONS,
+    UNIFIED_TOOL_DEFINITIONS,
+    VerityToolDispatcher,
+)
 
 logger = logging.getLogger("verity.mcp_server")
+
+MCP_TOOL_NAMES: frozenset[str] = frozenset(
+    tool["name"] for tool in UNIFIED_TOOL_DEFINITIONS
+)
 
 
 class VerityDiscoveryMcpServer:

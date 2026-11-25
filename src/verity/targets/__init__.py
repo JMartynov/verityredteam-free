@@ -11,6 +11,7 @@ from verity.targets.sqlite_target import SqliteSyntheticTarget
 
 __all__ = [
     "SYNTHETIC_TARGETS",
+    "TARGET_SLUGS",
     "get_synthetic_target",
     "list_synthetic_targets",
     "run_all_demo_probes",
@@ -25,6 +26,8 @@ SYNTHETIC_TARGETS: dict[str, Any] = {
         CodeExecSyntheticTarget(),
     )
 }
+
+TARGET_SLUGS: frozenset[str] = frozenset(SYNTHETIC_TARGETS.keys())
 
 
 def get_synthetic_target(target_id: str) -> Any:
