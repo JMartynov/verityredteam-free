@@ -18,6 +18,65 @@ AI agents now hold credentials, execute shell commands, query production databas
 
 ---
 
+## Tier 1 — Must-Have Product Core
+
+The twelve capabilities below are what a team installs Verity for. Everything is
+available in the Apache-2.0 Free edition unless the row carries the `[Pro]` badge.
+
+| Feature | Edition | Value Proposition |
+| --- | --- | --- |
+| Deterministic Multi-Dialect SQL AST Guard (`SqlSecurityGuard`) | Free | Parses model-generated SQL across seven dialects and rejects interpolation, statement stacking, and unbounded reads before execution. |
+| Multi-Client AI Workstation Config Discovery (`verity scan`) | Free | Locates every configured MCP server across Claude Desktop, Cursor, Windsurf, VS Code, Cline, Continue, and Zed. |
+| Plaintext Secret & DSN Credential Scanner / Redactor | Free | Detects provider tokens and embedded DSNs in MCP environment blocks and reports them with redacted evidence only. |
+| Unknown Capability Profiler (UCP) & SHA-256 Rug-Pull Detector | Free | Baselines each server's advertised capability set and flags silent tool-surface changes between scans. |
+| Pre-Flight Static Metadata & Tool-Poisoning Screener (13 Rules) | Free | Screens tool names, descriptions, and schema defaults for injection, poisoning, and exfiltration payloads. |
+| NoSQL / MongoDB AST Filter & Tenant Guard (`FilterSecurityGuard`) | [Pro] | Parses Mongo filter documents, rejects operator injection, and binds results to the authenticated tenant. |
+| Multi-Source OSV v1.6.0 Ingestion & DSU Alias Graph | Free | Correlates GHSA, PyPA, RustSec, and ecosystem aliases into one advisory graph per package. |
+| Tri-Layer Structural Fingerprint Matcher & O(1) Index (6k+ Passports) | Free | Identifies which MCP server a schema came from, even when the server name has been spoofed. |
+| Pure-Stdlib Agent Security MCP Server (`verity serve`) | Free | Exposes scanning, guarding, oracle, and remediation tooling to assistants with no extra runtime dependency. |
+| SemVer Vulnerability Lookup & SQLite Cache Engine | Free | Resolves the vulnerable range for an exact installed version and caches results for offline CI runs. |
+| Response Volume Policy & Payload Truncation Guard (`VolumePolicyGuard`) | [Pro] | Caps row counts and payload bytes at runtime, then emits a tamper-evident evidence hash. |
+| Supply-Chain Tamper & Drift Detector (`detect-drift`) | Free | Compares pinned manifests against observed server behaviour and fails on unexplained drift. |
+
+---
+
+## Tier 2 — High Customer Need
+
+These thirteen capabilities are requested by teams that already run Tier 1 in
+CI. They deepen coverage without changing the install story.
+
+| Feature | Edition | Value Proposition |
+| --- | --- | --- |
+| OASIS SARIF v2.1.0 Enterprise Compliance Exporter | [Pro] | Emits SARIF 2.1.0 for code-scanning dashboards plus multi-framework compliance bundles. |
+| Snowflake Cloud Warehouse Guard (`SnowflakeSecurityGuard`) | [Pro] | Enforces role, stage, and time-travel boundaries on warehouse queries before execution. |
+| Zero-Docker In-Memory Demo Targets (`verity test --demo`) | Free | Reproduces SQL injection, BOLA, NoSQL injection, and unsafe execution in-process for safe CI demos. |
+| Remote Snapshot Fetcher (ETag) & Air-Gap Fallback | Free | Keeps fingerprint and advisory snapshots current without breaking air-gapped installations. |
+| Client Config Hardening & Lossless JSONC Exporter (`export-config`) | Free | Rewrites risky client configs while preserving comments and key order. |
+| Bidirectional JSON-RPC Stdio Security Proxy (`McpStdioProxy`) | Free | Enforces policy on tool calls in flight between an IDE client and an untrusted server. |
+| Global npm/npx Unconfigured Server Discovery (`--scan-global`) | Free | Finds MCP packages installed on the workstation but never registered with any client. |
+| Python MCP Source AST Scanner (`McpAstScannerEngine` - 9 Rules) | Free | Traverses handler source for eval, shell, deserialization, traversal, XSS, and BOLA sinks. |
+| Polyglot Static AST Extractors (10 Languages) | Free | Extracts tool definitions from non-Python MCP servers so fingerprinting works across runtimes. |
+| Multi-Server Tool Collision & Shadowing Detector (`ConflictDetector`) | Free | Flags two servers advertising the same tool name with different behaviour. |
+| Live Network TCP/HTTP/SSE MCP Listener Scanner (`network-scan`) | Free | Discovers unadvertised MCP endpoints listening on the local network. |
+| AST Taint & YARA Threat Engine (`McpSourceScanner`, `ThreatEngine`) | Free | Follows tainted values from tool input to dangerous sinks and matches YARA threat rules. |
+| AST Call-Graph Dependency Reachability (`audit-transitive`) | Free | Proves whether a vulnerable helper is actually reachable from an exposed tool. |
+
+---
+
+## Verity Pro
+
+!!! note "Commercial capabilities live in the Pro guide"
+    Cloud warehouse and NoSQL guards, OASIS SARIF v2.1.0 compliance export, the extended
+    `verity_remediation_ops` action set, and multi-turn Socratic red-teaming are documented —
+    together with the graceful degradation contract — in
+    [Verity Pro Enterprise Features](pro/enterprise_features.md).
+
+Everything outside the two tiers above — the optional Tier 3 utilities and the
+internal Tier 4 QA and regression harnesses — is catalogued in the
+[Auxiliary & Benchmark Appendix (Tier 3/4)](reference/auxiliary_and_benchmarks.md).
+
+---
+
 ## Customer Pain Points & Problem-to-Solution Playbook
 
 | Pain point | What it looks like in practice | Verity play | Evidence produced |
@@ -102,33 +161,33 @@ A non-zero exit fails the job when medium-or-higher findings exist, while SARIF 
 
 | Rule | Name | Detects |
 |---|---|---|
-| VERITY-STATIC-001 | Insecure Stdio Command Injection | Shell-interpolated MCP launch commands |
-| VERITY-STATIC-002 | Hardcoded API Key / Secret in MCP Env | Secrets in MCP environment blocks |
-| VERITY-STATIC-003 | Unencrypted HTTP SSE Endpoint | Plaintext SSE transport URLs |
-| VERITY-STATIC-004 | Wildcard / Permissive Tool Permissions | `*` or overly broad tool scopes |
-| VERITY-STATIC-005 | Missing Auth Header in MCP Client | Remote MCP clients without auth |
-| VERITY-STATIC-006 | Exposed Localhost Debug Port | Debug listeners reachable locally |
-| VERITY-STATIC-007 | Insecure File Permissions on Config | World-readable MCP config files |
-| VERITY-STATIC-008 | Untrusted External MCP Registry Source | Unpinned third-party registry entries |
-| VERITY-STATIC-009 | Missing Tool Rate Limiting | Tool endpoints without limits |
-| VERITY-STATIC-010 | Exposed Environment Variables in Payload | Env leakage into tool payloads |
-| VERITY-STATIC-011 | Insecure Transport Layer Security Setting | Disabled or weakened TLS |
-| VERITY-STATIC-012 | Overprivileged Tool Scope | Tool scope exceeds declared purpose |
-| VERITY-STATIC-013 | Outdated MCP Protocol Version | Unsupported or stale protocol versions |
+| VERITY-STATIC-INJECTION-OVERRIDE | Prompt Injection Instruction Override | Instruction overrides and jailbreak directives embedded in tool or prompt text |
+| VERITY-STATIC-INJECTION-DELIMITER | Simulated Delimiter / Hidden Evasion Block | Fake role tags, chat-template markers, and hidden instruction blocks |
+| VERITY-STATIC-TOOL-POISONING | Tool Poisoning / Secondary Shadow Functionality | Unadvertised secondary actions such as credential scraping during processing |
+| VERITY-STATIC-EXFIL-WEBHOOK | Out-of-Band Data Exfiltration Endpoint | Disposable webhook, request-bin, and OAST collector endpoints |
+| VERITY-STATIC-EXFIL-COVERT | Covert Data Transfer / Streaming Exfiltration | Clipboard or conversation streaming to remote hosts and do-not-notify directives |
+| VERITY-STATIC-METADATA-SSRF | Cloud Instance Metadata Service SSRF | Link-local metadata endpoints that expose cloud IAM credentials |
+| VERITY-STATIC-CREDENTIAL-HARVESTING | Sensitive Credential Value or Key Block | Embedded keys, assigned API credentials, and sensitive path references |
+| VERITY-STATIC-SHELL-DROPPER | Remote Shell Dropper Pattern | Remote downloads piped straight into a shell interpreter |
+| VERITY-STATIC-SHELL-REVERSE-PIPE | Reverse Shell Network Payload | Reverse shell socket and named-pipe payloads |
+| VERITY-STATIC-CODE-EXECUTION | Obfuscated / Dynamic Execution Wrapper | Base64 and encoded command execution wrappers |
+| VERITY-STATIC-SHELL-DESTRUCTIVE | Destructive Host Command | Disk-wiping and filesystem-destroying commands |
+| VERITY-STATIC-SQL-INJECTION-SCHEMA | SQL Injection Sequence in Schema Defaults | SQL breakout sequences in schema default values |
+| VERITY-STATIC-SCRIPT-INJECTION-XSS | Script Injection / Stored XSS in Metadata | Unescaped script tags and javascript pseudo-protocols in metadata |
 
 ### AST rules (9)
 
 | Rule | Name | Detects |
 |---|---|---|
-| VERITY-AST-001 | Dynamic SQL String Formatting / Injection | f-strings, concatenation, format-built SQL |
-| VERITY-AST-002 | Unsafe eval/exec execution | Agent-controlled code execution |
-| VERITY-AST-003 | Unbounded Database Query / Missing Limit | Queries without limits or pagination |
-| VERITY-AST-004 | Hardcoded Database Credentials in Code | Inline credentials in source |
-| VERITY-AST-005 | Insecure Deserialization / Pickle | Untrusted pickle/deserialization |
-| VERITY-AST-006 | Path Traversal via Unvalidated Input | Unsanitized file path construction |
-| VERITY-AST-007 | Unauthenticated Endpoints / Missing Middleware | Sensitive routes without auth |
-| VERITY-AST-008 | Insecure Random / Crypto Usage | Weak RNG and deprecated crypto |
-| VERITY-AST-009 | Unchecked Subprocess Shell Execution | `shell=True` with untrusted input |
+| VERITY-AST-CWE-94-EVAL | Unsafe Dynamic Code Evaluation (eval/exec) | Direct evaluation of agent-controlled expressions and statements |
+| VERITY-AST-CWE-94-COMPILE | Dynamic Code Compilation (compile) | Bytecode built from agent-controlled source strings |
+| VERITY-AST-CWE-78-SHELL | Command Injection via shell=True Subprocess | Subprocess calls that pass a string to a shell |
+| VERITY-AST-CWE-78-SYSTEM | Direct OS Shell Execution (os.system / os.popen) | Unsanitized shell invocation without argument separation |
+| VERITY-AST-CWE-22-TRAVERSAL | Unvalidated Path Traversal / Boundary Breakout | Dynamic paths resolved without canonical containment checks |
+| VERITY-AST-CWE-502-PICKLE | Insecure Object Deserialization (pickle/marshal) | Untrusted pickle and marshal blobs that run __reduce__ hooks |
+| VERITY-AST-CWE-502-YAML | Insecure YAML Deserialization | yaml.load() without a safe loader |
+| VERITY-AST-CWE-79-XSS | Unescaped HTML / Script Injection in Tool Output | Agent input interpolated into markup without escaping |
+| VERITY-AST-CWE-862-BOLA | Missing Session Tenant Verification in Multi-Tenant Tool | Tenant-scoped reads that skip the session tenant check |
 
 ### SqlSecurityGuard dialects (7)
 
@@ -155,10 +214,61 @@ A non-zero exit fails the job when medium-or-higher findings exist, while SARIF 
 
 | Tool | Purpose |
 |---|---|
-| `mcp_security_scan` | Run static, AST, and configuration scans |
-| `mcp_database_guard` | Validate SQL for a selected dialect |
-| `mcp_database_oracle` | Compare vulnerable and patched behavior |
-| `mcp_remediation_ops` | Return prioritized fixes with evidence |
+| `verity_security_scan` | Run static, AST, and configuration scans |
+| `verity_database_guard` | Validate SQL for a selected dialect |
+| `verity_database_oracle` | Compare vulnerable and patched behavior |
+| `verity_remediation_ops` | Return prioritized fixes with evidence |
+
+---
+
+## Agent-Native MCP Server
+
+`verity serve` speaks stdio or SSE JSON-RPC and exposes four canonical tools.
+Each one accepts the same evidence shapes the CLI already produces, so an
+assistant never has to reimplement a check.
+
+| Tool | Purpose |
+| --- | --- |
+| `verity_security_scan` | Run static, AST, and configuration scans and return prioritised findings. |
+| `verity_database_guard` | Validate a statement or filter document for a selected dialect. |
+| `verity_database_oracle` | Compare vulnerable and patched behaviour to prove a fix. |
+| `verity_remediation_ops` | Return prioritised fixes, patches, and wrapper configuration. |
+
+```bash
+verity serve --transport stdio
+```
+
+---
+
+## Output formats
+
+| Output format | Edition | Typical use |
+| --- | --- | --- |
+| `--format terminal` | Free | Human-readable summary for a local shell. |
+| `--format json` | Free | Machine-readable artifact for pipelines and triage. |
+| `--format markdown` | Free | Pull request comment body. |
+| `--format html` | Free | Self-contained report for reviewers. |
+| `--format sarif` | [Pro] | OASIS SARIF v2.1.0 upload for code-scanning dashboards. |
+
+In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`.
+
+---
+
+## Zero-Docker demo targets
+
+Four intentionally vulnerable servers run in-process, so exploit verification
+works on a laptop and on an ephemeral CI runner without Docker, cloud accounts,
+or production access.
+
+```bash
+verity test --target sqlite-basic --demo --format json
+verity test --target postgres-basic --demo --format json
+verity test --target mongo-basic --demo --format json
+verity test --target code-exec-basic --demo --format json
+```
+
+Each transcript contains the executed probe, the evidence, and remediation text
+for the finding it proves.
 
 ---
 
@@ -267,30 +377,20 @@ $ verity test --target sqlite-basic --demo --format json
   },
   "summary": {
     "tests": 3,
-    "passed": 1,
-    "failed": 2,
+    "passed": 2,
+    "failed": 1,
     "highest_severity": "high"
   },
   "findings": [
     {
-      "id": "VERITY-AST-001",
-      "title": "Dynamic SQL String Formatting / Injection",
+      "id": "VERITY-STATIC-SQL-INJECTION-SCHEMA",
+      "title": "SQL Injection Sequence in Schema Defaults",
       "severity": "high",
       "evidence": {
         "query": "SELECT * FROM users WHERE name = 'admin' OR '1'='1'",
         "result": "authentication_bypass"
       },
       "remediation": "Use parameterized queries and validate model-generated SQL."
-    },
-    {
-      "id": "VERITY-AST-003",
-      "title": "Unbounded Database Query / Missing Limit",
-      "severity": "medium",
-      "evidence": {
-        "rows_returned": 1284,
-        "limit_present": false
-      },
-      "remediation": "Add LIMIT and enforce row caps in the tool layer."
     }
   ]
 }
@@ -299,7 +399,7 @@ $ verity test --target sqlite-basic --demo --format json
 ### Walkthrough 2: PostgreSQL Multi-Tenant Target with `verity test --demo`
 
 ~~~bash
-$ verity test --target postgres-multitenant --demo --format json
+$ verity test --target postgres-basic --demo --format json
 ~~~
 
 ~~~json
@@ -308,37 +408,27 @@ $ verity test --target postgres-multitenant --demo --format json
   "tool": "verity",
   "version": "0.2.1",
   "target": {
-    "name": "postgres-multitenant",
+    "name": "postgres-basic",
     "cwe": "CWE-639",
     "mode": "zero-docker"
   },
   "summary": {
     "tests": 4,
-    "passed": 2,
-    "failed": 2,
-    "highest_severity": "critical"
+    "passed": 3,
+    "failed": 1,
+    "highest_severity": "high"
   },
   "findings": [
     {
-      "id": "VERITY-BOLA-001",
-      "title": "Cross-tenant object access through agent tool",
-      "severity": "critical",
+      "id": "VERITY-AST-CWE-862-BOLA",
+      "title": "Missing Session Tenant Verification in Multi-Tenant Tool",
+      "severity": "high",
       "evidence": {
         "authenticated_tenant": "tenant-a",
         "requested_tenant": "tenant-b",
         "records_exposed": 17
       },
-      "remediation": "Bind every query to the authenticated tenant and deny mismatched scope."
-    },
-    {
-      "id": "VERITY-AST-007",
-      "title": "Unauthenticated Endpoints / Missing Middleware",
-      "severity": "high",
-      "evidence": {
-        "route": "/mcp/invoke",
-        "auth_middleware": false
-      },
-      "remediation": "Require authentication for all MCP invocation routes."
+      "remediation": "Compare the requested tenant with the session tenant and deny mismatches."
     }
   ]
 }
@@ -369,24 +459,24 @@ $ verity test --target code-exec-basic --format json
   },
   "findings": [
     {
-      "id": "VERITY-AST-002",
-      "title": "Unsafe eval/exec execution",
+      "id": "VERITY-AST-CWE-94-EVAL",
+      "title": "Unsafe Dynamic Code Evaluation (eval/exec)",
       "severity": "critical",
       "location": {"file": "agent/tools.py", "line": 42},
       "evidence": {"sink": "eval", "source": "tool_input.code"},
       "remediation": "Replace eval with an allowlisted interpreter."
     },
     {
-      "id": "VERITY-AST-009",
-      "title": "Unchecked Subprocess Shell Execution",
+      "id": "VERITY-AST-CWE-78-SHELL",
+      "title": "Command Injection via shell=True Subprocess",
       "severity": "high",
       "location": {"file": "agent/tools.py", "line": 57},
       "evidence": {"sink": "subprocess.run", "shell": true},
       "remediation": "Use argument lists and disable shell execution."
     },
     {
-      "id": "VERITY-STATIC-001",
-      "title": "Insecure Stdio Command Injection",
+      "id": "VERITY-STATIC-SHELL-DROPPER",
+      "title": "Remote Shell Dropper Pattern",
       "severity": "medium",
       "location": {"file": "mcp.json", "line": 8},
       "evidence": {"command": "sh -c"},
