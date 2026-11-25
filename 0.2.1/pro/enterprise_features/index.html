@@ -1982,10 +1982,7 @@ terminal scrollback. An attacker benefits from every finding that never reaches
 a tracked dashboard. The exporter turns each finding into a stable SARIF result
 with rule metadata, locations, and remediation text so it can be uploaded,
 deduplicated, and triaged.</p>
-<p><strong>Free vs. Pro delta.</strong> In Free, any attempt to export SARIF fails closed: the
-engine emits <code>PRO_FEATURE_REQUIRED</code>, exits with code 2, and writes no output
-file. Pro writes the artifact atomically, so a stale artifact can never be
-mistaken for a fresh one.</p>
+<p><strong>Free vs. Pro delta.</strong> In Free, <code>--format sarif</code> fails closed: the engine emits the deterministic <code>PRO_FEATURE_REQUIRED</code> JSON payload (<code>"ok": false</code>, <code>"verdict": "PRO_REQUIRED"</code>, <code>"error": "PRO_FEATURE_REQUIRED"</code>), exits with code 2, and writes zero partial files even when <code>--output</code> is supplied. When <code>verity-pro</code> is installed, <code>--format sarif</code> and <code>ComplianceReportEngine.generate_bundle()</code> preserve exact <code>physicalLocation.region.startLine</code> (falling back to <code>startLine: 1</code> when line info is absent) and <code>artifactLocation.uri</code>, write the SARIF artifact atomically, and place OSV v1.6.0 <code>AIVSS</code> metrics under <code>database_specific.aivss</code> (keeping <code>CVSS_V3</code> in top-level <code>severity[]</code>).</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity_pro.reporting.sarif</span><span class="w"> </span><span class="kn">import</span> <span class="n">SarifExporter</span>
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">exporter</span> <span class="o">=</span> <span class="n">SarifExporter</span><span class="p">(</span><span class="n">tool_version</span><span class="o">=</span><span class="s2">"2.1.0"</span><span class="p">)</span>

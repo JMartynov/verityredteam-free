@@ -1517,21 +1517,21 @@ omitting the region or crashing.</p>
 <td>unit</td>
 <td><code>tests/unit/cli/test_sarif_pro_gate.py::test_sarif_requires_pro_plugin</code></td>
 <td>Free emits <code>PRO_FEATURE_REQUIRED</code>, exit code <code>2</code>, and writes no artifact; paired Pro-present control exports successfully.</td>
-<td>Pending</td>
+<td>Done</td>
 </tr>
 <tr>
 <td>AC-40.2</td>
 <td>unit</td>
 <td><code>tests/unit/cli/test_sarif_line_precision.py::test_sarif_preserves_line</code></td>
 <td>Real source line survives export; missing location falls back to <code>startLine == 1</code>.</td>
-<td>Pending</td>
+<td>Done</td>
 </tr>
 <tr>
 <td>AC-40.3</td>
 <td>static</td>
 <td><code>uv run ruff check src tests</code></td>
 <td>Zero lint findings.</td>
-<td>Pending</td>
+<td>Done</td>
 </tr>
 </tbody>
 </table>
@@ -1541,12 +1541,12 @@ omitting the region or crashing.</p>
 </code></pre></div>
 <h2 id="delivery-checklist">Delivery Checklist<a class="headerlink" href="#delivery-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] <code>--format sarif</code> returns <code>PRO_FEATURE_REQUIRED</code> with exit code <code>2</code> when the plugin is absent.</li>
-<li>[ ] Gate writes no output file, including when <code>--output</code> is supplied.</li>
-<li>[ ] SARIF <code>region.startLine</code> uses the real finding line.</li>
-<li>[ ] SARIF <code>artifactLocation.uri</code> uses the real finding file path.</li>
-<li>[ ] Missing-location fallback yields <code>startLine == 1</code>.</li>
-<li>[ ] Paired test files committed and <code>uv run ruff check src tests</code> clean.</li>
+<li>[x] <code>--format sarif</code> returns <code>PRO_FEATURE_REQUIRED</code> with exit code <code>2</code> when the plugin is absent.</li>
+<li>[x] Gate writes no output file, including when <code>--output</code> is supplied.</li>
+<li>[x] SARIF <code>region.startLine</code> uses the real finding line.</li>
+<li>[x] SARIF <code>artifactLocation.uri</code> uses the real finding file path.</li>
+<li>[x] Missing-location fallback yields <code>startLine == 1</code>.</li>
+<li>[x] Paired test files committed and <code>uv run ruff check src tests</code> clean.</li>
 </ul>
 
 

@@ -2624,7 +2624,7 @@ assistant never has to reimplement a check.</p>
 </tr>
 </tbody>
 </table>
-<p>In Verity Free, <code>--format sarif</code> returns <code>PRO_FEATURE_REQUIRED</code> (exit code 2); SARIF v2.1.0 export requires <code>verity-pro</code>.</p>
+<p>In Verity Free, <code>--format sarif</code> returns <code>PRO_FEATURE_REQUIRED</code> (exit code 2); SARIF v2.1.0 export requires <code>verity-pro</code>. Specifically, Free emits <code>"ok": false</code>, <code>"verdict": "PRO_REQUIRED"</code>, and <code>"error": "PRO_FEATURE_REQUIRED"</code> with zero partial file writes even when <code>--output</code> is supplied; when <code>verity-pro</code> is installed, <code>--format sarif</code> and <code>ComplianceReportEngine.generate_bundle()</code> preserve exact <code>physicalLocation.region.startLine</code> (falling back to <code>startLine: 1</code> when line info is absent) and <code>artifactLocation.uri</code>, and OSV v1.6.0 records store <code>AIVSS</code> under <code>database_specific.aivss</code>.</p>
 <hr />
 <h2 id="zero-docker-demo-targets">Zero-Docker demo targets<a class="headerlink" href="#zero-docker-demo-targets" title="Permanent link">&para;</a></h2>
 <p>Four intentionally vulnerable servers run in-process, so exploit verification

@@ -876,10 +876,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sarif-output" class="md-nav__link">
+  <a href="#sarif-output-pro" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SARIF output
+        SARIF output ([Pro])
       
     </span>
   </a>
@@ -970,7 +970,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sarif-output_1" class="md-nav__link">
+  <a href="#sarif-output" class="md-nav__link">
     <span class="md-ellipsis">
       
         SARIF output
@@ -1080,10 +1080,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sarif-output_2" class="md-nav__link">
+  <a href="#sarif-output-pro_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SARIF output
+        SARIF output ([Pro])
       
     </span>
   </a>
@@ -1933,10 +1933,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sarif-output" class="md-nav__link">
+  <a href="#sarif-output-pro" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SARIF output
+        SARIF output ([Pro])
       
     </span>
   </a>
@@ -2027,7 +2027,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#sarif-output_1" class="md-nav__link">
+  <a href="#sarif-output" class="md-nav__link">
     <span class="md-ellipsis">
       
         SARIF output
@@ -2137,10 +2137,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#sarif-output_2" class="md-nav__link">
+  <a href="#sarif-output-pro_1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        SARIF output
+        SARIF output ([Pro])
       
     </span>
   </a>
@@ -2340,8 +2340,8 @@
 </tr>
 <tr>
 <td><code>2</code></td>
-<td>usage</td>
-<td>Invalid flag, unknown command, mutually exclusive options</td>
+<td>usage / Pro gate</td>
+<td>Invalid flag, unknown command, mutually exclusive options, or gated <code>[Pro]</code> feature (<code>PRO_FEATURE_REQUIRED</code>)</td>
 </tr>
 <tr>
 <td><code>3</code></td>
@@ -2694,8 +2694,8 @@
 <a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">  </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
 <a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="p">}</span>
 </code></pre></div>
-<h3 id="sarif-output">SARIF output<a class="headerlink" href="#sarif-output" title="Permanent link">&para;</a></h3>
-<p>SARIF 2.1.0. One <code>run</code> per invocation, one <code>rule</code> per finding identifier, one <code>result</code> per finding.</p>
+<h3 id="sarif-output-pro">SARIF output (<code>[Pro]</code>)<a class="headerlink" href="#sarif-output-pro" title="Permanent link">&para;</a></h3>
+<p>SARIF 2.1.0 export (<code>--format sarif</code>) is a <code>[Pro]</code> feature requiring <code>verity-pro</code>. When <code>verity-pro</code> is absent, Free emits the deterministic <code>PRO_FEATURE_REQUIRED</code> JSON payload (<code>"ok": false</code>, <code>"verdict": "PRO_REQUIRED"</code>, <code>"error": "PRO_FEATURE_REQUIRED"</code>), exits with code <code>2</code>, and writes zero partial files even when <code>--output</code> is supplied. When <code>verity-pro</code> is installed, <code>--format sarif</code> and <code>ComplianceReportEngine.generate_bundle()</code> emit one <code>run</code> per invocation, one <code>rule</code> per finding identifier, and one <code>result</code> per finding with exact <code>physicalLocation.region.startLine</code> (falling back to <code>1</code> when line info is absent) and <code>artifactLocation.uri</code>, alongside OSV v1.6.0 records storing <code>AIVSS</code> under <code>database_specific.aivss</code>.</p>
 <table>
 <thead>
 <tr>
@@ -2723,6 +2723,14 @@
 <tr>
 <td><code>runs[0].results[].level</code></td>
 <td><code>critical</code>/<code>high</code> → <code>error</code>, <code>medium</code> → <code>warning</code>, <code>low</code>/<code>info</code> → <code>note</code></td>
+</tr>
+<tr>
+<td><code>runs[0].results[].locations[0].physicalLocation.artifactLocation.uri</code></td>
+<td>finding <code>file_path</code> / <code>uri</code></td>
+</tr>
+<tr>
+<td><code>runs[0].results[].locations[0].physicalLocation.region.startLine</code></td>
+<td>finding <code>line_number</code> / <code>line</code> (fallback <code>1</code>)</td>
 </tr>
 <tr>
 <td><code>runs[0].results[].partialFingerprints.verityFingerprint</code></td>
@@ -2768,7 +2776,7 @@
 </tr>
 <tr>
 <td><code>2</code></td>
-<td>Usage error, including <code>--offline</code> with <code>--live-probe</code></td>
+<td>Usage error (including <code>--offline</code> with <code>--live-probe</code>) or gated <code>[Pro]</code> feature such as <code>--format sarif</code> (<code>PRO_FEATURE_REQUIRED</code>, zero partial file writes)</td>
 </tr>
 <tr>
 <td><code>3</code></td>
@@ -3006,7 +3014,7 @@
 <a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">  </span><span class="nt">"baseline"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span>
 <a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="p">}</span>
 </code></pre></div>
-<h3 id="sarif-output_1">SARIF output<a class="headerlink" href="#sarif-output_1" title="Permanent link">&para;</a></h3>
+<h3 id="sarif-output">SARIF output<a class="headerlink" href="#sarif-output" title="Permanent link">&para;</a></h3>
 <p>One rule per CWE (<code>CWE-89</code>, <code>CWE-639</code>, <code>CWE-943</code>, <code>CWE-94</code>). <code>vulnerable</code> maps to <code>error</code>, <code>error</code> to <code>warning</code>, <code>patched</code> and <code>skipped</code> produce no result.</p>
 <h3 id="test-exit-codes">Test exit codes<a class="headerlink" href="#test-exit-codes" title="Permanent link">&para;</a></h3>
 <table>
@@ -3168,9 +3176,11 @@
 <li>Errors reported in JSON also set a non-zero exit code; the envelope is still emitted when <code>--output</code> is set.</li>
 </ul>
 <hr />
-<h2 id="sarif-output_2">SARIF output<a class="headerlink" href="#sarif-output_2" title="Permanent link">&para;</a></h2>
+<h2 id="sarif-output-pro_1">SARIF output (<code>[Pro]</code>)<a class="headerlink" href="#sarif-output-pro_1" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Emitted as SARIF 2.1.0, suitable for GitHub code scanning, Azure DevOps, and DefectDojo.</li>
+<li>Requires <code>verity-pro</code>; in Free, <code>--format sarif</code> emits <code>"ok": false</code>, <code>"verdict": "PRO_REQUIRED"</code>, <code>"error": "PRO_FEATURE_REQUIRED"</code>, exits with code <code>2</code>, and writes no partial file even when <code>--output</code> is supplied.</li>
+<li>When <code>verity-pro</code> is installed, emitted as OASIS SARIF 2.1.0 with exact <code>physicalLocation.region.startLine</code> (falling back to <code>1</code> when line info is absent) and <code>artifactLocation.uri</code>, suitable for GitHub code scanning, Azure DevOps, and DefectDojo.</li>
+<li><code>ComplianceReportEngine.generate_bundle()</code> additionally pairs SARIF 2.1.0 with OSV v1.6.0 records that store <code>AIVSS</code> under <code>database_specific.aivss</code>.</li>
 <li><code>tool.driver.rules</code> is populated once per distinct finding identifier.</li>
 <li><code>results[].partialFingerprints.verityFingerprint</code> enables deduplication across runs.</li>
 <li>Severity mapping is fixed: <code>critical</code>/<code>high</code> → <code>error</code>, <code>medium</code> → <code>warning</code>, <code>low</code>/<code>info</code> → <code>note</code>.</li>
