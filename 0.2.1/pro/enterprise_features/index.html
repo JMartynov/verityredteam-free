@@ -1,0 +1,2285 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server">
+      
+      
+      
+        <link rel="canonical" href="https://jmartynov.github.io/verityredteam-free/0.2.1/pro/enterprise_features/">
+      
+      
+        <link rel="prev" href="../../extensibility/">
+      
+      
+        <link rel="next" href="../../reference/auxiliary_and_benchmarks/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Enterprise Features - Verity RedTeam Free</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#verity-pro-enterprise-features" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Verity RedTeam Free" class="md-header__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Verity RedTeam Free
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Enterprise Features
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cli/reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../rules/catalog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Rules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guards/sql-security-guard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guards & Runtime
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../mcp/server-and-ides/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  MCP & IDE Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Verity Pro
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/auxiliary_and_benchmarks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Roadmap & Changelog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Verity RedTeam Free" class="md-nav__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Verity RedTeam Free
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security Rules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Catalog (22 Rules)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guards & Runtime
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guards & Runtime
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guards/sql-security-guard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL Security Guard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP & IDE Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP & IDE Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/server-and-ides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server & IDEs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extensibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility & Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verity Pro
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Verity Pro
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Features
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#free-vs-pro-feature-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Free vs. Pro Feature Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Guards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Guards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snowflakesecurityguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnowflakeSecurityGuard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtersecurityguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FilterSecurityGuard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumepolicyguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VolumePolicyGuard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-sarif-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance &amp; SARIF Reporting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance &amp; SARIF Reporting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oasis-sarif-v210-compliance-bundles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OASIS SARIF v2.1.0 &amp; Compliance Bundles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-native-mcp-server-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent-Native MCP Server Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remediation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remediation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Remediation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pro-verity_remediation_ops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pro verity_remediation_ops
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adversarial-verification-red-teaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adversarial Verification &amp; Red-Teaming
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adversarial Verification &amp; Red-Teaming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-turn-socratic-red-teaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Turn Socratic Red-Teaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graceful-degradation-pro_feature_required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graceful Degradation (PRO_FEATURE_REQUIRED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/auxiliary_and_benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auxiliary & Benchmark Appendix (Tier 3/4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../roadmap/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & Changelog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roadmap & Changelog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Changelog (TASK-01–94)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#free-vs-pro-feature-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Free vs. Pro Feature Comparison
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Guards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Guards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#snowflakesecurityguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SnowflakeSecurityGuard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtersecurityguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FilterSecurityGuard
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volumepolicyguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        VolumePolicyGuard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#compliance-sarif-reporting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compliance &amp; SARIF Reporting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Compliance &amp; SARIF Reporting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#oasis-sarif-v210-compliance-bundles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OASIS SARIF v2.1.0 &amp; Compliance Bundles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-native-mcp-server-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent-Native MCP Server Actions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remediation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remediation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Remediation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pro-verity_remediation_ops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pro verity_remediation_ops
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adversarial-verification-red-teaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adversarial Verification &amp; Red-Teaming
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adversarial Verification &amp; Red-Teaming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#multi-turn-socratic-red-teaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Turn Socratic Red-Teaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graceful-degradation-pro_feature_required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graceful Degradation (PRO_FEATURE_REQUIRED)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/JMartynov/verityredteam-free/edit/main/docs/pro/enterprise_features.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/JMartynov/verityredteam-free/raw/main/docs/pro/enterprise_features.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="verity-pro-enterprise-features">Verity Pro Enterprise Features<a class="headerlink" href="#verity-pro-enterprise-features" title="Permanent link">&para;</a></h1>
+<p>Verity RedTeam Free is Apache-2.0 licensed and covers the Tier 1 and Tier 2
+customer core: multi-dialect SQL AST guarding, MCP config discovery, static
+metadata screening, Python AST source review, OSV correlation, and the
+agent-native MCP server.</p>
+<p>Verity RedTeam Pro is the commercial edition. It adds cloud warehouse and
+NoSQL guards, OASIS SARIF v2.1.0 compliance export, an extended
+<code>verity_remediation_ops</code> action set, and multi-turn Socratic red-teaming.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Pro is installed as the <code>verity-pro</code> package alongside the Free engine. It
+does not fork the Free analysis core, so rule IDs, evidence shapes, severity
+thresholds, and exit-code semantics stay identical between editions. Pro only
+adds capabilities that Free does not implement.</p>
+<p>Every Pro capability is reachable from three entry points:</p>
+<ul>
+<li><strong>Python library</strong> — guards in <code>verity.mcp_library</code> and reporting helpers.</li>
+<li><strong>CLI</strong> — extra output formats and compliance bundles on existing commands.</li>
+<li><strong>Agent-native MCP server</strong> — additional actions dispatched by <code>verity serve</code>.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Package</th>
+<th>Primary entry point</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cloud warehouse guard</td>
+<td><code>verity-pro</code></td>
+<td><code>SnowflakeSecurityGuard</code></td>
+</tr>
+<tr>
+<td>NoSQL filter guard</td>
+<td><code>verity-pro</code></td>
+<td><code>FilterSecurityGuard</code></td>
+</tr>
+<tr>
+<td>Volume policy guard</td>
+<td><code>verity-pro</code></td>
+<td><code>VolumePolicyGuard</code></td>
+</tr>
+<tr>
+<td>SARIF and compliance bundles</td>
+<td><code>verity-pro</code></td>
+<td><code>verity scan --format sarif</code></td>
+</tr>
+<tr>
+<td>Extended remediation actions</td>
+<td><code>verity-pro</code></td>
+<td><code>verity_remediation_ops</code></td>
+</tr>
+<tr>
+<td>Multi-turn Socratic red-teaming</td>
+<td><code>verity-pro</code></td>
+<td><code>DiscoverySessionRunner</code></td>
+</tr>
+</tbody>
+</table>
+<p>Pro capabilities fail closed. When the Free engine is asked for a Pro-only
+capability it returns a structured <code>PRO_FEATURE_REQUIRED</code> error instead of
+approximating the check. The full contract is documented in the final section.</p>
+<pre class="mermaid"><code>flowchart LR
+    FREE[Verity Free engine] --&gt; LAYER[Verity Pro capability layer]
+    LAYER --&gt; DB[Cloud and NoSQL guards]
+    LAYER --&gt; SARIF[SARIF and compliance bundles]
+    LAYER --&gt; ACT[Extended MCP actions]
+    LAYER --&gt; RT[Multi-turn Socratic red-team]</code></pre>
+<h2 id="free-vs-pro-feature-comparison">Free vs. Pro Feature Comparison<a class="headerlink" href="#free-vs-pro-feature-comparison" title="Permanent link">&para;</a></h2>
+<p>The matrix maps each customer-facing domain to Free and Pro behaviour. Every
+Pro cell carries the <code>[Pro]</code> badge, and the Free column records exactly what an
+Apache-2.0 installation can do today.</p>
+<table>
+<thead>
+<tr>
+<th>Capability Domain</th>
+<th>Verity RedTeam Free (Apache-2.0)</th>
+<th>Verity RedTeam Pro (Commercial)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Database AST Guarding</td>
+<td><code>SqlSecurityGuard</code> with seven SQL dialects</td>
+<td>[Pro] Cloud warehouse and NoSQL suite (<code>SnowflakeSecurityGuard</code>, <code>FilterSecurityGuard</code>, <code>VolumePolicyGuard</code>)</td>
+</tr>
+<tr>
+<td>Reporting &amp; CI/CD Formats</td>
+<td><code>--format terminal</code>, <code>--format json</code>, <code>--format markdown</code>, <code>--format html</code></td>
+<td>[Pro] OASIS SARIF v2.1.0 (<code>--format sarif</code>) and multi-framework compliance bundles; Free returns <code>PRO_FEATURE_REQUIRED</code> with exit code 2</td>
+</tr>
+<tr>
+<td>Agent-Native MCP Server (verity serve)</td>
+<td>Base four tools (<code>verity_security_scan</code>, <code>verity_database_guard</code>, <code>verity_database_oracle</code>, <code>verity_remediation_ops</code>)</td>
+<td>[Pro] Unlocks <code>validate_role_assignment</code>, <code>validate_snowflake_query</code>, <code>validate_nosql_filter</code>, <code>enforce_volume_policy</code>, <code>export_sarif</code>, <code>generate_guard_patch</code>, <code>generate_wrapper_config</code>, <code>generate_safe_parameterized_query</code>, <code>check_canary_proof</code></td>
+</tr>
+<tr>
+<td>Adversarial Verification &amp; Red-Teaming</td>
+<td>Four zero-Docker <code>--demo</code> targets with single-turn probes</td>
+<td>[Pro] Multi-turn Socratic red-teaming (<code>DiscoverySessionRunner</code> and <code>SocraticRefinementEngine</code>) with neurosymbolic remediation</td>
+</tr>
+</tbody>
+</table>
+<p>Badges are load-bearing. A <code>[Pro]</code> row never degrades quietly into a weaker
+check: the Free engine answers with <code>PRO_FEATURE_REQUIRED</code> and exit code 2 so
+that a CI gate cannot mistake a missing capability for a clean scan.</p>
+<h2 id="database-guards">Database Guards<a class="headerlink" href="#database-guards" title="Permanent link">&para;</a></h2>
+<p>Model-generated queries are the highest-impact MCP surface. An assistant that
+can build SQL, filter documents, or page through results can also escape a
+tenant, read a stage, or exfiltrate a warehouse. Free ships
+<code>SqlSecurityGuard</code>, which parses statement text for seven dialects. Pro adds
+three guards that understand the surrounding session: role, filter document,
+and response volume.</p>
+<h3 id="snowflakesecurityguard">SnowflakeSecurityGuard<a class="headerlink" href="#snowflakesecurityguard" title="Permanent link">&para;</a></h3>
+<p><strong>Threat and purpose.</strong> A warehouse role that is taken over — or simply minted
+by an over-broad credential — can switch session roles, read internal stages,
+or time-travel to a pre-deletion snapshot and recover data the operator
+believes is gone. <code>SnowflakeSecurityGuard</code> validates the role assignment, the
+statement text, the stage path, and the time-travel clause before the
+warehouse sees the request.</p>
+<p><strong>Free vs. Pro delta.</strong> Free <code>SqlSecurityGuard</code> parses Snowflake SQL for
+injection and unbounded reads but has no notion of session role, stage scope,
+or time-travel offsets. Those checks exist only in <code>SnowflakeSecurityGuard</code>,
+which is Pro-only.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.snowflake_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SnowflakeSecurityGuard</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">SnowflakeSecurityGuard</span><span class="p">(</span><span class="n">allowed_stages</span><span class="o">=</span><span class="p">(</span><span class="s2">"@TRUSTED"</span><span class="p">,))</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_session_role</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">"ANALYST_ROLE"</span><span class="p">)</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT id, total FROM orders WHERE tenant_id = :1"</span><span class="p">)</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_stage_path</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"@TRUSTED/orders/"</span><span class="p">)</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_time_travel</span><span class="p">(</span><span class="n">clause</span><span class="o">=</span><span class="s2">"AT(OFFSET =&gt; -3600)"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--sql<span class="w"> </span><span class="s2">"SELECT * FROM orders AT(OFFSET =&gt; -86400)"</span><span class="w"> </span>--dialect<span class="w"> </span>snowflake
+</code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    REQ[Agent warehouse request] --&gt; ROLE{Role allowed}
+    ROLE -- no --&gt; DENY[Deny with evidence]
+    ROLE -- yes --&gt; SQL{Statement safe}
+    SQL -- no --&gt; DENY
+    SQL -- yes --&gt; STAGE{Stage path allowed}
+    STAGE -- no --&gt; DENY
+    STAGE -- yes --&gt; TT{Time travel allowed}
+    TT -- no --&gt; DENY
+    TT -- yes --&gt; EXEC[Execute statement]</code></pre>
+<h3 id="filtersecurityguard">FilterSecurityGuard<a class="headerlink" href="#filtersecurityguard" title="Permanent link">&para;</a></h3>
+<p><strong>Threat and purpose.</strong> An agent that passes a caller-supplied filter document
+to MongoDB can inject operators such as <code>$ne</code>, <code>$where</code>, or <code>$gt</code> and widen a
+single-tenant read into a cross-tenant dump. The guard parses the filter tree,
+rejects unknown operators, and rewrites the query so the authenticated tenant
+is always enforced.</p>
+<p><strong>Free vs. Pro delta.</strong> Free ships no NoSQL parser: SQL AST guarding covers SQL
+dialects only. Field allowlisting and tenant binding for document databases are
+Pro-only behaviour.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.filters</span><span class="w"> </span><span class="kn">import</span> <span class="n">FilterSecurityGuard</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">FilterSecurityGuard</span><span class="p">(</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">allowed_fields</span><span class="o">=</span><span class="p">(</span><span class="s2">"tenant_id"</span><span class="p">,</span> <span class="s2">"status"</span><span class="p">,</span> <span class="s2">"created_at"</span><span class="p">),</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="p">)</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="n">safe_filter</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">validate_and_sanitize</span><span class="p">(</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="n">filter_document</span><span class="o">=</span><span class="p">{</span><span class="s2">"tenant_id"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"$ne"</span><span class="p">:</span> <span class="kc">None</span><span class="p">},</span> <span class="s2">"status"</span><span class="p">:</span> <span class="s2">"open"</span><span class="p">},</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    <span class="n">session_tenant</span><span class="o">=</span><span class="s2">"tenant-a"</span><span class="p">,</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">"collection"</span><span class="p">:</span><span class="w"> </span><span class="s2">"invoices"</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">"filter"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"tenant_id"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"$ne"</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">},</span><span class="w"> </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"open"</span><span class="p">}</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="p">}</span>
+</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    DOC[Caller filter document] --&gt; PARSE[Parse filter tree]
+    PARSE --&gt; OPS{Operator allowed}
+    OPS -- no --&gt; REJECT[Reject query]
+    OPS -- yes --&gt; FIELDS{Fields allowlisted}
+    FIELDS -- no --&gt; REJECT
+    FIELDS -- yes --&gt; TENANT[Bind session tenant]
+    TENANT --&gt; RUN[Execute scoped read]</code></pre>
+<h3 id="volumepolicyguard">VolumePolicyGuard<a class="headerlink" href="#volumepolicyguard" title="Permanent link">&para;</a></h3>
+<p><strong>Threat and purpose.</strong> A single unbounded read can stream an entire table into
+a model context, blowing out token budgets and moving data the agent was never
+meant to see. The guard clamps the requested limit, truncates oversized
+payloads, and emits a tamper-evident hash over the evidence it releases.</p>
+<p><strong>Free vs. Pro delta.</strong> Free reports unbounded reads as findings but does not
+police response volume at runtime. Limit clamping, payload truncation, and
+evidence hashing are Pro-only.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.volume</span><span class="w"> </span><span class="kn">import</span> <span class="n">VolumePolicyGuard</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">VolumePolicyGuard</span><span class="p">(</span><span class="n">max_rows</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">max_bytes</span><span class="o">=</span><span class="mi">65536</span><span class="p">)</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">allowed_rows</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">clamp_limit</span><span class="p">(</span><span class="n">requested_limit</span><span class="o">=</span><span class="mi">100000</span><span class="p">)</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">payload</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">truncate_payload</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">raw_payload</span><span class="p">)</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="n">evidence_hash</span> <span class="o">=</span> <span class="n">guard</span><span class="o">.</span><span class="n">compute_evidence_hash</span><span class="p">(</span><span class="n">payload</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>postgres-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<pre class="mermaid"><code>flowchart TD
+    REQ[Tool response] --&gt; LIMIT[Clamp row limit]
+    LIMIT --&gt; SIZE{Payload within byte cap}
+    SIZE -- no --&gt; TRUNC[Truncate payload]
+    SIZE -- yes --&gt; HASH[Compute evidence hash]
+    TRUNC --&gt; HASH
+    HASH --&gt; OUT[Return bounded response]</code></pre>
+<h2 id="compliance-sarif-reporting">Compliance &amp; SARIF Reporting<a class="headerlink" href="#compliance-sarif-reporting" title="Permanent link">&para;</a></h2>
+<p>Compliance teams need findings in the format their code-scanning dashboard
+already ingests. Free prints JSON, Markdown, HTML, and terminal summaries.
+Pro adds an OASIS SARIF v2.1.0 exporter and multi-framework compliance bundles
+that map the same evidence onto external control sets.</p>
+<h3 id="oasis-sarif-v210-compliance-bundles">OASIS SARIF v2.1.0 &amp; Compliance Bundles<a class="headerlink" href="#oasis-sarif-v210-compliance-bundles" title="Permanent link">&para;</a></h3>
+<p><strong>Threat and purpose.</strong> Security review stalls when MCP findings live only in a
+terminal scrollback. An attacker benefits from every finding that never reaches
+a tracked dashboard. The exporter turns each finding into a stable SARIF result
+with rule metadata, locations, and remediation text so it can be uploaded,
+deduplicated, and triaged.</p>
+<p><strong>Free vs. Pro delta.</strong> In Free, any attempt to export SARIF fails closed: the
+engine emits <code>PRO_FEATURE_REQUIRED</code>, exits with code 2, and writes no output
+file. Pro writes the artifact atomically, so a stale artifact can never be
+mistaken for a fresh one.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity_pro.reporting.sarif</span><span class="w"> </span><span class="kn">import</span> <span class="n">SarifExporter</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">exporter</span> <span class="o">=</span> <span class="n">SarifExporter</span><span class="p">(</span><span class="n">tool_version</span><span class="o">=</span><span class="s2">"2.1.0"</span><span class="p">)</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">artifact</span> <span class="o">=</span> <span class="n">exporter</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="n">findings</span><span class="o">=</span><span class="n">findings</span><span class="p">)</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">exporter</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">artifact</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s2">"verity-results.sarif"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>sarif<span class="w"> </span>--output<span class="w"> </span>verity-results.sarif<span class="w"> </span>--fail-on-findings
+</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    SCAN[verity scan] --&gt; ED{verity-pro installed}
+    ED -- no --&gt; ERR[PRO_FEATURE_REQUIRED exit 2]
+    ED -- yes --&gt; BUILD[Build SARIF 2.1.0 log]
+    BUILD --&gt; MAP[Map rules to controls]
+    MAP --&gt; WRITE[Write artifact atomically]</code></pre>
+<h2 id="agent-native-mcp-server-actions">Agent-Native MCP Server Actions<a class="headerlink" href="#agent-native-mcp-server-actions" title="Permanent link">&para;</a></h2>
+<p>The Free <code>verity serve</code> surface exposes four tools — <code>verity_security_scan</code>,
+<code>verity_database_guard</code>, <code>verity_database_oracle</code>, and
+<code>verity_remediation_ops</code> — so an assistant can run scans, validate SQL, compare
+vulnerable and patched behaviour, and request fixes.</p>
+<p>Pro unlocks additional actions inside the same dispatcher. The base four tools
+keep their names and schemas; the extra actions are reached through the guard
+and remediation tools rather than new transport endpoints.</p>
+<table>
+<thead>
+<tr>
+<th>Pro action</th>
+<th>Dispatched from</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>validate_role_assignment</code></td>
+<td><code>verity_database_guard</code></td>
+<td>Check warehouse role grants before execution.</td>
+</tr>
+<tr>
+<td><code>validate_snowflake_query</code></td>
+<td><code>verity_database_guard</code></td>
+<td>Full Snowflake role, stage, and time-travel review.</td>
+</tr>
+<tr>
+<td><code>validate_nosql_filter</code></td>
+<td><code>verity_database_guard</code></td>
+<td>Parse and tenant-bind document filters.</td>
+</tr>
+<tr>
+<td><code>enforce_volume_policy</code></td>
+<td><code>verity_database_guard</code></td>
+<td>Clamp rows and bytes on tool responses.</td>
+</tr>
+<tr>
+<td><code>export_sarif</code></td>
+<td><code>verity_security_scan</code></td>
+<td>Emit OASIS SARIF v2.1.0 for the current findings.</td>
+</tr>
+<tr>
+<td><code>generate_safe_parameterized_query</code></td>
+<td><code>verity_remediation_ops</code></td>
+<td>Rewrite a vulnerable statement with bind parameters.</td>
+</tr>
+<tr>
+<td><code>generate_guard_patch</code></td>
+<td><code>verity_remediation_ops</code></td>
+<td>Produce a minimal guard insertion patch.</td>
+</tr>
+<tr>
+<td><code>generate_wrapper_config</code></td>
+<td><code>verity_remediation_ops</code></td>
+<td>Produce hardening config for the failing client.</td>
+</tr>
+<tr>
+<td><code>check_canary_proof</code></td>
+<td><code>verity_database_oracle</code></td>
+<td>Verify that a canary proves the fix holds.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
+</code></pre></div>
+<h2 id="remediation">Remediation<a class="headerlink" href="#remediation" title="Permanent link">&para;</a></h2>
+<p>Findings only reduce risk when the fix is concrete. Free returns prioritised
+remediation text with rule IDs, evidence, and file locations. Pro adds
+machine-applicable remediation actions that turn a finding into a patch an
+assistant can review and apply.</p>
+<h3 id="pro-verity_remediation_ops">Pro verity_remediation_ops<a class="headerlink" href="#pro-verity_remediation_ops" title="Permanent link">&para;</a></h3>
+<p><strong>Threat and purpose.</strong> A team that reads a finding but cannot apply a fix
+leaves the vulnerable tool deployed. The Pro action set generates a safe
+parameterized query, a guard patch, and a wrapper configuration so the
+vulnerable path is closed rather than merely reported.</p>
+<p><strong>Free vs. Pro delta.</strong> Free <code>verity_remediation_ops</code> returns advisory text
+only. The three generative actions below are Pro-only; on Free each one returns
+<code>PRO_FEATURE_REQUIRED</code> with exit code 2, and no partial patch is written.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_server.tools</span><span class="w"> </span><span class="kn">import</span> <span class="n">VerityToolDispatcher</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="n">dispatcher</span> <span class="o">=</span> <span class="n">VerityToolDispatcher</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="n">result</span> <span class="o">=</span> <span class="n">dispatcher</span><span class="o">.</span><span class="n">execute_tool</span><span class="p">(</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="s2">"verity_remediation_ops"</span><span class="p">,</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="p">{</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="s2">"action"</span><span class="p">:</span> <span class="s2">"generate_safe_parameterized_query"</span><span class="p">,</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>        <span class="s2">"dialect"</span><span class="p">:</span> <span class="s2">"postgres"</span><span class="p">,</span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>        <span class="s2">"statement"</span><span class="p">:</span> <span class="s2">"SELECT id, total FROM invoices WHERE tenant_id = $1"</span><span class="p">,</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="p">},</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity_remediation_ops"</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"generate_guard_patch"</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="nt">"target_file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent/tools.py"</span><span class="p">,</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nt">"rule_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VERITY-STATIC-SQL-INJECTION-SCHEMA"</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
+</code></pre></div>
+<pre class="mermaid"><code>flowchart LR
+    FIND[Finding with evidence] --&gt; OPS[verity_remediation_ops]
+    OPS --&gt; Q[generate_safe_parameterized_query]
+    OPS --&gt; P[generate_guard_patch]
+    OPS --&gt; W[generate_wrapper_config]
+    Q --&gt; REVIEW[Human review]
+    P --&gt; REVIEW
+    W --&gt; REVIEW</code></pre>
+<h2 id="adversarial-verification-red-teaming">Adversarial Verification &amp; Red-Teaming<a class="headerlink" href="#adversarial-verification-red-teaming" title="Permanent link">&para;</a></h2>
+<p>Static rules catch patterns; adversarial verification proves whether a server
+actually misbehaves when pushed. Free includes four zero-Docker demo targets
+and single-turn probes that confirm SQL injection, BOLA, NoSQL operator
+injection, and unsafe execution in-process.</p>
+<h3 id="multi-turn-socratic-red-teaming">Multi-Turn Socratic Red-Teaming<a class="headerlink" href="#multi-turn-socratic-red-teaming" title="Permanent link">&para;</a></h3>
+<p><strong>Threat and purpose.</strong> Real attackers do not stop at the first refusal. They
+rephrase, split a request across turns, and probe for unadvertised side
+effects. Multi-turn Socratic red-teaming drives a target through escalating
+conversational refinements and records which turn produced the unsafe
+behaviour, so a refusal that only holds for one phrasing is not mistaken for a
+control.</p>
+<p><strong>Free vs. Pro delta.</strong> Free runs single-turn probes against the demo targets.
+Session orchestration, refusal-aware refinement, and neurosymbolic remediation
+advice are Pro-only, and each Pro entry point fails closed with
+<code>PRO_FEATURE_REQUIRED</code> on Free.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity_pro.redteam.socratic</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiscoverySessionRunner</span><span class="p">,</span> <span class="n">SocraticRefinementEngine</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">runner</span> <span class="o">=</span> <span class="n">DiscoverySessionRunner</span><span class="p">(</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">target_profile</span><span class="o">=</span><span class="s2">"mcp-http"</span><span class="p">,</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="n">refusal_policy</span><span class="o">=</span><span class="s2">"non-destructive"</span><span class="p">,</span>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="n">max_turns</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="p">)</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">engine</span> <span class="o">=</span> <span class="n">SocraticRefinementEngine</span><span class="p">(</span><span class="n">runner</span><span class="o">=</span><span class="n">runner</span><span class="p">)</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a><span class="n">session</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">seed_objective</span><span class="o">=</span><span class="s2">"map unadvertised tool side effects"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity_security_scan"</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">"arguments"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">    </span><span class="nt">"action"</span><span class="p">:</span><span class="w"> </span><span class="s2">"redteam_session"</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"http://localhost:3000/sse"</span><span class="p">,</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="nt">"max_turns"</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="nt">"refusal_policy"</span><span class="p">:</span><span class="w"> </span><span class="s2">"non-destructive"</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="p">}</span>
+</code></pre></div>
+<pre class="mermaid"><code>sequenceDiagram
+    participant A as Socratic engine
+    participant S as Target MCP server
+    participant R as Finding store
+    A-&gt;&gt;S: Turn 1 seed objective
+    S--&gt;&gt;A: Refusal
+    A-&gt;&gt;S: Turn 2 refined request
+    S--&gt;&gt;A: Partial disclosure
+    A-&gt;&gt;S: Turn 3 escalation
+    S--&gt;&gt;A: Unsafe behaviour
+    A-&gt;&gt;R: Record evidence per turn</code></pre>
+<h2 id="graceful-degradation-pro_feature_required">Graceful Degradation (PRO_FEATURE_REQUIRED)<a class="headerlink" href="#graceful-degradation-pro_feature_required" title="Permanent link">&para;</a></h2>
+<p>Pro capability requests never produce a silent downgrade. Whenever the Free
+engine is asked for a Pro-only capability it returns exactly one structured
+error and performs no work:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="p">{</span><span class="nt">"error"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PRO_FEATURE_REQUIRED"</span><span class="p">,</span><span class="w"> </span><span class="nt">"feature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;feature&gt;"</span><span class="p">,</span><span class="w"> </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"&lt;message&gt;"</span><span class="p">}</span>
+</code></pre></div>
+<p>The contract has four guarantees:</p>
+<ul>
+<li><strong>CLI exit code 2.</strong> A Pro-only command exits 2, distinct from the finding
+  threshold exit code 1, so a pipeline can tell "capability missing" apart from
+  "vulnerable".</li>
+<li><strong>No partial writes.</strong> Verity never writes a partial or empty output file. If
+  <code>--output</code> was supplied, the target path is left untouched, so a stale
+  artifact cannot be mistaken for a fresh one.</li>
+<li><strong>No unhandled traceback.</strong> The failure is reported as the structured error
+  above, never as an unhandled traceback.</li>
+<li><strong>MCP calls stay live.</strong> A Pro-only MCP action returns the same structured
+  error object inside the tool result, and the server keeps serving subsequent
+  requests.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Free behavior</th>
+<th>Pro behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SnowflakeSecurityGuard</code></td>
+<td><code>PRO_FEATURE_REQUIRED</code>, exit code 2</td>
+<td>Role, stage, and time-travel enforcement</td>
+</tr>
+<tr>
+<td><code>FilterSecurityGuard</code></td>
+<td><code>PRO_FEATURE_REQUIRED</code>, exit code 2</td>
+<td>NoSQL operator and tenant enforcement</td>
+</tr>
+<tr>
+<td><code>VolumePolicyGuard</code></td>
+<td><code>PRO_FEATURE_REQUIRED</code>, exit code 2</td>
+<td>Row and byte caps with evidence hashing</td>
+</tr>
+<tr>
+<td>SARIF and compliance bundles</td>
+<td><code>PRO_FEATURE_REQUIRED</code>, exit code 2, no output file</td>
+<td>OASIS SARIF v2.1.0 plus compliance bundles</td>
+</tr>
+<tr>
+<td>Generative <code>verity_remediation_ops</code> actions</td>
+<td><code>PRO_FEATURE_REQUIRED</code>, exit code 2</td>
+<td>Safe query, guard patch, wrapper config</td>
+</tr>
+<tr>
+<td>Multi-turn Socratic red-teaming</td>
+<td><code>PRO_FEATURE_REQUIRED</code>, exit code 2</td>
+<td>Multi-turn discovery, refinement, remediation</td>
+</tr>
+</tbody>
+</table>
+<p>Installing <code>verity-pro</code> is the only unlock. No environment variable, no
+configuration flag, and no CLI switch enables Pro behaviour in Free.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "search.share"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
