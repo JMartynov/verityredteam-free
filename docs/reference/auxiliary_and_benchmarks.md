@@ -62,17 +62,17 @@ Both tables below use the same six columns.
 | Rank | Tier | Feature Name | Repo | Score | Disposition / Action |
 | --- | --- | --- | --- | --- | --- |
 | 37 | Tier 4 | VAIB Applicability Engine, Exploit Bridge & Onboarding FSM | Pro + Free | 4.48 | Internal state helpers; keep out of primary marketing. |
-| 38 | Tier 4 | Interactive Hub, Curses TUI & Dead Setup Wizard (init) | Fingerprints / Vulns | 3.85 | Internal/legacy interactive shell; keep out of core docs. |
+| 38 | Tier 4 | Interactive Hub, Curses TUI & Setup Wizard (`init`, `~/.mcp_fingerprints.toml`) | Fingerprints / Vulns | 3.85 | Internal/legacy interactive shell; keep out of core docs. |
 | 39 | Tier 4 | Hardcoded F-String Guard Templates (generate_guard_patch) | Free + Pro | 3.80 | Position honestly as Guard Snippet Generator. |
-| 40 | Tier 4 | Sandboxed Live Probers (mcp-probe-runner:alpine / Incus) | mcp-vulnerabilities | 3.50 | Internal sandbox runner; requires local container runtime. |
+| 40 | Tier 4 | Sandboxed Live Probers (`python:3.12-slim` / Incus) | mcp-vulnerabilities | 3.50 | Internal sandbox runner; requires local container runtime. |
 | 41 | Tier 4 | Config Auto-Fixer & PR Bot (fix, remediate-pr) | mcp-vulnerabilities | 3.45 | Secondary experimental PR helper; keep out of primary core. |
-| 42 | Tier 4 | Sigstore Keyless Feed Attestation (verify-feed) | mcp-vulnerabilities | 3.40 | Optional verification utility when sigstore extra is installed. |
+| 42 | Tier 4 | Sigstore Keyless Feed Attestation (verify-feed) | mcp-vulnerabilities | 3.40 | Optional verification utility with deterministic `sha256-manifest` fallback when `sigstore` is absent. |
 | 43 | Tier 4 | Hardcoded Socratic Payloads & PolicyGatekeeper Tenants | Pro (hacking/*) | 3.25 | Internal benchmark/red-team fixtures; keep in QA harness docs. |
 | 44 | Tier 4 | Hardcoded 7-Branch AIVSS v1.0 CWE Lookup Table | Pro (reporting/) | 3.03 | Optional reporting metadata; not primary OSV severity. |
 | 45 | Tier 4 | Fixture-Coupled ReadOnlySafetyGuard & DualPathRouter | Free (scanner/) | 2.93 | Internal demo/fixture helpers; prefer SqlSecurityGuard. |
 | 46 | Tier 4 | 51 Synthetic JSON-Flag Database Verification Oracles | Pro (oracles/*) | 2.18 | Reposition strictly as Internal QA & Regression Benchmark Suite. |
 | 47 | Tier 4 | 32-Server Docker Lab & In-Memory Snowflake Cloud Mocks | Pro (fixtures/*) | 1.95 | Reposition strictly as Internal QA & Regression Benchmark Suite. |
-| 48 | Tier 4 | Tool Collision Resolver (resolve-config --strategy prefix) | mcp-vulnerabilities | 1.70 | Legacy CLI flag; do not recommend in customer workflows. |
+| 48 | Tier 4 | Tool Collision Resolver (resolve-config --strategy prefix) | mcp-vulnerabilities | 1.70 | Legacy CLI flag (`MCP_PREFIX_<TOOL>` env namespacing); do not recommend in customer workflows. |
 
 ## Tier 3 optional-utilities guidance
 
