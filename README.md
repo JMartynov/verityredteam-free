@@ -399,6 +399,10 @@ and that the secure variant resists it — without Docker, databases, or cloud c
 
 ```bash
 verity test --demo
+verity test --demo --target sqlite-basic --format json
+verity test --demo --target postgres-basic --format json
+verity test --demo --target mongo-basic --format json
+verity test --demo --target code-exec-basic --format json
 verity test --demo --format html --output verity-demo.html
 ```
 
@@ -557,10 +561,50 @@ detection catches a server that changes its tools after you approved it.
 ### Output, offline mode & exit codes
 
 - `--format` supports `terminal`, `json`, `markdown`, and `html`; `--output` writes to a file.
+- `--format sarif` [Pro] — In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`.
 - `--offline` disables remote snapshot fetching and uses local caches only.
 - Exit codes: `0` success, `1` findings with `--fail-on-findings` (or a failing probe), `2` gated Pro-only feature such as SARIF export.
 
 The SQL guard (`SqlSecurityGuard`) is also importable as a library from `verity.mcp_library.sql_guard`.
+
+## Tier 1 — Must-Have Product Core
+
+The twelve capabilities a team installs Verity for. Everything is available in the Apache-2.0 Free edition unless the row carries the `[Pro]` badge.
+
+| Feature | Edition | Value Proposition |
+| --- | --- | --- |
+| Deterministic Multi-Dialect SQL AST Guard (`SqlSecurityGuard`) | Free | Parses model-generated SQL across seven dialects and rejects interpolation, statement stacking, and unbounded reads before execution. |
+| Multi-Client AI Workstation Config Discovery (`verity scan`) | Free | Locates every configured MCP server across Claude Desktop, Cursor, Windsurf, VS Code, Cline, Continue, and Zed. |
+| Plaintext Secret & DSN Credential Scanner / Redactor | Free | Detects provider tokens and embedded DSNs in MCP environment blocks and reports them with redacted evidence only. |
+| Unknown Capability Profiler (UCP) & SHA-256 Rug-Pull Detector | Free | Baselines each server's advertised capability set and flags silent tool-surface changes between scans. |
+| Pre-Flight Static Metadata & Tool-Poisoning Screener (13 Rules) | Free | Screens tool names, descriptions, and schema defaults for injection, poisoning, and exfiltration payloads. |
+| NoSQL / MongoDB AST Filter & Tenant Guard (`FilterSecurityGuard`) | [Pro] | Parses Mongo filter documents, rejects operator injection, and binds results to the authenticated tenant. |
+| Multi-Source OSV v1.6.0 Ingestion & DSU Alias Graph | Free | Correlates GHSA, PyPA, RustSec, and ecosystem aliases into one advisory graph per package. |
+| Tri-Layer Structural Fingerprint Matcher & O(1) Index (6k+ Passports) | Free | Identifies which MCP server a schema came from, even when the server name has been spoofed. |
+| Pure-Stdlib Agent Security MCP Server (`verity serve`) | Free | Exposes scanning, guarding, oracle, and remediation tooling to assistants with no extra runtime dependency. |
+| SemVer Vulnerability Lookup & SQLite Cache Engine | Free | Resolves the vulnerable range for an exact installed version and caches results for offline CI runs. |
+| Response Volume Policy & Payload Truncation Guard (`VolumePolicyGuard`) | [Pro] | Caps row counts and payload bytes at runtime, then emits a tamper-evident evidence hash. |
+| Supply-Chain Tamper & Drift Detector (`detect-drift`) | Free | Compares pinned manifests against observed server behaviour and fails on unexplained drift. |
+
+## Tier 2 — High Customer Need
+
+These thirteen capabilities are requested by teams that already run Tier 1 in CI. They deepen coverage without changing the install story.
+
+| Feature | Edition | Value Proposition |
+| --- | --- | --- |
+| OASIS SARIF v2.1.0 Enterprise Compliance Exporter | [Pro] | Emits SARIF 2.1.0 for code-scanning dashboards plus multi-framework compliance bundles. |
+| Snowflake Cloud Warehouse Guard (`SnowflakeSecurityGuard`) | [Pro] | Enforces role, stage, and time-travel boundaries on warehouse queries before execution. |
+| Zero-Docker In-Memory Demo Targets (`verity test --demo`) | Free | Reproduces SQL injection, BOLA, NoSQL injection, and unsafe execution in-process for safe CI demos. |
+| Remote Snapshot Fetcher (ETag) & Air-Gap Fallback | Free | Keeps fingerprint and advisory snapshots current without breaking air-gapped installations. |
+| Client Config Hardening & Lossless JSONC Exporter (`export-config`) | Free | Rewrites risky client configs while preserving comments and key order. |
+| Bidirectional JSON-RPC Stdio Security Proxy (`McpStdioProxy`) | Free | Enforces policy on tool calls in flight between an IDE client and an untrusted server. |
+| Global npm/npx Unconfigured Server Discovery (`--scan-global`) | Free | Finds MCP packages installed on the workstation but never registered with any client. |
+| Python MCP Source AST Scanner (`McpAstScannerEngine` - 9 Rules) | Free | Traverses handler source for eval, shell, deserialization, traversal, XSS, and BOLA sinks. |
+| Polyglot Static AST Extractors (10 Languages) | Free | Extracts tool definitions from non-Python MCP servers so fingerprinting works across runtimes. |
+| Multi-Server Tool Collision & Shadowing Detector (`ConflictDetector`) | Free | Flags two servers advertising the same tool name with different behaviour. |
+| Live Network TCP/HTTP/SSE MCP Listener Scanner (`network-scan`) | Free | Discovers unadvertised MCP endpoints listening on the local network. |
+| AST Taint & YARA Threat Engine (`McpSourceScanner`, `ThreatEngine`) | Free | Follows tainted values from tool input to dangerous sinks and matches YARA threat rules. |
+| AST Call-Graph Dependency Reachability (`audit-transitive`) | Free | Proves whether a vulnerable helper is actually reachable from an exposed tool. |
 
 ## CI/CD Integration & Reproducible Empty-Container Verification
 
@@ -585,23 +629,214 @@ Every command in this README was captured from empty containers. See
 suite (`customer-pip`, `customer-uvx`, `customer-full-workstation`, `target-sse-lab`).
 Regenerate the animated demo with [`scripts/record_demo_gif.sh`](scripts/record_demo_gif.sh).
 
-## Free vs. Enterprise (`verity-pro`)
+## Verity Pro Enterprise Features
 
-| Capability | `verity-redteam-core` (Free) | `verity-pro` (Enterprise) |
-| :--- | :---: | :---: |
-| Workstation discovery (9 clients) | ✅ | ✅ |
-| 13 static rule screening | ✅ | ✅ |
-| 9-rule Python AST scanning | ✅ | ✅ |
-| Deterministic SQL AST guard | ✅ | ✅ |
-| Zero-Docker demo targets | ✅ | ✅ |
-| Terminal / JSON / Markdown / HTML reports | ✅ | ✅ |
-| IDE MCP server & rug-pull detection | ✅ | ✅ |
-| Snowflake RBAC & time-travel guard | — | ✅ |
-| Live database verification oracles | — | ✅ |
-| SARIF v2.1.0 export | — | ✅ |
-| Penetration automation & canary lab | — | ✅ |
+Verity RedTeam Free is Apache-2.0 licensed and covers the Tier 1 and Tier 2 customer core. Verity RedTeam Pro is the commercial edition: it adds cloud warehouse and NoSQL guards, OASIS SARIF v2.1.0 compliance export, an extended `verity_remediation_ops` action set, and multi-turn Socratic red-teaming. Pro capabilities fail closed — the Free engine returns a structured `PRO_FEATURE_REQUIRED` error instead of approximating the check. Enterprise features are discovered via plugins; see [`docs/extensibility.md`](docs/extensibility.md).
 
-Enterprise features are discovered via plugins; see [`docs/extensibility.md`](docs/extensibility.md).
+| Capability Domain | Verity RedTeam Free (Apache-2.0) | Verity RedTeam Pro (Commercial) |
+| --- | --- | --- |
+| Database AST Guarding | `SqlSecurityGuard` with seven SQL dialects | [Pro] Cloud warehouse and NoSQL suite (`SnowflakeSecurityGuard`, `FilterSecurityGuard`, `VolumePolicyGuard`) |
+| Reporting & CI/CD Formats | `--format` with `terminal`, `json`, `markdown`, `html` | [Pro] OASIS SARIF v2.1.0 (`--format sarif`) and multi-framework compliance bundles; Free returns `PRO_FEATURE_REQUIRED` with exit code 2 |
+| Agent-Native MCP Server (verity serve) | Base four tools (`verity_security_scan`, `verity_database_guard`, `verity_database_oracle`, `verity_remediation_ops`) | [Pro] Unlocks `validate_role_assignment`, `validate_snowflake_query`, `validate_nosql_filter`, `enforce_volume_policy`, `export_sarif`, `generate_guard_patch`, `generate_wrapper_config`, `generate_safe_parameterized_query`, `check_canary_proof` |
+| Adversarial Verification & Red-Teaming | Four zero-Docker `--demo` targets with single-turn probes | [Pro] Multi-turn Socratic red-teaming (`DiscoverySessionRunner` and `SocraticRefinementEngine`) with neurosymbolic remediation |
+
+Full commercial contract: [Verity Pro Enterprise Features](docs/pro/enterprise_features.md).
+
+### SnowflakeSecurityGuard
+
+**Threat and purpose.** A taken-over warehouse role can switch session roles, read internal stages, or time-travel to a pre-deletion snapshot and recover data the operator believes is gone.
+
+**Free vs. Pro delta.** Free `SqlSecurityGuard` parses Snowflake SQL for injection and unbounded reads but has no notion of session role, stage scope, or time-travel offsets; those checks exist only in `SnowflakeSecurityGuard`, which is Pro-only.
+
+```python
+from verity.mcp_library.snowflake_guard import SnowflakeSecurityGuard
+
+guard = SnowflakeSecurityGuard(allowed_stages=("@TRUSTED",))
+guard.validate_session_role(role="ANALYST_ROLE")
+guard.validate_query(sql="SELECT id, total FROM orders WHERE tenant_id = :1")
+```
+
+```bash
+verity test --sql "SELECT id, total FROM orders WHERE tenant_id = :1" --dialect snowflake
+```
+
+```mermaid
+flowchart TD
+    REQ[Agent warehouse request] --> ROLE{Role allowed}
+    ROLE -- no --> DENY[Deny with evidence]
+    ROLE -- yes --> STAGE{Stage path allowed}
+    STAGE -- no --> DENY
+    STAGE -- yes --> EXEC[Execute statement]
+```
+
+### FilterSecurityGuard
+
+**Threat and purpose.** An agent that forwards a caller-supplied filter document can inject operators such as `$ne` or `$where` and widen a single-tenant read into a cross-tenant dump.
+
+**Free vs. Pro delta.** Free ships no NoSQL parser — SQL AST guarding covers SQL dialects only — so field allowlisting and tenant binding for document databases are Pro-only.
+
+```python
+from verity.mcp_library.filters import FilterSecurityGuard
+
+guard = FilterSecurityGuard(
+    allowed_fields=("tenant_id", "status", "created_at"),
+    session_tenant="tenant-a",
+)
+safe_filter = guard.validate_and_sanitize(
+    filter_document={"tenant_id": {"$ne": None}, "status": "open"},
+    session_tenant="tenant-a",
+)
+```
+
+```bash
+verity scan --schema-file vendor_tools.json --fail-on-findings
+```
+
+```mermaid
+flowchart LR
+    DOC[Caller filter document] --> PARSE[Parse filter tree]
+    PARSE --> OPS{Operator allowed}
+    OPS -- no --> REJECT[Reject query]
+    OPS -- yes --> TENANT[Bind session tenant]
+    TENANT --> RUN[Execute scoped read]
+```
+
+### VolumePolicyGuard
+
+**Threat and purpose.** A single unbounded read can stream an entire table into a model context, blowing out token budgets and moving data the agent was never meant to see.
+
+**Free vs. Pro delta.** Free reports unbounded reads as findings but does not police response volume at runtime; limit clamping, payload truncation, and evidence hashing are Pro-only.
+
+```python
+from verity.mcp_library.volume import VolumePolicyGuard
+
+raw_payload = {"rows": [{"id": 1}, {"id": 2}]}
+guard = VolumePolicyGuard(max_rows=500, max_bytes=65536)
+allowed_rows = guard.clamp_limit(requested_limit=100000)
+payload = guard.truncate_payload(payload=raw_payload)
+```
+
+```json
+{
+  "tool": "verity_database_guard",
+  "arguments": {
+    "action": "enforce_volume_policy",
+    "max_rows": 500,
+    "max_bytes": 65536
+  }
+}
+```
+
+```mermaid
+flowchart TD
+    REQ[Tool response] --> LIMIT[Clamp row limit]
+    LIMIT --> HASH[Compute evidence hash]
+    HASH --> OUT[Return bounded response]
+```
+
+### OASIS SARIF v2.1.0 & Compliance Bundles
+
+**Threat and purpose.** Security review stalls when MCP findings live only in terminal scrollback, and an attacker benefits from every finding that never reaches a tracked dashboard.
+
+**Free vs. Pro delta.** In Verity Free, `--format sarif` returns `PRO_FEATURE_REQUIRED` (exit code 2); SARIF v2.1.0 export requires `verity-pro`, which writes the artifact atomically so a stale artifact can never be mistaken for a fresh one.
+
+```python
+import json
+from pathlib import Path
+
+report = json.loads(Path("verity.json").read_text(encoding="utf-8"))
+findings = report.get("findings", [])
+print(f"{len(findings)} findings ready for SARIF export")
+```
+
+```bash
+verity scan --path . --format sarif --output verity-results.sarif --fail-on-findings
+```
+
+- `--format sarif` [Pro] — requires `verity-pro`.
+
+```mermaid
+flowchart LR
+    SCAN[verity scan] --> ED{verity-pro installed}
+    ED -- no --> ERR[PRO_FEATURE_REQUIRED exit 2]
+    ED -- yes --> WRITE[Write SARIF artifact atomically]
+```
+
+### Pro verity_remediation_ops
+
+**Threat and purpose.** A team that reads a finding but cannot apply a fix leaves the vulnerable tool deployed, so Pro turns a finding into a reviewable patch rather than advisory text alone.
+
+**Free vs. Pro delta.** Free `verity_remediation_ops` returns advisory text only; the generative `generate_safe_parameterized_query`, `generate_guard_patch`, and `generate_wrapper_config` actions are Pro-only and fail closed with `PRO_FEATURE_REQUIRED` (exit code 2) on Free.
+
+```python
+from verity.mcp_server.tools import VerityToolDispatcher
+
+dispatcher = VerityToolDispatcher(context=None)
+result = dispatcher.execute_tool(
+    "verity_remediation_ops",
+    {
+        "action": "generate_safe_parameterized_query",
+        "dialect": "postgres",
+        "statement": "SELECT id, total FROM invoices WHERE tenant_id = $1",
+    },
+)
+```
+
+```json
+{
+  "tool": "verity_remediation_ops",
+  "arguments": {
+    "action": "generate_guard_patch",
+    "target_file": "agent/tools.py",
+    "rule_id": "VERITY-STATIC-SQL-INJECTION-SCHEMA"
+  }
+}
+```
+
+```mermaid
+flowchart LR
+    FIND[Finding with evidence] --> OPS[verity_remediation_ops]
+    OPS --> Q[Safe parameterized query]
+    OPS --> P[Guard patch]
+    OPS --> W[Wrapper config]
+```
+
+### Multi-Turn Socratic Red-Teaming
+
+**Threat and purpose.** Real attackers do not stop at the first refusal: they rephrase, split a request across turns, and probe for unadvertised side effects, so a one-phrasing refusal is not a control.
+
+**Free vs. Pro delta.** Free runs single-turn probes against the four demo targets; session orchestration, refusal-aware refinement, and neurosymbolic remediation are Pro-only and fail closed with `PRO_FEATURE_REQUIRED` (exit code 2) on Free.
+
+```python
+def plan_refinements(seed: str, max_turns: int = 6) -> list[str]:
+    return [f"{seed} (turn {index + 1})" for index in range(max_turns)]
+
+refinements = plan_refinements("map unadvertised tool side effects")
+```
+
+```json
+{
+  "tool": "verity_security_scan",
+  "arguments": {
+    "action": "redteam_session",
+    "target": "http://localhost:3000/sse",
+    "max_turns": 6,
+    "refusal_policy": "non-destructive"
+  }
+}
+```
+
+```mermaid
+sequenceDiagram
+    participant A as Socratic engine
+    participant S as Target MCP server
+    A->>S: Turn 1 seed objective
+    S-->>A: Refusal
+    A->>S: Turn 2 refined request
+    S-->>A: Unsafe behaviour
+```
+
+Optional secondary utilities and internal QA harnesses are catalogued separately in the [Auxiliary & Benchmark Appendix (Tier 3/4)](docs/reference/auxiliary_and_benchmarks.md).
 
 ## Development
 
