@@ -19,7 +19,7 @@
 | M40 | `TASK-103-FREE` | `Done` | P0 | XS | `PVTI_lAHOD-xmQM4Br351zhLvmAQ` | [M40 spec](../tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) | `_pro_plugin_available()` gate for `--format sarif` and true `line_number` / `uri` propagation in `src/verity/cli.py`. |
 | M41 | `TASK-104` | `Done` | P0 | S | `PVTI_lAHOD-xmQM4Br351zhLvmDo` | [M41 spec](../tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) | Tier 1 / Tier 2 homepage with auxiliary appendix and runtime-registry parity checks. |
 | M42 | `TASK-107` | `Done` | P0 | S | `PVTI_lAHOD-xmQM4Br351zhLvmsE` | [M42 spec](../tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) | `docs/pro/enterprise_features.md`, Free vs Pro matrix, and documented `PRO_FEATURE_REQUIRED` contract. |
-| M43 | `TASK-109-FREE` | `Ready` | P0 | XS | `PVTI_lAHOD-xmQM4Br351zhLvm_M` | [M43 spec](../tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in the MCP database handler. |
+| M43 | `TASK-109-FREE` | `Done` | P0 | XS | `PVTI_lAHOD-xmQM4Br351zhLvm_M` | [M43 spec](../tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in the MCP database handler. |
 | M44 | `TASK-106-FREE` | `Ready` | P1 | S | `PVTI_lAHOD-xmQM4Br351zhLvmgk` | [M44 spec](../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py`. |
 | M45 | `TASK-110-FREE` | `Done` | P0 | S | `PVTI_lAHOD-xmQM4Br351zhLvnMQ` | [M45 spec](../tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | README Tier 1 / Tier 2 focus, Pro showcase, and `[Pro]` badge parity checks. |
 
@@ -31,11 +31,11 @@ flowchart TD
     M40["M40 - TASK-103-FREE - CLI SARIF Pro gate [Done]"]
     M41["M41 - TASK-104 - Homepage Tier 1/2 focus [Done]"]
     M42["M42 - TASK-107 - Pro showcase and comparison [Done]"]
+    M43["M43 - TASK-109-FREE - MCP DB guard gating [Done]"]
     M45["M45 - TASK-110-FREE - README Tier 1/2 focus [Done]"]
   end
   subgraph Ready["Ready - Free engine realism"]
     M39["M39 - TASK-102 - Python AST real-world rules"]
-    M43["M43 - TASK-109-FREE - MCP DB guard gating"]
     M44["M44 - TASK-106-FREE - Read-only guard decoupling"]
   end
 

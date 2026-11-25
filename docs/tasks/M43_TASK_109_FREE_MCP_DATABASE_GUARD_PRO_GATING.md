@@ -2,7 +2,7 @@
 task_id: M43
 alias: TASK-109-FREE
 title: "Free MCP Database Guard Pro Gating"
-status: Ready
+status: Done
 priority: P0
 size: XS
 estimate_days: 1
@@ -50,9 +50,9 @@ same server instance that just returned a `PRO_FEATURE_REQUIRED` result.
 
 | Acceptance Criterion | Test Level | Target File / Function | Description | Status |
 | --- | --- | --- | --- | --- |
-| AC-43.1 | unit | `tests/unit/mcp_server/test_database_guard_pro_gating.py::test_pro_feature_required_and_free_action_benign` | Pro-only action returns `PRO_FEATURE_REQUIRED`; `validate_query` still succeeds on the same instance. | Pending |
-| AC-43.2 | unit | `tests/unit/mcp_server/test_database_guard_pro_gating.py::test_enforce_volume_policy_gated` | Volume enforcement is gated with the structured error and performs no guard logic. | Pending |
-| AC-43.3 | static | `uv run ruff check src tests` | Zero lint findings. | Pending |
+| AC-43.1 | unit | `tests/unit/mcp_server/test_database_guard_pro_gating.py::test_pro_feature_required_and_free_action_benign` | Pro-only action returns `PRO_FEATURE_REQUIRED`; `validate_query` still succeeds on the same instance. | Done |
+| AC-43.2 | unit | `tests/unit/mcp_server/test_database_guard_pro_gating.py::test_enforce_volume_policy_gated` | Volume enforcement is gated with the structured error and performs no guard logic. | Done |
+| AC-43.3 | static | `uv run ruff check src tests` | Zero lint findings. | Done |
 
 ## Validation Commands
 
@@ -63,9 +63,9 @@ uv run ruff check src tests
 
 ## Delivery Checklist
 
-- [ ] `validate_nosql_filter` gated when the plugin is absent.
-- [ ] `enforce_volume_policy` gated when the plugin is absent.
-- [ ] Gate runs before any Pro-module import.
-- [ ] `validate_query` remains functional on the same server instance.
-- [ ] Structured error shape matches the documented contract.
-- [ ] `uv run ruff check src tests` clean.
+- [x] `validate_nosql_filter` gated when the plugin is absent.
+- [x] `enforce_volume_policy` gated when the plugin is absent.
+- [x] Gate runs before any Pro-module import.
+- [x] `validate_query` remains functional on the same server instance.
+- [x] Structured error shape matches the documented contract.
+- [x] `uv run ruff check src tests` clean.

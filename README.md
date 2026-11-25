@@ -677,49 +677,65 @@ flowchart TD
 
 ### FilterSecurityGuard
 
-**Threat and purpose.** An agent that forwards a caller-supplied filter document can inject operators such as `$ne` or `$where` and widen a single-tenant read into a cross-tenant dump.
+**Threat and purpose.** An agent that forwards a caller-supplied filter document can inject operators such as `$ne` or `$where`, exceed safe nesting depth, or forge `tenant_id` to widen a single-tenant read into a cross-tenant dump.
 
-**Free vs. Pro delta.** Free ships no NoSQL parser — SQL AST guarding covers SQL dialects only — so field allowlisting and tenant binding for document databases are Pro-only.
+**Free vs. Pro delta.** Free ships no NoSQL parser — SQL AST guarding covers SQL dialects only, and `verity_database_guard(action="validate_nosql_filter")` returns `PRO_FEATURE_REQUIRED` in Free. `[Pro]` `FilterSecurityGuard` supports **schema-less universal mode** (`allowed_fields=None`, no implicit default allowlist — blocking `$`-operators with `NOSQL_OPERATOR_BLOCKED` and depth > `max_depth=3` with `FILTER_DEPTH_EXCEEDED` while binding `tenant_id`) plus **explicit allowlist mode** (`FIELD_NOT_ALLOWED` for unknown fields).
 
 ```python
 from verity.mcp_library.filters import FilterSecurityGuard
 
-guard = FilterSecurityGuard(
-    allowed_fields=("tenant_id", "status", "created_at"),
+universal_guard = FilterSecurityGuard()
+universal_filter = universal_guard.validate_and_sanitize(
+    filter_obj={"custom_field": "abc", "tenant_id": "spoofed"},
     session_tenant="tenant-a",
 )
-safe_filter = guard.validate_and_sanitize(
-    filter_document={"tenant_id": {"$ne": None}, "status": "open"},
+
+allowlist_guard = FilterSecurityGuard(
+    allowed_fields={"customer_id", "status", "invoice_id"},
+    session_tenant="tenant-a",
+)
+safe_filter = allowlist_guard.validate_and_sanitize(
+    filter_obj={"status": "OPEN"},
     session_tenant="tenant-a",
 )
 ```
 
-```bash
-verity scan --schema-file vendor_tools.json --fail-on-findings
+```json
+{
+  "tool": "verity_database_guard",
+  "arguments": {
+    "action": "validate_nosql_filter",
+    "options": {
+      "filter_obj": {"customer_id": {"$ne": ""}},
+      "session_tenant": "tenant-a"
+    }
+  }
+}
 ```
 
 ```mermaid
 flowchart LR
-    DOC[Caller filter document] --> PARSE[Parse filter tree]
-    PARSE --> OPS{Operator allowed}
-    OPS -- no --> REJECT[Reject query]
-    OPS -- yes --> TENANT[Bind session tenant]
-    TENANT --> RUN[Execute scoped read]
+    DOC[Caller filter document] --> PARSE[FilterSecurityGuard]
+    PARSE --> OPS{Operator and depth safe}
+    OPS -- no --> REJECT[NOSQL_OPERATOR_BLOCKED / FILTER_DEPTH_EXCEEDED]
+    OPS -- yes --> FIELDS{Schema-less or allowlist}
+    FIELDS -- no --> REJECT_F[FIELD_NOT_ALLOWED]
+    FIELDS -- yes --> TENANT[Bind session tenant]
 ```
 
 ### VolumePolicyGuard
 
 **Threat and purpose.** A single unbounded read can stream an entire table into a model context, blowing out token budgets and moving data the agent was never meant to see.
 
-**Free vs. Pro delta.** Free reports unbounded reads as findings but does not police response volume at runtime; limit clamping, payload truncation, and evidence hashing are Pro-only.
+**Free vs. Pro delta.** Free reports unbounded reads as findings and gates `verity_database_guard(action="enforce_volume_policy")` with `PRO_FEATURE_REQUIRED`. `[Pro]` `VolumePolicyGuard` clamps `requested_limit` to `1..50` (`MAX_ALLOWED_LIMIT = 50`), truncates payloads to 16 KB (`truncate_payload`), and emits `sha256:...` digests (`compute_evidence_hash`).
 
 ```python
 from verity.mcp_library.volume import VolumePolicyGuard
 
-raw_payload = {"rows": [{"id": 1}, {"id": 2}]}
-guard = VolumePolicyGuard(max_rows=500, max_bytes=65536)
-allowed_rows = guard.clamp_limit(requested_limit=100000)
-payload = guard.truncate_payload(payload=raw_payload)
+guard = VolumePolicyGuard()
+allowed_rows = guard.clamp_limit(requested_limit=50000)
+records, truncated = guard.truncate_payload(records=[{"id": 1}, {"id": 2}])
+evidence_hash = guard.compute_evidence_hash(records=records)
 ```
 
 ```json
@@ -727,16 +743,19 @@ payload = guard.truncate_payload(payload=raw_payload)
   "tool": "verity_database_guard",
   "arguments": {
     "action": "enforce_volume_policy",
-    "max_rows": 500,
-    "max_bytes": 65536
+    "options": {
+      "records": [{"id": 1}, {"id": 2}],
+      "requested_limit": 50000
+    }
   }
 }
 ```
 
 ```mermaid
 flowchart TD
-    REQ[Tool response] --> LIMIT[Clamp row limit]
-    LIMIT --> HASH[Compute evidence hash]
+    REQ[Tool response] --> LIMIT[clamp_limit 1..50]
+    LIMIT --> TRUNC[truncate_payload 16 KB]
+    TRUNC --> HASH[compute_evidence_hash sha256:...]
     HASH --> OUT[Return bounded response]
 ```
 
