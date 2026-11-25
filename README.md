@@ -644,16 +644,22 @@ Full commercial contract: [Verity Pro Enterprise Features](docs/pro/enterprise_f
 
 ### SnowflakeSecurityGuard
 
-**Threat and purpose.** A taken-over warehouse role can switch session roles, read internal stages, or time-travel to a pre-deletion snapshot and recover data the operator believes is gone.
+**Threat and purpose.** A taken-over warehouse role can switch session roles, exfiltrate via `GET`/`PUT` or `COPY INTO @stage`, call `SYSTEM$*`/`INFER_SCHEMA`, cross database share boundaries, or time-travel via `AT`/`BEFORE` to recover deleted data.
 
-**Free vs. Pro delta.** Free `SqlSecurityGuard` parses Snowflake SQL for injection and unbounded reads but has no notion of session role, stage scope, or time-travel offsets; those checks exist only in `SnowflakeSecurityGuard`, which is Pro-only.
+**Free vs. Pro delta.** Free `SqlSecurityGuard` parses Snowflake SQL for injection and unbounded reads; `[Pro]` `SnowflakeSecurityGuard` adds `sqlglot` (`read="snowflake"`) AST inspection (allowing benign trailing semicolons and literal strings while blocking `GET`/`PUT`, `SYSTEM$*`, `INFER_SCHEMA`, unauthorized `COPY INTO` stages, and `AT`/`BEFORE` Time Travel nodes) plus configurable `.agents/policies.yaml` / `VERITY_SNOWFLAKE_POLICIES` stage and database share boundaries (`restricted_databases`, `allowed_databases`, `validate_share_boundary`).
 
 ```python
-from verity.mcp_library.snowflake_guard import SnowflakeSecurityGuard
+from verity.mcp_library.snowflake_guard import SnowflakeSecurityGuard, load_snowflake_policies
 
-guard = SnowflakeSecurityGuard(allowed_stages=("@TRUSTED",))
-guard.validate_session_role(role="ANALYST_ROLE")
-guard.validate_query(sql="SELECT id, total FROM orders WHERE tenant_id = :1")
+policies = load_snowflake_policies()
+guard = SnowflakeSecurityGuard(
+    allowed_stages=policies.allowed_stages or ("@TRUSTED",),
+    restricted_databases=policies.restricted_databases or ("HR_PAYROLL_DB",),
+    allowed_databases=policies.allowed_databases or ("ANALYTICS_DB",),
+)
+guard.validate_session_role(role="ANALYST_READ_ROLE")
+guard.validate_query(sql="SELECT id, total FROM orders WHERE tenant_id = :1;")
+guard.validate_share_boundary("ANALYTICS_DB")
 ```
 
 ```bash

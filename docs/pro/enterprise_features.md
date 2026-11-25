@@ -73,24 +73,35 @@ and response volume.
 ### SnowflakeSecurityGuard
 
 **Threat and purpose.** A warehouse role that is taken over — or simply minted
-by an over-broad credential — can switch session roles, read internal stages,
-or time-travel to a pre-deletion snapshot and recover data the operator
-believes is gone. `SnowflakeSecurityGuard` validates the role assignment, the
-statement text, the stage path, and the time-travel clause before the
-warehouse sees the request.
+by an over-broad credential — can switch session roles, exfiltrate data via
+`GET`/`PUT` or `COPY INTO @attacker_stage`, invoke `SYSTEM$*` or `INFER_SCHEMA`
+administrative functions, cross database share boundaries, or time-travel via
+`AT`/`BEFORE` clauses to recover deleted data. `SnowflakeSecurityGuard` parses
+queries with `sqlglot` (`read="snowflake"`) AST inspection — allowing benign
+single trailing semicolons and reserved words inside string literals while
+blocking dangerous AST nodes — and enforces configurable allowlists loaded from
+`.agents/policies.yaml` or `VERITY_SNOWFLAKE_POLICIES` via
+`load_snowflake_policies()`.
 
 **Free vs. Pro delta.** Free `SqlSecurityGuard` parses Snowflake SQL for
-injection and unbounded reads but has no notion of session role, stage scope,
-or time-travel offsets. Those checks exist only in `SnowflakeSecurityGuard`,
+injection and unbounded reads but has no notion of session role, stage
+allowlists, `SYSTEM$*`/`INFER_SCHEMA` blocking, database share boundaries, or
+Time Travel AST offsets. Those checks exist only in `SnowflakeSecurityGuard`,
 which is Pro-only.
 
 ```python
-from verity.mcp_library.snowflake_guard import SnowflakeSecurityGuard
+from verity.mcp_library.snowflake_guard import SnowflakeSecurityGuard, load_snowflake_policies
 
-guard = SnowflakeSecurityGuard(allowed_stages=("@TRUSTED",))
-guard.validate_session_role(role="ANALYST_ROLE")
-guard.validate_query(sql="SELECT id, total FROM orders WHERE tenant_id = :1")
+policies = load_snowflake_policies()  # reads VERITY_SNOWFLAKE_POLICIES or .agents/policies.yaml
+guard = SnowflakeSecurityGuard(
+    allowed_stages=policies.allowed_stages or ("@TRUSTED",),
+    restricted_databases=policies.restricted_databases or ("HR_PAYROLL_DB",),
+    allowed_databases=policies.allowed_databases or ("ANALYTICS_DB",),
+)
+guard.validate_session_role(role="ANALYST_READ_ROLE")
+guard.validate_query(sql="SELECT id, total FROM orders WHERE tenant_id = :1;")
 guard.validate_stage_path(path="@TRUSTED/orders/")
+guard.validate_share_boundary("ANALYTICS_DB")
 guard.validate_time_travel(clause="AT(OFFSET => -3600)")
 ```
 
