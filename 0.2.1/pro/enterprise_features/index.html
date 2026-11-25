@@ -1883,22 +1883,33 @@ three guards that understand the surrounding session: role, filter document,
 and response volume.</p>
 <h3 id="snowflakesecurityguard">SnowflakeSecurityGuard<a class="headerlink" href="#snowflakesecurityguard" title="Permanent link">&para;</a></h3>
 <p><strong>Threat and purpose.</strong> A warehouse role that is taken over — or simply minted
-by an over-broad credential — can switch session roles, read internal stages,
-or time-travel to a pre-deletion snapshot and recover data the operator
-believes is gone. <code>SnowflakeSecurityGuard</code> validates the role assignment, the
-statement text, the stage path, and the time-travel clause before the
-warehouse sees the request.</p>
+by an over-broad credential — can switch session roles, exfiltrate data via
+<code>GET</code>/<code>PUT</code> or <code>COPY INTO @attacker_stage</code>, invoke <code>SYSTEM$*</code> or <code>INFER_SCHEMA</code>
+administrative functions, cross database share boundaries, or time-travel via
+<code>AT</code>/<code>BEFORE</code> clauses to recover deleted data. <code>SnowflakeSecurityGuard</code> parses
+queries with <code>sqlglot</code> (<code>read="snowflake"</code>) AST inspection — allowing benign
+single trailing semicolons and reserved words inside string literals while
+blocking dangerous AST nodes — and enforces configurable allowlists loaded from
+<code>.agents/policies.yaml</code> or <code>VERITY_SNOWFLAKE_POLICIES</code> via
+<code>load_snowflake_policies()</code>.</p>
 <p><strong>Free vs. Pro delta.</strong> Free <code>SqlSecurityGuard</code> parses Snowflake SQL for
-injection and unbounded reads but has no notion of session role, stage scope,
-or time-travel offsets. Those checks exist only in <code>SnowflakeSecurityGuard</code>,
+injection and unbounded reads but has no notion of session role, stage
+allowlists, <code>SYSTEM$*</code>/<code>INFER_SCHEMA</code> blocking, database share boundaries, or
+Time Travel AST offsets. Those checks exist only in <code>SnowflakeSecurityGuard</code>,
 which is Pro-only.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.snowflake_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SnowflakeSecurityGuard</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.snowflake_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SnowflakeSecurityGuard</span><span class="p">,</span> <span class="n">load_snowflake_policies</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">SnowflakeSecurityGuard</span><span class="p">(</span><span class="n">allowed_stages</span><span class="o">=</span><span class="p">(</span><span class="s2">"@TRUSTED"</span><span class="p">,))</span>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_session_role</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">"ANALYST_ROLE"</span><span class="p">)</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT id, total FROM orders WHERE tenant_id = :1"</span><span class="p">)</span>
-<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_stage_path</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"@TRUSTED/orders/"</span><span class="p">)</span>
-<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_time_travel</span><span class="p">(</span><span class="n">clause</span><span class="o">=</span><span class="s2">"AT(OFFSET =&gt; -3600)"</span><span class="p">)</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">policies</span> <span class="o">=</span> <span class="n">load_snowflake_policies</span><span class="p">()</span>  <span class="c1"># reads VERITY_SNOWFLAKE_POLICIES or .agents/policies.yaml</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="n">guard</span> <span class="o">=</span> <span class="n">SnowflakeSecurityGuard</span><span class="p">(</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="n">allowed_stages</span><span class="o">=</span><span class="n">policies</span><span class="o">.</span><span class="n">allowed_stages</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">"@TRUSTED"</span><span class="p">,),</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    <span class="n">restricted_databases</span><span class="o">=</span><span class="n">policies</span><span class="o">.</span><span class="n">restricted_databases</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">"HR_PAYROLL_DB"</span><span class="p">,),</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="n">allowed_databases</span><span class="o">=</span><span class="n">policies</span><span class="o">.</span><span class="n">allowed_databases</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">"ANALYTICS_DB"</span><span class="p">,),</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">)</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_session_role</span><span class="p">(</span><span class="n">role</span><span class="o">=</span><span class="s2">"ANALYST_READ_ROLE"</span><span class="p">)</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_query</span><span class="p">(</span><span class="n">sql</span><span class="o">=</span><span class="s2">"SELECT id, total FROM orders WHERE tenant_id = :1;"</span><span class="p">)</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_stage_path</span><span class="p">(</span><span class="n">path</span><span class="o">=</span><span class="s2">"@TRUSTED/orders/"</span><span class="p">)</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_share_boundary</span><span class="p">(</span><span class="s2">"ANALYTICS_DB"</span><span class="p">)</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="n">guard</span><span class="o">.</span><span class="n">validate_time_travel</span><span class="p">(</span><span class="n">clause</span><span class="o">=</span><span class="s2">"AT(OFFSET =&gt; -3600)"</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--sql<span class="w"> </span><span class="s2">"SELECT * FROM orders AT(OFFSET =&gt; -86400)"</span><span class="w"> </span>--dialect<span class="w"> </span>snowflake
 </code></pre></div>
