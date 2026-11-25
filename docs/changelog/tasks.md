@@ -62,7 +62,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M41** — Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) (Done)
 - **M42** — Pro Features Showcase & Comparison Docs in Free (`TASK-107`) (Done)
 - **M43** — Free MCP Database Guard Pro Gating (`TASK-109-FREE`) (Ready)
-- **M44** — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) (Ready)
+- **M44** — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) (Done)
 - **M45** — Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) (Done)
 
 ## Task Verification Matrix
@@ -112,7 +112,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-104 | M41 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-107 | M42 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-109 | M43 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-106 | M44 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-106 | M44 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-110 | M45 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 
 ## Detailed Engineering Notes
@@ -464,7 +464,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M44 — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)
 
 - **Phase:** Future
-- **Status:** Ready
+- **Status:** Done
 - **Scope:** Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py`
 - **Task references:** TASK-106
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`

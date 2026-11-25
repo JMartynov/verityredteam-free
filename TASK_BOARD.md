@@ -129,7 +129,7 @@ flowchart TD
 | **M41** | **Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`)** | Tier 1 / Tier 2 homepage, single auxiliary appendix, and runtime-registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`) | [M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md](docs/tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) | `Done` | [View Item #M41](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmDo`) |
 | **M42** | **Pro Features Showcase & Comparison Docs in Free (`TASK-107`)** | `docs/pro/enterprise_features.md`, Free vs Pro matrix, `PRO_FEATURE_REQUIRED` contract | [M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md](docs/tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) | `Done` | [View Item #M42](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmsE`) |
 | **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Ready` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
-| **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Ready` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
+| **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Done` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
 | **M45** | **Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)** | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | `Done` | [View Item #M45](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvnMQ`) |
 
 ---
@@ -1109,7 +1109,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md`](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmgk`)
 
 **Status & Deliverables**
-- **Status:** `Ready` (P1, S)
+- **Status:** `Done` (P1, S)
 - `readonly_guard.py` blocks `run_sql`, `execute_sql`, `upsert`, `post_`, `put_`, `patch_`, `chmod`, and `kill` in addition to the existing destructive verbs.
 - `dual_path_router.py` removes the hardcoded `"formula": "1 + 1"` argument for unknown tools and emits a schema-driven required-argument skeleton with neutral values, or an explicit `NEEDS_ARGS` marker when a required argument cannot be synthesised safely.
 - Covered by `tests/unit/test_readonly_guard.py` and `tests/unit/test_dual_path_router.py`.

@@ -190,7 +190,7 @@ MkDocs Material portal plus the automated task-to-docs pipeline.
 | M41 | Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmDo` | [M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md](../tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) |
 | M42 | Pro Features Showcase & Comparison Docs in Free (`TASK-107`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmsE` | [M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md](../tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) |
 | M43 | Free MCP Database Guard Pro Gating (`TASK-109-FREE`) | Future | Ready | `PVTI_lAHOD-xmQM4Br351zhLvm_M` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](../tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) |
-| M44 | Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) | Future | Ready | `PVTI_lAHOD-xmQM4Br351zhLvmgk` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) |
+| M44 | Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmgk` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) |
 | M45 | Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvnMQ` | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](../tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) |
 
 ## Documentation Guide

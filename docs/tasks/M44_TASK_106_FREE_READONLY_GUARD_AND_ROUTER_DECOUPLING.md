@@ -2,7 +2,7 @@
 task_id: M44
 alias: TASK-106-FREE
 title: "Free Read-Only Guard & Router Decoupling"
-status: Ready
+status: Done
 priority: P1
 size: S
 estimate_days: 1
@@ -59,9 +59,9 @@ Out of scope: transport probing and any Phase 2 mutation logic.
 
 | Acceptance Criterion | Test Level | Target File / Function | Description | Status |
 | --- | --- | --- | --- | --- |
-| AC-44.1 | unit | `tests/unit/test_readonly_guard.py::test_destructive_verbs_blocked`, `::test_readonly_tool_allowed` | New destructive verbs are blocked; read-only tools stay permitted. | Pending |
-| AC-44.2 | unit | `tests/unit/test_dual_path_router.py::test_no_hardcoded_formula_for_unknown_tool`, `::test_known_tool_args_preserved` | No hardcoded formula for unknown tools; known arguments preserved verbatim. | Pending |
-| AC-44.3 | static | `uv run ruff check src tests` | Zero lint findings. | Pending |
+| AC-44.1 | unit | `tests/unit/test_readonly_guard.py::test_destructive_verbs_blocked`, `::test_readonly_tool_allowed` | New destructive verbs are blocked; read-only tools stay permitted. | Verified (Green) |
+| AC-44.2 | unit | `tests/unit/test_dual_path_router.py::test_no_hardcoded_formula_for_unknown_tool`, `::test_known_tool_args_preserved` | No hardcoded formula for unknown tools; known arguments preserved verbatim. | Verified (Green) |
+| AC-44.3 | static | `uv run ruff check src tests` | Zero lint findings. | Verified (Green) |
 
 ## Validation Commands
 
@@ -72,9 +72,9 @@ uv run ruff check src tests
 
 ## Delivery Checklist
 
-- [ ] `run_sql`, `execute_sql`, `upsert`, `post_`, `put_`, `patch_`, `chmod`, and `kill` blocked.
-- [ ] `list_customers` and equivalent read-only tools permitted.
-- [ ] Hardcoded `"formula": "1 + 1"` removed from the router.
-- [ ] Unknown-tool skeleton uses neutral values or `NEEDS_ARGS`.
-- [ ] Known-tool arguments preserved verbatim.
-- [ ] `uv run ruff check src tests` clean.
+- [x] `run_sql`, `execute_sql`, `upsert`, `post_`, `put_`, `patch_`, `chmod`, and `kill` blocked.
+- [x] `list_customers` and equivalent read-only tools permitted.
+- [x] Hardcoded `"formula": "1 + 1"` removed from the router.
+- [x] Unknown-tool skeleton uses neutral values or `NEEDS_ARGS`.
+- [x] Known-tool arguments preserved verbatim.
+- [x] `uv run ruff check src tests` clean.

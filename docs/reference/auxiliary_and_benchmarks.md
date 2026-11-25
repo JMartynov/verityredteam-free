@@ -67,11 +67,11 @@ Both tables below use the same six columns.
 | 40 | Tier 4 | Sandboxed Live Probers (`python:3.12-slim` / Incus) | mcp-vulnerabilities | 3.50 | Internal sandbox runner; requires local container runtime. |
 | 41 | Tier 4 | Config Auto-Fixer & PR Bot (fix, remediate-pr) | mcp-vulnerabilities | 3.45 | Secondary experimental PR helper; keep out of primary core. |
 | 42 | Tier 4 | Sigstore Keyless Feed Attestation (verify-feed) | mcp-vulnerabilities | 3.40 | Optional verification utility with deterministic `sha256-manifest` fallback when `sigstore` is absent. |
-| 43 | Tier 4 | Hardcoded Socratic Payloads & PolicyGatekeeper Tenants | Pro (hacking/*) | 3.25 | Internal benchmark/red-team fixtures; keep in QA harness docs. |
+| 43 | Tier 4 | Hardcoded Socratic Payloads & Configurable `PolicyGatekeeper` | Pro (hacking/*) | 3.25 | Internal benchmark/red-team fixtures; `PolicyGatekeeper(allowed_tenants=())` defaults to opt-in tenancy, and `get_deterministic_plan()` synthesizes schema-driven plans for unregistered servers. |
 | 44 | Tier 4 | Hardcoded 7-Branch AIVSS v1.0 CWE Lookup Table | Pro (reporting/) | 3.03 | Optional reporting metadata; not primary OSV severity. |
-| 45 | Tier 4 | Fixture-Coupled ReadOnlySafetyGuard & DualPathRouter | Free (scanner/) | 2.93 | Internal demo/fixture helpers; prefer SqlSecurityGuard. |
-| 46 | Tier 4 | 51 Synthetic JSON-Flag Database Verification Oracles | Pro (oracles/*) | 2.18 | Reposition strictly as Internal QA & Regression Benchmark Suite. |
-| 47 | Tier 4 | 32-Server Docker Lab & In-Memory Snowflake Cloud Mocks | Pro (fixtures/*) | 1.95 | Reposition strictly as Internal QA & Regression Benchmark Suite. |
+| 45 | Tier 4 | `ReadOnlySafetyGuard` & `DualPathRouter` Helpers | Free (scanner/) | 2.93 | Internal demo/probe helpers; `ReadOnlySafetyGuard` blocks `run_sql`/`execute_sql`/`upsert`/`post_`/`put_`/`patch_`/`chmod`/`kill`, and `DualPathRouter` uses schema-driven skeletons (`NEEDS_ARGS` when unsafe); prefer `SqlSecurityGuard` for SQL AST guarding. |
+| 46 | Tier 4 | 51 Synthetic JSON-Flag Database Verification Oracles & `ControlledPenetrationEngine` | Pro (oracles/*, penetration/) | 2.18 | Reposition strictly as **Internal Benchmark & Regression Verification Infrastructure**; `ControlledPenetrationEngine` verifies rollback via `try/finally` and `DatabaseStateVerifier` fails closed (`allow_synthetic_fallback=False`). |
+| 47 | Tier 4 | 32-Server VAIB Docker Lab & In-Memory Snowflake Cloud Mocks | Pro (fixtures/*) | 1.95 | Reposition strictly as **Internal Benchmark & Regression Verification Infrastructure** (not a customer-facing operating mode). |
 | 48 | Tier 4 | Tool Collision Resolver (resolve-config --strategy prefix) | mcp-vulnerabilities | 1.70 | Legacy CLI flag (`MCP_PREFIX_<TOOL>` env namespacing); do not recommend in customer workflows. |
 
 ## Tier 3 optional-utilities guidance
@@ -123,11 +123,12 @@ When a Tier 4 helper proves broadly useful, the correct move is to promote
 a narrow, well-tested slice of it into Tier 1 or Tier 2 — never to
 re-label the harness itself as a customer feature.
 
-The two guard-related entries deserve a specific note. The hardcoded
-f-string guard templates are honest only when described as a **Guard
-Snippet Generator**, and the fixture-coupled ``ReadOnlySafetyGuard`` and
-``DualPathRouter`` are demo helpers — real deployments should use
-``SqlSecurityGuard`` instead.
+The two guard-related entries and Wave 4 benchmark decoupling deserve a specific note:
+
+- **Internal Benchmark & Regression Verification Infrastructure (Pro).** The 32-server VAIB Docker lab, the 51 DB scenario oracles, and `ControlledPenetrationEngine` are **Internal Benchmark & Regression Verification Infrastructure** used for CI and engineering QA — not the primary customer operating mode.
+- **Fail-closed Pro verification & rollback.** `DatabaseStateVerifier.verify_mongodb_cross_tenant_isolation(allow_synthetic_fallback=False)` fails closed when MongoDB is unreachable instead of reporting synthetic fixture passes (emitting a `[SYNTHETIC]`-prefixed reason only when `allow_synthetic_fallback=True`), and `ControlledPenetrationEngine` executes attack and rollback inside `try/finally` so `rollback_confirmed` is `True` only after rollback and post-rollback baseline verification succeed (`details["rollback_error"]` is recorded on failure).
+- **Configurable tenancy & schema-driven plans (Pro).** `PolicyGatekeeper(allowed_tenants=())` defaults to an empty allowlist so production targets are not rejected for lacking synthetic lab tenant names, while `get_deterministic_plan()` synthesizes neutral schema-driven proposals from `McpServerSpec` tool schemas for unregistered servers instead of falling back to `CUSTOMER_CRUD_PLAN`.
+- **Hardened `ReadOnlySafetyGuard` & decoupled `DualPathRouter` (Free).** `ReadOnlySafetyGuard` extends destructive-verb coverage to block `run_sql`, `execute_sql`, `upsert`, `post_`, `put_`, `patch_`, `chmod`, and `kill` (using boundary matching for `post_`, `put_`, and `patch_`), while `DualPathRouter` removes the hardcoded `"formula": "1 + 1"` payload in favor of a neutral schema-driven required-argument skeleton (surfacing `NEEDS_ARGS` when a required parameter cannot be synthesized safely and preserving caller-supplied arguments verbatim). Real SQL deployments should still use `SqlSecurityGuard`, and the hardcoded f-string guard templates are honest only when described as a **Guard Snippet Generator**.
 
 ## Disposition summary
 
