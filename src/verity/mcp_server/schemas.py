@@ -119,6 +119,8 @@ UNIFIED_TOOL_DEFINITIONS = [
                     "type": "string",
                     "enum": [
                         "validate_sql_query",
+                        "validate_nosql_filter",
+                        "enforce_volume_policy",
                         "validate_snowflake_policy",
                         "apply_projection_mask",
                         "sanitize_inputs",
@@ -130,6 +132,29 @@ UNIFIED_TOOL_DEFINITIONS = [
                     "description": "Guard options and payload data.",
                     "properties": {
                         "sql_query": {"type": "string", "description": "Raw SQL query to validate"},
+                        "filter_obj": {
+                            "type": "object",
+                            "description": "NoSQL filter document to validate",
+                        },
+                        "allowed_fields": {
+                            "type": "array",
+                            "items": {"type": "string"},
+                            "description": "Allowed search field allowlist",
+                        },
+                        "max_depth": {
+                            "type": "integer",
+                            "default": 3,
+                            "description": "Maximum permitted filter nesting depth",
+                        },
+                        "records": {
+                            "type": "array",
+                            "items": {"type": "object"},
+                            "description": "Records subject to volume enforcement",
+                        },
+                        "requested_limit": {
+                            "type": "integer",
+                            "description": "Requested record limit before clamping",
+                        },
                         "session_tenant": {
                             "type": "string",
                             "description": "Authenticated tenant context",

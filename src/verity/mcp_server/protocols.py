@@ -97,6 +97,7 @@ def pro_feature_required_response(
     return {
         "ok": False,
         "action": action,
+        "feature": action,
         "error": "PRO_FEATURE_REQUIRED",
         "verdict": "PRO_REQUIRED",
         "message": feature_desc
