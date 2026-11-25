@@ -50,6 +50,28 @@ def _pro_plugin_available() -> bool:
     return bool(_iter_plugin_entry_points())
 
 
+def _parse_start_line(finding: dict[str, Any]) -> int:
+    """Return a safe SARIF ``startLine`` from a finding's line metadata."""
+    for key in ("line_number", "line"):
+        value = finding.get(key)
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, str):
+            text = value.strip()
+            if text in ("", "-"):
+                continue
+            try:
+                value = int(text)
+            except ValueError:
+                continue
+        if not isinstance(value, int):
+            continue
+        if value <= 0:
+            continue
+        return value
+    return 1
+
+
 def _stdlib_sarif_exporter(report: dict[str, Any]) -> dict[str, Any]:
     """Serialize a normalized scan report into SARIF v2.1.0."""
     rules: list[dict[str, Any]] = []
@@ -89,9 +111,14 @@ def _stdlib_sarif_exporter(report: dict[str, Any]) -> dict[str, Any]:
                     {
                         "physicalLocation": {
                             "artifactLocation": {
-                                "uri": str(finding.get("file_path") or "mcp_config.json")
+                                "uri": str(
+                                    finding.get("file_path")
+                                    or finding.get("uri")
+                                    or finding.get("location")
+                                    or "mcp_config.json"
+                                )
                             },
-                            "region": {"startLine": 1},
+                            "region": {"startLine": _parse_start_line(finding)},
                         }
                     }
                 ],
@@ -151,7 +178,7 @@ def _print_pro_message(feature: str, message: str) -> None:
     from verity.mcp_server.protocols import pro_feature_required_response
 
     payload = pro_feature_required_response(feature, message)
-    print(payload["message"])
+    print(json.dumps(payload, indent=2))
 
 
 def _field(record: dict[str, Any], *keys: str, default: Any = "") -> Any:
@@ -203,9 +230,17 @@ def _normalize_finding(record: Any) -> dict[str, Any]:
         "title": str(_field(data, "title")),
         "message": message,
         "file_path": str(
-            _field(data, "file_path", "config_path", "target_name", "server_name")
+            _field(
+                data,
+                "file_path",
+                "config_path",
+                "uri",
+                "location",
+                "target_name",
+                "server_name",
+            )
         ),
-        "line_number": _field(data, "line_number", default="-") or "-",
+        "line_number": _field(data, "line_number", "line", default="-") or "-",
         "remediation": str(_field(data, "remediation")),
     }
 
@@ -541,10 +576,7 @@ def _collect_scan_data(
 def _export_sarif(report: dict[str, Any], output: str | None) -> int:
     exporter = _load_sarif_exporter()
     if exporter is None:
-        _print_pro_message(
-            "export_sarif",
-            "verity-pro is installed but no SARIF exporter entry point is registered.",
-        )
+        _print_pro_message("export_sarif", SARIF_MISSING_MESSAGE)
         return 2
     payload = exporter(report) if callable(exporter) else report
     text = payload if isinstance(payload, str) else json.dumps(payload, indent=2)
