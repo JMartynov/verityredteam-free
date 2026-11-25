@@ -53,10 +53,10 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
    - `--worktree` branches from `HEAD`; uncommitted test files do not exist in the new worktree and cause `--read-files` preflight checks to fail with exit code `14` (`PREFLIGHT_FAILED`).
    - Pass locked acceptance test files via `--read-files` (read-only) during Pass 1 so DeepSeek cannot weaken assertions.
 
-2. **Pass 1 — Surgical Implementation & Closed-Loop TDD (`--worktree --no-auto-merge`)**:
-   - Invoke `aider_bridge.py turn` via an ephemeral sub-agent (`flash_lite` / `flash`) with explicit `--files` and `--read-files` (never broad globs). Use `--worktree --no-auto-merge` (handles `.env` copy and branch isolation) and `--test-cmd` for in-turn closed-loop TDD self-healing:
+2. **Pass 1 — Smart Dispatch & Closed-Loop TDD (`--worktree --no-auto-merge`)**:
+   - Invoke `aider_bridge.py dispatch` (auto-selects Tier 1 `patch`, Tier 2 `surgical`, Tier 3 `architect` + `plan_align`, or Tier 4 `research`) via an ephemeral sub-agent (`flash_lite` / `flash`) with explicit `--files` and `--read-files` (never broad globs). Use `--worktree --no-auto-merge` (handles `.env` copy and branch isolation) and `--test-cmd` for in-turn closed-loop TDD self-healing:
      ```bash
-     python3 ~/.gemini/config/skills/aider-deepseek/scripts/aider_bridge.py turn \
+     python3 ~/.gemini/config/skills/aider-deepseek/scripts/aider_bridge.py dispatch \
        --task-id "<task_id>" \
        --worktree --no-auto-merge \
        --files <explicit_editable_files> \
@@ -64,8 +64,7 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
        --test-cmd "uv run pytest <test_file>" \
        --message "<Task specification from TASK_BOARD.md. Zero unrelated changes.>"
      ```
-   - **Architect Mode (Complex Refactors / Cross-Repo Work)**: Add `--model deepseek/deepseek-reasoner --architect` so the reasoner plans multi-file architectural changes while `deepseek/deepseek-flash` applies surgical diffs.
-   - If exit code is `10` (`INTERACTIVE_QUESTION`), answer the question from the architecture spec and re-run with `--restore`.
+   - **Interactive Questions (Exit `10` / `INTERACTIVE_QUESTION`)**: Run `aider_bridge.py inspect --task-id "<task_id>" --json` to read the question, then answer and resume via `aider_bridge.py reply --task-id "<task_id>" --answer "..."`.
 
 3. **Pass 2 — Mandatory Code Review (Prefix-Cached via `--restore`)**:
    - Before running final merge gates, always run a second pass on the same `--task-id` with `--restore --worktree --no-auto-merge`:
@@ -91,8 +90,8 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
      uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py
      ```
 
-5. **Session Cleanup & Locked Merge (`merge-worktree`)**:
-   - Run `aider_bridge.py cleanup --task-id "<task_id>"` followed by `aider_bridge.py merge-worktree --task-id "<task_id>"` (acquires `.git/aider_merge.lock.d`, auto-rebases, merges into `main`, and removes the worktree) **only after Pass 1, Pass 2, and all verification gates pass**.
+5. **Locked Merge (`merge-worktree`) & Session Cleanup**:
+   - Run `aider_bridge.py merge-worktree --task-id "<task_id>"` (acquires `.git/aider_merge.lock.d`, enforces the exit-`5` guard on `.aider-sessions/<task_id>/state.json`, auto-rebases, merges into `main`, and removes the worktree) **THEN** `aider_bridge.py cleanup --task-id "<task_id>"` **only after Pass 1, Pass 2, and all verification gates pass**.
 
 ### Web Search Guardrails (`aider_bridge.py search`)
 - **Allowed**: Targeted technical research only (Python PEPs, PyPI packages, OSV/CVE advisories, SQLGlot dialects, MCP specifications).
