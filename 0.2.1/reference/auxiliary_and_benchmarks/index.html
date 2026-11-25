@@ -1867,7 +1867,7 @@ day is described there.</p>
 <tr>
 <td>38</td>
 <td>Tier 4</td>
-<td>Interactive Hub, Curses TUI &amp; Dead Setup Wizard (init)</td>
+<td>Interactive Hub, Curses TUI &amp; Setup Wizard (<code>init</code>, <code>~/.mcp_fingerprints.toml</code>)</td>
 <td>Fingerprints / Vulns</td>
 <td>3.85</td>
 <td>Internal/legacy interactive shell; keep out of core docs.</td>
@@ -1883,7 +1883,7 @@ day is described there.</p>
 <tr>
 <td>40</td>
 <td>Tier 4</td>
-<td>Sandboxed Live Probers (mcp-probe-runner:alpine / Incus)</td>
+<td>Sandboxed Live Probers (<code>python:3.12-slim</code> / Incus)</td>
 <td>mcp-vulnerabilities</td>
 <td>3.50</td>
 <td>Internal sandbox runner; requires local container runtime.</td>
@@ -1902,7 +1902,7 @@ day is described there.</p>
 <td>Sigstore Keyless Feed Attestation (verify-feed)</td>
 <td>mcp-vulnerabilities</td>
 <td>3.40</td>
-<td>Optional verification utility when sigstore extra is installed.</td>
+<td>Optional verification utility with deterministic <code>sha256-manifest</code> fallback when <code>sigstore</code> is absent.</td>
 </tr>
 <tr>
 <td>43</td>
@@ -1950,7 +1950,7 @@ day is described there.</p>
 <td>Tool Collision Resolver (resolve-config --strategy prefix)</td>
 <td>mcp-vulnerabilities</td>
 <td>1.70</td>
-<td>Legacy CLI flag; do not recommend in customer workflows.</td>
+<td>Legacy CLI flag (<code>MCP_PREFIX_&lt;TOOL&gt;</code> env namespacing); do not recommend in customer workflows.</td>
 </tr>
 </tbody>
 </table>
