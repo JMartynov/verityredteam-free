@@ -2,7 +2,7 @@
 
 - **Repository scope:** `verityredteam-free` only.
 - **Board:** [GitHub Project #5](https://github.com/users/JMartynov/projects/5) (`PVT_kwHOD-xmQM4Br351`).
-- **Pro counterpart:** [`verityredteam/docs/reports/FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](../../verityredteam/docs/reports/FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md), tracked on GitHub Project Board #2 (`PVT_kwHOD-xmQM4BfzE2`).
+- **Pro counterpart:** `verityredteam/docs/reports/FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`, tracked on GitHub Project Board #2 (`PVT_kwHOD-xmQM4BfzE2`).
 - **Goal:** make the Free product read truthfully — real AST rules at dispatch time, honest Pro gating for SARIF and guard families, and documentation that leads with the customer core (Tier 1 / Tier 2) plus a single auxiliary pointer.
 
 ## Locked Free / Pro Boundary Decisions
