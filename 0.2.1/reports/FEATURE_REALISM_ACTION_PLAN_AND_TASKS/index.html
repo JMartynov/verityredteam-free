@@ -1478,12 +1478,12 @@
 <tr>
 <td>M44</td>
 <td><code>TASK-106-FREE</code></td>
-<td><code>Ready</code></td>
+<td><code>Done</code></td>
 <td>P1</td>
 <td>S</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvmgk</code></td>
 <td><a href="../../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING/">M44 spec</a></td>
-<td>Destructive-verb blocking in <code>readonly_guard.py</code> and formula de-hardcoding in <code>dual_path_router.py</code>.</td>
+<td>Destructive-verb blocking in <code>readonly_guard.py</code> and formula de-hardcoding in <code>dual_path_router.py</code> (<code>bc8dbcb</code> / <code>99e3e70</code>).</td>
 </tr>
 <tr>
 <td>M45</td>
@@ -1499,16 +1499,16 @@
 </table>
 <h2 id="free-only-execution-graph">Free-Only Execution Graph<a class="headerlink" href="#free-only-execution-graph" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
-  subgraph Completed["Completed - docs parity, Pro showcase, and SARIF gate"]
+  subgraph Completed["Completed - docs parity, Pro showcase, SARIF gate, and guard decoupling"]
     M40["M40 - TASK-103-FREE - CLI SARIF Pro gate [Done]"]
     M41["M41 - TASK-104 - Homepage Tier 1/2 focus [Done]"]
     M42["M42 - TASK-107 - Pro showcase and comparison [Done]"]
     M43["M43 - TASK-109-FREE - MCP DB guard gating [Done]"]
+    M44["M44 - TASK-106-FREE - Read-only guard decoupling [Done]"]
     M45["M45 - TASK-110-FREE - README Tier 1/2 focus [Done]"]
   end
   subgraph Ready["Ready - Free engine realism"]
     M39["M39 - TASK-102 - Python AST real-world rules"]
-    M44["M44 - TASK-106-FREE - Read-only guard decoupling"]
   end
 
   M41 --&gt; M42
@@ -1520,9 +1520,9 @@
   M43 --&gt; M44</code></pre>
 <h2 id="execution-notes">Execution Notes<a class="headerlink" href="#execution-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Wave 1 (Ready, no cross-task dependencies):</strong> M39 and M40 land independently; both unblock the MCP / Pro-gating wave.</li>
-<li><strong>Wave 2 (Ready, depends on Wave 1):</strong> M43 consumes the <code>PRO_FEATURE_REQUIRED</code> pattern established by M40.</li>
-<li><strong>Wave 3 (Ready, depends on Wave 2):</strong> M44 depends on M43's guard contract.</li>
+<li><strong>Wave 1 (M39 Ready, M40 Done):</strong> M40 landed independently; M39 (<code>TASK-102</code>) remains <code>Ready</code> (6/7 Free tasks Done).</li>
+<li><strong>Wave 2 (Done):</strong> M43 consumes the <code>PRO_FEATURE_REQUIRED</code> pattern established by M40.</li>
+<li><strong>Wave 3 (Done):</strong> M44 (<code>bc8dbcb</code> / <code>99e3e70</code>) hardens <code>ReadOnlySafetyGuard</code> and decouples <code>DualPathRouter</code> from hardcoded demo payloads.</li>
 <li><strong>Completed track:</strong> M41 (homepage parity) → M42 (Pro showcase) → M45 (README parity), with M41 → M45 as the direct fallback link.</li>
 </ul>
 

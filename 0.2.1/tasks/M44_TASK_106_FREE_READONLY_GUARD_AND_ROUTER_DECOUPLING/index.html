@@ -1520,21 +1520,21 @@ preserving known-tool arguments verbatim.</p>
 <td>unit</td>
 <td><code>tests/unit/test_readonly_guard.py::test_destructive_verbs_blocked</code>, <code>::test_readonly_tool_allowed</code></td>
 <td>New destructive verbs are blocked; read-only tools stay permitted.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 <tr>
 <td>AC-44.2</td>
 <td>unit</td>
 <td><code>tests/unit/test_dual_path_router.py::test_no_hardcoded_formula_for_unknown_tool</code>, <code>::test_known_tool_args_preserved</code></td>
 <td>No hardcoded formula for unknown tools; known arguments preserved verbatim.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 <tr>
 <td>AC-44.3</td>
 <td>static</td>
 <td><code>uv run ruff check src tests</code></td>
 <td>Zero lint findings.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 </tbody>
 </table>
@@ -1544,12 +1544,12 @@ preserving known-tool arguments verbatim.</p>
 </code></pre></div>
 <h2 id="delivery-checklist">Delivery Checklist<a class="headerlink" href="#delivery-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] <code>run_sql</code>, <code>execute_sql</code>, <code>upsert</code>, <code>post_</code>, <code>put_</code>, <code>patch_</code>, <code>chmod</code>, and <code>kill</code> blocked.</li>
-<li>[ ] <code>list_customers</code> and equivalent read-only tools permitted.</li>
-<li>[ ] Hardcoded <code>"formula": "1 + 1"</code> removed from the router.</li>
-<li>[ ] Unknown-tool skeleton uses neutral values or <code>NEEDS_ARGS</code>.</li>
-<li>[ ] Known-tool arguments preserved verbatim.</li>
-<li>[ ] <code>uv run ruff check src tests</code> clean.</li>
+<li>[x] <code>run_sql</code>, <code>execute_sql</code>, <code>upsert</code>, <code>post_</code>, <code>put_</code>, <code>patch_</code>, <code>chmod</code>, and <code>kill</code> blocked.</li>
+<li>[x] <code>list_customers</code> and equivalent read-only tools permitted.</li>
+<li>[x] Hardcoded <code>"formula": "1 + 1"</code> removed from the router.</li>
+<li>[x] Unknown-tool skeleton uses neutral values or <code>NEEDS_ARGS</code>.</li>
+<li>[x] Known-tool arguments preserved verbatim.</li>
+<li>[x] <code>uv run ruff check src tests</code> clean.</li>
 </ul>
 
 

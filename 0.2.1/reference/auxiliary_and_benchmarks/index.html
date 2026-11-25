@@ -1907,10 +1907,10 @@ day is described there.</p>
 <tr>
 <td>43</td>
 <td>Tier 4</td>
-<td>Hardcoded Socratic Payloads &amp; PolicyGatekeeper Tenants</td>
+<td>Hardcoded Socratic Payloads &amp; Configurable <code>PolicyGatekeeper</code></td>
 <td>Pro (hacking/*)</td>
 <td>3.25</td>
-<td>Internal benchmark/red-team fixtures; keep in QA harness docs.</td>
+<td>Internal benchmark/red-team fixtures; <code>PolicyGatekeeper(allowed_tenants=())</code> defaults to opt-in tenancy, and <code>get_deterministic_plan()</code> synthesizes schema-driven plans for unregistered servers.</td>
 </tr>
 <tr>
 <td>44</td>
@@ -1923,26 +1923,26 @@ day is described there.</p>
 <tr>
 <td>45</td>
 <td>Tier 4</td>
-<td>Fixture-Coupled ReadOnlySafetyGuard &amp; DualPathRouter</td>
+<td><code>ReadOnlySafetyGuard</code> &amp; <code>DualPathRouter</code> Helpers</td>
 <td>Free (scanner/)</td>
 <td>2.93</td>
-<td>Internal demo/fixture helpers; prefer SqlSecurityGuard.</td>
+<td>Internal demo/probe helpers; <code>ReadOnlySafetyGuard</code> blocks <code>run_sql</code>/<code>execute_sql</code>/<code>upsert</code>/<code>post_</code>/<code>put_</code>/<code>patch_</code>/<code>chmod</code>/<code>kill</code>, and <code>DualPathRouter</code> uses schema-driven skeletons (<code>NEEDS_ARGS</code> when unsafe); prefer <code>SqlSecurityGuard</code> for SQL AST guarding.</td>
 </tr>
 <tr>
 <td>46</td>
 <td>Tier 4</td>
-<td>51 Synthetic JSON-Flag Database Verification Oracles</td>
-<td>Pro (oracles/*)</td>
+<td>51 Synthetic JSON-Flag Database Verification Oracles &amp; <code>ControlledPenetrationEngine</code></td>
+<td>Pro (oracles/*, penetration/)</td>
 <td>2.18</td>
-<td>Reposition strictly as Internal QA &amp; Regression Benchmark Suite.</td>
+<td>Reposition strictly as <strong>Internal Benchmark &amp; Regression Verification Infrastructure</strong>; <code>ControlledPenetrationEngine</code> verifies rollback via <code>try/finally</code> and <code>DatabaseStateVerifier</code> fails closed (<code>allow_synthetic_fallback=False</code>).</td>
 </tr>
 <tr>
 <td>47</td>
 <td>Tier 4</td>
-<td>32-Server Docker Lab &amp; In-Memory Snowflake Cloud Mocks</td>
+<td>32-Server VAIB Docker Lab &amp; In-Memory Snowflake Cloud Mocks</td>
 <td>Pro (fixtures/*)</td>
 <td>1.95</td>
-<td>Reposition strictly as Internal QA &amp; Regression Benchmark Suite.</td>
+<td>Reposition strictly as <strong>Internal Benchmark &amp; Regression Verification Infrastructure</strong> (not a customer-facing operating mode).</td>
 </tr>
 <tr>
 <td>48</td>
@@ -1998,11 +1998,13 @@ boundaries that make them unsuitable as customer features:</p>
 <p>When a Tier 4 helper proves broadly useful, the correct move is to promote
 a narrow, well-tested slice of it into Tier 1 or Tier 2 — never to
 re-label the harness itself as a customer feature.</p>
-<p>The two guard-related entries deserve a specific note. The hardcoded
-f-string guard templates are honest only when described as a <strong>Guard
-Snippet Generator</strong>, and the fixture-coupled <code>ReadOnlySafetyGuard</code> and
-<code>DualPathRouter</code> are demo helpers — real deployments should use
-<code>SqlSecurityGuard</code> instead.</p>
+<p>The two guard-related entries and Wave 4 benchmark decoupling deserve a specific note:</p>
+<ul>
+<li><strong>Internal Benchmark &amp; Regression Verification Infrastructure (Pro).</strong> The 32-server VAIB Docker lab, the 51 DB scenario oracles, and <code>ControlledPenetrationEngine</code> are <strong>Internal Benchmark &amp; Regression Verification Infrastructure</strong> used for CI and engineering QA — not the primary customer operating mode.</li>
+<li><strong>Fail-closed Pro verification &amp; rollback.</strong> <code>DatabaseStateVerifier.verify_mongodb_cross_tenant_isolation(allow_synthetic_fallback=False)</code> fails closed when MongoDB is unreachable instead of reporting synthetic fixture passes (emitting a <code>[SYNTHETIC]</code>-prefixed reason only when <code>allow_synthetic_fallback=True</code>), and <code>ControlledPenetrationEngine</code> executes attack and rollback inside <code>try/finally</code> so <code>rollback_confirmed</code> is <code>True</code> only after rollback and post-rollback baseline verification succeed (<code>details["rollback_error"]</code> is recorded on failure).</li>
+<li><strong>Configurable tenancy &amp; schema-driven plans (Pro).</strong> <code>PolicyGatekeeper(allowed_tenants=())</code> defaults to an empty allowlist so production targets are not rejected for lacking synthetic lab tenant names, while <code>get_deterministic_plan()</code> synthesizes neutral schema-driven proposals from <code>McpServerSpec</code> tool schemas for unregistered servers instead of falling back to <code>CUSTOMER_CRUD_PLAN</code>.</li>
+<li><strong>Hardened <code>ReadOnlySafetyGuard</code> &amp; decoupled <code>DualPathRouter</code> (Free).</strong> <code>ReadOnlySafetyGuard</code> extends destructive-verb coverage to block <code>run_sql</code>, <code>execute_sql</code>, <code>upsert</code>, <code>post_</code>, <code>put_</code>, <code>patch_</code>, <code>chmod</code>, and <code>kill</code> (using boundary matching for <code>post_</code>, <code>put_</code>, and <code>patch_</code>), while <code>DualPathRouter</code> removes the hardcoded <code>"formula": "1 + 1"</code> payload in favor of a neutral schema-driven required-argument skeleton (surfacing <code>NEEDS_ARGS</code> when a required parameter cannot be synthesized safely and preserving caller-supplied arguments verbatim). Real SQL deployments should still use <code>SqlSecurityGuard</code>, and the hardcoded f-string guard templates are honest only when described as a <strong>Guard Snippet Generator</strong>.</li>
+</ul>
 <h2 id="disposition-summary">Disposition summary<a class="headerlink" href="#disposition-summary" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
