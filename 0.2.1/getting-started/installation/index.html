@@ -818,10 +818,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-docker-daemon-unavailable-or-image-pull-denied" class="md-nav__link">
+  <a href="#5-docker-daemon-unavailable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Docker daemon unavailable or image pull denied
+        5. Docker daemon unavailable
       
     </span>
   </a>
@@ -1795,10 +1795,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-docker-daemon-unavailable-or-image-pull-denied" class="md-nav__link">
+  <a href="#5-docker-daemon-unavailable" class="md-nav__link">
     <span class="md-ellipsis">
       
-        5. Docker daemon unavailable or image pull denied
+        5. Docker daemon unavailable
       
     </span>
   </a>
@@ -1907,7 +1907,7 @@
 </table>
 <h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Python 3.10 or newer for pip, uvx, uv tool, and source installs.</li>
+<li>Python 3.12 or newer (&lt;3.15) for pip, uvx, uv tool, and source installs.</li>
 <li>A supported IDE client for MCP integration.</li>
 <li>Optional: Docker 24+ only if you choose the container path.</li>
 </ul>
@@ -1918,22 +1918,19 @@
 <h2 id="install-with-uvx">Install with <code>uvx</code><a class="headerlink" href="#install-with-uvx" title="Permanent link">&para;</a></h2>
 <p><code>uvx</code> runs Verity in an ephemeral environment, which is ideal for one-off scans and trying the CLI without modifying global state.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
-<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>terminal
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>terminal
 </code></pre></div>
 <p>Pin a version in automation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core-core<span class="o">==</span><span class="m">0</span>.2.1<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--fail-on-findings
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="o">==</span><span class="m">0</span>.2.1<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--fail-on-findings
 </code></pre></div>
 <h2 id="install-with-pip">Install with <code>pip</code><a class="headerlink" href="#install-with-pip" title="Permanent link">&para;</a></h2>
 <p>Use a virtual environment or the CI runner's managed environment.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>$<span class="w"> </span><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
 <a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"verity-redteam-core-core==0.2.1"</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">"verity-redteam-core==0.2.1"</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>verity-redteam-core
 </code></pre></div>
@@ -1941,41 +1938,40 @@
 <p><code>uv tool</code> installs an isolated CLI binary while keeping it on <code>PATH</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>list
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>verity-redteam-core-core<span class="w"> </span>v0.2.1
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>verity-redteam-core<span class="w"> </span>v0.2.1
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
 <p>Upgrade or uninstall:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>upgrade<span class="w"> </span>verity-redteam-core
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>uninstall<span class="w"> </span>verity-redteam-core
 </code></pre></div>
 <h2 id="install-with-homebrew">Install with Homebrew<a class="headerlink" href="#install-with-homebrew" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>verity-redteam-core/tap
+<blockquote>
+<p>The Homebrew formula is upcoming in M30. Use <code>uvx</code> or <code>pip</code> until then.</p>
+</blockquote>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>JMartynov/tap
 <a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
 <p>Upgrade:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>$<span class="w"> </span>brew<span class="w"> </span>upgrade<span class="w"> </span>verity
 </code></pre></div>
 <h2 id="install-with-docker">Install with Docker<a class="headerlink" href="#install-with-docker" title="Permanent link">&para;</a></h2>
-<p>The container is stateless and mounts the working directory for scanning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/verity-redteam-core/verity:0.2.1
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>ghcr.io/verity-redteam-core/verity:0.2.1<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>json
+<p>Run Verity from the official Python 3.12 image and mount the working directory for scanning.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"pip install verity-redteam-core==0.2.1 &amp;&amp; verity scan --path . --format json"</span>
 </code></pre></div>
-<p>For CI, pin the digest instead of the tag.</p>
+<p>For CI, pin the image digest instead of the tag.</p>
 <h2 id="install-from-source">Install from source<a class="headerlink" href="#install-from-source" title="Permanent link">&para;</a></h2>
 <p>Use this path for air-gapped builds, contribution, or deep inspection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/verity-redteam-core/verityredteam-free.git
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/JMartynov/verityredteam-free.git
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>verityredteam-free
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>$<span class="w"> </span>uv<span class="w"> </span>sync
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
 <p>Build an offline wheel for transfer:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>uv<span class="w"> </span>build
@@ -1983,12 +1979,10 @@
 <a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>verity_redteam_core-0.2.1-py3-none-any.whl
 </code></pre></div>
 <h2 id="verify-the-installation">Verify the installation<a class="headerlink" href="#verify-the-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$<span class="w"> </span>verity<span class="w"> </span>doctor
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>verity-redteam-core<span class="w"> </span><span class="m">0</span>.2.1
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>Python<span class="w"> </span><span class="m">3</span>.12.4
-<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>OS<span class="w"> </span>macOS-15.2-arm64
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>Targets<span class="w"> </span><span class="m">4</span>/4<span class="w"> </span>available<span class="w"> </span><span class="o">(</span>zero-docker<span class="o">)</span>
-<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>MCP<span class="w"> </span>serve<span class="w"> </span>ready
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--demo
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>$<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import verity; print(verity.__version__)"</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="m">0</span>.2.1
 </code></pre></div>
 <hr />
 <h2 id="mcp-client-discovery-paths">MCP client discovery paths<a class="headerlink" href="#mcp-client-discovery-paths" title="Permanent link">&para;</a></h2>
@@ -2083,24 +2077,23 @@
 <hr />
 <h2 id="troubleshooting-faq">Troubleshooting FAQ<a class="headerlink" href="#troubleshooting-faq" title="Permanent link">&para;</a></h2>
 <h3 id="1-uvx-command-not-found">1. <code>uvx: command not found</code><a class="headerlink" href="#1-uvx-command-not-found" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>zsh:<span class="w"> </span><span class="nb">command</span><span class="w"> </span>not<span class="w"> </span>found:<span class="w"> </span>uvx
 </code></pre></div>
 <p>Install uv and reopen the shell so <code>~/.local/bin</code> is on <code>PATH</code>.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 <a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>$<span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SHELL</span><span class="s2">"</span>
-<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
-<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
 </code></pre></div>
 <h3 id="2-permission-denied-writing-an-mcp-config">2. Permission denied writing an MCP config<a class="headerlink" href="#2-permission-denied-writing-an-mcp-config" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>$<span class="w"> </span>verity<span class="w"> </span>mcp<span class="w"> </span>install<span class="w"> </span>--client<span class="w"> </span>claude
+<p>Add the <code>verity</code> server entry directly to the client JSON config. If the file or directory is not writable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude/claude_desktop_config.json"</span>
 <a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>error:<span class="w"> </span>permission<span class="w"> </span>denied:<span class="w"> </span>/Users/dev/Library/Application<span class="w"> </span>Support/Claude/claude_desktop_config.json
 </code></pre></div>
 <p>Fix ownership or run the client once so it creates the directory, then retry.</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude"</span>
 <a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>$<span class="w"> </span>chmod<span class="w"> </span>u+rw<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude"</span>
-<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>$<span class="w"> </span>verity<span class="w"> </span>mcp<span class="w"> </span>install<span class="w"> </span>--client<span class="w"> </span>claude
-<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>installed:<span class="w"> </span>claude
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude/claude_desktop_config.json"</span>
 </code></pre></div>
 <h3 id="3-python-version-mismatch">3. Python version mismatch<a class="headerlink" href="#3-python-version-mismatch" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
@@ -2110,28 +2103,27 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>$<span class="w"> </span>uv<span class="w"> </span>python<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.12
 <a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>$<span class="w"> </span>uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12
 <a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>$<span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
-<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
 <h3 id="4-homebrew-tap-not-found">4. Homebrew tap not found<a class="headerlink" href="#4-homebrew-tap-not-found" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
 <a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>Error:<span class="w"> </span>No<span class="w"> </span>available<span class="w"> </span>formula<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>name<span class="w"> </span><span class="s2">"verity"</span>.
 </code></pre></div>
 <p>Tap the repository first.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>verity-redteam-core/tap
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>JMartynov/tap
 <a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
-<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
-<h3 id="5-docker-daemon-unavailable-or-image-pull-denied">5. Docker daemon unavailable or image pull denied<a class="headerlink" href="#5-docker-daemon-unavailable-or-image-pull-denied" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>ghcr.io/verity-redteam-core/verity:0.2.1<span class="w"> </span>--version
+<h3 id="5-docker-daemon-unavailable">5. Docker daemon unavailable<a class="headerlink" href="#5-docker-daemon-unavailable" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>python:3.12-slim<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
 <a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>Cannot<span class="w"> </span>connect<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>Docker<span class="w"> </span>daemon<span class="w"> </span>at<span class="w"> </span>unix:///var/run/docker.sock.
 </code></pre></div>
-<p>Start Docker, authenticate to GHCR if required, and retry.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>$<span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>ghcr.io
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>$<span class="w"> </span>docker<span class="w"> </span>pull<span class="w"> </span>ghcr.io/verity-redteam-core/verity:0.2.1
-<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>ghcr.io/verity-redteam-core/verity:0.2.1<span class="w"> </span>--version
-<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a>verity<span class="w"> </span>scan<span class="w"> </span>completed<span class="w"> </span><span class="o">(</span><span class="m">0</span>.2.1<span class="o">)</span>
+<p>Start Docker and retry.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="w">    </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-25-5" name="__codelineno-25-5" href="#__codelineno-25-5"></a><span class="w">    </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"pip install verity-redteam-core==0.2.1 &amp;&amp; verity scan --path . --format json"</span>
 </code></pre></div>
 <h3 id="6-ide-does-not-list-verity-as-an-mcp-server">6. IDE does not list <code>verity</code> as an MCP server<a class="headerlink" href="#6-ide-does-not-list-verity-as-an-mcp-server" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>$<span class="w"> </span>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
@@ -2150,13 +2142,10 @@
 <a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="p">}</span>
 </code></pre></div>
-<p>Restart the IDE, then confirm discovery:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>$<span class="w"> </span>verity<span class="w"> </span>mcp<span class="w"> </span>status<span class="w"> </span>--client<span class="w"> </span>claude
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>client:<span class="w"> </span>claude
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>server:<span class="w"> </span>verity
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>status:<span class="w"> </span>connected
-<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a>tools:<span class="w"> </span>mcp_security_scan,<span class="w"> </span>mcp_database_guard,<span class="w"> </span>mcp_database_oracle,<span class="w"> </span>mcp_remediation_ops
+<p>Restart the IDE, then confirm discovery with a manual stdio handshake:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
 </code></pre></div>
+<p>The response lists the four unified tools: <code>verity_security_scan</code>, <code>verity_database_guard</code>, <code>verity_database_oracle</code>, and <code>verity_remediation_ops</code>.</p>
 <hr />
 <h2 id="uninstall">Uninstall<a class="headerlink" href="#uninstall" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>uninstall<span class="w"> </span>verity-redteam-core

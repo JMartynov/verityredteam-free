@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#milestone-roadmap-m01-m38" class="md-skip">
+        <a href="#milestone-roadmap-m01-m53" class="md-skip">
           Skip to content
         </a>
       
@@ -1426,16 +1426,38 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#phase-5-feature-realism-product-alignment-m39-m45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 5 — Feature Realism &amp; Product Alignment (M39-M45)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-6-next-gen-sast-ux-supply-chain-roadmap-m46-m53" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 6 — Next-Gen SAST, UX &amp; Supply-Chain Roadmap (M46-M53)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#milestone-table-m01-m38" class="md-nav__link">
+  <a href="#milestone-table-m01-m53" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Milestone Table (M01-M38)
+        Milestone Table (M01-M53)
       
     </span>
   </a>
@@ -1525,12 +1547,12 @@
   
 
 
-<h1 id="milestone-roadmap-m01-m38">Milestone Roadmap (M01-M38)<a class="headerlink" href="#milestone-roadmap-m01-m38" title="Permanent link">&para;</a></h1>
+<h1 id="milestone-roadmap-m01-m53">Milestone Roadmap (M01-M53)<a class="headerlink" href="#milestone-roadmap-m01-m53" title="Permanent link">&para;</a></h1>
 <p>This roadmap is generated from <code>TASK_BOARD.md</code> by
 <code>scripts/build_docs_portal.py</code>. It reflects the shipped milestones,
 the active backlog, and the exact project item backing each task.</p>
 <h2 id="executive-overview">Executive Overview<a class="headerlink" href="#executive-overview" title="Permanent link">&para;</a></h2>
-<p>Verity Red Team evolved in four arcs. The first arc produced a
+<p>Verity Red Team evolved in six arcs. The first arc produced a
 standalone, stdlib-only MCP server and a zero-Docker workstation
 scanner — the minimum viable product that proves value in seconds.
 The second arc hardened the open-core boundary, shipped the free CLI,
@@ -1539,8 +1561,15 @@ that a customer could hit in the field: offline mode, SSE transport,
 rug-pull detection, credential shapes, dialect-aware SQL guards, and
 container-verified end-to-end scenarios. The fourth arc turns the
 entire engineering record into a published documentation portal so
-adoption no longer depends on reading the source tree.</p>
-<p>The invariant across all four arcs is the runtime abstraction
+adoption no longer depends on reading the source tree. The fifth arc
+aligns the product with reality: real-world Python AST rules, honest
+Pro CLI/MCP gates, and Tier 1/2 homepage and README parity. The sixth
+arc charts the next generation of the product: a unified <code>verity
+scan</code> CLI with SBOM and drift reporting, a local web viewer,
+interactive <code>init</code>/<code>fix</code> flows, opt-in semantic alignment, plugin
+hooks, Sigstore-verified snapshots, multi-framework agent SAST, and
+server reputation scoring.</p>
+<p>The invariant across all six arcs is the runtime abstraction
 barrier: core never imports enterprise code, and enterprise
 capabilities register through the <code>verity.plugins</code> entry point.
 Every milestone below respects that boundary, which is why the
@@ -1563,6 +1592,14 @@ the next phase.</p>
 <li><strong>Knowledge separation (M38).</strong> The documentation portal and the
    task-to-docs pipeline decouple what the engine does from how a
    customer learns about it.</li>
+<li><strong>Product realism (M39-M45).</strong> Real-world Python AST rules, honest
+   Pro CLI/MCP gates, and Tier 1/2 homepage and README parity keep
+   the advertised capability identical to the shipped behaviour.</li>
+<li><strong>Next-generation separation (M46-M53).</strong> The unified <code>verity
+   scan</code> CLI (SBOM and drift), local web viewer, interactive
+   <code>init</code>/<code>fix</code>, opt-in semantic alignment, plugin hooks,
+   Sigstore-verified snapshots, multi-framework agent SAST, and
+   reputation scoring extend the engine without breaking it.</li>
 </ol>
 <h2 id="capability-evolution">Capability Evolution<a class="headerlink" href="#capability-evolution" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart LR
@@ -1591,7 +1628,17 @@ the next phase.</p>
         D1["MkDocs Portal"]
         D2["Task-to-Docs Pipeline"]
     end
-    P1 --&gt; P2 --&gt; P3 --&gt; P4</code></pre>
+    subgraph P5["Feature Realism (M39-M45)"]
+        R1["Python AST Realism"]
+        R2["Honest Pro Gates"]
+        R3["Homepage/README Parity"]
+    end
+    subgraph P6["Next-Gen Roadmap (M46-M53)"]
+        N1["Unified scan CLI (SBOM &amp; Drift)"]
+        N2["Web Viewer &amp; Interactive fix"]
+        N3["Plugins, Sigstore &amp; Reputation"]
+    end
+    P1 --&gt; P2 --&gt; P3 --&gt; P4 --&gt; P5 --&gt; P6</code></pre>
 <h2 id="phase-breakdown">Phase Breakdown<a class="headerlink" href="#phase-breakdown" title="Permanent link">&para;</a></h2>
 <h3 id="phase-1-foundation-m01-m06">Phase 1 — Foundation (M01-M06)<a class="headerlink" href="#phase-1-foundation-m01-m06" title="Permanent link">&para;</a></h3>
 <p>Standalone core, deterministic static screening, SQL AST guard, workspace linkage, free CLI, and CI readiness.</p>
@@ -1810,49 +1857,49 @@ the next phase.</p>
 <tr>
 <td>M30</td>
 <td><code>uvx</code> Single-Token Execution &amp; Homebrew Distribution (<code>TASK-79</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td>Dual <code>verity-redteam-core</code> script entrypoint, <code>-V</code>/<code>--version</code>, <code>[project.urls]</code>, <code>generate_homebrew_formula.py</code>, <code>JMartynov/homebrew-tap</code></td>
 </tr>
 <tr>
 <td>M31</td>
 <td>CLI CI Prerequisites &amp; Brownfield Baseline / Ignore Engine (<code>TASK-80</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td>Stdlib <code>verity.baseline</code> (<code>paths</code>, <code>fingerprint</code>, <code>ignore</code>, <code>inline</code>, <code>store</code>), <code>--fail-on-severity</code>, multi-file <code>--path</code>, un-gated Core SARIF 2.1.0</td>
 </tr>
 <tr>
 <td>M32</td>
 <td>Official GitHub Action (<code>verity-scan-action@v1</code>) &amp; Pre-Commit Hooks (<code>TASK-81</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>.pre-commit-hooks.yaml</code> (<code>verity-scan</code>, <code>verity-scan-configs</code>, <code>verity-scan-uvx</code>), README snippet, <code>JMartynov/verity-scan-action</code></td>
 </tr>
 <tr>
 <td>M33</td>
 <td>TypeScript / JavaScript MCP SAST Scanner (<code>TASK-90</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td>Polyglot <code>.ts</code>/<code>.tsx</code>/<code>.js</code>/<code>.mjs</code> discovery in <code>McpAstScannerEngine</code>, <code>typescript_ast.py</code>, 5 <code>VERITY-AST-TS-*</code> sink rules, UCP/StaticRule wiring</td>
 </tr>
 <tr>
 <td>M34</td>
 <td>Agent Skill / Instruction File Scanner &amp; Cross-Tool Toxic Flow Analysis (<code>TASK-91</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>InstructionFileScanner</code> (6 formats), <code>ToxicFlowAnalyzer</code> lethal-trifecta correlation (<code>VERITY-TOXIC-FLOW-*</code>), <code>--skills</code> / <code>--toxic-flows</code></td>
 </tr>
 <tr>
 <td>M35</td>
 <td>Authenticated Remote Probing (OAuth/Bearer) &amp; <code>--identify-as</code> Bait-and-Switch Detection (<code>TASK-92</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>DiscoveredServerConfig.headers</code> (redacted), <code>--header</code>/<code>--bearer-token</code>, <code>--identify-as</code>, differential <code>--detect-bait-and-switch</code></td>
 </tr>
 <tr>
 <td>M36</td>
 <td>ANSI Terminal Deception &amp; Unicode BiDi/Tag-Char Findings (<code>TASK-93</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td>Explicit ANSI/BiDi/Tag/zero-width <code>StaticRuleEvaluator</code> rules, <code>VERITY-UCP-UNICODE-ANOMALY</code> wiring, <code>--visualize-ansi-codes</code></td>
 </tr>
 <tr>
 <td>M37</td>
 <td>MCP Schema-Handler Drift &amp; Structured Agent Guidance (<code>TASK-85</code>)</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td>Expose <code>verify_physical_database</code> / <code>generate_safe_parameterized_query</code> in <code>schemas.py</code>, <code>DualPathRouter</code> + <code>next_recommended_actions</code>, <code>--unified-only</code></td>
 </tr>
 </tbody>
@@ -1877,7 +1924,125 @@ the next phase.</p>
 </tr>
 </tbody>
 </table>
-<h2 id="milestone-table-m01-m38">Milestone Table (M01-M38)<a class="headerlink" href="#milestone-table-m01-m38" title="Permanent link">&para;</a></h2>
+<h3 id="phase-5-feature-realism-product-alignment-m39-m45">Phase 5 — Feature Realism &amp; Product Alignment (M39-M45)<a class="headerlink" href="#phase-5-feature-realism-product-alignment-m39-m45" title="Permanent link">&para;</a></h3>
+<p>Real-world Python AST rules, honest Pro CLI/MCP gates, Tier 1/2 homepage and README parity, and Pro feature showcase.</p>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Title</th>
+<th>Status</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M39</td>
+<td>Python AST Real-World Rules &amp; Import Aliases (<code>TASK-102</code>)</td>
+<td>Done</td>
+<td>Alias resolution in <code>visit_Call</code> plus real def-use CWE-22 / CWE-89 / CWE-862 rules in <code>src/verity/scanner/python_ast.py</code></td>
+</tr>
+<tr>
+<td>M40</td>
+<td>Free CLI SARIF Pro Gate &amp; Line Precision (<code>TASK-103-FREE</code>)</td>
+<td>Done</td>
+<td><code>_pro_plugin_available()</code> SARIF gate (<code>PRO_FEATURE_REQUIRED</code>, exit code <code>2</code>) and real <code>line_number</code> / <code>uri</code> in <code>src/verity/cli.py</code></td>
+</tr>
+<tr>
+<td>M41</td>
+<td>Homepage Tier 1/2 Focus &amp; Registry Parity (<code>TASK-104</code>)</td>
+<td>Done</td>
+<td>Tier 1 / Tier 2 homepage, single auxiliary appendix, and runtime-registry parity (<code>STATIC_RULE_IDS</code>, <code>AST_RULE_IDS</code>, <code>TARGET_SLUGS</code>, <code>MCP_TOOL_NAMES</code>)</td>
+</tr>
+<tr>
+<td>M42</td>
+<td>Pro Features Showcase &amp; Comparison Docs in Free (<code>TASK-107</code>)</td>
+<td>Done</td>
+<td><code>docs/pro/enterprise_features.md</code>, Free vs Pro matrix, <code>PRO_FEATURE_REQUIRED</code> contract</td>
+</tr>
+<tr>
+<td>M43</td>
+<td>Free MCP Database Guard Pro Gating (<code>TASK-109-FREE</code>)</td>
+<td>Done</td>
+<td><code>PRO_FEATURE_REQUIRED</code> gate for <code>validate_nosql_filter</code> and <code>enforce_volume_policy</code> in <code>src/verity/mcp_server/handlers/database_guard.py</code></td>
+</tr>
+<tr>
+<td>M44</td>
+<td>Free Read-Only Guard &amp; Router Decoupling (<code>TASK-106-FREE</code>)</td>
+<td>Done</td>
+<td>Destructive-verb blocking in <code>readonly_guard.py</code> and formula de-hardcoding in <code>dual_path_router.py</code></td>
+</tr>
+<tr>
+<td>M45</td>
+<td>Free README Tier 1/2 Focus, Pro Showcase &amp; Parity (<code>TASK-110-FREE</code>)</td>
+<td>Done</td>
+<td><code>README.md</code> Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity</td>
+</tr>
+</tbody>
+</table>
+<h3 id="phase-6-next-gen-sast-ux-supply-chain-roadmap-m46-m53">Phase 6 — Next-Gen SAST, UX &amp; Supply-Chain Roadmap (M46-M53)<a class="headerlink" href="#phase-6-next-gen-sast-ux-supply-chain-roadmap-m46-m53" title="Permanent link">&para;</a></h3>
+<p>Unified verity scan CLI (SBOM &amp; drift), local web viewer, interactive init/fix, opt-in semantic alignment, plugin hooks, snapshot Sigstore verification, multi-framework agent SAST, and reputation scoring.</p>
+<table>
+<thead>
+<tr>
+<th>Milestone</th>
+<th>Title</th>
+<th>Status</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M46</td>
+<td>Unified <code>verity scan</code> CLI (<code>mcp-fingerprints</code> + <code>mcp-vulnerabilities</code>, SBOM &amp; Drift) (<code>TASK-82-FREE</code>)</td>
+<td>Not Done</td>
+<td>15+ client discovery with JSONC, composable <code>--scanners</code>, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift</td>
+</tr>
+<tr>
+<td>M47</td>
+<td>Zero-Signup Local Web Viewer (<code>verity view</code> Core SPA &amp; Server) (<code>TASK-83-FREE</code>)</td>
+<td>Not Done</td>
+<td>Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, <code>ViewerRegistry</code></td>
+</tr>
+<tr>
+<td>M48</td>
+<td>Interactive Onboarding Wizard (<code>verity init</code>) &amp; Safe Config Fix (<code>verity fix</code>) (<code>TASK-84-FREE</code>)</td>
+<td>Partially Done</td>
+<td>Lossless <code>JsoncPatcher</code>, <code>AtomicBackupManager</code> rollback, <code>verity init</code> wizard &amp; <code>verity fix</code> dry-run/write config remediation</td>
+</tr>
+<tr>
+<td>M49</td>
+<td>Opt-In <code>--llm-assist</code> Semantic Alignment Analyzer on UCP Path B (<code>TASK-87-FREE</code>)</td>
+<td>Partially Done</td>
+<td>Wire <code>DualPathRouter</code> in <code>auditor.py</code>, fix <code>TEMPLATE_INDICATORS</code>, pure-stdlib <code>semantic_assist.py</code> with exact <code>evidence_span</code> guard, <code>--llm-assist</code></td>
+</tr>
+<tr>
+<td>M50</td>
+<td>Free <code>PRO_FEATURE_REQUIRED</code> Plugin Hooks for <code>--autofix</code> and <code>--explain</code> (<code>TASK-88-89-FREE</code>)</td>
+<td>Not Done</td>
+<td><code>set_autofix_provider</code>/<code>set_explain_provider</code>, <code>synthesize_verified_patch</code>/<code>explain_finding_context</code> schemas, <code>PRO_FEATURE_REQUIRED</code> gates</td>
+</tr>
+<tr>
+<td>M51</td>
+<td>Bundled Snapshot Sync (<code>passports</code>/<code>vulns</code>), Sigstore Verification &amp; Config Scanner Dedup (<code>TASK-94-FREE</code>)</td>
+<td>Not Done</td>
+<td>Sync <code>passports.json.gz</code>/<code>vulnerabilities.json.gz</code>, Sigstore verification in <code>data_fetcher.py</code>, dedup <code>StaticConfigScanner</code></td>
+</tr>
+<tr>
+<td>M52</td>
+<td>Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) &amp; Optional YARA Engine (<code>TASK-95-FREE</code>)</td>
+<td>Not Done</td>
+<td><code>langchain_ast.py</code>, <code>crewai_ast.py</code>, <code>autogen_ast.py</code> visitors + optional <code>yara_engine.py</code> graceful fallback</td>
+</tr>
+<tr>
+<td>M53</td>
+<td>Pre-Boot Maintainer &amp; Package Reputation Scoring (0-100) (<code>TASK-97-FREE</code>)</td>
+<td>Not Done</td>
+<td>Opt-in <code>ReputationScorer</code> (0-100) on <code>DualPathRouter</code> Path B respecting <code>VERITY_OFFLINE=1</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="milestone-table-m01-m53">Milestone Table (M01-M53)<a class="headerlink" href="#milestone-table-m01-m53" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
 <tr>
@@ -2126,65 +2291,65 @@ the next phase.</p>
 <td>M30</td>
 <td><code>uvx</code> Single-Token Execution &amp; Homebrew Distribution (<code>TASK-79</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPUU</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION/">M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md</a></td>
 </tr>
 <tr>
 <td>M31</td>
 <td>CLI CI Prerequisites &amp; Brownfield Baseline / Ignore Engine (<code>TASK-80</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPYA</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES/">M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md</a></td>
 </tr>
 <tr>
 <td>M32</td>
 <td>Official GitHub Action (<code>verity-scan-action@v1</code>) &amp; Pre-Commit Hooks (<code>TASK-81</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPcI</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS/">M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md</a></td>
 </tr>
 <tr>
 <td>M33</td>
 <td>TypeScript / JavaScript MCP SAST Scanner (<code>TASK-90</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPfA</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER/">M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md</a></td>
 </tr>
 <tr>
 <td>M34</td>
 <td>Agent Skill / Instruction File Scanner &amp; Cross-Tool Toxic Flow Analysis (<code>TASK-91</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPjE</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M34_TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS/">M34_TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md</a></td>
 </tr>
 <tr>
 <td>M35</td>
 <td>Authenticated Remote Probing (OAuth/Bearer) &amp; <code>--identify-as</code> Bait-and-Switch Detection (<code>TASK-92</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPm8</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M35_TASK_92_AUTH_REMOTE_PROBING_AND_BAIT_SWITCH/">M35_TASK_92_AUTH_REMOTE_PROBING_AND_BAIT_SWITCH.md</a></td>
 </tr>
 <tr>
 <td>M36</td>
 <td>ANSI Terminal Deception &amp; Unicode BiDi/Tag-Char Findings (<code>TASK-93</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPrY</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M36_TASK_93_ANSI_TERMINAL_DECEPTION_AND_UNICODE_FINDINGS/">M36_TASK_93_ANSI_TERMINAL_DECEPTION_AND_UNICODE_FINDINGS.md</a></td>
 </tr>
 <tr>
 <td>M37</td>
 <td>MCP Schema-Handler Drift &amp; Structured Agent Guidance (<code>TASK-85</code>)</td>
 <td>Hardening &amp; Parity</td>
-<td>Ready</td>
+<td>Not Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLJPuo</code></td>
-<td><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md">TASK_BOARD.md</a></td>
+<td><a href="../tasks/M37_TASK_85_FREE_MCP_SCHEMA_DRIFT_AND_AGENT_GUIDANCE/">M37_TASK_85_FREE_MCP_SCHEMA_DRIFT_AND_AGENT_GUIDANCE.md</a></td>
 </tr>
 <tr>
 <td>M38</td>
@@ -2197,7 +2362,7 @@ the next phase.</p>
 <tr>
 <td>M39</td>
 <td>Python AST Real-World Rules &amp; Import Aliases (<code>TASK-102</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvl0M</code></td>
 <td><a href="../tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES/">M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md</a></td>
@@ -2205,7 +2370,7 @@ the next phase.</p>
 <tr>
 <td>M40</td>
 <td>Free CLI SARIF Pro Gate &amp; Line Precision (<code>TASK-103-FREE</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvmAQ</code></td>
 <td><a href="../tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION/">M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md</a></td>
@@ -2213,7 +2378,7 @@ the next phase.</p>
 <tr>
 <td>M41</td>
 <td>Homepage Tier 1/2 Focus &amp; Registry Parity (<code>TASK-104</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvmDo</code></td>
 <td><a href="../tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY/">M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md</a></td>
@@ -2221,7 +2386,7 @@ the next phase.</p>
 <tr>
 <td>M42</td>
 <td>Pro Features Showcase &amp; Comparison Docs in Free (<code>TASK-107</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvmsE</code></td>
 <td><a href="../tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE/">M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md</a></td>
@@ -2229,7 +2394,7 @@ the next phase.</p>
 <tr>
 <td>M43</td>
 <td>Free MCP Database Guard Pro Gating (<code>TASK-109-FREE</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvm_M</code></td>
 <td><a href="../tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING/">M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md</a></td>
@@ -2237,7 +2402,7 @@ the next phase.</p>
 <tr>
 <td>M44</td>
 <td>Free Read-Only Guard &amp; Router Decoupling (<code>TASK-106-FREE</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvmgk</code></td>
 <td><a href="../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING/">M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md</a></td>
@@ -2245,10 +2410,74 @@ the next phase.</p>
 <tr>
 <td>M45</td>
 <td>Free README Tier 1/2 Focus, Pro Showcase &amp; Parity (<code>TASK-110-FREE</code>)</td>
-<td>Future</td>
+<td>Feature Realism &amp; Product Alignment</td>
 <td>Done</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvnMQ</code></td>
 <td><a href="../tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY/">M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md</a></td>
+</tr>
+<tr>
+<td>M46</td>
+<td>Unified <code>verity scan</code> CLI (<code>mcp-fingerprints</code> + <code>mcp-vulnerabilities</code>, SBOM &amp; Drift) (<code>TASK-82-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Not Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjAI</code></td>
+<td><a href="../tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT/">M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md</a></td>
+</tr>
+<tr>
+<td>M47</td>
+<td>Zero-Signup Local Web Viewer (<code>verity view</code> Core SPA &amp; Server) (<code>TASK-83-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Not Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjFQ</code></td>
+<td><a href="../tasks/M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA/">M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md</a></td>
+</tr>
+<tr>
+<td>M48</td>
+<td>Interactive Onboarding Wizard (<code>verity init</code>) &amp; Safe Config Fix (<code>verity fix</code>) (<code>TASK-84-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Partially Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjKw</code></td>
+<td><a href="../tasks/M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX/">M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md</a></td>
+</tr>
+<tr>
+<td>M49</td>
+<td>Opt-In <code>--llm-assist</code> Semantic Alignment Analyzer on UCP Path B (<code>TASK-87-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Partially Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjOY</code></td>
+<td><a href="../tasks/M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT/">M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md</a></td>
+</tr>
+<tr>
+<td>M50</td>
+<td>Free <code>PRO_FEATURE_REQUIRED</code> Plugin Hooks for <code>--autofix</code> and <code>--explain</code> (<code>TASK-88-89-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Not Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjTI</code></td>
+<td><a href="../tasks/M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS/">M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md</a></td>
+</tr>
+<tr>
+<td>M51</td>
+<td>Bundled Snapshot Sync (<code>passports</code>/<code>vulns</code>), Sigstore Verification &amp; Config Scanner Dedup (<code>TASK-94-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Not Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjXY</code></td>
+<td><a href="../tasks/M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP/">M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md</a></td>
+</tr>
+<tr>
+<td>M52</td>
+<td>Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) &amp; Optional YARA Engine (<code>TASK-95-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Not Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjcE</code></td>
+<td><a href="../tasks/M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA/">M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md</a></td>
+</tr>
+<tr>
+<td>M53</td>
+<td>Pre-Boot Maintainer &amp; Package Reputation Scoring (0-100) (<code>TASK-97-FREE</code>)</td>
+<td>Next-Gen SAST, UX &amp; Supply-Chain Roadmap</td>
+<td>Not Done</td>
+<td><code>PVTI_lAHOD-xmQM4Br351zhMEjic</code></td>
+<td><a href="../tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING/">M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md</a></td>
 </tr>
 </tbody>
 </table>

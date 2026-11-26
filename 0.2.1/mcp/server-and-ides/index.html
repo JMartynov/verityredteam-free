@@ -2239,7 +2239,7 @@
 <hr />
 <h2 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Python 3.11 or newer.</li>
+<li>Python 3.12 or newer (&lt;3.15).</li>
 <li><code>uv</code> for the recommended zero-install <code>uvx</code> flow.</li>
 <li>A Verity installation if you want to use the <code>verity</code> command directly.</li>
 <li>Local Verity data snapshots if you are operating offline. The usual directories are <code>data/fingerprints</code> and <code>data/vulnerabilities</code>.</li>
@@ -2264,7 +2264,7 @@
 <h3 id="variant-a-zero-install-with-uvx">Variant A: zero-install with <code>uvx</code><a class="headerlink" href="#variant-a-zero-install-with-uvx" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </code></pre></div>
 <p>This is the easiest starting point. <code>uvx</code> resolves and runs the package without a permanent global install.</p>
@@ -2285,7 +2285,7 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="p">}</span>
@@ -2312,7 +2312,7 @@
 <a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="p">}</span>
@@ -2335,7 +2335,7 @@
 <a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="p">}</span>
@@ -2358,7 +2358,7 @@
 <a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="p">}</span>
@@ -2382,7 +2382,7 @@
 <a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">,</span>
 <a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a><span class="p">}</span>
@@ -2406,7 +2406,7 @@
 <a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">  </span><span class="p">}</span>
 <a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="p">}</span>
@@ -2430,7 +2430,7 @@
 <a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a><span class="w">        </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"uvx"</span><span class="p">,</span>
-<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">        </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a><span class="w">        </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a><span class="w">      </span><span class="p">}</span>
 <a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a><span class="w">    </span><span class="p">}</span>
 <a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a><span class="w">  </span><span class="p">}</span>
@@ -2746,7 +2746,7 @@
 <li>Send a valid <code>initialize</code> request and confirm that a response appears.</li>
 </ol>
 <p>Manual handshake test on macOS or Linux:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>uvx<span class="w"> </span>verity-redteam-core<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>If this prints a JSON response containing <code>tools</code>, the server is healthy and the IDE configuration is the problem. If it prints nothing, check stderr and the executable path.</p>
 <h3 id="92-uvx-works-in-terminal-but-not-in-the-ide">9.2 <code>uvx</code> works in Terminal but not in the IDE<a class="headerlink" href="#92-uvx-works-in-terminal-but-not-in-the-ide" title="Permanent link">&para;</a></h3>
@@ -2756,7 +2756,7 @@
 <p>Put that full path into the IDE configuration:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="p">{</span>
 <a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/you/.local/bin/uvx"</span><span class="p">,</span>
-<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="p">}</span>
 </code></pre></div>
 <p>For the installed command:</p>
@@ -2773,7 +2773,7 @@
 </code></pre></div>
 <p>Common causes:</p>
 <ul>
-<li>Python version too old. Use Python 3.11 or newer.</li>
+<li>Python version too old. Use Python 3.12 or newer (&lt;3.15).</li>
 <li>The package is not installed in the active environment.</li>
 <li>The virtual environment was created under a different user or architecture.</li>
 <li>A project-level <code>.env</code> or wrapper script is sending output to stdout.</li>
@@ -2859,7 +2859,7 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>Zero-install invocation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>uvx<span class="w"> </span>verity-redteam-core<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>Manual MCP tools/list smoke test:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>verity<span class="w"> </span>serve
