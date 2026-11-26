@@ -2256,7 +2256,7 @@
 <li><code>terminal</code> is the default for both <code>scan</code> and <code>test</code>.</li>
 <li>Color is enabled only when stderr is a TTY and <code>NO_COLOR</code> is unset.</li>
 <li>Reports go to stdout (or <code>--output</code>); diagnostics and progress go to stderr.</li>
-<li>Every command supports <code>--help</code>. To print the version, run <code>python -c "import verity; print(verity.__version__)"</code> (<code>--version</code> is planned for M30).</li>
+<li>Every command supports <code>--help</code>, and the root command supports <code>-V</code> / <code>--version</code> (prints <code>verity 0.2.1</code> and exits <code>0</code>).</li>
 <li>Repeated scans and tests are deterministic: the same input produces the same fingerprints.</li>
 </ul>
 <h3 id="global-options">Global options<a class="headerlink" href="#global-options" title="Permanent link">&para;</a></h3>
@@ -2270,6 +2270,12 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>-V</code>, <code>--version</code></td>
+<td>flag</td>
+<td>—</td>
+<td>Print <code>verity 0.2.1</code> and exit 0</td>
+</tr>
 <tr>
 <td><code>--help</code></td>
 <td>flag</td>
