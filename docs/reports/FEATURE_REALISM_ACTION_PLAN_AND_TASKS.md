@@ -58,3 +58,4 @@ flowchart TD
 - **Wave 2 (Done):** M43 consumes the `PRO_FEATURE_REQUIRED` pattern established by M40.
 - **Wave 3 (Done):** M44 (`bc8dbcb` / `99e3e70`) hardens `ReadOnlySafetyGuard` and decouples `DualPathRouter` from hardcoded demo payloads.
 - **Completed track:** M41 (homepage parity) → M42 (Pro showcase) → M45 (README parity), with M41 → M45 as the direct fallback link.
+- **Post-Wave Packaging & Distribution (`M30` / `TASK-79`, Done):** Dual `verity` + `verity-redteam-core` `uvx` script entrypoints, `-V`/`--version`, `[project.urls]`, deterministic `scripts/generate_homebrew_formula.py`, `.github/workflows/homebrew-tap.yml`, and live `JMartynov/homebrew-tap` (`e6f2217`, `ba3c474`, `33de892`).
