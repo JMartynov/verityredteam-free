@@ -9,7 +9,6 @@ from pathlib import Path
 
 from verity.baseline.fingerprint import assign_fingerprints, compute_finding_fingerprint
 from verity.baseline.paths import canonicalize_path, resolve_project_root
-
 from verity.scanner.engine import McpAstScannerEngine
 
 

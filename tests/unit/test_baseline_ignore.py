@@ -6,6 +6,7 @@ from datetime import date
 from pathlib import Path
 
 import pytest
+
 from verity.baseline.ignore import (
     PolicyValidationError,
     apply_policy_suppressions,

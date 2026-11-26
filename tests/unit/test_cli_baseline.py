@@ -8,9 +8,9 @@ import sys
 from pathlib import Path
 
 import pytest
-from verity.baseline.store import BaselineSchemaError, load_baseline
 
 from verity import cli
+from verity.baseline.store import BaselineSchemaError, load_baseline
 
 
 def _make_repo(tmp_path: Path) -> Path:
