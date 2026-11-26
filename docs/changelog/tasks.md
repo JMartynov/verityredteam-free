@@ -1,4 +1,4 @@
-# Task Changelog (TASK-01 - TASK-94)
+# Task Changelog (M01 - M53)
 
 This changelog is generated from `TASK_BOARD.md` and
 `docs/tasks/*.md` by `scripts/build_docs_portal.py`. It merges the
@@ -7,7 +7,7 @@ any behaviour back to a milestone and a verification command.
 
 Discovered task specifications with frontmatter `task_id`:
 
-`TASK-94`, `M39`, `M40`, `M41`, `M42`, `M43`, `M44`, `M45`
+`M30`, `M31`, `M32`, `M33`, `M34`, `M35`, `M36`, `M37`, `TASK-94`, `M39`, `M40`, `M41`, `M42`, `M43`, `M44`, `M45`, `M46`, `M47`, `M48`, `M49`, `M50`, `M51`, `M52`, `M53`
 
 ## Release Notes
 
@@ -26,7 +26,7 @@ credential-shape detection, dialect-aware SQL validation, offline and
 air-gapped behaviour, and the reporting/parity guards that keep the
 documentation honest.
 
-### Continuous Engineering Ledger (M12-M38)
+### Continuous Engineering Ledger (M12-M53)
 
 Every change after the 0.2.0 cut lands as a tracked milestone:
 
@@ -48,14 +48,14 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M27** — Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi` (Done)
 - **M28** — Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard (Done)
 - **M29** — Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`) (Done)
-- **M30** — `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) (Ready)
-- **M31** — CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) (Ready)
-- **M32** — Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) (Ready)
-- **M33** — TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) (Ready)
-- **M34** — Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) (Ready)
-- **M35** — Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) (Ready)
-- **M36** — ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) (Ready)
-- **M37** — MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) (Ready)
+- **M30** — `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) (Not Done)
+- **M31** — CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) (Not Done)
+- **M32** — Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) (Not Done)
+- **M33** — TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) (Not Done)
+- **M34** — Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) (Not Done)
+- **M35** — Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) (Not Done)
+- **M36** — ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) (Not Done)
+- **M37** — MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) (Not Done)
 - **M38** — Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) (Done)
 - **M39** — Python AST Real-World Rules & Import Aliases (`TASK-102`) (Done)
 - **M40** — Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) (Done)
@@ -64,6 +64,14 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M43** — Free MCP Database Guard Pro Gating (`TASK-109-FREE`) (Done)
 - **M44** — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) (Done)
 - **M45** — Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) (Done)
+- **M46** — Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) (Not Done)
+- **M47** — Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`) (Not Done)
+- **M48** — Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`) (Partially Done)
+- **M49** — Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`) (Partially Done)
+- **M50** — Free `PRO_FEATURE_REQUIRED` Plugin Hooks for `--autofix` and `--explain` (`TASK-88-89-FREE`) (Not Done)
+- **M51** — Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`) (Not Done)
+- **M52** — Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`) (Not Done)
+- **M53** — Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`) (Not Done)
 
 ## Task Verification Matrix
 
@@ -98,14 +106,14 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | — | M27 | Done | `uv run pytest tests/unit -q` |
 | — | M28 | Done | `uv run pytest tests/unit -q` |
 | — | M29 | Done | `uv run pytest tests/unit -q` |
-| TASK-79 | M30 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-80 | M31 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-81 | M32 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-90 | M33 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-91 | M34 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-92 | M35 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-93 | M36 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-85 | M37 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-79 | M30 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-80 | M31 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-81 | M32 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-90 | M33 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-91 | M34 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-92 | M35 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-93 | M36 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-85 | M37 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-94 | M38 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-102 | M39 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-103 | M40 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
@@ -114,6 +122,14 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-109 | M43 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-106 | M44 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-110 | M45 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-82 | M46 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-83 | M47 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-84 | M48 | Partially Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-87 | M49 | Partially Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-88 | M50 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-94 | M51 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-95 | M52 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-97 | M53 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 
 ## Detailed Engineering Notes
 
@@ -352,7 +368,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M30 — `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap`
 - **Task references:** TASK-79
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -360,7 +376,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M31 — CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, un-gated Core SARIF 2.1.0
 - **Task references:** TASK-80
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -368,7 +384,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M32 — Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action`
 - **Task references:** TASK-81
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -376,7 +392,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M33 — TypeScript / JavaScript MCP SAST Scanner (`TASK-90`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring
 - **Task references:** TASK-90
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -384,7 +400,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M34 — Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** `InstructionFileScanner` (6 formats), `ToxicFlowAnalyzer` lethal-trifecta correlation (`VERITY-TOXIC-FLOW-*`), `--skills` / `--toxic-flows`
 - **Task references:** TASK-91
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -392,7 +408,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M35 — Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** `DiscoveredServerConfig.headers` (redacted), `--header`/`--bearer-token`, `--identify-as`, differential `--detect-bait-and-switch`
 - **Task references:** TASK-92
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -400,7 +416,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M36 — ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** Explicit ANSI/BiDi/Tag/zero-width `StaticRuleEvaluator` rules, `VERITY-UCP-UNICODE-ANOMALY` wiring, `--visualize-ansi-codes`
 - **Task references:** TASK-93
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -408,7 +424,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M37 — MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Ready
+- **Status:** Not Done
 - **Scope:** Expose `verify_physical_database` / `generate_safe_parameterized_query` in `schemas.py`, `DualPathRouter` + `next_recommended_actions`, `--unified-only`
 - **Task references:** TASK-85
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -423,7 +439,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 ### M39 — Python AST Real-World Rules & Import Aliases (`TASK-102`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
 - **Scope:** Alias resolution in `visit_Call` plus real def-use CWE-22 / CWE-89 / CWE-862 rules in `src/verity/scanner/python_ast.py`
 - **Task references:** TASK-102
@@ -431,7 +447,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 ### M40 — Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
 - **Scope:** `_pro_plugin_available()` SARIF gate (`PRO_FEATURE_REQUIRED`, exit code `2`) and real `line_number` / `uri` in `src/verity/cli.py`
 - **Task references:** TASK-103
@@ -439,7 +455,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 ### M41 — Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
 - **Scope:** Tier 1 / Tier 2 homepage, single auxiliary appendix, and runtime-registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`)
 - **Task references:** TASK-104
@@ -447,7 +463,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 ### M42 — Pro Features Showcase & Comparison Docs in Free (`TASK-107`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
 - **Scope:** `docs/pro/enterprise_features.md`, Free vs Pro matrix, `PRO_FEATURE_REQUIRED` contract
 - **Task references:** TASK-107
@@ -455,15 +471,15 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 ### M43 — Free MCP Database Guard Pro Gating (`TASK-109-FREE`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
-- **Scope:** `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py`
+- **Scope:** `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py`
 - **Task references:** TASK-109
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
 
 ### M44 — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
 - **Scope:** Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py`
 - **Task references:** TASK-106
@@ -471,10 +487,74 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 ### M45 — Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)
 
-- **Phase:** Future
+- **Phase:** Feature Realism & Product Alignment
 - **Status:** Done
 - **Scope:** `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity
 - **Task references:** TASK-110
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M46 — Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift
+- **Task references:** TASK-82
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M47 — Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, `ViewerRegistry`
+- **Task references:** TASK-83
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M48 — Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Partially Done
+- **Scope:** Lossless `JsoncPatcher`, `AtomicBackupManager` rollback, `verity init` wizard & `verity fix` dry-run/write config remediation
+- **Task references:** TASK-84
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M49 — Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Partially Done
+- **Scope:** Wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, `--llm-assist`
+- **Task references:** TASK-87
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M50 — Free `PRO_FEATURE_REQUIRED` Plugin Hooks for `--autofix` and `--explain` (`TASK-88-89-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** `set_autofix_provider`/`set_explain_provider`, `synthesize_verified_patch`/`explain_finding_context` schemas, `PRO_FEATURE_REQUIRED` gates
+- **Task references:** TASK-88
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M51 — Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** Sync `passports.json.gz`/`vulnerabilities.json.gz`, Sigstore verification in `data_fetcher.py`, dedup `StaticConfigScanner`
+- **Task references:** TASK-94
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M52 — Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** `langchain_ast.py`, `crewai_ast.py`, `autogen_ast.py` visitors + optional `yara_engine.py` graceful fallback
+- **Task references:** TASK-95
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M53 — Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** Opt-in `ReputationScorer` (0-100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1`
+- **Task references:** TASK-97
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
 
 ## Customer Upgrade Guide

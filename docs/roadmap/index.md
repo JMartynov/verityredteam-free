@@ -1,4 +1,4 @@
-# Milestone Roadmap (M01-M38)
+# Milestone Roadmap (M01-M53)
 
 This roadmap is generated from `TASK_BOARD.md` by
 `scripts/build_docs_portal.py`. It reflects the shipped milestones,
@@ -6,7 +6,7 @@ the active backlog, and the exact project item backing each task.
 
 ## Executive Overview
 
-Verity Red Team evolved in four arcs. The first arc produced a
+Verity Red Team evolved in six arcs. The first arc produced a
 standalone, stdlib-only MCP server and a zero-Docker workstation
 scanner — the minimum viable product that proves value in seconds.
 The second arc hardened the open-core boundary, shipped the free CLI,
@@ -15,9 +15,16 @@ that a customer could hit in the field: offline mode, SSE transport,
 rug-pull detection, credential shapes, dialect-aware SQL guards, and
 container-verified end-to-end scenarios. The fourth arc turns the
 entire engineering record into a published documentation portal so
-adoption no longer depends on reading the source tree.
+adoption no longer depends on reading the source tree. The fifth arc
+aligns the product with reality: real-world Python AST rules, honest
+Pro CLI/MCP gates, and Tier 1/2 homepage and README parity. The sixth
+arc charts the next generation of the product: a unified `verity
+scan` CLI with SBOM and drift reporting, a local web viewer,
+interactive `init`/`fix` flows, opt-in semantic alignment, plugin
+hooks, Sigstore-verified snapshots, multi-framework agent SAST, and
+server reputation scoring.
 
-The invariant across all four arcs is the runtime abstraction
+The invariant across all six arcs is the runtime abstraction
 barrier: core never imports enterprise code, and enterprise
 capabilities register through the `verity.plugins` entry point.
 Every milestone below respects that boundary, which is why the
@@ -42,6 +49,14 @@ the next phase.
 4. **Knowledge separation (M38).** The documentation portal and the
    task-to-docs pipeline decouple what the engine does from how a
    customer learns about it.
+5. **Product realism (M39-M45).** Real-world Python AST rules, honest
+   Pro CLI/MCP gates, and Tier 1/2 homepage and README parity keep
+   the advertised capability identical to the shipped behaviour.
+6. **Next-generation separation (M46-M53).** The unified `verity
+   scan` CLI (SBOM and drift), local web viewer, interactive
+   `init`/`fix`, opt-in semantic alignment, plugin hooks,
+   Sigstore-verified snapshots, multi-framework agent SAST, and
+   reputation scoring extend the engine without breaking it.
 
 ## Capability Evolution
 
@@ -72,7 +87,17 @@ flowchart LR
         D1["MkDocs Portal"]
         D2["Task-to-Docs Pipeline"]
     end
-    P1 --> P2 --> P3 --> P4
+    subgraph P5["Feature Realism (M39-M45)"]
+        R1["Python AST Realism"]
+        R2["Honest Pro Gates"]
+        R3["Homepage/README Parity"]
+    end
+    subgraph P6["Next-Gen Roadmap (M46-M53)"]
+        N1["Unified scan CLI (SBOM & Drift)"]
+        N2["Web Viewer & Interactive fix"]
+        N3["Plugins, Sigstore & Reputation"]
+    end
+    P1 --> P2 --> P3 --> P4 --> P5 --> P6
 ```
 
 ## Phase Breakdown
@@ -126,14 +151,14 @@ Transport, detection, offline, credential, dialect, governance, and distribution
 | M27 | Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi` | Done | Guard `uv build` behind `INSTALL_SOURCE=wheel`, clean stale wheels, unit test & dual-mode container E2E |
 | M28 | Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard | Done | Replace `verity-core` with `verity-redteam-core` in `AGENTS.md` and extend `test_no_stale_package_references` |
 | M29 | Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`) | Done | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard |
-| M30 | `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) | Ready | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` |
-| M31 | CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) | Ready | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, un-gated Core SARIF 2.1.0 |
-| M32 | Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) | Ready | `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action` |
-| M33 | TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) | Ready | Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring |
-| M34 | Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) | Ready | `InstructionFileScanner` (6 formats), `ToxicFlowAnalyzer` lethal-trifecta correlation (`VERITY-TOXIC-FLOW-*`), `--skills` / `--toxic-flows` |
-| M35 | Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) | Ready | `DiscoveredServerConfig.headers` (redacted), `--header`/`--bearer-token`, `--identify-as`, differential `--detect-bait-and-switch` |
-| M36 | ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) | Ready | Explicit ANSI/BiDi/Tag/zero-width `StaticRuleEvaluator` rules, `VERITY-UCP-UNICODE-ANOMALY` wiring, `--visualize-ansi-codes` |
-| M37 | MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) | Ready | Expose `verify_physical_database` / `generate_safe_parameterized_query` in `schemas.py`, `DualPathRouter` + `next_recommended_actions`, `--unified-only` |
+| M30 | `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) | Not Done | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` |
+| M31 | CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) | Not Done | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, un-gated Core SARIF 2.1.0 |
+| M32 | Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) | Not Done | `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action` |
+| M33 | TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) | Not Done | Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring |
+| M34 | Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) | Not Done | `InstructionFileScanner` (6 formats), `ToxicFlowAnalyzer` lethal-trifecta correlation (`VERITY-TOXIC-FLOW-*`), `--skills` / `--toxic-flows` |
+| M35 | Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) | Not Done | `DiscoveredServerConfig.headers` (redacted), `--header`/`--bearer-token`, `--identify-as`, differential `--detect-bait-and-switch` |
+| M36 | ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) | Not Done | Explicit ANSI/BiDi/Tag/zero-width `StaticRuleEvaluator` rules, `VERITY-UCP-UNICODE-ANOMALY` wiring, `--visualize-ansi-codes` |
+| M37 | MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) | Not Done | Expose `verify_physical_database` / `generate_safe_parameterized_query` in `schemas.py`, `DualPathRouter` + `next_recommended_actions`, `--unified-only` |
 
 ### Phase 4 — Customer Documentation Portal (M38)
 
@@ -143,7 +168,36 @@ MkDocs Material portal plus the automated task-to-docs pipeline.
 | --- | --- | --- | --- |
 | M38 | Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) | Done | MkDocs Material portal (`mkdocs.yml`), 10 deep guides/catalogs, `scripts/build_docs_portal.py`, GitHub Pages workflow |
 
-## Milestone Table (M01-M38)
+### Phase 5 — Feature Realism & Product Alignment (M39-M45)
+
+Real-world Python AST rules, honest Pro CLI/MCP gates, Tier 1/2 homepage and README parity, and Pro feature showcase.
+
+| Milestone | Title | Status | Focus |
+| --- | --- | --- | --- |
+| M39 | Python AST Real-World Rules & Import Aliases (`TASK-102`) | Done | Alias resolution in `visit_Call` plus real def-use CWE-22 / CWE-89 / CWE-862 rules in `src/verity/scanner/python_ast.py` |
+| M40 | Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) | Done | `_pro_plugin_available()` SARIF gate (`PRO_FEATURE_REQUIRED`, exit code `2`) and real `line_number` / `uri` in `src/verity/cli.py` |
+| M41 | Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) | Done | Tier 1 / Tier 2 homepage, single auxiliary appendix, and runtime-registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`) |
+| M42 | Pro Features Showcase & Comparison Docs in Free (`TASK-107`) | Done | `docs/pro/enterprise_features.md`, Free vs Pro matrix, `PRO_FEATURE_REQUIRED` contract |
+| M43 | Free MCP Database Guard Pro Gating (`TASK-109-FREE`) | Done | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` |
+| M44 | Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) | Done | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` |
+| M45 | Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) | Done | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity |
+
+### Phase 6 — Next-Gen SAST, UX & Supply-Chain Roadmap (M46-M53)
+
+Unified verity scan CLI (SBOM & drift), local web viewer, interactive init/fix, opt-in semantic alignment, plugin hooks, snapshot Sigstore verification, multi-framework agent SAST, and reputation scoring.
+
+| Milestone | Title | Status | Focus |
+| --- | --- | --- | --- |
+| M46 | Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) | Not Done | 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift |
+| M47 | Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`) | Not Done | Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, `ViewerRegistry` |
+| M48 | Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`) | Partially Done | Lossless `JsoncPatcher`, `AtomicBackupManager` rollback, `verity init` wizard & `verity fix` dry-run/write config remediation |
+| M49 | Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`) | Partially Done | Wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, `--llm-assist` |
+| M50 | Free `PRO_FEATURE_REQUIRED` Plugin Hooks for `--autofix` and `--explain` (`TASK-88-89-FREE`) | Not Done | `set_autofix_provider`/`set_explain_provider`, `synthesize_verified_patch`/`explain_finding_context` schemas, `PRO_FEATURE_REQUIRED` gates |
+| M51 | Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`) | Not Done | Sync `passports.json.gz`/`vulnerabilities.json.gz`, Sigstore verification in `data_fetcher.py`, dedup `StaticConfigScanner` |
+| M52 | Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`) | Not Done | `langchain_ast.py`, `crewai_ast.py`, `autogen_ast.py` visitors + optional `yara_engine.py` graceful fallback |
+| M53 | Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`) | Not Done | Opt-in `ReputationScorer` (0-100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1` |
+
+## Milestone Table (M01-M53)
 
 | # | Title | Phase | Status | Project Item | Spec |
 | --- | --- | --- | --- | --- | --- |
@@ -176,22 +230,30 @@ MkDocs Material portal plus the automated task-to-docs pipeline.
 | M27 | Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi` | Hardening & Parity | Done | `PVTI_lAHOD-xmQM4Br351zhKQXBQ` | [M27_guard_uv_build_in_run_e2e.md](../tasks/M27_guard_uv_build_in_run_e2e.md) |
 | M28 | Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard | Hardening & Parity | Done | `PVTI_lAHOD-xmQM4Br351zhKQXFA` | [M28_fix_agents_md_retired_package_name.md](../tasks/M28_fix_agents_md_retired_package_name.md) |
 | M29 | Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`) | Hardening & Parity | Done | `PVTI_lAHOD-xmQM4Br351zhKQXJA` | [M29_exact_task_board_project_links.md](../tasks/M29_exact_task_board_project_links.md) |
-| M30 | `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPUU` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M31 | CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPYA` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M32 | Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPcI` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M33 | TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPfA` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M34 | Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPjE` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M35 | Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPm8` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M36 | ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPrY` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
-| M37 | MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) | Hardening & Parity | Ready | `PVTI_lAHOD-xmQM4Br351zhLJPuo` | [TASK_BOARD.md](https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md) |
+| M30 | `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPUU` | [M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md](../tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) |
+| M31 | CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPYA` | [M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md](../tasks/M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md) |
+| M32 | Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPcI` | [M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md](../tasks/M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md) |
+| M33 | TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPfA` | [M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md](../tasks/M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md) |
+| M34 | Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPjE` | [M34_TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md](../tasks/M34_TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md) |
+| M35 | Authenticated Remote Probing (OAuth/Bearer) & `--identify-as` Bait-and-Switch Detection (`TASK-92`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPm8` | [M35_TASK_92_AUTH_REMOTE_PROBING_AND_BAIT_SWITCH.md](../tasks/M35_TASK_92_AUTH_REMOTE_PROBING_AND_BAIT_SWITCH.md) |
+| M36 | ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPrY` | [M36_TASK_93_ANSI_TERMINAL_DECEPTION_AND_UNICODE_FINDINGS.md](../tasks/M36_TASK_93_ANSI_TERMINAL_DECEPTION_AND_UNICODE_FINDINGS.md) |
+| M37 | MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) | Hardening & Parity | Not Done | `PVTI_lAHOD-xmQM4Br351zhLJPuo` | [M37_TASK_85_FREE_MCP_SCHEMA_DRIFT_AND_AGENT_GUIDANCE.md](../tasks/M37_TASK_85_FREE_MCP_SCHEMA_DRIFT_AND_AGENT_GUIDANCE.md) |
 | M38 | Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) | Customer Documentation Portal | Done | `PVTI_lAHOD-xmQM4Br351zhLOM2U` | [M38_web_documentation_portal_and_task_publisher.md](../tasks/M38_web_documentation_portal_and_task_publisher.md) |
-| M39 | Python AST Real-World Rules & Import Aliases (`TASK-102`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvl0M` | [M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md](../tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md) |
-| M40 | Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmAQ` | [M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md](../tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) |
-| M41 | Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmDo` | [M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md](../tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) |
-| M42 | Pro Features Showcase & Comparison Docs in Free (`TASK-107`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmsE` | [M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md](../tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) |
-| M43 | Free MCP Database Guard Pro Gating (`TASK-109-FREE`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvm_M` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](../tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) |
-| M44 | Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvmgk` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) |
-| M45 | Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) | Future | Done | `PVTI_lAHOD-xmQM4Br351zhLvnMQ` | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](../tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) |
+| M39 | Python AST Real-World Rules & Import Aliases (`TASK-102`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvl0M` | [M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md](../tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md) |
+| M40 | Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvmAQ` | [M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md](../tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) |
+| M41 | Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvmDo` | [M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md](../tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) |
+| M42 | Pro Features Showcase & Comparison Docs in Free (`TASK-107`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvmsE` | [M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md](../tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) |
+| M43 | Free MCP Database Guard Pro Gating (`TASK-109-FREE`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvm_M` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](../tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) |
+| M44 | Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvmgk` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](../tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) |
+| M45 | Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) | Feature Realism & Product Alignment | Done | `PVTI_lAHOD-xmQM4Br351zhLvnMQ` | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](../tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) |
+| M46 | Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjAI` | [M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md](../tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) |
+| M47 | Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjFQ` | [M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md](../tasks/M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md) |
+| M48 | Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Partially Done | `PVTI_lAHOD-xmQM4Br351zhMEjKw` | [M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md](../tasks/M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md) |
+| M49 | Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Partially Done | `PVTI_lAHOD-xmQM4Br351zhMEjOY` | [M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md](../tasks/M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md) |
+| M50 | Free `PRO_FEATURE_REQUIRED` Plugin Hooks for `--autofix` and `--explain` (`TASK-88-89-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjTI` | [M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md](../tasks/M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md) |
+| M51 | Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjXY` | [M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md](../tasks/M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md) |
+| M52 | Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjcE` | [M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md](../tasks/M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md) |
+| M53 | Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjic` | [M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md](../tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md) |
 
 ## Documentation Guide
 
