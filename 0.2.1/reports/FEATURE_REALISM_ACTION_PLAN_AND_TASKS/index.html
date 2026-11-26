@@ -1343,6 +1343,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#summary-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#free-only-execution-graph" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1428,12 +1439,12 @@
 <tr>
 <td>M39</td>
 <td><code>TASK-102</code></td>
-<td><code>Ready</code></td>
+<td><code>Done</code></td>
 <td>P0</td>
 <td>S</td>
 <td><code>PVTI_lAHOD-xmQM4Br351zhLvl0M</code></td>
 <td><a href="../../tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES/">M39 spec</a></td>
-<td>Alias-aware <code>visit_Call</code> dispatch with real def-use CWE-22 / CWE-89 / CWE-862 rules in <code>src/verity/scanner/python_ast.py</code>.</td>
+<td>Alias-aware <code>visit_Call</code> dispatch with real def-use CWE-22 / CWE-89 / CWE-862 rules in <code>src/verity/scanner/python_ast.py</code> (<code>4e6399a</code>, <code>650df12</code>).</td>
 </tr>
 <tr>
 <td>M40</td>
@@ -1497,18 +1508,22 @@
 </tr>
 </tbody>
 </table>
+<h2 id="summary-status">Summary Status<a class="headerlink" href="#summary-status" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Free Feature Realism (<code>M39</code>–<code>M45</code>, Board <code>#5</code>):</strong> <strong>7 / 7 (<code>100%</code>) <code>Implemented</code> / <code>Done</code></strong> (<code>M39</code>, <code>M40</code>, <code>M41</code>, <code>M42</code>, <code>M43</code>, <code>M44</code>, <code>M45</code>).</li>
+</ul>
 <h2 id="free-only-execution-graph">Free-Only Execution Graph<a class="headerlink" href="#free-only-execution-graph" title="Permanent link">&para;</a></h2>
 <pre class="mermaid"><code>flowchart TD
-  subgraph Completed["Completed - docs parity, Pro showcase, SARIF gate, and guard decoupling"]
-    M40["M40 - TASK-103-FREE - CLI SARIF Pro gate [Done]"]
-    M41["M41 - TASK-104 - Homepage Tier 1/2 focus [Done]"]
-    M42["M42 - TASK-107 - Pro showcase and comparison [Done]"]
-    M43["M43 - TASK-109-FREE - MCP DB guard gating [Done]"]
-    M44["M44 - TASK-106-FREE - Read-only guard decoupling [Done]"]
-    M45["M45 - TASK-110-FREE - README Tier 1/2 focus [Done]"]
-  end
-  subgraph Ready["Ready - Free engine realism"]
-    M39["M39 - TASK-102 - Python AST real-world rules"]
+  classDef done fill:#e6f4ea,stroke:#1e8e3e,color:#137333
+
+  subgraph Completed["Completed (7 / 7 — 100% Done)"]
+    M39["M39 - TASK-102 - Python AST real-world rules [Done]"]:::done
+    M40["M40 - TASK-103-FREE - CLI SARIF Pro gate [Done]"]:::done
+    M41["M41 - TASK-104 - Homepage Tier 1/2 focus [Done]"]:::done
+    M42["M42 - TASK-107 - Pro showcase and comparison [Done]"]:::done
+    M43["M43 - TASK-109-FREE - MCP DB guard gating [Done]"]:::done
+    M44["M44 - TASK-106-FREE - Read-only guard decoupling [Done]"]:::done
+    M45["M45 - TASK-110-FREE - README Tier 1/2 focus [Done]"]:::done
   end
 
   M41 --&gt; M42
@@ -1520,7 +1535,7 @@
   M43 --&gt; M44</code></pre>
 <h2 id="execution-notes">Execution Notes<a class="headerlink" href="#execution-notes" title="Permanent link">&para;</a></h2>
 <ul>
-<li><strong>Wave 1 (M39 Ready, M40 Done):</strong> M40 landed independently; M39 (<code>TASK-102</code>) remains <code>Ready</code> (6/7 Free tasks Done).</li>
+<li><strong>Wave 1 (Done):</strong> M39 (<code>TASK-102</code>, commits <code>4e6399a</code> / <code>650df12</code>) and M40 (<code>TASK-103-FREE</code>) are both <code>Done</code> (<strong>7 / 7 (<code>100%</code>)</strong> Free tasks <code>Implemented</code> / <code>Done</code>).</li>
 <li><strong>Wave 2 (Done):</strong> M43 consumes the <code>PRO_FEATURE_REQUIRED</code> pattern established by M40.</li>
 <li><strong>Wave 3 (Done):</strong> M44 (<code>bc8dbcb</code> / <code>99e3e70</code>) hardens <code>ReadOnlySafetyGuard</code> and decouples <code>DualPathRouter</code> from hardcoded demo payloads.</li>
 <li><strong>Completed track:</strong> M41 (homepage parity) → M42 (Pro showcase) → M45 (README parity), with M41 → M45 as the direct fallback link.</li>

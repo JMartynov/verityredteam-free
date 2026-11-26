@@ -1564,35 +1564,35 @@ tenant/session ownership check (<code>session_tenant</code>, <code>current_user<
 <td>unit</td>
 <td><code>tests/unit/scanner/test_python_ast.py::test_import_alias_resolution</code>, <code>::test_benign_os_path_join</code></td>
 <td>Aliased imports resolve to canonical dotted names; benign <code>os.path.join</code> stays clean.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 <tr>
 <td>AC-39.2</td>
 <td>unit</td>
 <td><code>tests/unit/scanner/test_python_ast.py::test_cwe22_traversal_flagged</code>, <code>::test_cwe22_traversal_defended</code></td>
 <td>Real def-use traversal is flagged; <code>resolve</code> plus <code>is_relative_to</code> containment is clean.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 <tr>
 <td>AC-39.3</td>
 <td>unit</td>
 <td><code>tests/unit/scanner/test_python_ast.py::test_cwe89_sqli_fstring</code>, <code>::test_cwe89_sqli_parameterized</code></td>
 <td>f-string, <code>.format()</code>, and <code>%</code> interpolation are flagged; <code>Constant</code> parameterized SQL is clean.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 <tr>
 <td>AC-39.4</td>
 <td>unit</td>
 <td><code>tests/unit/scanner/test_python_ast.py::test_cwe862_bola_flagged</code>, <code>::test_cwe862_bola_defended</code></td>
 <td>Tenant-less ID lookup is flagged; ownership-checked lookup is clean.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 <tr>
 <td>AC-39.5</td>
 <td>static</td>
 <td><code>uv run ruff check src tests</code></td>
 <td>Zero lint findings across the touched files.</td>
-<td>Pending</td>
+<td>Verified (Green)</td>
 </tr>
 </tbody>
 </table>
@@ -1602,12 +1602,12 @@ tenant/session ownership check (<code>session_tenant</code>, <code>current_user<
 </code></pre></div>
 <h2 id="delivery-checklist">Delivery Checklist<a class="headerlink" href="#delivery-checklist" title="Permanent link">&para;</a></h2>
 <ul>
-<li>[ ] M39.1 alias map wired into <code>visit_Call</code> with safe attribute-chain rewriting.</li>
-<li>[ ] M39.2 real CWE-22 def-use check replaces the <code>is_traversal</code> string heuristic.</li>
-<li>[ ] M39.3 real CWE-89 rule added with a parameterized-SQL benign control.</li>
-<li>[ ] M39.4 real CWE-862 rule added with an ownership-check benign control.</li>
-<li>[ ] AC-39.1 through AC-39.4 paired tests committed.</li>
-<li>[ ] <code>uv run ruff check src tests</code> clean.</li>
+<li>[x] M39.1 alias map wired into <code>visit_Call</code> with safe attribute-chain rewriting.</li>
+<li>[x] M39.2 real CWE-22 def-use check replaces the <code>is_traversal</code> string heuristic.</li>
+<li>[x] M39.3 real CWE-89 rule added with a parameterized-SQL benign control.</li>
+<li>[x] M39.4 real CWE-862 rule added with an ownership-check benign control.</li>
+<li>[x] AC-39.1 through AC-39.4 paired tests committed.</li>
+<li>[x] <code>uv run ruff check src tests</code> clean.</li>
 </ul>
 
 

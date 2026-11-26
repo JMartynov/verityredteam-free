@@ -2129,7 +2129,7 @@ CI. They deepen coverage without changing the install story.</p>
 <tr>
 <td>Python MCP Source AST Scanner (<code>McpAstScannerEngine</code> - 9 Rules)</td>
 <td>Free</td>
-<td>Traverses handler source for eval, shell, deserialization, traversal, XSS, and BOLA sinks.</td>
+<td>Traverses handler source with alias-aware import resolution (<code>self.imports</code>) and def-use analysis for <code>CWE-22</code>, <code>CWE-89</code>, and <code>CWE-862</code> alongside eval, shell, deserialization, and XSS sinks.</td>
 </tr>
 <tr>
 <td>Polyglot Static AST Extractors (10 Languages)</td>
