@@ -2,7 +2,7 @@
 task_id: M39
 alias: TASK-102
 title: "Python AST Real-World Rules & Import Aliases"
-status: Ready
+status: Done
 priority: P0
 size: S
 estimate_days: 2
@@ -94,11 +94,11 @@ tenant/session ownership check (`session_tenant`, `current_user`, `owner_id`,
 
 | Acceptance Criterion | Test Level | Target File / Function | Description | Status |
 | --- | --- | --- | --- | --- |
-| AC-39.1 | unit | `tests/unit/scanner/test_python_ast.py::test_import_alias_resolution`, `::test_benign_os_path_join` | Aliased imports resolve to canonical dotted names; benign `os.path.join` stays clean. | Pending |
-| AC-39.2 | unit | `tests/unit/scanner/test_python_ast.py::test_cwe22_traversal_flagged`, `::test_cwe22_traversal_defended` | Real def-use traversal is flagged; `resolve` plus `is_relative_to` containment is clean. | Pending |
-| AC-39.3 | unit | `tests/unit/scanner/test_python_ast.py::test_cwe89_sqli_fstring`, `::test_cwe89_sqli_parameterized` | f-string, `.format()`, and `%` interpolation are flagged; `Constant` parameterized SQL is clean. | Pending |
-| AC-39.4 | unit | `tests/unit/scanner/test_python_ast.py::test_cwe862_bola_flagged`, `::test_cwe862_bola_defended` | Tenant-less ID lookup is flagged; ownership-checked lookup is clean. | Pending |
-| AC-39.5 | static | `uv run ruff check src tests` | Zero lint findings across the touched files. | Pending |
+| AC-39.1 | unit | `tests/unit/scanner/test_python_ast.py::test_import_alias_resolution`, `::test_benign_os_path_join` | Aliased imports resolve to canonical dotted names; benign `os.path.join` stays clean. | Verified (Green) |
+| AC-39.2 | unit | `tests/unit/scanner/test_python_ast.py::test_cwe22_traversal_flagged`, `::test_cwe22_traversal_defended` | Real def-use traversal is flagged; `resolve` plus `is_relative_to` containment is clean. | Verified (Green) |
+| AC-39.3 | unit | `tests/unit/scanner/test_python_ast.py::test_cwe89_sqli_fstring`, `::test_cwe89_sqli_parameterized` | f-string, `.format()`, and `%` interpolation are flagged; `Constant` parameterized SQL is clean. | Verified (Green) |
+| AC-39.4 | unit | `tests/unit/scanner/test_python_ast.py::test_cwe862_bola_flagged`, `::test_cwe862_bola_defended` | Tenant-less ID lookup is flagged; ownership-checked lookup is clean. | Verified (Green) |
+| AC-39.5 | static | `uv run ruff check src tests` | Zero lint findings across the touched files. | Verified (Green) |
 
 ## Validation Commands
 
@@ -109,9 +109,9 @@ uv run ruff check src tests
 
 ## Delivery Checklist
 
-- [ ] M39.1 alias map wired into `visit_Call` with safe attribute-chain rewriting.
-- [ ] M39.2 real CWE-22 def-use check replaces the `is_traversal` string heuristic.
-- [ ] M39.3 real CWE-89 rule added with a parameterized-SQL benign control.
-- [ ] M39.4 real CWE-862 rule added with an ownership-check benign control.
-- [ ] AC-39.1 through AC-39.4 paired tests committed.
-- [ ] `uv run ruff check src tests` clean.
+- [x] M39.1 alias map wired into `visit_Call` with safe attribute-chain rewriting.
+- [x] M39.2 real CWE-22 def-use check replaces the `is_traversal` string heuristic.
+- [x] M39.3 real CWE-89 rule added with a parameterized-SQL benign control.
+- [x] M39.4 real CWE-862 rule added with an ownership-check benign control.
+- [x] AC-39.1 through AC-39.4 paired tests committed.
+- [x] `uv run ruff check src tests` clean.

@@ -385,10 +385,7 @@ Scanning the real DVMCP benchmark source produced **6** findings
 (`04_dvmcp_ast_summary.json` reports `{"total_findings": 6}`), confirming the gate fires on
 real-world MCP code, not only on synthetic fixtures.
 
-**How It Solves Your Pain Point:** `verity scan --path` parses Python into an AST and flags
-`eval`/`exec`, `compile`, `shell=True`, `os.system`, unsafe `pickle`/`yaml.load`, path
-traversal, unescaped HTML, and BOLA tenant gaps. Combine with `--fail-on-findings` to block
-a pull request before RCE reaches your agent.
+**How It Solves Your Pain Point:** `verity scan --path` parses Python into an AST (`McpAstScannerEngine`), resolves import aliases via `self.imports`, and runs def-use analysis for `CWE-22` path traversal, `CWE-89` SQL injection, and `CWE-862` BOLA tenant gaps alongside `eval`/`exec`, `compile`, `shell=True`, `os.system`, unsafe `pickle`/`yaml.load`, and unescaped HTML. Combine with `--fail-on-findings` to block a pull request before RCE reaches your agent.
 
 ### 5. Proving Agent Vulnerability vs. Defense in 5 Seconds (Zero Docker, Zero API Keys)
 
@@ -599,7 +596,7 @@ These thirteen capabilities are requested by teams that already run Tier 1 in CI
 | Client Config Hardening & Lossless JSONC Exporter (`export-config`) | Free | Rewrites risky client configs while preserving comments and key order. |
 | Bidirectional JSON-RPC Stdio Security Proxy (`McpStdioProxy`) | Free | Enforces policy on tool calls in flight between an IDE client and an untrusted server. |
 | Global npm/npx Unconfigured Server Discovery (`--scan-global`) | Free | Finds MCP packages installed on the workstation but never registered with any client. |
-| Python MCP Source AST Scanner (`McpAstScannerEngine` - 9 Rules) | Free | Traverses handler source for eval, shell, deserialization, traversal, XSS, and BOLA sinks. |
+| Python MCP Source AST Scanner (`McpAstScannerEngine` - 9 Rules) | Free | Traverses handler source with alias-aware import resolution (`self.imports`) and def-use analysis for `CWE-22`, `CWE-89`, and `CWE-862` alongside eval, shell, deserialization, and XSS sinks. |
 | Polyglot Static AST Extractors (10 Languages) | Free | Extracts tool definitions from non-Python MCP servers so fingerprinting works across runtimes. |
 | Multi-Server Tool Collision & Shadowing Detector (`ConflictDetector`) | Free | Flags two servers advertising the same tool name with different behaviour. |
 | Live Network TCP/HTTP/SSE MCP Listener Scanner (`network-scan`) | Free | Discovers unadvertised MCP endpoints listening on the local network. |

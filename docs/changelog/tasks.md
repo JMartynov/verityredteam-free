@@ -57,11 +57,11 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M36** — ANSI Terminal Deception & Unicode BiDi/Tag-Char Findings (`TASK-93`) (Ready)
 - **M37** — MCP Schema-Handler Drift & Structured Agent Guidance (`TASK-85`) (Ready)
 - **M38** — Web Documentation Portal & Automated Task-to-Docs Pipeline (`TASK-94`) (Done)
-- **M39** — Python AST Real-World Rules & Import Aliases (`TASK-102`) (Ready)
+- **M39** — Python AST Real-World Rules & Import Aliases (`TASK-102`) (Done)
 - **M40** — Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`) (Done)
 - **M41** — Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`) (Done)
 - **M42** — Pro Features Showcase & Comparison Docs in Free (`TASK-107`) (Done)
-- **M43** — Free MCP Database Guard Pro Gating (`TASK-109-FREE`) (Ready)
+- **M43** — Free MCP Database Guard Pro Gating (`TASK-109-FREE`) (Done)
 - **M44** — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) (Done)
 - **M45** — Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) (Done)
 
@@ -107,11 +107,11 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-93 | M36 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-85 | M37 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-94 | M38 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-102 | M39 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-102 | M39 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-103 | M40 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-104 | M41 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-107 | M42 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-109 | M43 | Ready | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-109 | M43 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-106 | M44 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-110 | M45 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 
@@ -424,7 +424,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M39 — Python AST Real-World Rules & Import Aliases (`TASK-102`)
 
 - **Phase:** Future
-- **Status:** Ready
+- **Status:** Done
 - **Scope:** Alias resolution in `visit_Call` plus real def-use CWE-22 / CWE-89 / CWE-862 rules in `src/verity/scanner/python_ast.py`
 - **Task references:** TASK-102
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
@@ -456,7 +456,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M43 — Free MCP Database Guard Pro Gating (`TASK-109-FREE`)
 
 - **Phase:** Future
-- **Status:** Ready
+- **Status:** Done
 - **Scope:** `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py`
 - **Task references:** TASK-109
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`

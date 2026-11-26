@@ -54,7 +54,7 @@ CI. They deepen coverage without changing the install story.
 | Client Config Hardening & Lossless JSONC Exporter (`export-config`) | Free | Rewrites risky client configs while preserving comments and key order. |
 | Bidirectional JSON-RPC Stdio Security Proxy (`McpStdioProxy`) | Free | Enforces policy on tool calls in flight between an IDE client and an untrusted server. |
 | Global npm/npx Unconfigured Server Discovery (`--scan-global`) | Free | Finds MCP packages installed on the workstation but never registered with any client. |
-| Python MCP Source AST Scanner (`McpAstScannerEngine` - 9 Rules) | Free | Traverses handler source for eval, shell, deserialization, traversal, XSS, and BOLA sinks. |
+| Python MCP Source AST Scanner (`McpAstScannerEngine` - 9 Rules) | Free | Traverses handler source with alias-aware import resolution (`self.imports`) and def-use analysis for `CWE-22`, `CWE-89`, and `CWE-862` alongside eval, shell, deserialization, and XSS sinks. |
 | Polyglot Static AST Extractors (10 Languages) | Free | Extracts tool definitions from non-Python MCP servers so fingerprinting works across runtimes. |
 | Multi-Server Tool Collision & Shadowing Detector (`ConflictDetector`) | Free | Flags two servers advertising the same tool name with different behaviour. |
 | Live Network TCP/HTTP/SSE MCP Listener Scanner (`network-scan`) | Free | Discovers unadvertised MCP endpoints listening on the local network. |
