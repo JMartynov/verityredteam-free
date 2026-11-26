@@ -231,11 +231,19 @@ def _split_command_line(line: str) -> list[str] | None:
     if len(tokens) >= 2 and tokens[0] == "uv" and tokens[1] == "run":
         tokens = tokens[2:]
     elif tokens and tokens[0] == "uvx":
-        try:
-            start = tokens.index("verity")
-        except ValueError:
-            return None
-        tokens = tokens[start:]
+        if "verity" in tokens:
+            tokens = tokens[tokens.index("verity") :]
+        else:
+            match_idx: int | None = None
+            for idx, tok in enumerate(tokens[1:], start=1):
+                if tokens[idx - 1] == "--from":
+                    continue
+                if tok == "verity-redteam-core" or tok.startswith("verity-redteam-core=="):
+                    match_idx = idx
+                    break
+            if match_idx is None:
+                return None
+            tokens = ["verity", *tokens[match_idx + 1 :]]
 
     if not tokens or tokens[0] != "verity":
         return None
@@ -311,6 +319,10 @@ def test_readme_cli_commands_are_valid() -> None:
         try:
             parser.parse_args(tokens[1:])
         except SystemExit as exc:  # argparse raises SystemExit on invalid invocations
+            if exc.code == 0 and any(
+                flag in tokens[1:] for flag in ("-V", "--version", "-h", "--help")
+            ):
+                continue
             pytest.fail(
                 f"README documents an invalid CLI command: {' '.join(tokens)!r} "
                 f"(argparse exit code {exc.code})"
@@ -339,6 +351,10 @@ def test_readme_yaml_snippet_commands_are_valid() -> None:
         try:
             parser.parse_args(tokens[1:])
         except SystemExit as exc:  # argparse raises SystemExit on invalid invocations
+            if exc.code == 0 and any(
+                flag in tokens[1:] for flag in ("-V", "--version", "-h", "--help")
+            ):
+                continue
             pytest.fail(
                 f"README documents an invalid YAML CLI command: {' '.join(tokens)!r} "
                 f"(argparse exit code {exc.code})"
@@ -366,6 +382,8 @@ def test_readme_documents_pypi_quickstart() -> None:
     text = README_PATH.read_text(encoding="utf-8")
     assert "pip install verity-redteam-core" in text
     assert "uvx --from verity-redteam-core" in text
+    assert "uvx verity-redteam-core scan" in text
+    assert "brew install JMartynov/tap/verity" in text
 
     summary = "<summary>Install from source (contributors)</summary>"
     assert summary in text
@@ -374,6 +392,8 @@ def test_readme_documents_pypi_quickstart() -> None:
     details_close = text.index("</details>", summary_index)
     assert details_open < summary_index < details_close
     assert text.index("pip install verity-redteam-core") < details_open
+    assert text.index("uvx verity-redteam-core scan") < details_open
+    assert text.index("brew install JMartynov/tap/verity") < details_open
     assert "dist/*.whl" in text[details_open:details_close]
 
 

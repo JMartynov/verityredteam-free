@@ -28,6 +28,7 @@ ALL_WORKFLOW_PATHS = (
     WORKFLOWS_DIR / "full-tests.yml",
     WORKFLOWS_DIR / "workflow.yaml",
     WORKFLOWS_DIR / "e2e-containers.yml",
+    WORKFLOWS_DIR / "homebrew-tap.yml",
 )
 CHECKOUT_ACTION = "actions/checkout"
 SETUP_UV_ACTION = "astral-sh/setup-uv"
@@ -39,11 +40,12 @@ EXPECTED_JOB_NAMES = {
     "full-tests",
     "pypi-publish",
     "e2e-containers",
+    "update-homebrew-tap",
 }
 RELEASE_FIXTURE_PATH = (
     Path(__file__).resolve().parent / "fixtures" / "gh_release_v0.2.0.json"
 )
-KNOWN_TRIGGERS = {"push", "release", "workflow_dispatch"}
+KNOWN_TRIGGERS = {"push", "release", "workflow_dispatch", "workflow_run"}
 PUBLISH_ACTION = "pypa/gh-action-pypi-publish"
 SAMPLE_RELEASE_TAG = "v0.2.0"
 
@@ -467,3 +469,24 @@ def test_workflows_parse_and_expose_expected_jobs() -> None:
         found.update(name for name in jobs if isinstance(name, str))
     missing = EXPECTED_JOB_NAMES - found
     assert not missing, missing
+
+
+def test_homebrew_tap_workflow_contract() -> None:
+    """AC-30.4: Verify .github/workflows/homebrew-tap.yml triggers, pins, and tap publishing."""
+    tap_path = WORKFLOWS_DIR / "homebrew-tap.yml"
+    assert tap_path.is_file(), "homebrew-tap.yml must exist"
+    raw_text = tap_path.read_text(encoding="utf-8")
+    workflow_data = load_workflow(tap_path)
+    raw_on = _raw_on(workflow_data)
+    assert isinstance(raw_on, dict), "homebrew-tap.yml must define 'on' mapping"
+    assert "workflow_dispatch" in raw_on
+    wf_run = raw_on.get("workflow_run")
+    assert isinstance(wf_run, dict), "homebrew-tap.yml must define on.workflow_run"
+    assert wf_run.get("workflows") == ["Publish to PyPI"]
+    assert wf_run.get("types") == ["completed"]
+
+    assert EXPECTED_CHECKOUT_REF in _iter_uses(workflow_data)
+    assert EXPECTED_SETUP_UV_REF in _iter_uses(workflow_data)
+    assert "scripts/generate_homebrew_formula.py" in raw_text
+    assert "HOMEBREW_TAP_TOKEN" in raw_text
+    assert "JMartynov/homebrew-tap" in raw_text

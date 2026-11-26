@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import json
+import tomllib
 from pathlib import Path
 
+import pytest
+
+import verity
 from verity import cli
 from verity.reporting import (
     render_scan_html,
@@ -231,3 +235,25 @@ def test_cli_test_demo_single_target_passes(capsys):
     captured = capsys.readouterr()
     assert exit_code == 0
     assert "PASS" in captured.out
+
+
+def test_pyproject_exposes_dual_uvx_scripts_and_urls() -> None:
+    pyproject_path = Path(__file__).resolve().parents[2] / "pyproject.toml"
+    with pyproject_path.open("rb") as handle:
+        project = tomllib.load(handle)["project"]
+    scripts = project["scripts"]
+    assert scripts["verity"] == "verity.cli:main"
+    assert scripts["verity-redteam-core"] == "verity.cli:main"
+    urls = project["urls"]
+    for key in ("Homepage", "Repository", "Documentation", "Issues"):
+        assert urls[key].startswith("https://")
+
+
+@pytest.mark.parametrize("flag", ["--version", "-V"])
+def test_cli_version_flags_exit_zero(capsys: pytest.CaptureFixture[str], flag: str) -> None:
+    parser = cli.build_parser()
+    with pytest.raises(SystemExit) as exc:
+        parser.parse_args([flag])
+    assert exc.value.code == 0
+    captured = capsys.readouterr()
+    assert captured.out == f"verity {verity.__version__}\n"
