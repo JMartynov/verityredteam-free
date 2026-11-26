@@ -1256,6 +1256,10 @@ def _phase_for(number: int) -> str:
         return "Hardening & Parity"
     if number == 38:
         return "Customer Documentation Portal"
+    if 39 <= number <= 45:
+        return "Feature Realism & Product Alignment"
+    if number >= 46:
+        return "Next-Gen SAST, UX & Supply-Chain Roadmap"
     return "Future"
 
 
@@ -1303,9 +1307,9 @@ def _phase_bullets(milestones: list[Milestone], low: int, high: int) -> list[str
     return lines
 
 
-def _roadmap_header() -> list[str]:
+def _roadmap_header(max_num: int) -> list[str]:
     return [
-        "# Milestone Roadmap (M01-M38)",
+        f"# Milestone Roadmap (M01-M{max_num:02d})",
         "",
         "This roadmap is generated from `TASK_BOARD.md` by",
         "`scripts/build_docs_portal.py`. It reflects the shipped milestones,",
@@ -1313,7 +1317,7 @@ def _roadmap_header() -> list[str]:
         "",
         "## Executive Overview",
         "",
-        "Verity Red Team evolved in four arcs. The first arc produced a",
+        "Verity Red Team evolved in six arcs. The first arc produced a",
         "standalone, stdlib-only MCP server and a zero-Docker workstation",
         "scanner — the minimum viable product that proves value in seconds.",
         "The second arc hardened the open-core boundary, shipped the free CLI,",
@@ -1322,9 +1326,16 @@ def _roadmap_header() -> list[str]:
         "rug-pull detection, credential shapes, dialect-aware SQL guards, and",
         "container-verified end-to-end scenarios. The fourth arc turns the",
         "entire engineering record into a published documentation portal so",
-        "adoption no longer depends on reading the source tree.",
+        "adoption no longer depends on reading the source tree. The fifth arc",
+        "aligns the product with reality: real-world Python AST rules, honest",
+        "Pro CLI/MCP gates, and Tier 1/2 homepage and README parity. The sixth",
+        "arc charts the next generation of the product: a unified `verity",
+        "scan` CLI with SBOM and drift reporting, a local web viewer,",
+        "interactive `init`/`fix` flows, opt-in semantic alignment, plugin",
+        "hooks, Sigstore-verified snapshots, multi-framework agent SAST, and",
+        "server reputation scoring.",
         "",
-        "The invariant across all four arcs is the runtime abstraction",
+        "The invariant across all six arcs is the runtime abstraction",
         "barrier: core never imports enterprise code, and enterprise",
         "capabilities register through the `verity.plugins` entry point.",
         "Every milestone below respects that boundary, which is why the",
@@ -1349,6 +1360,14 @@ def _roadmap_header() -> list[str]:
         "4. **Knowledge separation (M38).** The documentation portal and the",
         "   task-to-docs pipeline decouple what the engine does from how a",
         "   customer learns about it.",
+        "5. **Product realism (M39-M45).** Real-world Python AST rules, honest",
+        "   Pro CLI/MCP gates, and Tier 1/2 homepage and README parity keep",
+        "   the advertised capability identical to the shipped behaviour.",
+        "6. **Next-generation separation (M46-M53).** The unified `verity",
+        "   scan` CLI (SBOM and drift), local web viewer, interactive",
+        "   `init`/`fix`, opt-in semantic alignment, plugin hooks,",
+        "   Sigstore-verified snapshots, multi-framework agent SAST, and",
+        "   reputation scoring extend the engine without breaking it.",
         "",
         "## Capability Evolution",
         "",
@@ -1379,7 +1398,17 @@ def _roadmap_header() -> list[str]:
         '        D1["MkDocs Portal"]',
         '        D2["Task-to-Docs Pipeline"]',
         "    end",
-        "    P1 --> P2 --> P3 --> P4",
+        '    subgraph P5["Feature Realism (M39-M45)"]',
+        '        R1["Python AST Realism"]',
+        '        R2["Honest Pro Gates"]',
+        '        R3["Homepage/README Parity"]',
+        "    end",
+        '    subgraph P6["Next-Gen Roadmap (M46-M53)"]',
+        '        N1["Unified scan CLI (SBOM & Drift)"]',
+        '        N2["Web Viewer & Interactive fix"]',
+        '        N3["Plugins, Sigstore & Reputation"]',
+        "    end",
+        "    P1 --> P2 --> P3 --> P4 --> P5 --> P6",
         "```",
         "",
     ]
@@ -1387,6 +1416,7 @@ def _roadmap_header() -> list[str]:
 
 def _phase_sections(milestones: list[Milestone]) -> list[str]:
     lines: list[str] = ["## Phase Breakdown", ""]
+    max_num = max((m.number for m in milestones), default=53)
     phases = [
         (
             "Phase 1 — Foundation (M01-M06)",
@@ -1414,6 +1444,22 @@ def _phase_sections(milestones: list[Milestone]) -> list[str]:
             38,
             38,
             "MkDocs Material portal plus the automated task-to-docs pipeline.",
+        ),
+        (
+            "Phase 5 — Feature Realism & Product Alignment (M39-M45)",
+            39,
+            45,
+            "Real-world Python AST rules, honest Pro CLI/MCP gates, Tier 1/2",
+            "homepage and README parity, and Pro feature showcase.",
+        ),
+        (
+            "Phase 6 — Next-Gen SAST, UX & Supply-Chain Roadmap (M46-M53)",
+            46,
+            max(53, max_num),
+            "Unified verity scan CLI (SBOM & drift), local web viewer,",
+            "interactive init/fix, opt-in semantic alignment, plugin hooks,",
+            "snapshot Sigstore verification, multi-framework agent SAST, and",
+            "reputation scoring.",
         ),
     ]
     for title, low, high, *prose in phases:
@@ -1467,11 +1513,12 @@ def _roadmap_docs_links() -> list[str]:
 def render_roadmap() -> str:
     """Render ``docs/roadmap/index.md`` deterministically."""
     milestones = _parse_milestones(_read_task_board())
-    lines = _roadmap_header()
+    max_num = max((m.number for m in milestones), default=53)
+    lines = _roadmap_header(max_num)
     lines.extend(_phase_sections(milestones))
     lines.extend(
         [
-            "## Milestone Table (M01-M38)",
+            f"## Milestone Table (M01-M{max_num:02d})",
             "",
             "| # | Title | Phase | Status | Project Item | Spec |",
             "| --- | --- | --- | --- | --- | --- |",
@@ -1520,7 +1567,7 @@ def _verification_command(number: int) -> str:
     return "uv run pytest tests/ -q && uv run ruff check src tests"
 
 
-def _release_notes() -> list[str]:
+def _release_notes(max_num: int) -> list[str]:
     return [
         "## Release Notes",
         "",
@@ -1539,7 +1586,7 @@ def _release_notes() -> list[str]:
         "air-gapped behaviour, and the reporting/parity guards that keep the",
         "documentation honest.",
         "",
-        "### Continuous Engineering Ledger (M12-M38)",
+        f"### Continuous Engineering Ledger (M12-M{max_num:02d})",
         "",
         "Every change after the 0.2.0 cut lands as a tracked milestone:",
         "",
@@ -1623,9 +1670,10 @@ def _upgrade_guide() -> list[str]:
 def render_changelog() -> str:
     """Render ``docs/changelog/tasks.md`` deterministically."""
     milestones = _parse_milestones(_read_task_board())
+    max_num = max((m.number for m in milestones), default=53)
     task_ids = _task_file_ids()
     lines = [
-        "# Task Changelog (TASK-01 - TASK-94)",
+        f"# Task Changelog (M01 - M{max_num:02d})",
         "",
         "This changelog is generated from `TASK_BOARD.md` and",
         "`docs/tasks/*.md` by `scripts/build_docs_portal.py`. It merges the",
@@ -1642,7 +1690,7 @@ def render_changelog() -> str:
                 "",
             ]
         )
-    lines.extend(_release_notes())
+    lines.extend(_release_notes(max_num))
     lines.extend(_ledger_bullets(milestones))
     lines.extend(_verification_matrix(milestones))
     lines.extend(_detailed_notes(milestones))
