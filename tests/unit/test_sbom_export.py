@@ -7,6 +7,12 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
+
+from verity import cli
+from verity.discovery.models import ClientType, ServerAuditRecord
+from verity.mcp_server.handlers.legacy import LegacyToolsHandlerMixin
+from verity.mcp_server.handlers.security_scan import SecurityScanHandlerMixin
+from verity.mcp_server.schemas import UNIFIED_TOOL_DEFINITIONS
 from verity.reporting.sbom import (
     build_compliance_scorecard,
     build_inventory_snapshot,
@@ -15,12 +21,6 @@ from verity.reporting.sbom import (
     render_scan_cyclonedx,
     render_scan_spdx,
 )
-
-from verity import cli
-from verity.discovery.models import ClientType, ServerAuditRecord
-from verity.mcp_server.handlers.legacy import LegacyToolsHandlerMixin
-from verity.mcp_server.handlers.security_scan import SecurityScanHandlerMixin
-from verity.mcp_server.schemas import UNIFIED_TOOL_DEFINITIONS
 
 
 def _sample_records() -> list[ServerAuditRecord]:
