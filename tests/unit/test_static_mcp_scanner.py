@@ -108,11 +108,12 @@ def test_scan_path_traversal_detection(tmp_path: Path) -> None:
     """Detect unvalidated path traversal breakout in path traversal fixture."""
     fixture_path = tmp_path / "server.py"
     fixture_path.write_text(
-        'if profile == "vulnerable":\n'
-        "    pass\n"
+        "import os\n\n"
+        "@mcp.tool()\n"
         "def tool_read(path: str):\n"
-        "    if is_traversal:\n"
-        '        return "external_files path_traversal"\n',
+        '    target = os.path.join("/var/data", path)\n'
+        '    with open(target, "r", encoding="utf-8") as fh:\n'
+        "        return fh.read()\n",
         encoding="utf-8",
     )
     findings = scan_python_file(str(fixture_path))
@@ -127,11 +128,9 @@ def test_scan_bola_broken_authorization_detection(tmp_path: Path) -> None:
     """Detect broken object level authorization in confused deputy fixture."""
     fixture_path = tmp_path / "server.py"
     fixture_path.write_text(
-        'session_tenant = "t1"\n'
-        'target_tenant = "t2"\n'
-        "def tool_access():\n"
-        "    if is_cross_tenant:\n"
-        '        return "bola_violation"\n',
+        "@mcp.tool()\n"
+        "def tool_access(doc_id: str, session):\n"
+        "    return session.get_document(doc_id)\n",
         encoding="utf-8",
     )
     findings = scan_python_file(str(fixture_path))
