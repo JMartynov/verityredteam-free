@@ -2,7 +2,7 @@
 
 - **Task ID**: `M21`
 - **Priority**: `P1` (Master Rank `#10`, Track B — Simple Fixes, Docs & CI Hygiene)
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: `M9`, `M10`, `M11`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
 - **GitHub Project #5**: [Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)

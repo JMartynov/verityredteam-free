@@ -26,7 +26,7 @@ This task implements only the Free gating behaviour.
 
 | File | Change |
 | --- | --- |
-| `src/verity/mcp_server/handlers/database.py` | Edition gate for the two Pro-only actions |
+| `src/verity/mcp_server/handlers/database_guard.py` | Edition gate for the two Pro-only actions |
 | `tests/unit/mcp_server/test_database_guard_pro_gating.py` | Gate and benign Free-action tests |
 
 Out of scope: the Pro guard implementations themselves and any other MCP tool.

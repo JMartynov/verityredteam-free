@@ -2,7 +2,7 @@
 
 - **Task ID**: `M13`
 - **Priority**: `P1` (Master Rank `#2`, Track A — Product & Customer Value)
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: `M8`, `M11` (and pairs cleanly with `M12` for remote streaming MCP servers)
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
 - **GitHub Project #5**: [Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)

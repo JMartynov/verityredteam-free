@@ -2,7 +2,7 @@
 
 - **Task ID**: `M17`
 - **Priority**: `P2` (Master Rank `#6`, Track A — Product & Customer Value)
-- **Status**: `Todo`
+- **Status**: `Done`
 - **Dependencies**: `M3`, `M5`
 - **Target Repository**: `/Users/ivan/Project/3t.tools.intellij/verityredteam-free` (`verity-redteam-core`)
 - **GitHub Project #5**: [Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)
