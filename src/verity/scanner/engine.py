@@ -5,7 +5,9 @@ from __future__ import annotations
 import logging
 import time
 from collections.abc import Sequence
+from dataclasses import replace
 from pathlib import Path
+from typing import Any
 
 from verity.scanner.models import AstFinding, ScannerSeverity, ScanReport
 from verity.scanner.python_ast import scan_python_file
@@ -45,8 +47,17 @@ class McpAstScannerEngine:
         self.min_severity = min_severity
         self.excluded_dirs = set(excluded_dirs) if excluded_dirs else IGNORE_DIRS
 
-    def scan_path(self, target_path: str | Path) -> ScanReport:
+    def scan_path(
+        self,
+        target_path: str | Path,
+        *,
+        project_root: Path | None = None,
+        ignore_matcher: Any | None = None,
+    ) -> ScanReport:
         """Scan a specific file or recursively scan a directory for vulnerabilities."""
+        if project_root is not None:
+            from verity.baseline.paths import canonicalize_path
+
         start_time = time.perf_counter()
         target = Path(target_path).resolve()
 
@@ -55,12 +66,17 @@ class McpAstScannerEngine:
         error_count = 0
 
         if target.is_file():
-            files_to_scan = [target]
+            if ignore_matcher is not None and ignore_matcher.is_ignored(target, is_dir=False):
+                files_to_scan = []
+            else:
+                files_to_scan = [target]
         elif target.is_dir():
             files_to_scan = []
             for p in sorted(target.rglob("*.py")):
-                # Check exclusions
-                if any(ignored in p.parts for ignored in self.excluded_dirs):
+                if ignore_matcher is not None:
+                    if ignore_matcher.is_ignored(p, is_dir=False):
+                        continue
+                elif any(ignored in p.parts for ignored in self.excluded_dirs):
                     continue
                 files_to_scan.append(p)
         else:
@@ -75,11 +91,22 @@ class McpAstScannerEngine:
         min_rank = SEVERITY_ORDER[self.min_severity]
 
         for file_path in files_to_scan:
-            scanned_files.append(str(file_path))
+            scanned_files.append(
+                canonicalize_path(file_path, project_root=project_root)
+                if project_root is not None
+                else str(file_path)
+            )
             try:
                 findings = scan_python_file(file_path)
                 for f in findings:
                     if SEVERITY_ORDER[f.severity] >= min_rank:
+                        if project_root is not None:
+                            f = replace(
+                                f,
+                                file_path=canonicalize_path(
+                                    f.file_path, project_root=project_root
+                                ),
+                            )
                         all_findings.append(f)
             except Exception as e:
                 logger.warning(f"Error scanning file {file_path}: {e}")

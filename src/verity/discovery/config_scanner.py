@@ -326,6 +326,31 @@ class MultiClientConfigScanner:
         return discovered
 
     @classmethod
+    def discover_workspace_configs(
+        cls,
+        root_path: str | Path,
+        ignore_matcher: Any | None = None,
+    ) -> list[Path]:
+        """Recursively discover workspace-local MCP configuration files."""
+        from verity.baseline.ignore import DEFAULT_IGNORE_DIRS
+
+        root = Path(root_path).resolve()
+        candidate_names = {".mcp.json", "mcp.json", "claude_desktop_config.json"}
+        discovered: list[Path] = []
+
+        for path in sorted(root.rglob("*")):
+            if not path.is_file() or path.name not in candidate_names:
+                continue
+            if ignore_matcher is not None:
+                if ignore_matcher.is_ignored(path, is_dir=False):
+                    continue
+            elif any(part in DEFAULT_IGNORE_DIRS for part in path.parts[:-1]):
+                continue
+            discovered.append(path)
+
+        return discovered
+
+    @classmethod
     def scan_all(
         cls,
         target_clients: list[ClientType] | None = None,
