@@ -526,8 +526,8 @@ def test_yaml_configs_parsed_and_scanned(
     assert report["summary"]["scanned_files_count"] == 1
 
 
-def test_package_version_is_0_2_1() -> None:
-    assert verity.__version__ == "0.2.1"
+def test_package_version_is_0_2_2() -> None:
+    assert verity.__version__ == "0.2.2"
 
 
 def test_default_active_bridge_template_parses() -> None:

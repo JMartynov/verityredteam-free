@@ -19,7 +19,7 @@ ENV PATH="/opt/verity-venv/bin:$PATH"
 COPY .build_dist /tmp/dist
 
 RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
-        /opt/verity-venv/bin/pip install --no-cache-dir "verity-redteam-core==0.2.1"; \
+        /opt/verity-venv/bin/pip install --no-cache-dir "verity-redteam-core==0.2.2"; \
     else \
         /opt/verity-venv/bin/pip install --no-cache-dir /tmp/dist/*.whl; \
     fi

@@ -41,9 +41,9 @@ $ uvx --from verity-redteam-core verity scan --offline
 Pin a version in automation:
 
 ~~~bash
-$ uvx verity-redteam-core==0.2.1 scan --path . --fail-on-findings
+$ uvx verity-redteam-core==0.2.2 scan --path . --fail-on-findings
 # Or with --from:
-$ uvx --from verity-redteam-core==0.2.1 verity scan --path . --fail-on-findings
+$ uvx --from verity-redteam-core==0.2.2 verity scan --path . --fail-on-findings
 ~~~
 
 ## Install with `pip`
@@ -54,7 +54,7 @@ Use a virtual environment or the CI runner's managed environment.
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ python -m pip install --upgrade pip
-$ python -m pip install "verity-redteam-core==0.2.1"
+$ python -m pip install "verity-redteam-core==0.2.2"
 $ verity scan --help
 ~~~
 
@@ -69,7 +69,7 @@ $ python -m pip install --upgrade verity-redteam-core
 ~~~bash
 $ uv tool install verity-redteam-core
 $ uv tool list
-verity-redteam-core v0.2.1
+verity-redteam-core v0.2.2
 
 $ verity scan --help
 ~~~
@@ -88,7 +88,7 @@ Install Verity on macOS or Linux via the official tap [`JMartynov/homebrew-tap`]
 ~~~bash
 $ brew install JMartynov/tap/verity
 $ verity --version
-verity 0.2.1
+verity 0.2.2
 $ verity test --demo
 ~~~
 
@@ -117,7 +117,7 @@ $ docker run --rm \
     -v "$PWD:/work" \
     -w /work \
     python:3.12-slim \
-    sh -c "pip install verity-redteam-core==0.2.1 && verity scan --path . --format json"
+    sh -c "pip install verity-redteam-core==0.2.2 && verity scan --path . --format json"
 ~~~
 
 For CI, pin the image digest instead of the tag.
@@ -138,7 +138,7 @@ Build an offline wheel for transfer:
 ~~~bash
 $ uv build
 $ ls dist
-verity_redteam_core-0.2.1-py3-none-any.whl
+verity_redteam_core-0.2.2-py3-none-any.whl
 ~~~
 
 ## Verify the installation
@@ -147,7 +147,7 @@ verity_redteam_core-0.2.1-py3-none-any.whl
 $ verity scan --offline
 $ verity test --demo
 $ python -c "import verity; print(verity.__version__)"
-0.2.1
+0.2.2
 ~~~
 
 ---
@@ -289,7 +289,7 @@ $ docker run --rm \
     -v "$PWD:/work" \
     -w /work \
     python:3.12-slim \
-    sh -c "pip install verity-redteam-core==0.2.1 && verity scan --path . --format json"
+    sh -c "pip install verity-redteam-core==0.2.2 && verity scan --path . --format json"
 ~~~
 
 ### 6. IDE does not list `verity` as an MCP server

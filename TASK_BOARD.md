@@ -4,8 +4,8 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), CI & Brownfield Baselines (`M31`), Docs Portal (`M38`), Realism (`M39`–`M45`); Queued — Wave 1 Adoption (`M32`–`M37`), Next Wave (`M46`–`M53`)  
-> **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Released (`M7`–`M11`)  
+> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), CI & Brownfield Baselines (`M31`), Docs Portal (`M38`), Realism (`M39`–`M45`), Unified Scan CLI (`M46`); Queued — Wave 1 Adoption (`M32`–`M37`), Next Wave (`M47`–`M53`)  
+> **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` (`M7`–`M11`) / `v0.2.1` (`M12`–`M45`) / `v0.2.2` (`M46`)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
 
@@ -97,14 +97,13 @@ flowchart TD
 
 ### Low Priority (`P2`) Queue (`Not Done`)
 
-- `M46` — Unified `verity scan` CLI `--scanners`, SBOM, OWASP, inventory drift
 - `M53` — Pre-Boot Maintainer & Package Reputation Scoring
 
 ### Grouped by Decisions / Target Files / Purposes
 
 1. *Group A — Zero-Friction Distribution & CI/CD Adoption* (`M30` [Done], `M31` [Done], `M32`, `M48`)
 2. *Group B — Multi-Language & Multi-Framework SAST Expansion* (`M33`, `M34`, `M52`, `M39` [Done])
-3. *Group C — Transport, Deception & Supply-Chain Hardening* (`M35`, `M36`, `M46`, `M51`, `M53`, `M44` [Done])
+3. *Group C — Transport, Deception & Supply-Chain Hardening* (`M35`, `M36`, `M46` [Done], `M51`, `M53`, `M44` [Done])
 4. *Group D — Agent Guidance, Local Viewer & Opt-In Advisory Hooks* (`M37`, `M47`, `M49`, `M50`, `M40` [Done], `M43` [Done])
 5. *Group E — Product Documentation & Open-Core Foundation* (`M1`–`M29` [Done], `M38` [Done], `M41`–`M42` [Done], `M45` [Done])
 
@@ -164,7 +163,7 @@ flowchart TD
 | **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Done` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
 | **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Done` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
 | **M45** | **Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)** | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | `Done` | [View Item #M45](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvnMQ`) |
-| **M46** | **Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)** | 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift | [M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) | `Not Done` | [View Item #M46](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjAI`) |
+| **M46** | **Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)** | 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift | [M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) | `Done` | [View Item #M46](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjAI`) |
 | **M47** | **Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`)** | Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, `ViewerRegistry` | [M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md](docs/tasks/M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md) | `Not Done` | [View Item #M47](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjFQ`) |
 | **M48** | **Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`)** | Lossless `JsoncPatcher`, `AtomicBackupManager` rollback, `verity init` wizard & `verity fix` dry-run/write config remediation | [M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md](docs/tasks/M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md) | `Partially Done` | [View Item #M48](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjKw`) |
 | **M49** | **Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`)** | Wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, `--llm-assist` | [M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md](docs/tasks/M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md) | `Partially Done` | [View Item #M49](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjOY`) |
@@ -1100,7 +1099,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md`](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjAI`)
 
 **Status & Deliverables**
-- **Status:** `Not Done` (P2, L)
+- **Status:** `Done` (P2, L)
 - 15+ client discovery with JSONC parsing, composable `--scanners`, offline BK-Tree typosquatting, conflicts, and reachability.
 - CycloneDX 1.6 / SPDX 2.3 SBOM export, OWASP MCP Top 10 mapping, and inventory drift flags.
 

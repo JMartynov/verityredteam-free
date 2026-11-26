@@ -26,6 +26,18 @@ credential-shape detection, dialect-aware SQL validation, offline and
 air-gapped behaviour, and the reporting/parity guards that keep the
 documentation honest.
 
+### v0.2.2 — Unified Scan CLI, SBOM & Inventory Drift
+
+Extends `verity scan` with 17-client discovery and JSONC comment
+stripping (`--client`, `--scan-global`), composable `--scanners`,
+offline BK-Tree typosquatting, multi-server conflict detection,
+transitive call-graph reachability (`--call-analysis`, `--reachable-only`,
+`--manifest`), OWASP MCP Top 10 / LLM Top 10 compliance scorecards
+(`--compliance`, `--fail-on-non-compliant`), CycloneDX 1.6 and SPDX 2.3
+SBOM export (`--format cyclonedx|spdx`), inventory drift baselines
+(`--save-inventory-baseline`, `--compare-inventory-baseline`,
+`--fail-on-drift`), and `verity_security_scan` MCP parity.
+
 ### Continuous Engineering Ledger (M12-M53)
 
 Every change after the 0.2.0 cut lands as a tracked milestone:
@@ -64,7 +76,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M43** — Free MCP Database Guard Pro Gating (`TASK-109-FREE`) (Done)
 - **M44** — Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`) (Done)
 - **M45** — Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`) (Done)
-- **M46** — Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) (Not Done)
+- **M46** — Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) (Done)
 - **M47** — Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`) (Not Done)
 - **M48** — Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`) (Partially Done)
 - **M49** — Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`) (Partially Done)
@@ -122,7 +134,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-109 | M43 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-106 | M44 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-110 | M45 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
-| TASK-82 | M46 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-82 | M46 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-83 | M47 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-84 | M48 | Partially Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-87 | M49 | Partially Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
@@ -496,7 +508,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M46 — Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)
 
 - **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
-- **Status:** Not Done
+- **Status:** Done
 - **Scope:** 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift
 - **Task references:** TASK-82
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`

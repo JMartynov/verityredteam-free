@@ -520,10 +520,13 @@ detection catches a server that changes its tools after you approved it.
 
 ## Full Free Capabilities Reference
 
-### Supported AI clients (9)
+### Supported AI clients (17)
 
-`Claude Desktop`, `Cursor`, `VS Code Cline`, `VS Code Roo`, `Continue`, `Windsurf`, `Zed`,
-`LibreChat`, and workspace `.mcp.json` auto-detection.
+`claude_desktop`, `claude_code`, `cursor`, `windsurf`, `zed`, `vscode_cline`, `vscode_roo`,
+`goose`, `continue`, `junie`, `vscode`, `antigravity`, `openhands`, `trae`, `lmstudio`,
+`librechat`, and `workspace` (`.mcp.json`), with JSONC comment/trailing-comma stripping,
+`--client <NAME>` filtering (aliases such as `claude-code`, `cline`, `roo-code`), and
+opt-in `--scan-global` for global npm / `~/.npm/_npx` MCP packages.
 
 ### Static rule screening (`VERITY-STATIC-*`, 13 rules)
 
@@ -557,14 +560,21 @@ detection catches a server that changes its tools after you approved it.
 | `VERITY-AST-CWE-79-XSS` | CWE-79 | HIGH | Unescaped HTML/script injection in output |
 | `VERITY-AST-CWE-862-BOLA` | CWE-862 | HIGH | Missing tenant verification in multi-tenant tools |
 
+### Composable Scanners, Compliance, SBOM & Inventory Drift
+
+- `--scanners` selects comma-separated engines (`config,vuln,secret,ast,taint,typosquat,conflict,all`): offline BK-Tree typosquatting (`--typosquat-threshold 1..3`), multi-server `ConflictDetector` (`TOOL_COLLISION`), and transitive call-graph reachability (`--call-analysis` / `--no-call-analysis`, `--reachable-only`, `--manifest`), with AST/taint deduplication.
+- `--compliance owasp-mcp-top-10` (or `owasp-llm-2025`) attaches additive OWASP MCP/LLM Top 10 fields and computes a compliance scorecard; pair with `--fail-on-non-compliant` to gate CI (`exit 1`).
+- `--save-inventory-baseline`, `--compare-inventory-baseline`, and `--fail-on-drift` (`exit 2` on drift) track server inventory changes independently of M31 finding baselines (`--save-baseline`, `--baseline`, `--fail-on-new`).
+- `verity_security_scan` MCP options mirror CLI parity (`scanners`, `include_reachability`, `format`, `save_inventory_baseline`, `compare_inventory_baseline`, `fail_on_drift`).
+
 ### Output, offline mode & exit codes
 
-- `--format` supports `terminal`, `json`, `markdown`, and `html`; `--output` writes to a file.
+- `--format` supports `terminal`, `json`, `markdown`, `html`, `cyclonedx` (CycloneDX 1.6 SBOM), and `spdx` (SPDX 2.3 SBOM); `--output` writes to a file. SBOM exports run in inventory-only mode by default and enrich `cyclonedx` with `vulnerabilities[]` plus reachability-mapped `analysis.state` when `--scanners vuln` is passed.
 - `--format sarif` [Pro] — In Verity Free, `--format sarif` returns a deterministic `PRO_FEATURE_REQUIRED` JSON payload (`"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`) with exit code 2 and zero partial file writes even when `--output` is supplied; SARIF v2.1.0 export requires `verity-pro`.
 - `--fail-on-severity` / `--fail-on` gates CI at `CRITICAL|HIGH|MEDIUM|LOW|INFO` (`--fail-on-findings` aliases `INFO`); `--path` accepts multiple mixed files (`.py` + `.json`/`.yaml`/`.yml`) and discovers nested monorepo configs.
-- `--save-baseline` / `--baseline` / `--fail-on-new` enable brownfield baseline diffing (`.verity-baseline.json` with pre-redaction `verity:v1:` fingerprints), paired with `.verityignore`, `verity.toml` (`[[ignore]]` / `[[allowlists]]`), and inline `# verity-ignore` / `# nosemgrep` suppressions.
+- `--save-baseline` / `--baseline` / `--fail-on-new` enable brownfield finding baseline diffing (`.verity-baseline.json` with pre-redaction `verity:v1:` fingerprints), paired with `.verityignore`, `verity.toml` (`[[ignore]]` / `[[allowlists]]`), and inline `# verity-ignore` / `# nosemgrep` suppressions.
 - `--offline` disables remote snapshot fetching and uses local caches only.
-- Exit codes: `0` success, `1` findings/new findings exceeding the configured gate (or a failing probe), `2` usage/policy/baseline-schema error or gated Pro-only feature such as SARIF export.
+- Exit codes: `0` success, `1` findings, non-compliant scorecard (`--fail-on-non-compliant`), or new findings exceeding the configured gate (or a failing probe), `2` usage/policy/baseline-schema error, inventory drift (`--fail-on-drift`), or gated Pro-only feature such as SARIF export.
 
 The SQL guard (`SqlSecurityGuard`) is also importable as a library from `verity.mcp_library.sql_guard`.
 
@@ -625,11 +635,14 @@ jobs:
           verity scan --path ./src/my_mcp_server --schema-file vendor_tools.json --fail-on-findings
 ```
 
-For existing ("brownfield") repositories, snapshot a baseline once and fail CI only on new regressions above your severity threshold:
+For existing ("brownfield") repositories, snapshot a finding baseline or server inventory baseline and fail CI on new regressions or inventory drift:
 
 ```bash
 verity scan --path . --save-baseline .verity-baseline.json
 verity scan --path . --baseline .verity-baseline.json --fail-on-new --fail-on-severity HIGH
+verity scan --offline --format cyclonedx --scanners vuln --output bom.cdx.json
+verity scan --offline --save-inventory-baseline .verity-inventory.json
+verity scan --offline --compare-inventory-baseline .verity-inventory.json --fail-on-drift
 ```
 
 Every command in this README was captured from empty containers. See

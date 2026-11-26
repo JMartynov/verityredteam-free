@@ -360,7 +360,7 @@ The CLI and MCP server share one discovery and analysis core, so IDE-driven scan
 
 ~~~bash
 $ uv run python -c "import verity; print(verity.__version__)"
-0.2.1
+0.2.2
 
 $ verity test --target sqlite-basic --demo --format json
 ~~~
@@ -369,7 +369,7 @@ $ verity test --target sqlite-basic --demo --format json
 {
   "schema_version": "1.0",
   "tool": "verity",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "target": {
     "name": "sqlite-basic",
     "cwe": "CWE-89",
@@ -406,7 +406,7 @@ $ verity test --target postgres-basic --demo --format json
 {
   "schema_version": "1.0",
   "tool": "verity",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "target": {
     "name": "postgres-basic",
     "cwe": "CWE-639",
@@ -444,7 +444,7 @@ $ verity test --target code-exec-basic --format json
 {
   "schema_version": "1.0",
   "tool": "verity",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "scan": {
     "target": "code-exec-basic",
     "cwe": "CWE-94",

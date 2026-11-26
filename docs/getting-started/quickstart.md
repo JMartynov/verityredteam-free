@@ -15,7 +15,7 @@ The four tutorials are independent. Tutorial 1 needs no project files.
 ## Requirements
 
 - Python 3.12+ (>=3.12,<3.15)
-- `verity-redteam-core` 0.2.1+
+- `verity-redteam-core` 0.2.2+
 - No network access for Tutorials 1, 3, and 4
 
 ## Install
@@ -23,7 +23,7 @@ The four tutorials are independent. Tutorial 1 needs no project files.
 ~~~bash
 pip install verity-redteam-core
 python -c "import verity; print(verity.__version__)"
-# 0.2.1
+# 0.2.2
 ~~~
 
 Alternative with `uvx`:
@@ -57,7 +57,7 @@ verity scan --path . --format terminal
 ### Step 2. Read the summary
 
 ~~~text
-verity 0.2.1 — scan
+verity 0.2.2 — scan
 root: /Users/ivan
 mode: offline (no live probes)
 
@@ -107,6 +107,19 @@ verity scan --path . --baseline .verity-baseline.json --fail-on-new --fail-on-se
 ~~~
 
 You can also suppress known noise deterministically using `.verityignore` (gitignore globs, `:include .gitignore`, `!negation`), `verity.toml` (`[[ignore]]` with `expires` / `reason` and `[[allowlists]]`), or inline `# verity-ignore` / `# nosemgrep` comments.
+
+### Step 6. Export SBOMs, check OWASP compliance, and track inventory drift
+
+Discover up to 17 IDE/agent clients (including JSONC configs), filter with `--client` / `--scanners`, evaluate OWASP MCP Top 10 compliance, emit CycloneDX 1.6 / SPDX 2.3 SBOMs, and detect shadow server additions with inventory baselines:
+
+~~~bash
+verity scan --client claude-code cursor --scanners config,vuln,typosquat,conflict --offline
+verity scan --path . --offline --compliance owasp-mcp-top-10 --fail-on-non-compliant
+verity scan --offline --format cyclonedx --scanners vuln --output bom.cdx.json
+verity scan --offline --format spdx --output bom.spdx.json
+verity scan --offline --save-inventory-baseline .verity-inventory.json
+verity scan --offline --compare-inventory-baseline .verity-inventory.json --fail-on-drift
+~~~
 
 ### What happened
 

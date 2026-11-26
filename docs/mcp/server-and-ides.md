@@ -529,13 +529,19 @@ How the IDE assistant uses the result:
 4. Offer a next step such as `verity_remediation_ops` or a configuration change.
 5. If `isError` is `true`, show the error and suggest a diagnostic command.
 
-Optional `verity_security_scan` brownfield baseline and ignore parameters (`options`):
+Optional `verity_security_scan` baseline, SBOM, scanner, and inventory-drift parameters (`options`):
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `baseline_path` | string | — | Path to a `.verity-baseline.json` file (for `scan_client_configs` / `scan_ast_code`) or a tool-hash baseline map (for `detect_rug_pull` / `snapshot_baseline`). |
 | `fail_on_new` | boolean | `false` | Sets `gate_passed: false` when active findings not present in `baseline_path` are detected. |
 | `respect_ignores` | boolean | `true` | Applies `.verityignore`, `verity.toml` (`[[ignore]]` / `[[allowlists]]`), and inline `# verity-ignore` / `# nosemgrep` suppressions. |
+| `scanners` | array[string] | — | Scanner modules (`all`, `config`, `vuln`, `secret`, `ast`, `taint`, `typosquat`, `conflict`). Passing `vuln` with `format: "cyclonedx"` enriches the SBOM with `vulnerabilities[]`. |
+| `include_reachability` | boolean | `true` | Include reachability metadata in SBOM vulnerability analysis. |
+| `format` | string | — | Output format (`terminal`, `json`, `markdown`, `html`, `sarif`, `cyclonedx`, `spdx`). When `cyclonedx` or `spdx`, attaches the `sbom` object to the response. |
+| `save_inventory_baseline` | string | — | Persist a server inventory snapshot to this path. |
+| `compare_inventory_baseline` | string | — | Compare current discovered server inventory against this baseline path (`inventory_drift`). |
+| `fail_on_drift` | boolean | `false` | Sets `gate_passed: false` when `inventory_drift.has_drift` is `true`. |
 
 ### 7.2 `verity_database_guard`
 

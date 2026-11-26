@@ -14,18 +14,18 @@ verity
 ## Global conventions
 
 - Long options only. Both `--flag=value` and `--flag value` are accepted.
-- `--format` accepts `terminal`, `json`, `markdown`, `html`, or `sarif` for `scan` (`sarif` is `[Pro]`); `test` accepts `terminal`, `json`, `markdown`, or `html`.
+- `--format` accepts `terminal`, `json`, `markdown`, `html`, `cyclonedx`, `spdx`, or `sarif` for `scan` (`sarif` is `[Pro]`); `test` accepts `terminal`, `json`, `markdown`, or `html`.
 - `terminal` is the default for both `scan` and `test`.
 - Color is enabled only when stderr is a TTY and `NO_COLOR` is unset.
 - Reports go to stdout (or `--output`); diagnostics and progress go to stderr.
-- Every command supports `--help`, and the root command supports `-V` / `--version` (prints `verity 0.2.1` and exits `0`).
+- Every command supports `--help`, and the root command supports `-V` / `--version` (prints `verity 0.2.2` and exits `0`).
 - Repeated scans and tests are deterministic: the same input produces the same fingerprints.
 
 ### Global options
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `-V`, `--version` | flag | — | Print `verity 0.2.1` and exit 0 |
+| `-V`, `--version` | flag | — | Print `verity 0.2.2` and exit 0 |
 | `--help` | flag | — | Print help for the command and exit 0 |
 
 ### Exit codes
@@ -33,8 +33,8 @@ verity
 | Code | Name | Meaning |
 | --- | --- | --- |
 | `0` | success | Completed; no blocking findings |
-| `1` | findings | Findings present with `--fail-on-findings`, or `verity test` reported a vulnerable case |
-| `2` | usage / Pro gate | Invalid flag, unknown command, or gated `[Pro]` feature (`PRO_FEATURE_REQUIRED`) |
+| `1` | findings | Findings present with `--fail-on-findings`, `--fail-on-non-compliant` failed, or `verity test` reported a vulnerable case |
+| `2` | usage / Pro gate | Invalid flag, unknown command, inventory drift with `--fail-on-drift`, or gated `[Pro]` feature (`PRO_FEATURE_REQUIRED`) |
 | `3` | config | Unreadable or invalid config, schema, or dialect file |
 | `4` | target | Target unreachable, refused, or timed out (`--url`, `--live-probe`) |
 | `5` | internal | Unhandled internal error |
@@ -66,26 +66,43 @@ Precedence, highest first: command-line flag → environment variable → built-
 ~~~text
 verity scan [--config-file PATH [PATH ...]] [--schema-file PATH] [--path PATH [PATH ...]]
             [--root DIR] [--config PATH] [--ignore-file PATH]
-            [--format terminal|json|markdown|html|sarif] [--output PATH]
+            [--client NAME [NAME ...]] [--scan-global]
+            [--scanners LIST] [--typosquat-threshold {1,2,3}]
+            [--call-analysis | --no-call-analysis] [--reachable-only] [--manifest PATH]
+            [--compliance STANDARD] [--fail-on-non-compliant]
+            [--save-inventory-baseline PATH] [--compare-inventory-baseline PATH] [--fail-on-drift]
+            [--format terminal|json|markdown|html|cyclonedx|spdx|sarif] [--output PATH]
             [--fail-on-findings] [--fail-on-severity LEVEL] [--fail-on LEVEL]
             [--fail-on-new] [--save-baseline PATH] [--baseline PATH]
             [--show-suppressed] [--strict-policy] [--no-inline-ignores]
             [--no-default-ignores] [--offline] [--live-probe]
 ~~~
 
-Statically audits discovered MCP/LLM configuration files and Python source trees. Target code is parsed, never executed.
+Statically audits discovered MCP/LLM configuration files (across 17 clients with JSONC `//` and `/* */` comment stripping) and Python source trees. Target code is parsed, never executed.
 
 ### Option table
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--config-file` | path... | auto-discover | One or more MCP/LLM config JSON/YAML files. When omitted alongside `--path`/`--schema-file`, workstation configs are auto-discovered |
+| `--config-file` | path... | auto-discover | One or more MCP/LLM config JSON/JSONC/YAML files. When omitted alongside `--path`/`--schema-file`, workstation configs are auto-discovered |
 | `--schema-file` | path | — | JSON Schema for declared tool arguments. Enables static checks such as `VERITY-STATIC-TOOL-POISONING` on tool schemas |
 | `--path` | path... | — | One or more Python files, directories, or config files (`.json`/`.yaml`/`.yml`). Directories scan AST sources and discover nested monorepo configs (`**/.cursor/mcp.json`, `**/.vscode/mcp.json`, `**/.mcp.json`, `**/mcp.json`) filtered by `.verityignore` |
 | `--root` | dir | auto-discover | Explicit project root for POSIX repo-relative path canonicalization (`--root` → enclosing `.git` → target dir/parent → cwd) |
 | `--config` | path | `<root>/verity.toml` | Path to a `verity.toml` policy config (`[scan]`, `[[ignore]]`, `[[allowlists]]`) |
 | `--ignore-file` | path | `<root>/.verityignore` | Path to a `.verityignore` file |
-| `--format` | enum | `terminal` | `terminal`, `json`, `markdown`, `html`, or `sarif` (`[Pro]`) |
+| `--client` | name... | all 17 clients | Restrict workstation discovery to specific clients (`claude_desktop`, `claude_code`, `cursor`, `windsurf`, `zed`, `vscode_cline`, `vscode_roo`, `goose`, `continue`, `junie`, `vscode`, `antigravity`, `openhands`, `trae`, `lmstudio`, `librechat`, `workspace`; aliases like `claude-code`, `cline`, `roo-code` accepted) |
+| `--scan-global` | flag | off | Also scan globally installed npm / `~/.npm/_npx` MCP packages (opt-in) |
+| `--scanners` | list | offline defaults | Comma-separated scanners (`all`, `config`, `vuln`, `secret`, `ast`, `taint`, `typosquat`, `conflict`). Defaults to `config,vuln,secret,ast,typosquat,conflict` (+ `taint` when `--path` is set), or inventory-only when `--format cyclonedx\|spdx` is used without `--scanners` |
+| `--typosquat-threshold` | int | `2` | Maximum Damerau-Levenshtein distance (`1`–`3`) for offline BK-Tree typosquatting detection |
+| `--call-analysis` / `--no-call-analysis` | flag | on | Enable or disable AST call-graph reachability analysis for transitive dependency CVEs |
+| `--reachable-only` | flag | off | Filter transitive vulnerability findings to only those `REACHABLE` from exposed MCP tools |
+| `--manifest` | path | — | Path to a dependency manifest (`package.json`, `requirements.txt`, `uv.lock`, `poetry.lock`, `pyproject.toml`) for transitive reachability |
+| `--compliance` | string | — | Evaluate OWASP compliance (`owasp-mcp-top-10` or `owasp-llm-2025`), attach additive `owasp_mcp_id` / `owasp_llm_id` / `owasp_category` fields, and emit a scorecard |
+| `--fail-on-non-compliant` | flag | off | Exit `1` when the `--compliance` tier is not `COMPLIANT` |
+| `--save-inventory-baseline` | path | — | Persist a deterministic server inventory snapshot JSON to this path |
+| `--compare-inventory-baseline` | path | — | Diff current discovered server inventory against a saved inventory baseline |
+| `--fail-on-drift` | flag | off | Exit `2` when `--compare-inventory-baseline` detects added, removed, or modified servers |
+| `--format` | enum | `terminal` | `terminal`, `json`, `markdown`, `html`, `cyclonedx` (CycloneDX 1.6), `spdx` (SPDX 2.3), or `sarif` (`[Pro]`) |
 | `--output` | path | stdout | Write the report to a file |
 | `--fail-on-findings` | flag | off | Exit `1` when at least one active finding is present (alias for `--fail-on-severity INFO`) |
 | `--fail-on-severity`, `--fail-on` | enum | — | Exit `1` when any active finding meets or exceeds `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, or `INFO` (case-insensitive) |
@@ -134,6 +151,21 @@ verity scan --path . --format sarif --output verity.sarif
 
 # Live probing of referenced endpoints
 verity scan --path . --config-file .mcp.json --live-probe
+
+# Filter clients and include global npm packages
+verity scan --client claude-code cursor --scan-global --offline
+
+# CycloneDX 1.6 (inventory-only vs vuln-enriched) and SPDX 2.3 SBOM
+verity scan --offline --format cyclonedx --output bom.cdx.json
+verity scan --offline --format cyclonedx --scanners vuln --output bom-vulns.cdx.json
+verity scan --offline --format spdx --output bom.spdx.json
+
+# OWASP MCP Top 10 compliance scorecard & gate
+verity scan --path . --offline --compliance owasp-mcp-top-10 --fail-on-non-compliant
+
+# Inventory drift baseline & CI gate (exits 2 on drift)
+verity scan --offline --save-inventory-baseline .verity-inventory.json
+verity scan --offline --compare-inventory-baseline .verity-inventory.json --fail-on-drift
 ~~~
 
 ### Brownfield baselines (`.verity-baseline.json`)
@@ -154,7 +186,7 @@ verity scan --path . --config-file .mcp.json --live-probe
 ### Terminal output
 
 ~~~text
-verity 0.2.1 — scan
+verity 0.2.2 — scan
 root: /Users/ivan/app
 mode: offline (no live probes)
 
@@ -205,7 +237,7 @@ Finding object fields:
 ~~~json
 {
   "schema_version": "1.0",
-  "tool": { "name": "verity", "version": "0.2.1" },
+  "tool": { "name": "verity", "version": "0.2.2" },
   "scan": {
     "path": "/Users/ivan/app",
     "offline": true,
@@ -246,7 +278,7 @@ SARIF 2.1.0 export (`--format sarif`) is a `[Pro]` feature requiring `verity-pro
 {
   "version": "2.1.0",
   "runs": [{
-    "tool": { "driver": { "name": "verity", "version": "0.2.1" } },
+    "tool": { "driver": { "name": "verity", "version": "0.2.2" } },
     "results": [{
       "ruleId": "VERITY-STATIC-SHELL-DROPPER",
       "level": "error",
@@ -268,8 +300,8 @@ SARIF 2.1.0 export (`--format sarif`) is a `[Pro]` feature requiring `verity-pro
 | Code | Condition |
 | --- | --- |
 | `0` | Scan completed; no blocking active findings (or gate threshold not exceeded) |
-| `1` | Active findings met or exceeded `--fail-on-severity`/`--fail-on`/`--fail-on-findings`, or new findings appeared with `--baseline --fail-on-new` |
-| `2` | Usage error, missing `--config-file`/`--config`/`--ignore-file`/`--baseline`, baseline schema mismatch, `--strict-policy` error, or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
+| `1` | Active findings met or exceeded `--fail-on-severity`/`--fail-on`/`--fail-on-findings`, `--fail-on-non-compliant` failed, or new findings appeared with `--baseline --fail-on-new` |
+| `2` | Usage error, missing `--config-file`/`--config`/`--ignore-file`/`--baseline`, baseline schema mismatch, `--strict-policy` error, inventory drift (`--fail-on-drift`), or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
 | `3` | Invalid config, schema, or output path |
 | `4` | `--live-probe` could not reach a referenced target |
 | `5` | Internal error |
@@ -347,7 +379,7 @@ verity test --command 'python3 server.py' --baseline .verity-test-baseline.json
 ### Terminal output
 
 ~~~text
-verity 0.2.1 — test
+verity 0.2.2 — test
 mode: demo (4 cases)
 
 CWE-89   SQL injection            vulnerable  payload: ' OR 1=1 --        result: bypass
@@ -377,7 +409,7 @@ summary: 4 vulnerable, 0 patched, 0 errors
 ~~~json
 {
   "schema_version": "1.0",
-  "tool": { "name": "verity", "version": "0.2.1" },
+  "tool": { "name": "verity", "version": "0.2.2" },
   "suite": "demo",
   "cases": [
     {

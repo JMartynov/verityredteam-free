@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "verity-redteam-core"
-version = "0.2.1"
+version = "0.2.2"
 description = "Verity RedTeam Free — Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server"
 readme = "README.md"
 license = "Apache-2.0"
