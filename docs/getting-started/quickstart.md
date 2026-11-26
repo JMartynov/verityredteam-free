@@ -29,6 +29,8 @@ python -c "import verity; print(verity.__version__)"
 Alternative with `uvx`:
 
 ~~~bash
+uvx verity-redteam-core scan --offline
+# Legacy two-token form (equivalent):
 uvx --from verity-redteam-core verity scan --offline
 ~~~
 

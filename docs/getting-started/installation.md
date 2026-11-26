@@ -32,13 +32,17 @@ Python 3.12.4
 
 ~~~bash
 $ curl -LsSf https://astral.sh/uv/install.sh | sh
+$ uvx verity-redteam-core scan --offline
+$ uvx verity-redteam-core scan --path . --format terminal
+# Legacy two-token form (equivalent):
 $ uvx --from verity-redteam-core verity scan --offline
-$ uvx --from verity-redteam-core verity scan --path . --format terminal
 ~~~
 
 Pin a version in automation:
 
 ~~~bash
+$ uvx verity-redteam-core==0.2.1 scan --path . --fail-on-findings
+# Or with --from:
 $ uvx --from verity-redteam-core==0.2.1 verity scan --path . --fail-on-findings
 ~~~
 
@@ -79,7 +83,16 @@ $ uv tool uninstall verity-redteam-core
 
 ## Install with Homebrew
 
-> The Homebrew formula is upcoming in M30. Use `uvx` or `pip` until then.
+Install Verity on macOS or Linux via the official tap [`JMartynov/homebrew-tap`](https://github.com/JMartynov/homebrew-tap):
+
+~~~bash
+$ brew install JMartynov/tap/verity
+$ verity --version
+verity 0.2.1
+$ verity test --demo
+~~~
+
+Or tap first and install:
 
 ~~~bash
 $ brew tap JMartynov/tap
@@ -92,6 +105,8 @@ Upgrade:
 ~~~bash
 $ brew upgrade verity
 ~~~
+
+> **Stage B (`Homebrew/homebrew-core`) Graduation:** Verity ships via `JMartynov/homebrew-tap` immediately. Graduation to `Homebrew/homebrew-core` requires meeting notability thresholds (≥75 stars / ≥30 forks for third-party submissions, or ≥225 stars / ≥90 forks for self-submissions) and validating Python 3.15 so `requires-python` can be lifted from `>=3.12,<3.15` to `>=3.12,<3.16`.
 
 ## Install with Docker
 

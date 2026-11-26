@@ -2,7 +2,7 @@
 task_id: M30
 alias: TASK-79
 title: "uvx Single-Token Execution & Homebrew Distribution"
-status: Not Done
+status: Done
 priority: High (P0)
 size: S
 estimate_days: 2

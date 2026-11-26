@@ -4,7 +4,7 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Docs Portal (`M38`), Realism (`M39`–`M45`); Queued — Wave 1 Adoption (`M30`–`M37`), Next Wave (`M46`–`M53`)  
+> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), Docs Portal (`M38`), Realism (`M39`–`M45`); Queued — Wave 1 Adoption (`M31`–`M37`), Next Wave (`M46`–`M53`)  
 > **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Released (`M7`–`M11`)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
@@ -79,7 +79,6 @@ flowchart TD
 
 ### High Priority (`P0`) Focus Queue (`Not Done`)
 
-- `M30` — `uvx` & Homebrew
 - `M32` — GitHub Action & pre-commit
 - `M33` — TypeScript/JS MCP SAST
 - `M34` — Agent Skill Scanner & Toxic Flows
@@ -104,7 +103,7 @@ flowchart TD
 
 ### Grouped by Decisions / Target Files / Purposes
 
-1. *Group A — Zero-Friction Distribution & CI/CD Adoption* (`M30`, `M31`, `M32`, `M48`)
+1. *Group A — Zero-Friction Distribution & CI/CD Adoption* (`M30` [Done], `M31`, `M32`, `M48`)
 2. *Group B — Multi-Language & Multi-Framework SAST Expansion* (`M33`, `M34`, `M52`, `M39` [Done])
 3. *Group C — Transport, Deception & Supply-Chain Hardening* (`M35`, `M36`, `M46`, `M51`, `M53`, `M44` [Done])
 4. *Group D — Agent Guidance, Local Viewer & Opt-In Advisory Hooks* (`M37`, `M47`, `M49`, `M50`, `M40` [Done], `M43` [Done])
@@ -150,7 +149,7 @@ flowchart TD
 
 | Task Key | Task Title | Architectural Scope | Task Spec | Status | GitHub Project #5 Item |
 | :---: | :--- | :--- | :--- | :---: | :---: |
-| **M30** | **`uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)** | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` | [M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md](docs/tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) | `Not Done` | [View Item #M30](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPUU`) |
+| **M30** | **`uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)** | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` | [M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md](docs/tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) | `Done` | [View Item #M30](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPUU`) |
 | **M31** | **CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`)** | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, un-gated Core SARIF 2.1.0 | [M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md](docs/tasks/M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md) | `Not Done` | [View Item #M31](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPYA`) |
 | **M32** | **Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`)** | `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action` | [M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md](docs/tasks/M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md) | `Not Done` | [View Item #M32](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPcI`) |
 | **M33** | **TypeScript / JavaScript MCP SAST Scanner (`TASK-90`)** | Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring | [M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md](docs/tasks/M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md) | `Not Done` | [View Item #M33](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPfA`) |
@@ -904,7 +903,7 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 #### Canonical Task Spec
 - [`M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md`](docs/tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPUU`)
 
-**Status:** `Not Done`
+**Status:** `Done`
 
 #### Context & Key Deliverables
 - Add dual `[project.scripts]` (`verity` and `verity-redteam-core`) + `[project.urls]` in `pyproject.toml`, `-V`/`--version` in `src/verity/cli.py`, and quickstart updates in `README.md`.

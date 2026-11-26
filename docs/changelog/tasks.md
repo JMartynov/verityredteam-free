@@ -48,7 +48,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M27** — Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi` (Done)
 - **M28** — Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard (Done)
 - **M29** — Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`) (Done)
-- **M30** — `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) (Not Done)
+- **M30** — `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) (Done)
 - **M31** — CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) (Not Done)
 - **M32** — Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) (Not Done)
 - **M33** — TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) (Not Done)
@@ -106,7 +106,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | — | M27 | Done | `uv run pytest tests/unit -q` |
 | — | M28 | Done | `uv run pytest tests/unit -q` |
 | — | M29 | Done | `uv run pytest tests/unit -q` |
-| TASK-79 | M30 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-79 | M30 | Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-80 | M31 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-81 | M32 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-90 | M33 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
@@ -368,7 +368,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 ### M30 — `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)
 
 - **Phase:** Hardening & Parity
-- **Status:** Not Done
+- **Status:** Done
 - **Scope:** Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap`
 - **Task references:** TASK-79
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`

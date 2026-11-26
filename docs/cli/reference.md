@@ -18,13 +18,14 @@ verity
 - `terminal` is the default for both `scan` and `test`.
 - Color is enabled only when stderr is a TTY and `NO_COLOR` is unset.
 - Reports go to stdout (or `--output`); diagnostics and progress go to stderr.
-- Every command supports `--help`. To print the version, run `python -c "import verity; print(verity.__version__)"` (`--version` is planned for M30).
+- Every command supports `--help`, and the root command supports `-V` / `--version` (prints `verity 0.2.1` and exits `0`).
 - Repeated scans and tests are deterministic: the same input produces the same fingerprints.
 
 ### Global options
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
+| `-V`, `--version` | flag | — | Print `verity 0.2.1` and exit 0 |
 | `--help` | flag | — | Print help for the command and exit 0 |
 
 ### Exit codes
