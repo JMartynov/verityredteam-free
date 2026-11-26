@@ -1,0 +1,2327 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server">
+      
+      
+      
+        <link rel="canonical" href="https://jmartynov.github.io/verityredteam-free/0.2.2/extensibility/">
+      
+      
+        <link rel="prev" href="../mcp/server-and-ides/">
+      
+      
+        <link rel="next" href="../pro/enterprise_features/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Extensibility & Plugins - Verity RedTeam Free</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#extensibility-plugin-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Verity RedTeam Free" class="md-header__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Verity RedTeam Free
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Extensibility & Plugins
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../cli/reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../rules/catalog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Rules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../guards/sql-security-guard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guards & Runtime
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../mcp/server-and-ides/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  MCP & IDE Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../pro/enterprise_features/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Verity Pro
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/auxiliary_and_benchmarks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Roadmap & Changelog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Verity RedTeam Free" class="md-nav__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Verity RedTeam Free
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cli/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security Rules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rules/catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Catalog (22 Rules)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guards & Runtime
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guards & Runtime
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guards/sql-security-guard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL Security Guard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP & IDE Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP & IDE Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mcp/server-and-ides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server & IDEs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility & Plugins
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility & Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-abstraction-barrier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime abstraction barrier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-plugin-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a plugin package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graceful-degradation-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graceful degradation contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-an-extension-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing an extension point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-1-custom-static-configuration-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial 1: Custom static configuration rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial 1: Custom static configuration rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-define-the-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Define the rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-evaluate-a-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Evaluate a definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-read-the-structured-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Read the structured result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-fields-that-are-scanned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Fields that are scanned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-authoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Authoring guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-2-custom-python-ast-visitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial 2: Custom Python AST visitors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial 2: Custom Python AST visitors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-subclass-the-visitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Subclass the visitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-invoke-the-visitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Invoke the visitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-interpret-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Interpret findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-composing-with-the-shipped-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Composing with the shipped scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-authoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Authoring guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-3-extending-sqlsecurityguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial 3: Extending SqlSecurityGuard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial 3: Extending SqlSecurityGuard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-forbidden-table-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Forbidden-table policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-tenant-scoping-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Tenant scoping policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-covering-the-policy-with-pytest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Covering the policy with pytest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-authoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Authoring guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composing-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composing extensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verity Pro
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Verity Pro
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pro/enterprise_features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/auxiliary_and_benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auxiliary & Benchmark Appendix (Tier 3/4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../roadmap/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & Changelog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roadmap & Changelog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../changelog/tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Changelog (TASK-01–94)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#runtime-abstraction-barrier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runtime abstraction barrier
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registering-a-plugin-package" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering a plugin package
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#graceful-degradation-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graceful degradation contract
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-an-extension-point" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing an extension point
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-1-custom-static-configuration-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial 1: Custom static configuration rules
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial 1: Custom static configuration rules">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-define-the-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Define the rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-evaluate-a-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Evaluate a definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-read-the-structured-result" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Read the structured result
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-fields-that-are-scanned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Fields that are scanned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-authoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Authoring guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-2-custom-python-ast-visitors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial 2: Custom Python AST visitors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial 2: Custom Python AST visitors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-subclass-the-visitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Subclass the visitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-invoke-the-visitor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Invoke the visitor
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-interpret-findings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Interpret findings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-composing-with-the-shipped-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Composing with the shipped scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-authoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Authoring guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tutorial-3-extending-sqlsecurityguard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tutorial 3: Extending SqlSecurityGuard
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tutorial 3: Extending SqlSecurityGuard">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-forbidden-table-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Forbidden-table policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-tenant-scoping-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Tenant scoping policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-covering-the-policy-with-pytest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Covering the policy with pytest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-authoring-guidance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Authoring guidance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#composing-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composing extensions
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/JMartynov/verityredteam-free/edit/main/docs/extensibility.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/JMartynov/verityredteam-free/raw/main/docs/extensibility.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="extensibility-plugin-architecture">Extensibility &amp; Plugin Architecture<a class="headerlink" href="#extensibility-plugin-architecture" title="Permanent link">&para;</a></h1>
+<p><code>verity-redteam-core</code> (Verity RedTeam Free) is the single source of the runtime
+abstraction barrier. Optional enterprise capabilities ship in a separate <code>verity-pro</code>
+distribution and are discovered dynamically through Python entry points — no core code is
+patched or branched.</p>
+<h2 id="runtime-abstraction-barrier">Runtime abstraction barrier<a class="headerlink" href="#runtime-abstraction-barrier" title="Permanent link">&para;</a></h2>
+<p>The core enumerates plugins registered under the <code>verity.plugins</code> entry-point group:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">importlib.metadata</span><span class="w"> </span><span class="kn">import</span> <span class="n">entry_points</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="n">entry_points</span><span class="p">(</span><span class="n">group</span><span class="o">=</span><span class="s2">"verity.plugins"</span><span class="p">):</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="n">ep</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="registering-a-plugin-package">Registering a plugin package<a class="headerlink" href="#registering-a-plugin-package" title="Permanent link">&para;</a></h2>
+<p>A plugin package registers itself in its own <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">[project.entry-points.</span><span class="s2">"verity.plugins"</span><span class="k">]</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="n">enterprise</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"verity_pro.plugin:register_pro_extensions"</span>
+</code></pre></div>
+<h2 id="graceful-degradation-contract">Graceful degradation contract<a class="headerlink" href="#graceful-degradation-contract" title="Permanent link">&para;</a></h2>
+<p>When no plugin is installed, Pro-only actions (for example SARIF export or Snowflake RBAC
+guards) return a structured <code>PRO_FEATURE_REQUIRED</code> payload instead of raising
+<code>ImportError</code>. This guarantees that <code>verity-redteam-core</code> always runs completely
+standalone:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="s2">"PRO_FEATURE_REQUIRED"</span><span class="p">,</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">"feature"</span><span class="p">:</span><span class="w"> </span><span class="s2">"export_sarif"</span><span class="p">,</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SARIF v2.1.0 compliance export requires the verity-pro plugin."</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="p">}</span>
+</code></pre></div>
+<p>Install the core package and use it without any plugin:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>verity<span class="w"> </span>scan
+</code></pre></div>
+<h2 id="choosing-an-extension-point">Choosing an extension point<a class="headerlink" href="#choosing-an-extension-point" title="Permanent link">&para;</a></h2>
+<p>The core exposes three independent seams. Pick the one that matches the fidelity you
+need — from cheapest (pure regex over metadata) to deepest (parsed Python control flow).</p>
+<table>
+<thead>
+<tr>
+<th>Goal</th>
+<th>Public seam</th>
+<th>Primary object</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flag hostile MCP metadata, prompts, or resources</td>
+<td><code>StaticRuleEvaluator(custom_rules=[...])</code></td>
+<td><code>StaticRule</code></td>
+</tr>
+<tr>
+<td>Inspect MCP handler source code</td>
+<td>subclass <code>McpAstVisitor</code></td>
+<td><code>AstFinding</code></td>
+</tr>
+<tr>
+<td>Constrain SQL execution and row visibility</td>
+<td>subclass <code>SqlSecurityGuard</code></td>
+<td><code>SqlSecurityError</code></td>
+</tr>
+</tbody>
+</table>
+<p>None of these seams requires patching <code>verity-redteam-core</code>. They are ordinary Python
+classes in <code>verity.scanner.static_rules</code>, <code>verity.scanner.python_ast</code>, and
+<code>verity.mcp_library.sql_guard</code>, and they are designed to be composed by the caller.</p>
+<h2 id="tutorial-1-custom-static-configuration-rules">Tutorial 1: Custom static configuration rules<a class="headerlink" href="#tutorial-1-custom-static-configuration-rules" title="Permanent link">&para;</a></h2>
+<p><code>StaticRuleEvaluator</code> ships a curated set of <code>DEFAULT_RULES</code>. A custom rule is simply a
+<code>StaticRule</code> instance appended through the <code>custom_rules</code> constructor argument; custom
+rules evaluate alongside the defaults with the same precedence rules.</p>
+<h3 id="11-define-the-rule">1.1 Define the rule<a class="headerlink" href="#11-define-the-rule" title="Permanent link">&para;</a></h3>
+<p>The following policy rejects package install instructions that point away from the
+corporate registry:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.scanner.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">ScannerSeverity</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.scanner.static_rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">StaticRule</span><span class="p">,</span> <span class="n">StaticRuleEvaluator</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="n">CUSTOM_REGISTRY_RULE</span> <span class="o">=</span> <span class="n">StaticRule</span><span class="p">(</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>    <span class="n">rule_id</span><span class="o">=</span><span class="s2">"CUSTOM-STATIC-001"</span><span class="p">,</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="n">category</span><span class="o">=</span><span class="s2">"SUPPLY_CHAIN"</span><span class="p">,</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="n">cwe_id</span><span class="o">=</span><span class="s2">"CWE-829"</span><span class="p">,</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="n">severity</span><span class="o">=</span><span class="n">ScannerSeverity</span><span class="o">.</span><span class="n">HIGH</span><span class="p">,</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="n">title</span><span class="o">=</span><span class="s2">"Non-approved internal package registry"</span><span class="p">,</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>    <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>        <span class="s2">"MCP tool metadata directs package resolution at a registry that is "</span>
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>        <span class="s2">"not on the corporate allowlist."</span>
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    <span class="p">),</span>
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>    <span class="n">patterns</span><span class="o">=</span><span class="p">(</span>
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>        <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>            <span class="sa">r</span><span class="s2">"https?://(?!packages\.corp\.internal)[a-z0-9.\-]+/simple/?"</span><span class="p">,</span>
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>            <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>        <span class="p">),</span>
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>        <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>            <span class="sa">r</span><span class="s2">"\bpip\s+install\s+--index-url\s+"</span>
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>            <span class="sa">r</span><span class="s2">"https?://(?!packages\.corp\.internal)\S+"</span><span class="p">,</span>
+<a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a>            <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">,</span>
+<a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a>        <span class="p">),</span>
+<a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a>    <span class="p">),</span>
+<a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a>    <span class="n">remediation</span><span class="o">=</span><span class="s2">"Point installs at https://packages.corp.internal/simple."</span><span class="p">,</span>
+<a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="p">)</span>
+<a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a>
+<a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="n">evaluator</span> <span class="o">=</span> <span class="n">StaticRuleEvaluator</span><span class="p">(</span><span class="n">custom_rules</span><span class="o">=</span><span class="p">[</span><span class="n">CUSTOM_REGISTRY_RULE</span><span class="p">])</span>
+</code></pre></div>
+<p>Rules are safer as module-level constants: <code>patterns</code> is a tuple of pre-compiled
+<code>re.Pattern</code> objects, so compilation happens once per process rather than per scan.</p>
+<h3 id="12-evaluate-a-definition">1.2 Evaluate a definition<a class="headerlink" href="#12-evaluate-a-definition" title="Permanent link">&para;</a></h3>
+<p><code>scan_all()</code> walks tools, prompts, and resources in one pass. Each field is scanned
+independently, and at most one finding per rule per field is emitted:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">tool</span> <span class="o">=</span> <span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="s2">"name"</span><span class="p">:</span> <span class="s2">"install_dependency"</span><span class="p">,</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="s2">"description"</span><span class="p">:</span> <span class="p">(</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>        <span class="s2">"Runs pip install --index-url https://pypi.org/simple for the caller."</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="p">),</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>    <span class="s2">"inputSchema"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"properties"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"package"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"string"</span><span class="p">}}},</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="p">}</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="n">result</span> <span class="o">=</span> <span class="n">evaluator</span><span class="o">.</span><span class="n">scan_all</span><span class="p">(</span><span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">tool</span><span class="p">])</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">has_findings</span><span class="p">)</span>      <span class="c1"># True</span>
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">high_count</span><span class="p">)</span>        <span class="c1"># 1</span>
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">critical_count</span><span class="p">)</span>    <span class="c1"># 0</span>
+</code></pre></div>
+<h3 id="13-read-the-structured-result">1.3 Read the structured result<a class="headerlink" href="#13-read-the-structured-result" title="Permanent link">&para;</a></h3>
+<p><code>StaticScanResult.to_dict()</code> is the wire format consumed by reporting layers:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="n">payload</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">payload</span><span class="p">[</span><span class="s2">"summary"</span><span class="p">][</span><span class="s2">"total_findings"</span><span class="p">]</span>        <span class="c1"># 1</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="n">payload</span><span class="p">[</span><span class="s2">"findings"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"rule_id"</span><span class="p">]</span>           <span class="c1"># 'CUSTOM-STATIC-001'</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="n">payload</span><span class="p">[</span><span class="s2">"findings"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"target_type"</span><span class="p">]</span>       <span class="c1"># 'tool'</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">payload</span><span class="p">[</span><span class="s2">"findings"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"target_name"</span><span class="p">]</span>       <span class="c1"># 'install_dependency'</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">payload</span><span class="p">[</span><span class="s2">"findings"</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">"field_path"</span><span class="p">]</span>        <span class="c1"># 'description'</span>
+</code></pre></div>
+<p>The <code>summary</code> block always carries <code>total_findings</code>, per-severity counts,
+<code>scanned_tools</code>, <code>scanned_prompts</code>, <code>scanned_resources</code>, and <code>duration_ms</code>. The
+<code>duration_ms</code> value is wall-clock timing and therefore differs on every run.</p>
+<h3 id="14-fields-that-are-scanned">1.4 Fields that are scanned<a class="headerlink" href="#14-fields-that-are-scanned" title="Permanent link">&para;</a></h3>
+<p>For a tool, the evaluator inspects <code>name</code>, <code>description</code>, every
+<code>inputSchema.properties.&lt;name&gt;.description</code>, and every
+<code>inputSchema.properties.&lt;name&gt;.default</code>. Prompts are scanned on <code>name</code>, <code>description</code>,
+each argument description, and each <code>messages[i].content</code>. Resources are scanned on
+<code>uri</code> and <code>description</code>.</p>
+<h3 id="15-authoring-guidance">1.5 Authoring guidance<a class="headerlink" href="#15-authoring-guidance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Prefix custom ids (<code>CUSTOM-…</code>) so they are distinguishable from shipped rules.</li>
+<li>Keep <code>patterns</code> narrow; every pattern runs against every scanned field.</li>
+<li>Set <code>suppress_on_templates=True</code> when a rule should ignore documentation snippets
+  containing <code>YOUR_API_KEY</code>, <code>REPLACE_WITH</code>, <code>.example</code>, <code>.sample</code>, or <code>.template</code>.</li>
+<li>Normalization and zero-width stripping are applied before matching, so patterns do
+  not need to handle homoglyph or <code>\u200b</code> evasion themselves.</li>
+<li>The evaluator is stateless after construction; reuse one instance per process.</li>
+</ul>
+<h2 id="tutorial-2-custom-python-ast-visitors">Tutorial 2: Custom Python AST visitors<a class="headerlink" href="#tutorial-2-custom-python-ast-visitors" title="Permanent link">&para;</a></h2>
+<p>Static rules never see source code. When a policy depends on <em>how</em> a handler is
+implemented — which sink is called, which arguments flow into it — extend
+<code>McpAstVisitor</code>.</p>
+<h3 id="21-subclass-the-visitor">2.1 Subclass the visitor<a class="headerlink" href="#21-subclass-the-visitor" title="Permanent link">&para;</a></h3>
+<p>The stock visitor matches <code>pickle.loads</code> by attribute chain. A handler that imports
+<code>pickle as p</code> therefore escapes it. The subclass below resolves import aliases recorded
+during traversal and reuses the shipped catalog rule so reports stay consistent:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">ast</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.scanner.python_ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">McpAstVisitor</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.scanner.rules</span><span class="w"> </span><span class="kn">import</span> <span class="n">RuleCatalog</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">AliasedDeserializationVisitor</span><span class="p">(</span><span class="n">McpAstVisitor</span><span class="p">):</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">    </span><span class="sd">"""Catch insecure deserialization hidden behind an import alias."""</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    <span class="n">SINKS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"loads"</span><span class="p">,</span> <span class="s2">"load"</span><span class="p">})</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    <span class="n">MODULES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"pickle"</span><span class="p">,</span> <span class="s2">"_pickle"</span><span class="p">,</span> <span class="s2">"marshal"</span><span class="p">})</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">visit_Call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">node</span><span class="p">:</span> <span class="n">ast</span><span class="o">.</span><span class="n">Call</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>        <span class="n">func</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">func</span>
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Attribute</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">func</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">ast</span><span class="o">.</span><span class="n">Name</span><span class="p">):</span>
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>            <span class="n">root</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">id</span>
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>            <span class="n">origin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">imports</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>            <span class="k">if</span> <span class="n">origin</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">MODULES</span> <span class="ow">and</span> <span class="n">func</span><span class="o">.</span><span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">SINKS</span><span class="p">:</span>
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>                <span class="bp">self</span><span class="o">.</span><span class="n">_add_finding</span><span class="p">(</span>
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>                    <span class="n">RuleCatalog</span><span class="o">.</span><span class="n">RULE_CWE_502_PICKLE</span><span class="p">,</span>
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>                    <span class="n">node</span><span class="p">,</span>
+<a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>                    <span class="s2">"Aliased insecure deserialization via "</span>
+<a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>                    <span class="sa">f</span><span class="s2">"'</span><span class="si">{</span><span class="n">root</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="n">attr</span><span class="si">}</span><span class="s2">' (imported as '</span><span class="si">{</span><span class="n">origin</span><span class="si">}</span><span class="s2">')."</span><span class="p">,</span>
+<a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>                <span class="p">)</span>
+<a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">visit_Call</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+</code></pre></div>
+<p><code>self.imports</code> maps local aliases to their origin module for both <code>import x as y</code> and
+<code>from m import x as y</code>. <code>self._add_finding(rule, node, message)</code> is the protected helper
+the base class uses internally; it records file, line, column, snippet, and the current
+MCP tool context.</p>
+<h3 id="22-invoke-the-visitor">2.2 Invoke the visitor<a class="headerlink" href="#22-invoke-the-visitor" title="Permanent link">&para;</a></h3>
+<p><code>scan_python_file()</code> constructs the stock <code>McpAstVisitor</code> internally and offers no
+substitution hook, so custom visitors are driven directly by the caller:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">source</span> <span class="o">=</span> <span class="s2">"""</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="s2">import pickle as p</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="s2">def tool_restore(payload):</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="s2">    return p.loads(payload)</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="s2">"""</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="n">visitor</span> <span class="o">=</span> <span class="n">AliasedDeserializationVisitor</span><span class="p">(</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    <span class="n">file_path</span><span class="o">=</span><span class="s2">"custom_server.py"</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    <span class="n">source_code</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="p">)</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="n">visitor</span><span class="o">.</span><span class="n">visit</span><span class="p">(</span><span class="n">ast</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">source</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="23-interpret-findings">2.3 Interpret findings<a class="headerlink" href="#23-interpret-findings" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="k">for</span> <span class="n">finding</span> <span class="ow">in</span> <span class="n">visitor</span><span class="o">.</span><span class="n">findings</span><span class="p">:</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">finding</span><span class="o">.</span><span class="n">rule_id</span><span class="si">}</span><span class="s2"> line=</span><span class="si">{</span><span class="n">finding</span><span class="o">.</span><span class="n">line_number</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">finding</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">finding</span><span class="o">.</span><span class="n">snippet</span><span class="p">)</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="nb">print</span><span class="p">(</span><span class="n">finding</span><span class="o">.</span><span class="n">mcp_tool_context</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>VERITY-AST-CWE-502-PICKLE line=5
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>Aliased insecure deserialization via 'p.loads' (imported as 'pickle').
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    return p.loads(payload)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>tool_restore
+</code></pre></div>
+<p>The parent's <code>visit_FunctionDef</code> marks handlers named <code>tool_*</code>, containing <code>handle_</code>, or
+literally named <code>call</code> / <code>execute_tool</code> as tool context, so <code>mcp_tool_context</code> is
+populated without extra work.</p>
+<h3 id="24-composing-with-the-shipped-scan">2.4 Composing with the shipped scan<a class="headerlink" href="#24-composing-with-the-shipped-scan" title="Permanent link">&para;</a></h3>
+<p>Run <code>scan_python_file(path)</code> for baseline coverage, then append your visitor's findings:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.scanner.python_ast</span><span class="w"> </span><span class="kn">import</span> <span class="n">scan_python_file</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="n">findings</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">scan_python_file</span><span class="p">(</span><span class="s2">"custom_server.py"</span><span class="p">))</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="n">findings</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">visitor</span><span class="o">.</span><span class="n">findings</span><span class="p">)</span>
+</code></pre></div>
+<p>Both paths return <code>AstFinding</code> objects from <code>verity.scanner.models</code>, so downstream
+formatters treat them identically. Note that <code>scan_python_file()</code> swallows
+<code>SyntaxError</code> and unreadable files by returning <code>[]</code>; if a companion visitor must run,
+parse the file yourself and handle failures explicitly.</p>
+<h3 id="25-authoring-guidance">2.5 Authoring guidance<a class="headerlink" href="#25-authoring-guidance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Call <code>super().visit_Call(node)</code> so stock detections keep firing.</li>
+<li>Override <code>visit_FunctionDef</code> / <code>visit_AsyncFunctionDef</code> only if you need to <em>suppress</em>
+  or <em>retarget</em> findings inside specific scopes.</li>
+<li>Emit findings against an existing <code>RuleCatalog</code> constant where possible; novel
+  behaviours deserve their own <code>CUSTOM-AST-…</code> id and a <code>RuleDefinition</code>.</li>
+<li>Prefer AST checks over regex when the discriminator is an argument name, keyword
+  value, or call target.</li>
+</ul>
+<h2 id="tutorial-3-extending-sqlsecurityguard">Tutorial 3: Extending SqlSecurityGuard<a class="headerlink" href="#tutorial-3-extending-sqlsecurityguard" title="Permanent link">&para;</a></h2>
+<p><code>SqlSecurityGuard</code> is a collection of classmethods. Custom policy is expressed by
+subclassing and overriding the relevant guard, which keeps call sites unchanged.</p>
+<h3 id="31-forbidden-table-policy">3.1 Forbidden-table policy<a class="headerlink" href="#31-forbidden-table-policy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.sql_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqlSecurityError</span><span class="p">,</span> <span class="n">SqlSecurityGuard</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">CorpSqlGuard</span><span class="p">(</span><span class="n">SqlSecurityGuard</span><span class="p">):</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="n">FORBIDDEN_TABLES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"payroll"</span><span class="p">,</span> <span class="s2">"secrets"</span><span class="p">,</span> <span class="s2">"audit_log"</span><span class="p">})</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="nd">@classmethod</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_parameterized_query</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">"postgres"</span><span class="p">):</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate_parameterized_query</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">dialect</span><span class="p">)</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>        <span class="n">lowered</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>        <span class="k">for</span> <span class="n">table</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">FORBIDDEN_TABLES</span><span class="p">:</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>            <span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"\b</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">table</span><span class="p">)</span><span class="si">}</span><span class="s2">\b"</span><span class="p">,</span> <span class="n">lowered</span><span class="p">):</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>                <span class="k">raise</span> <span class="n">SqlSecurityError</span><span class="p">(</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>                    <span class="sa">f</span><span class="s2">"Table '</span><span class="si">{</span><span class="n">table</span><span class="si">}</span><span class="s2">' is outside the approved data domain."</span><span class="p">,</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>                    <span class="n">rule_id</span><span class="o">=</span><span class="s2">"CUSTOM-FORBIDDEN-TABLE"</span><span class="p">,</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>                <span class="p">)</span>
+</code></pre></div>
+<p>Delegating to <code>super()</code> first preserves the base guarantees — dangerous interpolation
+patterns, stacked statements, and dialect-aware tokenization.</p>
+<h3 id="32-tenant-scoping-policy">3.2 Tenant scoping policy<a class="headerlink" href="#32-tenant-scoping-policy" title="Permanent link">&para;</a></h3>
+<p><code>enforce_tenant_filter</code> normalizes caller parameters onto <code>tenant_id</code>. A corporate
+deployment usually constrains the tenant namespace as well:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>    <span class="nd">@classmethod</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">enforce_tenant_filter</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">session_tenant</span><span class="p">):</span>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>        <span class="k">if</span> <span class="ow">not</span> <span class="n">session_tenant</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"corp-"</span><span class="p">):</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>            <span class="k">raise</span> <span class="n">SqlSecurityError</span><span class="p">(</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>                <span class="s2">"session_tenant must be in the corporate namespace."</span><span class="p">,</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>                <span class="n">rule_id</span><span class="o">=</span><span class="s2">"CUSTOM-TENANT-NAMESPACE"</span><span class="p">,</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>            <span class="p">)</span>
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="n">scoped</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">enforce_tenant_filter</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">session_tenant</span><span class="p">)</span>
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>        <span class="n">scoped</span><span class="p">[</span><span class="s2">"tenant_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">session_tenant</span>
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>        <span class="k">return</span> <span class="n">scoped</span>
+</code></pre></div>
+<p>Always return the mapping produced by the base implementation and mutate a copy — the
+base already copies its input, so callers never observe aliasing.</p>
+<h3 id="33-covering-the-policy-with-pytest">3.3 Covering the policy with pytest<a class="headerlink" href="#33-covering-the-policy-with-pytest" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="kn">from</span><span class="w"> </span><span class="nn">verity.mcp_library.sql_guard</span><span class="w"> </span><span class="kn">import</span> <span class="n">SqlSecurityError</span>
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_forbidden_table_rejected</span><span class="p">():</span>
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">SqlSecurityError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"payroll"</span><span class="p">):</span>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        <span class="n">CorpSqlGuard</span><span class="o">.</span><span class="n">validate_parameterized_query</span><span class="p">(</span>
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>            <span class="s2">"SELECT id FROM payroll WHERE id = </span><span class="si">%s</span><span class="s2">"</span>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="p">)</span>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_approved_table_allowed</span><span class="p">():</span>
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    <span class="n">CorpSqlGuard</span><span class="o">.</span><span class="n">validate_parameterized_query</span><span class="p">(</span>
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>        <span class="s2">"SELECT id FROM invoices WHERE id = </span><span class="si">%s</span><span class="s2">"</span>
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>    <span class="p">)</span>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_cross_tenant_filter_rejected</span><span class="p">():</span>
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">SqlSecurityError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"corporate namespace"</span><span class="p">):</span>
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>        <span class="n">CorpSqlGuard</span><span class="o">.</span><span class="n">enforce_tenant_filter</span><span class="p">({},</span> <span class="s2">"partner-42"</span><span class="p">)</span>
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a><span class="k">def</span><span class="w"> </span><span class="nf">test_tenant_bound_to_parameters</span><span class="p">():</span>
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>    <span class="k">assert</span> <span class="n">CorpSqlGuard</span><span class="o">.</span><span class="n">enforce_tenant_filter</span><span class="p">({},</span> <span class="s2">"corp-42"</span><span class="p">)[</span><span class="s2">"tenant_id"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"corp-42"</span>
+</code></pre></div>
+<p>Assert on the exception type instead of its message wherever possible; message text is
+not part of the stable contract, but <code>SqlSecurityError</code> and its optional <code>rule_id</code> are.</p>
+<h3 id="34-authoring-guidance">3.4 Authoring guidance<a class="headerlink" href="#34-authoring-guidance" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Override only the classmethod you need; the remaining guards stay inherited.</li>
+<li>Raise <code>SqlSecurityError</code> (never <code>ValueError</code>) so callers can branch uniformly.</li>
+<li>Set <code>rule_id</code> on policy-specific errors; it flows into structured output.</li>
+<li>Keep allowlists lowercase and explicit — <code>validate_identifier_allowlist</code> normalizes
+  input before comparing.</li>
+<li>Test both the reject and the accept path; a guard that rejects everything is as
+  dangerous as one that rejects nothing.</li>
+</ul>
+<h2 id="composing-extensions">Composing extensions<a class="headerlink" href="#composing-extensions" title="Permanent link">&para;</a></h2>
+<p>The three seams are independent, so a customer integration typically:</p>
+<ol>
+<li>Builds one <code>StaticRuleEvaluator</code> with the shipped defaults plus <code>custom_rules</code>.</li>
+<li>Runs <code>scan_python_file()</code> and merges in any <code>McpAstVisitor</code> subclass findings.</li>
+<li>Wraps every database call site in the <code>SqlSecurityGuard</code> subclass.</li>
+</ol>
+<p>Because each seam returns plain dataclasses (<code>StaticRuleMatch</code>, <code>AstFinding</code>) or raises a
+typed error, they compose without adapters. The <code>PRO_FEATURE_REQUIRED</code> degradation
+contract above still applies: extensions never require <code>verity-pro</code>, and the absence of a
+plugin never changes the behaviour of a locally defined rule, visitor, or guard.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "search.share"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

