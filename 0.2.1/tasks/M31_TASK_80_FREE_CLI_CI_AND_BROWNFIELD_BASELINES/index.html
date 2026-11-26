@@ -1353,6 +1353,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#completion-verification-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Completion &amp; Verification Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -1493,6 +1504,14 @@
 </tr>
 </tbody>
 </table>
+<h2 id="completion-verification-summary">Completion &amp; Verification Summary<a class="headerlink" href="#completion-verification-summary" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>Implemented Commits (<code>verityredteam-free</code>)</strong>:</li>
+<li><code>f72e2e7</code> (<code>test(m31)</code>): Locked ATDD test suites (<code>tests/unit/test_baseline_fingerprint.py</code>, <code>tests/unit/test_baseline_ignore.py</code>, <code>tests/unit/test_cli_baseline.py</code>, <code>tests/unit/test_cli_ci_flags.py</code>).</li>
+<li><code>a89df8e</code> (<code>feat(m31)</code>): Stdlib <code>src/verity/baseline/</code> package (<code>__init__.py</code>, <code>paths.py</code>, <code>fingerprint.py</code>, <code>ignore.py</code>, <code>inline.py</code>, <code>store.py</code>), relative path canonicalization in <code>src/verity/scanner/engine.py</code>, and <code>.verityignore</code>-filtered nested monorepo discovery in <code>src/verity/discovery/config_scanner.py</code>.</li>
+<li><code>7df0948</code> (<code>feat(m31)</code>): CLI CI flags (<code>--fail-on-severity</code>/<code>--fail-on</code>, <code>--save-baseline</code>, <code>--baseline</code>, <code>--fail-on-new</code>, <code>--ignore-file</code>, <code>--config</code>, <code>--root</code>, <code>--show-suppressed</code>, <code>--strict-policy</code>, <code>--no-inline-ignores</code>, <code>--no-default-ignores</code>, multi-file <code>--path</code>), <code>verity test --baseline</code> schema-mismatch guard (<code>exit 2</code>), suppression/baseline summaries across <code>terminal</code>/<code>markdown</code>/<code>html</code>/<code>json</code> reporters, and MCP <code>verity_security_scan</code> parity (<code>baseline_path</code>, <code>fail_on_new</code>, <code>respect_ignores</code>) in <code>src/verity/mcp_server/{schemas.py,handlers/security_scan.py}</code>.</li>
+<li><strong>Acceptance Criteria</strong>: <code>AC-31.1</code> through <code>AC-31.5</code> verified green (<code>uv run pytest tests/</code>, <code>uv run ruff check src tests scripts</code>, <code>uv run verity test --demo</code>, and <code>uv run mkdocs build --strict</code>).</li>
+</ul>
 
 
 

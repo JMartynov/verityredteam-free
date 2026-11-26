@@ -2603,6 +2603,37 @@
 <li>Offer a next step such as <code>verity_remediation_ops</code> or a configuration change.</li>
 <li>If <code>isError</code> is <code>true</code>, show the error and suggest a diagnostic command.</li>
 </ol>
+<p>Optional <code>verity_security_scan</code> brownfield baseline and ignore parameters (<code>options</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>baseline_path</code></td>
+<td>string</td>
+<td>—</td>
+<td>Path to a <code>.verity-baseline.json</code> file (for <code>scan_client_configs</code> / <code>scan_ast_code</code>) or a tool-hash baseline map (for <code>detect_rug_pull</code> / <code>snapshot_baseline</code>).</td>
+</tr>
+<tr>
+<td><code>fail_on_new</code></td>
+<td>boolean</td>
+<td><code>false</code></td>
+<td>Sets <code>gate_passed: false</code> when active findings not present in <code>baseline_path</code> are detected.</td>
+</tr>
+<tr>
+<td><code>respect_ignores</code></td>
+<td>boolean</td>
+<td><code>true</code></td>
+<td>Applies <code>.verityignore</code>, <code>verity.toml</code> (<code>[[ignore]]</code> / <code>[[allowlists]]</code>), and inline <code># verity-ignore</code> / <code># nosemgrep</code> suppressions.</td>
+</tr>
+</tbody>
+</table>
 <h3 id="72-verity_database_guard">7.2 <code>verity_database_guard</code><a class="headerlink" href="#72-verity_database_guard" title="Permanent link">&para;</a></h3>
 <p>Use this tool before executing generated or user-supplied SQL. It is a guardrail for database operations.</p>
 <p>Example developer prompt:</p>

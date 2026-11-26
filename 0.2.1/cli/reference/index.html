@@ -854,6 +854,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#brownfield-baselines-verity-baselinejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brownfield baselines (.verity-baseline.json)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore-rules-policy-config-inline-suppressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignore rules, policy config &amp; inline suppressions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#terminal-output" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1900,6 +1922,28 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#brownfield-baselines-verity-baselinejson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brownfield baselines (.verity-baseline.json)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore-rules-policy-config-inline-suppressions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ignore rules, policy config &amp; inline suppressions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#terminal-output" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2409,9 +2453,13 @@
 <p>Precedence, highest first: command-line flag → environment variable → built-in default. <code>NO_COLOR</code> (standard) is honored alongside <code>VERITY_NO_COLOR</code>.</p>
 <hr />
 <h2 id="verity-scan">verity scan<a class="headerlink" href="#verity-scan" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>verity scan [--config-file PATH] [--schema-file PATH] [--path PATH]
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>            [--format terminal|json|markdown|html|sarif] [--output PATH]
-<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>            [--fail-on-findings] [--offline] [--live-probe]
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>verity scan [--config-file PATH [PATH ...]] [--schema-file PATH] [--path PATH [PATH ...]]
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>            [--root DIR] [--config PATH] [--ignore-file PATH]
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>            [--format terminal|json|markdown|html|sarif] [--output PATH]
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>            [--fail-on-findings] [--fail-on-severity LEVEL] [--fail-on LEVEL]
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            [--fail-on-new] [--save-baseline PATH] [--baseline PATH]
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            [--show-suppressed] [--strict-policy] [--no-inline-ignores]
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>            [--no-default-ignores] [--offline] [--live-probe]
 </code></pre></div>
 <p>Statically audits discovered MCP/LLM configuration files and Python source trees. Target code is parsed, never executed.</p>
 <h3 id="option-table">Option table<a class="headerlink" href="#option-table" title="Permanent link">&para;</a></h3>
@@ -2427,9 +2475,9 @@
 <tbody>
 <tr>
 <td><code>--config-file</code></td>
-<td>path</td>
+<td>path...</td>
 <td>auto-discover</td>
-<td>Explicit MCP/LLM config. When omitted, <code>.mcp.json</code>, <code>mcp.json</code>, and <code>claude_desktop_config.json</code> are located by walking upward from <code>--path</code></td>
+<td>One or more MCP/LLM config JSON/YAML files. When omitted alongside <code>--path</code>/<code>--schema-file</code>, workstation configs are auto-discovered</td>
 </tr>
 <tr>
 <td><code>--schema-file</code></td>
@@ -2439,9 +2487,27 @@
 </tr>
 <tr>
 <td><code>--path</code></td>
-<td>path</td>
+<td>path...</td>
 <td>—</td>
-<td>Python source file or directory to scan</td>
+<td>One or more Python files, directories, or config files (<code>.json</code>/<code>.yaml</code>/<code>.yml</code>). Directories scan AST sources and discover nested monorepo configs (<code>**/.cursor/mcp.json</code>, <code>**/.vscode/mcp.json</code>, <code>**/.mcp.json</code>, <code>**/mcp.json</code>) filtered by <code>.verityignore</code></td>
+</tr>
+<tr>
+<td><code>--root</code></td>
+<td>dir</td>
+<td>auto-discover</td>
+<td>Explicit project root for POSIX repo-relative path canonicalization (<code>--root</code> → enclosing <code>.git</code> → target dir/parent → cwd)</td>
+</tr>
+<tr>
+<td><code>--config</code></td>
+<td>path</td>
+<td><code>&lt;root&gt;/verity.toml</code></td>
+<td>Path to a <code>verity.toml</code> policy config (<code>[scan]</code>, <code>[[ignore]]</code>, <code>[[allowlists]]</code>)</td>
+</tr>
+<tr>
+<td><code>--ignore-file</code></td>
+<td>path</td>
+<td><code>&lt;root&gt;/.verityignore</code></td>
+<td>Path to a <code>.verityignore</code> file</td>
 </tr>
 <tr>
 <td><code>--format</code></td>
@@ -2459,7 +2525,55 @@
 <td><code>--fail-on-findings</code></td>
 <td>flag</td>
 <td>off</td>
-<td>Exit <code>1</code> when at least one finding is present</td>
+<td>Exit <code>1</code> when at least one active finding is present (alias for <code>--fail-on-severity INFO</code>)</td>
+</tr>
+<tr>
+<td><code>--fail-on-severity</code>, <code>--fail-on</code></td>
+<td>enum</td>
+<td>—</td>
+<td>Exit <code>1</code> when any active finding meets or exceeds <code>CRITICAL</code>, <code>HIGH</code>, <code>MEDIUM</code>, <code>LOW</code>, or <code>INFO</code> (case-insensitive)</td>
+</tr>
+<tr>
+<td><code>--fail-on-new</code></td>
+<td>flag</td>
+<td>off</td>
+<td>Exit <code>1</code> when active findings not present in <code>--baseline</code> appear</td>
+</tr>
+<tr>
+<td><code>--save-baseline</code></td>
+<td>path</td>
+<td>—</td>
+<td>Atomically write a canonical <code>.verity-baseline.json</code> (<code>verity-baseline.v1.json</code>) snapshot of active findings</td>
+</tr>
+<tr>
+<td><code>--baseline</code></td>
+<td>path</td>
+<td>—</td>
+<td>Diff active findings against a saved <code>.verity-baseline.json</code> baseline</td>
+</tr>
+<tr>
+<td><code>--show-suppressed</code></td>
+<td>flag</td>
+<td>off</td>
+<td>Include <code>suppressed_findings</code> details in report output</td>
+</tr>
+<tr>
+<td><code>--strict-policy</code></td>
+<td>flag</td>
+<td>off</td>
+<td>Require non-empty <code>reason</code> / <code>description</code> on policy <code>[[ignore]]</code>, <code>[[allowlists]]</code>, and inline suppressions</td>
+</tr>
+<tr>
+<td><code>--no-inline-ignores</code></td>
+<td>flag</td>
+<td>off</td>
+<td>Disable in-source <code># verity-ignore</code> and <code># nosemgrep</code> directives</td>
+</tr>
+<tr>
+<td><code>--no-default-ignores</code></td>
+<td>flag</td>
+<td>off</td>
+<td>Disable built-in default ignored directories (<code>.git</code>, <code>.venv</code>, <code>node_modules</code>, etc.) and auto-loaded <code>.verityignore</code></td>
 </tr>
 <tr>
 <td><code>--offline</code></td>
@@ -2479,28 +2593,51 @@
 <ul>
 <li><code>--live-probe</code> implies egress from the host.</li>
 <li><code>--offline</code> sets <code>VERITY_OFFLINE=1</code> for the run.</li>
-<li>Unreadable config or schema files exit <code>3</code>.</li>
+<li><code>--save-baseline</code> and <code>--baseline</code> are mutually exclusive (<code>exit 2</code>).</li>
+<li>Missing <code>--config-file</code>, <code>--config</code>, <code>--ignore-file</code>, <code>--baseline</code>, invalid <code>--fail-on-severity</code>, <code>--strict-policy</code> violations, or baseline schema mismatches exit <code>2</code>.</li>
 <li>Scan never imports, executes, or evaluates project code.</li>
 </ul>
 <h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Default posture scan of the current directory</span>
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>verity<span class="w"> </span>scan
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Explicit config and source root</span>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span>.mcp.json<span class="w"> </span>--path<span class="w"> </span>server
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="c1"># Multi-file mixed-type scan (ideal for pre-commit)</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>server.py<span class="w"> </span>tools.py<span class="w"> </span>.mcp.json<span class="w"> </span>--fail-on-severity<span class="w"> </span>HIGH
 <a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Machine-readable report to a file</span>
-<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>findings.json
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="c1"># Explicit config and source root</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span>.mcp.json<span class="w"> </span>--path<span class="w"> </span>server
 <a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>
-<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># CI gate</span>
-<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--offline<span class="w"> </span>--fail-on-findings
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="c1"># Machine-readable report to a file</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>--output<span class="w"> </span>findings.json
 <a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>
-<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Code-scanning upload [Pro]</span>
-<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>sarif<span class="w"> </span>--output<span class="w"> </span>verity.sarif
-<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
-<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a><span class="c1"># Live probing of referenced endpoints</span>
-<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--config-file<span class="w"> </span>.mcp.json<span class="w"> </span>--live-probe
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a><span class="c1"># Brownfield baseline capture and CI regression gate</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--offline<span class="w"> </span>--save-baseline<span class="w"> </span>.verity-baseline.json
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--offline<span class="w"> </span>--baseline<span class="w"> </span>.verity-baseline.json<span class="w"> </span>--fail-on-new<span class="w"> </span>--fail-on-severity<span class="w"> </span>HIGH
+<a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>
+<a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a><span class="c1"># CI gate (greenfield)</span>
+<a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--offline<span class="w"> </span>--fail-on-findings
+<a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>
+<a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a><span class="c1"># Code-scanning upload [Pro]</span>
+<a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--format<span class="w"> </span>sarif<span class="w"> </span>--output<span class="w"> </span>verity.sarif
+<a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>
+<a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a><span class="c1"># Live probing of referenced endpoints</span>
+<a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--config-file<span class="w"> </span>.mcp.json<span class="w"> </span>--live-probe
 </code></pre></div>
+<h3 id="brownfield-baselines-verity-baselinejson">Brownfield baselines (<code>.verity-baseline.json</code>)<a class="headerlink" href="#brownfield-baselines-verity-baselinejson" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Schema (<code>verity-baseline.v1.json</code>)</strong>: <code>--save-baseline</code> writes <code>schema_version: "1.0"</code>, <code>generated_by</code>, and deterministic <code>entries</code> sorted by <code>(file_path, rule_id, fingerprint)</code> atomically via a temporary file and <code>os.replace()</code>. No <code>scan_duration_ms</code>, timestamps, absolute machine paths, or plaintext secrets are stored.</li>
+<li><strong>Pre-redaction fingerprints (<code>verity:v1:&lt;16-hex&gt;_&lt;occ&gt;</code>)</strong>: Computed before secret scrubbing so AST findings survive line shifts, duplicate findings disambiguate via <code>_0</code>/<code>_1</code>, and rotating a secret invalidates its baseline entry without storing plaintext credentials.</li>
+<li><strong>Schema-mismatch guard (<code>exit 2</code>)</strong>: <code>verity scan --baseline</code> rejects <code>verity test</code> rug-pull hash maps (<code>{tool: sha256}</code>) with exit code <code>2</code>, and <code>verity test --baseline</code> rejects <code>verity-baseline.v1.json</code> scan baselines with exit code <code>2</code>.</li>
+</ul>
+<h3 id="ignore-rules-policy-config-inline-suppressions">Ignore rules, policy config &amp; inline suppressions<a class="headerlink" href="#ignore-rules-policy-config-inline-suppressions" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>.verityignore</code></strong> (<code>--ignore-file</code>): Supports gitignore-style globs, <code>:include .gitignore</code> (with cycle and root-escape protection), top-to-bottom <code>!pattern</code> negation, and <code>--no-default-ignores</code>. Applied to both AST path walks and nested monorepo config discovery.</li>
+<li><strong><code>verity.toml</code></strong> (<code>--config</code>): Parsed with stdlib <code>tomllib</code>.</li>
+<li><code>[scan]</code>: default <code>fail_on</code> / <code>fail_on_severity</code> (<code>min_severity</code>, <code>baseline</code>, <code>fail_on_new</code>).</li>
+<li><code>[[ignore]]</code>: match by <code>id</code> (including OSV/CVE <code>aliases</code>), <code>paths</code>, <code>servers</code>, or <code>fingerprint</code>, with <code>reason</code> and optional <code>expires = "YYYY-MM-DD"</code>. Expired rules re-activate findings and emit <code>expired_ignore_warnings</code>.</li>
+<li><code>[[allowlists]]</code>: match <code>paths</code>, <code>servers</code>, <code>stopwords</code>, and <code>regexes</code> against <code>regex_target</code> (<code>secret</code>, <code>match</code>, or <code>line</code>) with <code>description</code>.</li>
+<li><strong>Inline suppressions</strong>: <code># verity-ignore</code>, <code># verity-ignore: RULE_1, RULE_2 -- &lt;reason&gt;</code>, and <code># nosemgrep: &lt;rule-id&gt;</code> on the finding line or immediately preceding line tag findings with <code>suppression: {"kind": "inSource", "source": "inline", ...}</code> unless <code>--no-inline-ignores</code> is set. <code>--strict-policy</code> requires a non-empty <code>reason</code> / <code>description</code>.</li>
+</ul>
 <h3 id="terminal-output">Terminal output<a class="headerlink" href="#terminal-output" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>verity 0.2.1 — scan
 <a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>root: /Users/ivan/app
@@ -2569,12 +2706,17 @@
 <tr>
 <td><code>summary</code></td>
 <td>object</td>
-<td>Counts per severity plus <code>total</code></td>
+<td>Counts per severity, <code>suppressed_counts</code> (<code>baseline</code>, <code>ignore_file</code>, <code>policy</code>, <code>inline</code>, <code>other</code>, <code>total</code>), optional <code>new_findings</code> / <code>baseline_findings</code> / <code>resolved_since_baseline</code>, and <code>expired_ignore_warnings</code></td>
 </tr>
 <tr>
 <td><code>findings</code></td>
 <td>array</td>
-<td>Finding objects (see below)</td>
+<td>Active finding objects (see below)</td>
+</tr>
+<tr>
+<td><code>suppressed_findings</code></td>
+<td>array</td>
+<td>Suppressed finding objects with <code>suppression</code> metadata (present when <code>--show-suppressed</code> is set)</td>
 </tr>
 </tbody>
 </table>
@@ -2722,15 +2864,15 @@
 <tbody>
 <tr>
 <td><code>0</code></td>
-<td>Scan completed; no findings (or <code>--fail-on-findings</code> not set)</td>
+<td>Scan completed; no blocking active findings (or gate threshold not exceeded)</td>
 </tr>
 <tr>
 <td><code>1</code></td>
-<td>Findings present and <code>--fail-on-findings</code> was set</td>
+<td>Active findings met or exceeded <code>--fail-on-severity</code>/<code>--fail-on</code>/<code>--fail-on-findings</code>, or new findings appeared with <code>--baseline --fail-on-new</code></td>
 </tr>
 <tr>
 <td><code>2</code></td>
-<td>Usage error (unknown or invalid flag) or gated <code>[Pro]</code> feature such as <code>--format sarif</code> (<code>PRO_FEATURE_REQUIRED</code>, zero partial file writes)</td>
+<td>Usage error, missing <code>--config-file</code>/<code>--config</code>/<code>--ignore-file</code>/<code>--baseline</code>, baseline schema mismatch, <code>--strict-policy</code> error, or gated <code>[Pro]</code> feature such as <code>--format sarif</code> (<code>PRO_FEATURE_REQUIRED</code>, zero partial file writes)</td>
 </tr>
 <tr>
 <td><code>3</code></td>
@@ -2834,6 +2976,7 @@
 <li><code>--dialect</code> defaults to <code>postgres</code>.</li>
 <li><code>--url</code> uses <code>VERITY_TEST_AUTHORIZATION</code> if set.</li>
 <li><code>--save-baseline</code> and <code>--baseline</code> require <code>--command</code> or <code>--url</code> and are mutually exclusive; each violation is reported as a <code>FAIL</code> result and exits <code>1</code>.</li>
+<li>Passing a <code>verity scan</code> <code>.verity-baseline.json</code> (<code>verity-baseline.v1.json</code>) file to <code>verity test --baseline</code> triggers the schema-mismatch guard and exits <code>2</code>.</li>
 <li>Invalid or missing baseline files exit <code>1</code> with a <code>FAIL</code> result.</li>
 <li><code>--url</code> connection failures are reported as a <code>FAIL</code> result and exit <code>1</code>.</li>
 </ul>
@@ -3209,7 +3352,7 @@
 </code></pre></div>
 <h3 id="gating-guidance">Gating guidance<a class="headerlink" href="#gating-guidance" title="Permanent link">&para;</a></h3>
 <ul>
-<li>Use <code>--baseline</code> on long-lived branches to block only regressions.</li>
+<li>Use <code>--baseline .verity-baseline.json --fail-on-new</code> on long-lived brownfield branches to block only regressions, paired with <code>--fail-on-severity HIGH</code> when prioritizing high-impact issues.</li>
 <li>Use <code>--fail-on-findings</code> without a baseline only on greenfield repositories.</li>
 <li>Always pair <code>--output</code> with an artifact upload; exit codes alone discard evidence.</li>
 <li>Keep <code>--offline</code> in CI unless the job is explicitly authorized to probe live endpoints.</li>
