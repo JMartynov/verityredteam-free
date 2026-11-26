@@ -1,0 +1,101 @@
+name: Update Homebrew Tap
+
+on:
+  workflow_run:
+    workflows: ["Publish to PyPI"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release semver (e.g. 0.2.1). Defaults to the latest tag."
+        required: false
+
+jobs:
+  update-homebrew-tap:
+    name: Update Homebrew Tap
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            if [ -z "$VERSION" ]; then
+              VERSION="$(git describe --tags --abbrev=0)"
+            fi
+          else
+            VERSION="${{ github.event.workflow_run.head_branch }}"
+          fi
+          VERSION="${VERSION#v}"
+          echo "resolved=${VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Sync dev dependencies
+        run: uv sync --extra dev
+
+      - name: Wait for PyPI release
+        env:
+          VERSION: ${{ steps.version.outputs.resolved }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL="https://pypi.org/pypi/verity-redteam-core/${VERSION}/json"
+          for attempt in $(seq 1 24); do
+            status="$(curl -s -o /dev/null -w '%{http_code}' "$URL")"
+            if [ "$status" = "200" ]; then
+              echo "verity-redteam-core ${VERSION} is available on PyPI"
+              exit 0
+            fi
+            echo "Waiting for PyPI to serve ${VERSION} (attempt ${attempt}/24, status ${status})"
+            sleep 5
+          done
+          echo "Timed out after 120s waiting for ${URL}" >&2
+          exit 1
+
+      - name: Render Formula/verity.rb
+        run: |
+          set -euo pipefail
+          uv run python scripts/generate_homebrew_formula.py \
+            --version "${{ steps.version.outputs.resolved }}" \
+            --output /tmp/verity.rb
+          sed -n '1,20p' /tmp/verity.rb
+
+      - name: Checkout Homebrew tap
+        uses: actions/checkout@v5
+        with:
+          repository: JMartynov/homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+          path: tap
+
+      - name: Commit and push formula
+        env:
+          VERSION: ${{ steps.version.outputs.resolved }}
+        run: |
+          set -euo pipefail
+          mkdir -p tap/Formula
+          cp /tmp/verity.rb tap/Formula/verity.rb
+          cd tap
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Formula/verity.rb
+          if git diff --cached --quiet; then
+            echo "No formula changes detected"
+            exit 0
+          fi
+          git commit -m "Update verity to ${VERSION}"
+          git push

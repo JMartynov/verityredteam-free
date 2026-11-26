@@ -19,6 +19,8 @@ Offline, deterministic, zero Docker, zero API keys, Apache-2.0.
 End users install straight from PyPI:
 
 ```bash
+uvx verity-redteam-core scan
+brew install JMartynov/tap/verity
 pip install verity-redteam-core
 uvx --from verity-redteam-core verity scan
 ```

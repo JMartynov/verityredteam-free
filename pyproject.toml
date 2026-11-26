@@ -32,6 +32,13 @@ docs = [
 
 [project.scripts]
 verity = "verity.cli:main"
+verity-redteam-core = "verity.cli:main"
+
+[project.urls]
+Homepage = "https://jmartynov.github.io/verityredteam-free/"
+Repository = "https://github.com/JMartynov/verityredteam-free"
+Documentation = "https://jmartynov.github.io/verityredteam-free/"
+Issues = "https://github.com/JMartynov/verityredteam-free/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]

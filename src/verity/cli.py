@@ -970,6 +970,13 @@ def _cmd_serve(args: argparse.Namespace) -> int:
 def build_parser() -> argparse.ArgumentParser:
     """Build the Verity argument parser."""
     parser = argparse.ArgumentParser(prog="verity", description="Verity MCP security toolkit.")
+    parser.add_argument(
+        "-V",
+        "--version",
+        action="version",
+        version=f"%(prog)s {verity.__version__}",
+        help="Show the Verity version and exit.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     scan = subparsers.add_parser("scan", help="Scan MCP configurations, schemas, and source.")
