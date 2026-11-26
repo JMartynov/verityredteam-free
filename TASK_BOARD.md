@@ -166,6 +166,14 @@ flowchart TD
 | **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Done` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
 | **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Done` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
 | **M45** | **Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)** | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | `Done` | [View Item #M45](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvnMQ`) |
+| **M46** | **Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)** | 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift | [M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) | `Not Done` | [View Item #M46](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjAI`) |
+| **M47** | **Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`)** | Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, `ViewerRegistry` | [M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md](docs/tasks/M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md) | `Not Done` | [View Item #M47](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjFQ`) |
+| **M48** | **Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`)** | Lossless `JsoncPatcher`, `AtomicBackupManager` rollback, `verity init` wizard & `verity fix` dry-run/write config remediation | [M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md](docs/tasks/M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md) | `Partially Done` | [View Item #M48](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjKw`) |
+| **M49** | **Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`)** | Wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, `--llm-assist` | [M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md](docs/tasks/M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md) | `Partially Done` | [View Item #M49](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjOY`) |
+| **M50** | **Free `PRO_FEATURE_REQUIRED` Plugin Hooks for `--autofix` and `--explain` (`TASK-88-89-FREE`)** | `set_autofix_provider`/`set_explain_provider`, `synthesize_verified_patch`/`explain_finding_context` schemas, `PRO_FEATURE_REQUIRED` gates | [M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md](docs/tasks/M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md) | `Not Done` | [View Item #M50](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjTI`) |
+| **M51** | **Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`)** | Sync `passports.json.gz`/`vulnerabilities.json.gz`, Sigstore verification in `data_fetcher.py`, dedup `StaticConfigScanner` | [M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md](docs/tasks/M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md) | `Not Done` | [View Item #M51](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjXY`) |
+| **M52** | **Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`)** | `langchain_ast.py`, `crewai_ast.py`, `autogen_ast.py` visitors + optional `yara_engine.py` graceful fallback | [M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md](docs/tasks/M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md) | `Not Done` | [View Item #M52](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjcE`) |
+| **M53** | **Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`)** | Opt-in `ReputationScorer` (0-100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1` | [M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md](docs/tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md) | `Not Done` | [View Item #M53](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjic`) |
 
 ---
 
@@ -1175,3 +1183,84 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - `README.md` leads with Tier 1 (12) / Tier 2 (13), a single auxiliary pointer, and the Pro showcase section.
 - `[Pro]` badge on `--format sarif` with `PRO_FEATURE_REQUIRED` / exit code `2`; Free formats unbadged.
 - Covered by `tests/unit/test_readme_parity.py`.
+
+---
+
+## Next-Gen SAST, UX & Supply-Chain Wave (M46–M53)
+
+### M46: Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)
+
+**Task Spec**
+- [`M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md`](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjAI`)
+
+**Status & Deliverables**
+- **Status:** `Not Done` (P2, L)
+- 15+ client discovery with JSONC parsing, composable `--scanners`, offline BK-Tree typosquatting, conflicts, and reachability.
+- CycloneDX 1.6 / SPDX 2.3 SBOM export, OWASP MCP Top 10 mapping, and inventory drift flags.
+
+### M47: Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`)
+
+**Task Spec**
+- [`M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md`](docs/tasks/M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjFQ`)
+
+**Status & Deliverables**
+- **Status:** `Not Done` (P1, L)
+- Loopback-only HTTP + SSE server with DNS-rebinding, CSP, and token guards (`--watch`, `--allow-live-scan`).
+- JSON/JSONL artifact indexer and zero-build ES module SPA with `ViewerRegistry`.
+
+### M48: Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`)
+
+**Task Spec**
+- [`M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md`](docs/tasks/M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjKw`)
+
+**Status & Deliverables**
+- **Status:** `Partially Done` (P1, L)
+- Legacy `src/verity/onboarding/{controller,models,config_scanner}.py` exist from M2.
+- Remaining: lossless `JsoncPatcher`, `AtomicBackupManager` handshake rollback, `verity init` wizard, and `verity fix` dry-run/write config remediation + Pro AST gate.
+
+### M49: Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`)
+
+**Task Spec**
+- [`M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md`](docs/tasks/M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjOY`)
+
+**Status & Deliverables**
+- **Status:** `Partially Done` (P1, M)
+- `python_ast.py` `visit_AsyncFunctionDef` and real `CWE-22`/`89`/`862` heuristics already Done in M39.
+- Remaining: wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, add pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, and `--llm-assist` CLI flags.
+
+### M50: Free `PRO_FEATURE_REQUIRED` Plugin Hooks for `--autofix` and `--explain` (`TASK-88-89-FREE`)
+
+**Task Spec**
+- [`M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md`](docs/tasks/M50_TASK_88_89_FREE_AUTOFIX_AND_EXPLAIN_PLUGIN_HOOKS.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjTI`)
+
+**Status & Deliverables**
+- **Status:** `Not Done` (P1, S)
+- `set_autofix_provider` / `set_explain_provider` hooks and `synthesize_verified_patch` / `explain_finding_context` schemas.
+- Fail closed with `PRO_FEATURE_REQUIRED` (exit code `2`) when `verity-pro` is absent.
+
+### M51: Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`)
+
+**Task Spec**
+- [`M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md`](docs/tasks/M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjXY`)
+
+**Status & Deliverables**
+- **Status:** `Not Done` (P1, M)
+- Refresh bundled `passports.json.gz` and `vulnerabilities.json.gz`, enforce keyless Sigstore verification in `data_fetcher.py`, and consolidate `StaticConfigScanner` into `MultiClientConfigScanner`.
+
+### M52: Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`)
+
+**Task Spec**
+- [`M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md`](docs/tasks/M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjcE`)
+
+**Status & Deliverables**
+- **Status:** `Not Done` (P1, L)
+- Deterministic `langchain_ast.py`, `crewai_ast.py`, and `autogen_ast.py` visitors plus optional `yara_engine.py` graceful fallback.
+
+### M53: Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`)
+
+**Task Spec**
+- [`M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md`](docs/tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjic`)
+
+**Status & Deliverables**
+- **Status:** `Not Done` (P2, S)
+- Opt-in `ReputationScorer` (0–100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1` with zero outbound requests.
