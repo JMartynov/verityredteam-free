@@ -116,6 +116,58 @@ def render_scan_html(report_data: dict[str, Any]) -> str:
     else:
         rows.append("<p>No findings detected.</p>")
 
+    suppressed_counts = summary.get("suppressed_counts") or {}
+    suppressed_findings = report_data.get("suppressed_findings") or []
+    if suppressed_counts or suppressed_findings:
+        rows.extend(
+            [
+                "<h2>Suppressed Findings</h2>",
+                "<table>",
+                "<thead><tr><th>Source</th><th>Count</th></tr></thead>",
+                "<tbody>",
+            ]
+        )
+        for source in ("baseline", "ignore_file", "policy", "inline", "other"):
+            rows.append(
+                f"<tr><td>{_e(source)}</td>"
+                f"<td>{_e(suppressed_counts.get(source, 0))}</td></tr>"
+            )
+        rows.append(
+            f"<tr><td>total</td>"
+            f"<td>{_e(suppressed_counts.get('total', len(suppressed_findings)))}</td></tr>"
+        )
+        rows.extend(["</tbody>", "</table>"])
+        if suppressed_findings:
+            rows.extend(
+                [
+                    "<table>",
+                    "<thead><tr><th>Severity</th><th>Rule</th>"
+                    "<th>Location</th><th>Reason</th></tr></thead>",
+                    "<tbody>",
+                ]
+            )
+            for finding in suppressed_findings:
+                suppression = finding.get("suppression") or {}
+                path = _field(finding, "file_path", "target_name")
+                line = _field(finding, "line_number")
+                rows.append(
+                    "<tr>"
+                    f"<td>{_severity_badge(finding.get('severity'))}</td>"
+                    f"<td>{_e(_field(finding, 'rule_id'))}</td>"
+                    f"<td>{_e(f'{path}:{line}')}</td>"
+                    f"<td>{_e(suppression.get('reason') or suppression.get('source'))}</td>"
+                    "</tr>"
+                )
+            rows.extend(["</tbody>", "</table>"])
+
+    resolved = summary.get("resolved_since_baseline")
+    if resolved is not None:
+        rows.append(
+            f"<p><strong>Resolved since baseline:</strong> {_e(resolved)}</p>"
+        )
+    for warning in summary.get("expired_ignore_warnings") or []:
+        rows.append(f'<p class="warning">{_e(warning)}</p>')
+
     return _document("Verity Scan Report", "\n".join(rows))
 
 

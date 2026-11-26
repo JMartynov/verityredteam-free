@@ -100,6 +100,21 @@ UNIFIED_TOOL_DEFINITIONS = [
                                 "When true, save current canonical hashes to baseline_path."
                             ),
                         },
+                        "fail_on_new": {
+                            "type": "boolean",
+                            "default": False,
+                            "description": (
+                                "Fail the scan gate when new findings appear "
+                                "versus baseline_path."
+                            ),
+                        },
+                        "respect_ignores": {
+                            "type": "boolean",
+                            "default": True,
+                            "description": (
+                                "Apply inline and policy suppressions to findings."
+                            ),
+                        },
                     },
                 },
             },

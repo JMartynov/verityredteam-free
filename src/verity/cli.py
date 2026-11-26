@@ -6,12 +6,28 @@ import argparse
 import importlib.metadata
 import json
 import os
+import re
 import shlex
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
 import verity
+from verity.baseline import (
+    BaselineSchemaError,
+    PolicyValidationError,
+    apply_inline_suppressions,
+    apply_policy_suppressions,
+    assign_fingerprints,
+    diff_baseline,
+    load_baseline,
+    load_ignore_spec,
+    load_policy_config,
+    resolve_project_root,
+    save_baseline,
+    validate_rug_pull_baseline_dict,
+)
 from verity.reporting import (
     render_scan_html,
     render_scan_markdown,
@@ -28,6 +44,7 @@ from verity.scanner.credential_patterns import (
 
 _SEVERITY_ORDER = ("CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO")
 _SEVERITY_RANK = {sev: idx for idx, sev in enumerate(_SEVERITY_ORDER)}
+_SECRET_RULE_IDS = frozenset({"VERITY-CFG-SECRET-001", "SEC-STATIC-SECRET-IN-CONFIG"})
 
 SARIF_MISSING_MESSAGE = (
     "SARIF v2.1.0 compliance export requires the verity-pro plugin."
@@ -102,28 +119,40 @@ def _stdlib_sarif_exporter(report: dict[str, Any]) -> dict[str, Any]:
         else:
             level = "warning"
 
-        results.append(
-            {
-                "ruleId": rule_id,
-                "level": level,
-                "message": {"text": f"{title}: {message}".strip()},
-                "locations": [
-                    {
-                        "physicalLocation": {
-                            "artifactLocation": {
-                                "uri": str(
-                                    finding.get("file_path")
-                                    or finding.get("uri")
-                                    or finding.get("location")
-                                    or "mcp_config.json"
-                                )
-                            },
-                            "region": {"startLine": _parse_start_line(finding)},
-                        }
+        result: dict[str, Any] = {
+            "ruleId": rule_id,
+            "level": level,
+            "message": {"text": f"{title}: {message}".strip()},
+            "locations": [
+                {
+                    "physicalLocation": {
+                        "artifactLocation": {
+                            "uri": str(
+                                finding.get("file_path")
+                                or finding.get("uri")
+                                or finding.get("location")
+                                or "mcp_config.json"
+                            )
+                        },
+                        "region": {"startLine": _parse_start_line(finding)},
                     }
-                ],
-            }
-        )
+                }
+            ],
+        }
+        fingerprint = finding.get("fingerprint")
+        if fingerprint:
+            result["partialFingerprints"] = {"verity/v1": str(fingerprint)}
+        suppression = finding.get("suppression")
+        if isinstance(suppression, dict):
+            kind = str(suppression.get("kind") or "external")
+            if kind not in ("inSource", "external"):
+                kind = "external"
+            entry: dict[str, Any] = {"kind": kind}
+            reason = suppression.get("reason")
+            if reason:
+                entry["justification"] = str(reason)
+            result["suppressions"] = [entry]
+        results.append(result)
 
     return {
         "$schema": (
@@ -196,6 +225,144 @@ def _as_severity(raw: Any) -> str:
     return text if text in _SEVERITY_RANK else "INFO"
 
 
+def _as_str_list(val: Any) -> list[str]:
+    """Normalize a ``str``/``Path``/sequence/``None`` value into a list of strings."""
+    if val is None:
+        return []
+    if isinstance(val, (str, Path)):
+        return [str(val)]
+    if isinstance(val, Sequence):
+        return [str(item) for item in val if item is not None and str(item)]
+    return [str(val)]
+
+
+def _should_canonicalize(
+    project_root: Path,
+    target_paths: list[str],
+    args: argparse.Namespace,
+) -> bool:
+    """Decide whether findings' ``file_path`` values should be canonicalized.
+
+    Canonicalization is required whenever results will be persisted
+    (``--save-baseline`` / ``--baseline``) or compared across machines
+    (``--root``). Directory scans canonicalize for consistency. A single
+    file that is not part of a git project keeps its literal path so
+    callers (e.g. SARIF exporters) see exactly the path they passed.
+    """
+    if getattr(args, "root", None) or getattr(args, "save_baseline", None) or getattr(
+        args, "baseline", None
+    ):
+        return True
+    for target in target_paths:
+        if Path(target).is_dir():
+            return True
+    try:
+        if (Path(project_root) / ".git").exists():
+            return True
+    except OSError:
+        pass
+    return False
+
+
+def _config_source_path(config: Any) -> str:
+    for attr in ("config_path", "source_path", "config_file", "path", "source"):
+        value = getattr(config, attr, None)
+        if value:
+            return str(value)
+    raw_config = getattr(config, "raw_config", None)
+    if isinstance(raw_config, dict):
+        for key in ("__config_path__", "_config_path", "config_path", "path"):
+            if raw_config.get(key):
+                return str(raw_config[key])
+    return ""
+
+
+def _extract_env_var_name(finding: dict[str, Any]) -> str:
+    for key in ("env_key", "message", "title"):
+        value = finding.get(key)
+        if not value:
+            continue
+        match = re.search(r"['\"]([A-Za-z0-9_]+)['\"]", str(value))
+        if match:
+            return match.group(1)
+    return ""
+
+
+def _annotate_secret_finding(
+    finding: dict[str, Any], env_secrets: dict[str, str]
+) -> None:
+    """Attach ``env_key`` and the raw secret value to config secret findings."""
+    if str(finding.get("rule_id") or "") not in _SECRET_RULE_IDS:
+        return
+    env_key = str(finding.get("env_key") or _extract_env_var_name(finding))
+    if env_key and env_key in env_secrets:
+        finding.setdefault("env_key", env_key)
+        finding.setdefault("_raw_secret", env_secrets[env_key])
+
+
+def _load_sources(
+    findings: list[dict[str, Any]], project_root: Path | None
+) -> tuple[dict[str, str], dict[str, list[str]]]:
+    """Read on-disk source for findings, keyed by both stored and resolved paths."""
+    sources: dict[str, str] = {}
+    lines_cache: dict[str, list[str]] = {}
+    for finding in findings:
+        file_path = finding.get("file_path")
+        if not file_path:
+            continue
+        candidates = [Path(str(file_path))]
+        if project_root is not None:
+            candidates.append(Path(project_root) / str(file_path))
+        for candidate in candidates:
+            try:
+                if not candidate.is_file():
+                    continue
+                text = candidate.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            sources[str(file_path)] = text
+            sources[str(candidate)] = text
+            lines_cache[str(file_path)] = text.splitlines()
+            lines_cache[str(candidate)] = text.splitlines()
+            break
+    return sources, lines_cache
+
+
+def _suppressed_counts(suppressed: list[dict[str, Any]]) -> dict[str, int]:
+    """Bucket suppressed findings by their ``suppression.source``."""
+    counts: dict[str, int] = {
+        "total": len(suppressed),
+        "baseline": 0,
+        "ignore_file": 0,
+        "policy": 0,
+        "inline": 0,
+        "other": 0,
+    }
+    for finding in suppressed:
+        suppression = finding.get("suppression")
+        source = str((suppression or {}).get("source") or "")
+        if source in counts and source != "total":
+            counts[source] += 1
+        else:
+            counts["other"] += 1
+    return counts
+
+
+def _resolve_fail_threshold(args: argparse.Namespace, policy: Any) -> str | None:
+    """Return the minimum severity that should trigger a non-zero exit code."""
+    if getattr(args, "fail_on_findings", False):
+        return "INFO"
+    raw = getattr(args, "fail_on_severity", None) or getattr(args, "fail_on", None)
+    if raw:
+        return _as_severity(raw)
+    scan_cfg = getattr(policy, "scan", {}) or {}
+    if isinstance(scan_cfg, dict):
+        configured = scan_cfg.get("fail_on_severity") or scan_cfg.get("fail_on")
+        if configured:
+            return _as_severity(configured)
+    return None
+
+
 def _normalize_finding(record: Any) -> dict[str, Any]:
     """Normalize a static/AST finding into the canonical report finding schema."""
     if hasattr(record, "to_dict"):
@@ -223,7 +390,7 @@ def _normalize_finding(record: Any) -> dict[str, Any]:
     else:
         message = base_message
 
-    return {
+    finding: dict[str, Any] = {
         "rule_id": str(_field(data, "rule_id", "issue_id")),
         "cwe_id": cwe_id,
         "severity": _as_severity(_field(data, "severity")),
@@ -243,6 +410,29 @@ def _normalize_finding(record: Any) -> dict[str, Any]:
         "line_number": _field(data, "line_number", "line", default="-") or "-",
         "remediation": str(_field(data, "remediation")),
     }
+    for key in (
+        "mcp_tool_context",
+        "func_name",
+        "snippet",
+        "matched_snippet",
+        "field_path",
+        "target_type",
+        "tool_name",
+        "server_name",
+        "advisory_id",
+        "cve_id",
+        "aliases",
+        "package_name",
+        "category",
+        "env_key",
+        "_raw_secret",
+        "source",
+        "kind",
+    ):
+        value = data.get(key)
+        if value not in (None, ""):
+            finding[key] = value
+    return finding
 
 
 def _build_report(
@@ -317,21 +507,38 @@ def _collect_redaction_targets(text: str, secrets: list[str]) -> list[str]:
     return sorted(targets, key=len, reverse=True)
 
 
-def _scrub_secrets(finding: dict[str, Any], secrets: list[str]) -> dict[str, Any]:
-    """Replace any known plaintext secret values with ``****`` in string fields."""
+def _scrub_secrets(
+    finding: dict[str, Any], secrets: list[str] | None = None
+) -> dict[str, Any]:
+    """Redact plaintext secrets and drop private (underscore-prefixed) keys."""
+    targets: list[str] = [str(item) for item in (secrets or []) if item]
+    embedded = finding.get("_redaction_secrets")
+    if isinstance(embedded, (list, tuple, set)):
+        targets.extend(str(item) for item in embedded if item)
+    for key in ("_raw_secret", "raw_secret_value"):
+        value = finding.get(key)
+        if value:
+            targets.append(str(value))
+
     scrubbed: dict[str, Any] = {}
     for key, value in finding.items():
+        if key.startswith("_"):
+            continue
         if isinstance(value, str):
-            for secret in _collect_redaction_targets(value, secrets):
+            for secret in _collect_redaction_targets(value, targets):
                 value = value.replace(secret, "****")
         scrubbed[key] = value
     return scrubbed
 
 
 def _collect_config_findings(
-    config_file: str | None,
+    config_file: str | Sequence[str] | None,
     offline: bool = False,
     live_probe: bool = False,
+    *,
+    scrub: bool = True,
+    scan_workstation: bool = True,
+    ignore_matcher: Any | None = None,
 ) -> tuple[list[dict[str, Any]], set[str]]:
     from verity.discovery.auditor import ConsolidatedSecurityAuditor
     from verity.discovery.config_scanner import MultiClientConfigScanner
@@ -340,28 +547,36 @@ def _collect_config_findings(
     scanner = MultiClientConfigScanner()
     evaluator = StaticRuleEvaluator()
     scanned_files: set[str] = set()
+    config_paths = _as_str_list(config_file)
 
-    if config_file:
-        path = Path(config_file)
-        if not path.is_file():
-            raise FileNotFoundError(f"Config file not found: {config_file}")
-        content = path.read_text(encoding="utf-8")
-        try:
-            if path.suffix.lower() in (".yaml", ".yml"):
-                import yaml
+    configs: list[Any] = []
+    config_sources: dict[int, str] = {}
 
-                raw = yaml.safe_load(content)
-            else:
-                raw = json.loads(content)
-        except Exception as exc:
-            raise ValueError(f"Invalid config file {config_file}: {exc}") from exc
-        if not isinstance(raw, (dict, list)):
-            raise ValueError(
-                f"Config file must contain a JSON/YAML object or list: {config_file}"
-            )
-        configs = scanner.parse_config_file(config_file)
-        scanned_files.add(str(config_file))
-    else:
+    if config_paths:
+        for raw_path in config_paths:
+            path = Path(raw_path)
+            if not path.is_file():
+                raise FileNotFoundError(f"Config file not found: {raw_path}")
+            content = path.read_text(encoding="utf-8")
+            try:
+                if path.suffix.lower() in (".yaml", ".yml"):
+                    import yaml
+
+                    raw = yaml.safe_load(content)
+                else:
+                    raw = json.loads(content)
+            except Exception as exc:
+                raise ValueError(f"Invalid config file {raw_path}: {exc}") from exc
+            if not isinstance(raw, (dict, list)):
+                raise ValueError(
+                    f"Config file must contain a JSON/YAML object or list: {raw_path}"
+                )
+            parsed = scanner.parse_config_file(raw_path)
+            for cfg in parsed:
+                config_sources[id(cfg)] = str(raw_path)
+            configs.extend(parsed)
+            scanned_files.add(str(raw_path))
+    elif scan_workstation:
         configs, files = scanner.scan_all()
         scanned_files.update(files)
 
@@ -407,12 +622,16 @@ def _collect_config_findings(
             if not isinstance(raw_config, dict):
                 raw_config = {}
 
+            config_path = config_sources.get(id(config)) or _config_source_path(config)
+            server_name = str(getattr(config, "server_name", "") or "")
+
             candidate_env: dict[str, Any] = {}
             raw_env = raw_config.get("env")
             if isinstance(raw_env, dict):
                 candidate_env.update(raw_env)
             candidate_env.update(getattr(config, "env", {}) or {})
 
+            env_secrets: dict[str, str] = {}
             secrets: list[str] = []
             for key, value in candidate_env.items():
                 raw_val = raw_env.get(key, value)
@@ -420,6 +639,10 @@ def _collect_config_findings(
                     continue
                 text = str(value) if value is not None else ""
                 raw_text = str(raw_val) if raw_val is not None else ""
+                if text and not is_placeholder_value(text):
+                    env_secrets[str(key)] = text
+                if raw_text and raw_text != text and not is_placeholder_value(raw_text):
+                    env_secrets.setdefault(str(key), raw_text)
                 if len(text) >= 4:
                     secrets.append(text)
                 if raw_text and raw_text != text and len(raw_text) >= 4:
@@ -446,7 +669,7 @@ def _collect_config_findings(
                 except Exception as exc:
                     if live_probe:
                         print(
-                            f"Live probe failed for {config.server_name}: {exc}",
+                            f"Live probe failed for {server_name}: {exc}",
                             file=sys.stderr,
                         )
                 if record is not None:
@@ -454,17 +677,58 @@ def _collect_config_findings(
                         probe_error = getattr(record, "live_probe_error", None)
                         if probe_error:
                             print(
-                                f"Live probe failed for {config.server_name}: {probe_error}",
+                                f"Live probe failed for {server_name}: {probe_error}",
                                 file=sys.stderr,
                             )
                     for audit_finding in record.findings:
                         finding = _normalize_finding(audit_finding)
-                        findings.append(_scrub_secrets(finding, secrets))
+                        if config_path:
+                            finding["file_path"] = config_path
+                        if not finding.get("server_name"):
+                            finding["server_name"] = server_name
+                        _annotate_secret_finding(finding, env_secrets)
+                        if scrub:
+                            finding = _scrub_secrets(finding, secrets)
+                        else:
+                            finding["_redaction_secrets"] = list(secrets)
+                        findings.append(finding)
 
-            tool_dict = {"name": config.server_name, **raw_config}
+            for env_key, raw_value in env_secrets.items():
+                findings.append(
+                    {
+                        "rule_id": "SEC-STATIC-SECRET-IN-CONFIG",
+                        "cwe_id": "CWE-798",
+                        "severity": "HIGH",
+                        "title": "Plaintext secret in MCP configuration",
+                        "message": (
+                            f"Environment variable '{env_key}' contains a "
+                            "plaintext secret"
+                        ),
+                        "file_path": config_path or server_name,
+                        "line_number": 1,
+                        "remediation": (
+                            "Use environment variable references or a secret manager."
+                        ),
+                        "server_name": server_name,
+                        "env_key": env_key,
+                        "_raw_secret": raw_value,
+                        "category": "SECRET",
+                        "_redaction_secrets": list(secrets),
+                    }
+                )
+
+            tool_dict = {"name": server_name, **raw_config}
             for match in evaluator.scan_tool(tool_dict):
                 finding = _normalize_finding(match)
-                findings.append(_scrub_secrets(finding, secrets))
+                if config_path:
+                    finding["file_path"] = config_path
+                if not finding.get("server_name"):
+                    finding["server_name"] = server_name
+                if scrub:
+                    finding = _scrub_secrets(finding, secrets)
+                else:
+                    finding["_redaction_secrets"] = list(secrets)
+                findings.append(finding)
     finally:
         if offline:
             if previous_offline is None:
@@ -472,28 +736,14 @@ def _collect_config_findings(
             else:
                 os.environ["VERITY_OFFLINE"] = previous_offline
 
-    deduped: list[dict[str, Any]] = []
-    seen: set[tuple[Any, ...]] = set()
-    for finding in findings:
-        key = (
-            finding.get("rule_id"),
-            finding.get("file_path"),
-            finding.get("title"),
-            finding.get("message"),
-        )
-        if key in seen:
-            continue
-        seen.add(key)
-        deduped.append(finding)
-
     if live_probe:
-        deduped.sort(
+        findings.sort(
             key=lambda f: _SEVERITY_RANK.get(
                 _as_severity(f.get("severity")), len(_SEVERITY_ORDER)
             )
         )
 
-    return deduped, scanned_files
+    return findings, scanned_files
 
 
 def _collect_schema_findings(
@@ -517,10 +767,15 @@ def _collect_schema_findings(
 
 def _collect_ast_findings(
     target_path: str,
+    *,
+    project_root: Path | None = None,
+    ignore_matcher: Any | None = None,
 ) -> tuple[list[dict[str, Any]], set[str], float]:
     from verity.scanner.engine import McpAstScannerEngine
 
-    report = McpAstScannerEngine().scan_path(target_path)
+    report = McpAstScannerEngine().scan_path(
+        target_path, project_root=project_root, ignore_matcher=ignore_matcher
+    )
     data = report.to_dict() if hasattr(report, "to_dict") else dict(report)
 
     findings = [_normalize_finding(item) for item in data.get("findings", []) or []]
@@ -537,33 +792,73 @@ def _collect_ast_findings(
 
 def _collect_scan_data(
     args: argparse.Namespace,
+    *,
+    project_root: Path | None = None,
+    ignore_matcher: Any | None = None,
 ) -> tuple[list[dict[str, Any]], set[str], float]:
     findings: list[dict[str, Any]] = []
     scanned_files: set[str] = set()
     duration_ms = 0.0
 
-    try:
-        config_findings, config_files = _collect_config_findings(
-            args.config_file,
-            offline=getattr(args, "offline", False),
-            live_probe=getattr(args, "live_probe", False),
-        )
-        findings.extend(config_findings)
-        scanned_files.update(config_files)
-    except Exception as exc:  # pragma: no cover - defensive
-        print(f"Configuration scan failed: {exc}", file=sys.stderr)
+    config_files = _as_str_list(getattr(args, "config_file", None))
+    raw_targets = _as_str_list(getattr(args, "path", None))
+    schema_file = getattr(args, "schema_file", None)
 
-    if args.schema_file:
+    config_targets: list[str] = []
+    ast_targets: list[str] = []
+    for target in raw_targets:
+        path = Path(target)
+        if path.suffix.lower() in (".json", ".yaml", ".yml"):
+            config_targets.append(target)
+        elif path.is_dir():
+            ast_targets.append(target)
+            try:
+                from verity.discovery.config_scanner import (
+                    MultiClientConfigScanner,
+                )
+
+                config_targets.extend(
+                    str(p)
+                    for p in MultiClientConfigScanner.discover_workspace_configs(
+                        target, ignore_matcher=ignore_matcher
+                    )
+                )
+            except Exception as exc:
+                print(f"Workspace discovery failed: {exc}", file=sys.stderr)
+        else:
+            ast_targets.append(target)
+
+    all_config_paths = list(dict.fromkeys([*config_files, *config_targets]))
+    scan_workstation = not (config_files or raw_targets or schema_file)
+
+    if all_config_paths or scan_workstation:
         try:
-            schema_findings, schema_files = _collect_schema_findings(args.schema_file)
+            config_findings, config_scanned = _collect_config_findings(
+                all_config_paths or None,
+                offline=getattr(args, "offline", False),
+                live_probe=getattr(args, "live_probe", False),
+                scrub=False,
+                scan_workstation=scan_workstation,
+                ignore_matcher=ignore_matcher,
+            )
+            findings.extend(config_findings)
+            scanned_files.update(config_scanned)
+        except Exception as exc:  # pragma: no cover - defensive
+            print(f"Configuration scan failed: {exc}", file=sys.stderr)
+
+    if schema_file:
+        try:
+            schema_findings, schema_files = _collect_schema_findings(schema_file)
             findings.extend(schema_findings)
             scanned_files.update(schema_files)
         except Exception as exc:
             print(f"Schema screen failed: {exc}", file=sys.stderr)
 
-    if args.path:
+    for target in ast_targets:
         try:
-            ast_findings, ast_files, ast_duration = _collect_ast_findings(args.path)
+            ast_findings, ast_files, ast_duration = _collect_ast_findings(
+                target, project_root=project_root, ignore_matcher=ignore_matcher
+            )
             findings.extend(ast_findings)
             scanned_files.update(ast_files)
             duration_ms += ast_duration
@@ -589,8 +884,136 @@ def _cmd_scan(args: argparse.Namespace) -> int:
         _print_pro_message("export_sarif", SARIF_MISSING_MESSAGE)
         return 2
 
-    findings, scanned_files, duration_ms = _collect_scan_data(args)
-    report = _build_report(findings, scanned_files, duration_ms, target_path=args.path)
+    if getattr(args, "save_baseline", None) and getattr(args, "baseline", None):
+        print(
+            "--save-baseline and --baseline are mutually exclusive.",
+            file=sys.stderr,
+        )
+        return 2
+
+    if not getattr(args, "fail_on_findings", False):
+        raw_fail = getattr(args, "fail_on_severity", None) or getattr(
+            args, "fail_on", None
+        )
+        if raw_fail and str(raw_fail).upper() not in _SEVERITY_RANK:
+            print(
+                f"Invalid severity for --fail-on-severity/--fail-on: {raw_fail}",
+                file=sys.stderr,
+            )
+            return 2
+
+    config_files = _as_str_list(getattr(args, "config_file", None))
+    for config_file in config_files:
+        if not Path(config_file).is_file():
+            print(f"Config file not found: {config_file}", file=sys.stderr)
+            return 2
+    if getattr(args, "config", None) and not Path(args.config).is_file():
+        print(f"Policy config not found: {args.config}", file=sys.stderr)
+        return 2
+    if getattr(args, "ignore_file", None) and not Path(args.ignore_file).is_file():
+        print(f"Ignore file not found: {args.ignore_file}", file=sys.stderr)
+        return 2
+
+    target_paths = _as_str_list(getattr(args, "path", None))
+    project_root = resolve_project_root(
+        target_paths=[*target_paths, *config_files] or None,
+        explicit_root=getattr(args, "root", None),
+    )
+    canonical_root = (
+        project_root if _should_canonicalize(project_root, target_paths, args) else None
+    )
+
+    try:
+        ignore_matcher = load_ignore_spec(
+            project_root,
+            getattr(args, "ignore_file", None),
+            use_default_ignores=not getattr(args, "no_default_ignores", False),
+        )
+    except Exception:  # pragma: no cover - defensive
+        ignore_matcher = None
+
+    try:
+        policy = load_policy_config(
+            project_root,
+            getattr(args, "config", None),
+            strict_policy=getattr(args, "strict_policy", False),
+        )
+    except (PolicyValidationError, FileNotFoundError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    findings, scanned_files, duration_ms = _collect_scan_data(
+        args, project_root=canonical_root, ignore_matcher=ignore_matcher
+    )
+
+    assign_fingerprints(
+        findings,
+        project_root=canonical_root,
+        home_dir=Path.home(),
+        update_file_path=canonical_root is not None,
+    )
+
+    source_by_file, source_lines_cache = _load_sources(findings, canonical_root)
+    apply_policy_suppressions(
+        findings, policy, source_lines_cache=source_lines_cache
+    )
+    try:
+        apply_inline_suppressions(
+            findings,
+            source_by_file,
+            respect_inline_ignores=not getattr(args, "no_inline_ignores", False),
+            strict_policy=getattr(args, "strict_policy", False),
+        )
+    except PolicyValidationError as exc:
+        print(str(exc), file=sys.stderr)
+        return 2
+
+    findings = [_scrub_secrets(finding) for finding in findings]
+
+    suppressed = [f for f in findings if "suppression" in f]
+    active = [f for f in findings if "suppression" not in f]
+
+    new_findings_count: int | None = None
+    baseline_findings_count: int | None = None
+    resolved_since_baseline = 0
+
+    if getattr(args, "baseline", None):
+        try:
+            baseline_data = load_baseline(args.baseline)
+        except (FileNotFoundError, BaselineSchemaError) as exc:
+            print(str(exc), file=sys.stderr)
+            return 2
+        diff = diff_baseline(list(active), baseline_data)
+        active = diff.new_findings
+        suppressed.extend(diff.baseline_findings)
+        new_findings_count = len(diff.new_findings)
+        baseline_findings_count = len(diff.baseline_findings)
+        resolved_since_baseline = diff.resolved_since_baseline
+
+    if getattr(args, "save_baseline", None):
+        try:
+            save_baseline(
+                args.save_baseline,
+                list(active),
+                project_root=project_root,
+                home_dir=Path.home(),
+            )
+        except Exception as exc:  # pragma: no cover - defensive
+            print(str(exc), file=sys.stderr)
+            return 2
+
+    target_label = " ".join(target_paths) or None
+    report = _build_report(active, scanned_files, duration_ms, target_path=target_label)
+    summary = report["summary"]
+    summary["suppressed_counts"] = _suppressed_counts(suppressed)
+    if new_findings_count is not None:
+        summary["new_findings"] = new_findings_count
+        summary["baseline_findings"] = baseline_findings_count or 0
+        summary["resolved_since_baseline"] = resolved_since_baseline
+    if policy.expired_warnings:
+        summary["expired_ignore_warnings"] = list(policy.expired_warnings)
+    if getattr(args, "show_suppressed", False):
+        report["suppressed_findings"] = suppressed
 
     if args.format == "sarif":
         rc = _export_sarif(report, args.output)
@@ -599,8 +1022,22 @@ def _cmd_scan(args: argparse.Namespace) -> int:
     else:
         _emit(_render_scan(report, args.format), args.output)
 
-    if args.fail_on_findings and findings:
+    if (
+        new_findings_count is not None
+        and getattr(args, "fail_on_new", False)
+        and new_findings_count > 0
+    ):
         return 1
+
+    threshold = _resolve_fail_threshold(args, policy)
+    if threshold:
+        limit = _SEVERITY_RANK.get(threshold, len(_SEVERITY_ORDER))
+        for finding in active:
+            rank = _SEVERITY_RANK.get(
+                _as_severity(finding.get("severity")), len(_SEVERITY_ORDER)
+            )
+            if rank <= limit:
+                return 1
     return 0
 
 
@@ -666,14 +1103,46 @@ def _run_rug_pull_cli(
     results: list[dict[str, Any]],
     save_baseline: str | None,
     baseline: str | None,
-) -> None:
+) -> int | None:
     """Handle --save-baseline / --baseline for a probed MCP endpoint."""
     if not save_baseline and not baseline:
-        return
+        return None
 
     from verity.ucp.engine import UnknownCapabilityProfiler
 
     result_name = "rug_pull_baseline_save" if save_baseline else "rug_pull_baseline"
+
+    authorized: dict[str, str] | None = None
+    if baseline:
+        try:
+            authorized_raw = json.loads(Path(baseline).read_text(encoding="utf-8"))
+            if not isinstance(authorized_raw, dict):
+                raise ValueError("baseline must be a JSON object")
+        except Exception as exc:
+            results.append(
+                {
+                    "name": "rug_pull_baseline",
+                    "status": "FAIL",
+                    "message": f"Failed to load baseline file '{baseline}': {exc}",
+                    "details": None,
+                    "severity": "CRITICAL",
+                }
+            )
+            return None
+        try:
+            authorized = validate_rug_pull_baseline_dict(authorized_raw)
+        except BaselineSchemaError as exc:
+            is_scan_baseline = "verity scan" in str(exc).lower()
+            results.append(
+                {
+                    "name": "rug_pull_baseline",
+                    "status": "FAIL",
+                    "message": str(exc),
+                    "details": "SCHEMA_MISMATCH" if is_scan_baseline else None,
+                    "severity": "CRITICAL",
+                }
+            )
+            return 2 if is_scan_baseline else None
 
     try:
         capability = transport.inspect(config)
@@ -687,7 +1156,7 @@ def _run_rug_pull_cli(
                 "severity": "CRITICAL" if baseline else None,
             }
         )
-        return
+        return None
 
     if not getattr(capability, "is_responsive", True):
         results.append(
@@ -702,7 +1171,7 @@ def _run_rug_pull_cli(
                 "severity": "CRITICAL" if baseline else None,
             }
         )
-        return
+        return None
 
     tools = [t for t in getattr(capability, "tools", []) or [] if isinstance(t, dict)]
 
@@ -738,29 +1207,7 @@ def _run_rug_pull_cli(
                 }
             )
 
-    if baseline:
-        try:
-            authorized_raw = json.loads(Path(baseline).read_text(encoding="utf-8"))
-            if not isinstance(authorized_raw, dict):
-                raise ValueError("baseline must be a JSON object")
-            for key, value in authorized_raw.items():
-                if not isinstance(key, str) or not isinstance(value, str):
-                    raise ValueError(
-                        "baseline must map string tool names to string hashes"
-                    )
-            authorized = authorized_raw
-        except Exception as exc:
-            results.append(
-                {
-                    "name": "rug_pull_baseline",
-                    "status": "FAIL",
-                    "message": f"Failed to load baseline file '{baseline}': {exc}",
-                    "details": None,
-                    "severity": "CRITICAL",
-                }
-            )
-            return
-
+    if baseline and authorized is not None:
         drift = [
             r
             for r in UnknownCapabilityProfiler.detect_rug_pull(
@@ -790,9 +1237,12 @@ def _run_rug_pull_cli(
                 }
             )
 
+    return None
+
 
 def _cmd_test(args: argparse.Namespace) -> int:
     results: list[dict[str, Any]] = []
+    rc_override = 0
 
     baseline_flags = bool(args.save_baseline or args.baseline)
     baseline_endpoint_missing = baseline_flags and not (args.url or args.command)
@@ -930,9 +1380,11 @@ def _cmd_test(args: argparse.Namespace) -> int:
         sse_transport = HttpSseDiscoveryTransport()
         results.append(_probe_config(config, sse_transport, "sse_transport_probe"))
         if not baseline_both:
-            _run_rug_pull_cli(
+            rc = _run_rug_pull_cli(
                 config, sse_transport, results, args.save_baseline, args.baseline
             )
+            if rc:
+                rc_override = rc
 
     if args.command:
         from verity.discovery.models import ClientType, DiscoveredServerConfig, TransportType
@@ -949,12 +1401,16 @@ def _cmd_test(args: argparse.Namespace) -> int:
         stdio_transport = StdioDiscoveryTransport()
         results.append(_probe_config(config, stdio_transport, "stdio_transport_probe"))
         if not baseline_both:
-            _run_rug_pull_cli(
+            rc = _run_rug_pull_cli(
                 config, stdio_transport, results, args.save_baseline, args.baseline
             )
+            if rc:
+                rc_override = rc
 
     _emit(_render_test(results, args.format), args.output)
 
+    if rc_override:
+        return rc_override
     if any(str(r.get("status", "")).upper() == "FAIL" for r in results):
         return 1
     return 0
@@ -980,9 +1436,22 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     scan = subparsers.add_parser("scan", help="Scan MCP configurations, schemas, and source.")
-    scan.add_argument("--config-file", default=None, help="Single MCP config JSON file to scan.")
+    scan.add_argument(
+        "--config-file",
+        nargs="+",
+        default=None,
+        help="One or more MCP config JSON/YAML files to scan.",
+    )
     scan.add_argument("--schema-file", default=None, help="JSON file with MCP tool definitions.")
-    scan.add_argument("--path", default=None, help="Python source file or directory to scan.")
+    scan.add_argument(
+        "--path",
+        nargs="+",
+        default=None,
+        help="Source files, directories, or config files to scan.",
+    )
+    scan.add_argument("--root", default=None, help="Explicit project root for path canonicalization.")
+    scan.add_argument("--config", default=None, help="Path to a verity.toml policy config.")
+    scan.add_argument("--ignore-file", default=None, help="Path to a .verityignore file.")
     scan.add_argument(
         "--format",
         choices=("terminal", "json", "markdown", "html", "sarif"),
@@ -994,6 +1463,43 @@ def build_parser() -> argparse.ArgumentParser:
         "--fail-on-findings",
         action="store_true",
         help="Return exit code 1 when findings are detected.",
+    )
+    scan.add_argument(
+        "--fail-on-severity",
+        default=None,
+        help="Return exit code 1 when a finding meets or exceeds this severity.",
+    )
+    scan.add_argument(
+        "--fail-on",
+        default=None,
+        help="Alias for --fail-on-severity (case-insensitive).",
+    )
+    scan.add_argument(
+        "--fail-on-new",
+        action="store_true",
+        help="Return exit code 1 when new findings appear versus --baseline.",
+    )
+    scan.add_argument("--save-baseline", default=None, help="Write a baseline document to this path.")
+    scan.add_argument("--baseline", default=None, help="Diff findings against this baseline document.")
+    scan.add_argument(
+        "--show-suppressed",
+        action="store_true",
+        help="Include suppressed findings in the report output.",
+    )
+    scan.add_argument(
+        "--strict-policy",
+        action="store_true",
+        help="Require reasons on ignore rules and inline suppressions.",
+    )
+    scan.add_argument(
+        "--no-inline-ignores",
+        action="store_true",
+        help="Disable in-source # verity-ignore / # nosemgrep directives.",
+    )
+    scan.add_argument(
+        "--no-default-ignores",
+        action="store_true",
+        help="Disable built-in default ignore directories.",
     )
     scan.add_argument(
         "--offline",

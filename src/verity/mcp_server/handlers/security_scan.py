@@ -2,16 +2,148 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import logging
 from pathlib import Path
 from typing import Any
 
+from verity.baseline import (
+    BaselineSchemaError,
+    PolicyValidationError,
+    apply_inline_suppressions,
+    apply_policy_suppressions,
+    assign_fingerprints,
+    diff_baseline,
+    load_baseline,
+    load_policy_config,
+    resolve_project_root,
+)
+
 logger = logging.getLogger("verity.mcp_server.tools")
+
+_SECRET_RULE_ID = "SEC-STATIC-SECRET-IN-CONFIG"
+
+
+def _suppressed_counts(suppressed: list[dict[str, Any]]) -> dict[str, int]:
+    """Bucket suppressed findings by their ``suppression.source``."""
+    counts: dict[str, int] = {
+        "total": len(suppressed),
+        "baseline": 0,
+        "ignore_file": 0,
+        "policy": 0,
+        "inline": 0,
+        "other": 0,
+    }
+    for finding in suppressed:
+        suppression = finding.get("suppression")
+        source = str((suppression or {}).get("source") or "")
+        if source in counts and source != "total":
+            counts[source] += 1
+        else:
+            counts["other"] += 1
+    return counts
+
+
+def _load_sources(
+    findings: list[dict[str, Any]], project_root: Path | None
+) -> tuple[dict[str, str], dict[str, list[str]]]:
+    sources: dict[str, str] = {}
+    lines_cache: dict[str, list[str]] = {}
+    for finding in findings:
+        file_path = finding.get("file_path")
+        if not file_path:
+            continue
+        candidates = [Path(str(file_path))]
+        if project_root is not None:
+            candidates.append(Path(project_root) / str(file_path))
+        for candidate in candidates:
+            try:
+                if not candidate.is_file():
+                    continue
+                text = candidate.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            sources[str(file_path)] = text
+            sources[str(candidate)] = text
+            lines_cache[str(file_path)] = text.splitlines()
+            lines_cache[str(candidate)] = text.splitlines()
+            break
+    return sources, lines_cache
 
 
 class SecurityScanHandlerMixin:
     """Handlers for verity_security_scan."""
+
+    def _augment_findings(
+        self,
+        findings: list[dict[str, Any]],
+        options: dict[str, Any],
+        project_root: Path | None,
+    ) -> tuple[
+        list[dict[str, Any]],
+        list[dict[str, Any]],
+        dict[str, int],
+        int | None,
+        int | None,
+        int,
+        bool,
+    ]:
+        """Fingerprint findings, apply suppressions, diff against baseline, and scrub private keys."""
+        assign_fingerprints(
+            findings, project_root=project_root, home_dir=Path.home()
+        )
+
+        respect = bool(options.get("respect_ignores", True))
+        if respect:
+            sources, lines_cache = _load_sources(findings, project_root)
+            try:
+                policy = load_policy_config(project_root or Path.cwd())
+            except (PolicyValidationError, FileNotFoundError):
+                policy = None
+            if policy is not None and (policy.ignores or policy.allowlists):
+                apply_policy_suppressions(
+                    findings, policy, source_lines_cache=lines_cache
+                )
+            if sources:
+                with contextlib.suppress(PolicyValidationError):
+                    apply_inline_suppressions(
+                        findings, sources, respect_inline_ignores=True
+                    )
+
+        suppressed = [f for f in findings if "suppression" in f]
+        active = [f for f in findings if "suppression" not in f]
+        counts = _suppressed_counts(suppressed)
+
+        new_count: int | None = None
+        baseline_count: int | None = None
+        resolved = 0
+        baseline_path = options.get("baseline_path")
+        if baseline_path:
+            baseline_data = None
+            try:
+                baseline_data = load_baseline(baseline_path)
+            except (FileNotFoundError, BaselineSchemaError):
+                baseline_data = None
+            if baseline_data is not None:
+                diff = diff_baseline(list(active), baseline_data)
+                active = diff.new_findings
+                suppressed.extend(diff.baseline_findings)
+                counts = _suppressed_counts(suppressed)
+                new_count = len(diff.new_findings)
+                baseline_count = len(diff.baseline_findings)
+                resolved = diff.resolved_since_baseline
+
+        gate_passed = True
+        if bool(options.get("fail_on_new")) and (new_count or 0) > 0:
+            gate_passed = False
+
+        # Never leak private bookkeeping (e.g. ``_raw_secret``) to callers.
+        for finding in [*active, *suppressed]:
+            for key in [k for k in finding if k.startswith("_")]:
+                del finding[key]
+
+        return active, suppressed, counts, new_count, baseline_count, resolved, gate_passed
 
     def _execute_security_scan(self, args: dict[str, Any]) -> dict[str, Any]:
         action = args.get("action", "")
@@ -24,6 +156,50 @@ class SecurityScanHandlerMixin:
 
         if action == "scan_client_configs":
             res = self._discover_client_environment(options)
+            project_root: Path | None = None
+            sandbox_root = options.get("sandbox_root")
+            if sandbox_root:
+                try:
+                    project_root = resolve_project_root([sandbox_root])
+                except Exception:
+                    project_root = Path(sandbox_root)
+            findings: list[dict[str, Any]] = []
+            for item in res.get("detected_secrets", []) or []:
+                if not isinstance(item, dict):
+                    continue
+                findings.append(
+                    {
+                        "rule_id": _SECRET_RULE_ID,
+                        "severity": "HIGH",
+                        "message": str(
+                            item.get("finding") or "Plaintext secret detected"
+                        ),
+                        "file_path": str(item.get("client_type") or ""),
+                        "server_name": str(item.get("server_name") or ""),
+                        "env_key": str(item.get("env_key") or ""),
+                        "_raw_secret": str(item.get("detected_token") or ""),
+                        "category": "SECRET",
+                    }
+                )
+            (
+                active,
+                suppressed,
+                counts,
+                new_count,
+                baseline_count,
+                resolved,
+                gate_passed,
+            ) = self._augment_findings(findings, options, project_root)
+            res["findings"] = active
+            if suppressed:
+                res["suppressed_findings"] = suppressed
+            summary = res.setdefault("summary", {})
+            summary["suppressed_counts"] = counts
+            res["gate_passed"] = gate_passed
+            if new_count is not None:
+                res["new_findings"] = new_count
+                res["baseline_findings"] = baseline_count or 0
+                res["resolved_since_baseline"] = resolved
             res["action"] = action
             return res
 
@@ -41,14 +217,47 @@ class SecurityScanHandlerMixin:
             return self._full_audit_pipeline(options)
 
         if action == "scan_ast_code":
+            from verity.baseline import load_ignore_spec
             from verity.scanner import McpAstScannerEngine, ScannerSeverity
 
             target_path = options.get("path") or "."
             min_sev_str = options.get("min_severity", "INFO")
             min_sev = ScannerSeverity(min_sev_str)
+            project_root = resolve_project_root([target_path])
+            respect = bool(options.get("respect_ignores", True))
+            ignore_matcher = (
+                load_ignore_spec(project_root) if respect else None
+            )
             scanner = McpAstScannerEngine(min_severity=min_sev)
-            report = scanner.scan_path(target_path)
+            report = scanner.scan_path(
+                target_path, project_root=project_root, ignore_matcher=ignore_matcher
+            )
             res = report.to_dict()
+            findings = [dict(item) for item in res.get("findings", []) or []]
+            (
+                active,
+                suppressed,
+                counts,
+                new_count,
+                baseline_count,
+                resolved,
+                gate_passed,
+            ) = self._augment_findings(findings, options, project_root)
+            res["findings"] = active
+            if suppressed:
+                res["suppressed_findings"] = suppressed
+            summary = res.setdefault("summary", {})
+            summary["total_findings"] = len(active)
+            summary["suppressed_counts"] = counts
+            res["suppressed_counts"] = counts
+            if new_count is not None:
+                res["new_findings"] = new_count
+                res["baseline_findings"] = baseline_count or 0
+                res["resolved_since_baseline"] = resolved
+                summary["new_findings"] = new_count
+                summary["baseline_findings"] = baseline_count or 0
+                summary["resolved_since_baseline"] = resolved
+            res["gate_passed"] = gate_passed
             res["ok"] = True
             res["action"] = action
             return res
@@ -301,7 +510,7 @@ class SecurityScanHandlerMixin:
                 "with verity_database_oracle(check_canary_proof)."
             )
 
-        return {
+        result: dict[str, Any] = {
             "ok": True,
             "action": "full_audit",
             "target": target_str,
@@ -313,6 +522,35 @@ class SecurityScanHandlerMixin:
             "recommended_checks": recommended_checks,
             "remediation_guidance": remediation,
         }
+
+        project_root: Path | None = None
+        try:
+            project_root = resolve_project_root([options.get("path") or ".", "."])
+        except Exception:
+            project_root = Path.cwd()
+        audit_findings = list(result.get("findings", []) or [])
+        (
+            active,
+            suppressed,
+            counts,
+            new_count,
+            baseline_count,
+            resolved,
+            gate_passed,
+        ) = self._augment_findings(audit_findings, options, project_root)
+        result["findings"] = active
+        result["findings_count"] = len(active)
+        result["is_vulnerable"] = len(active) > 0
+        if suppressed:
+            result["suppressed_findings"] = suppressed
+        summary = result.setdefault("summary", {})
+        summary["suppressed_counts"] = counts
+        result["gate_passed"] = gate_passed
+        if new_count is not None:
+            result["new_findings"] = new_count
+            result["baseline_findings"] = baseline_count or 0
+            result["resolved_since_baseline"] = resolved
+        return result
 
     def _call_target_tool(self, options: dict[str, Any]) -> dict[str, Any]:
         """Invoke a tool on a remote target MCP server via HTTP/SSE, capturing telemetry."""

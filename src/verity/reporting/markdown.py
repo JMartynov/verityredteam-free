@@ -63,6 +63,46 @@ def render_scan_markdown(report_data: dict[str, Any]) -> str:
     else:
         lines.append("_No findings detected._")
 
+    suppressed_counts = summary.get("suppressed_counts") or {}
+    suppressed_findings = report_data.get("suppressed_findings") or []
+    if suppressed_counts or suppressed_findings:
+        lines.extend(["", "## Suppressed Findings", ""])
+        lines.append("| Source | Count |")
+        lines.append("| --- | --- |")
+        for source in ("baseline", "ignore_file", "policy", "inline", "other"):
+            lines.append(f"| {source} | {_cell(suppressed_counts.get(source, 0))} |")
+        lines.append(
+            f"| total | {_cell(suppressed_counts.get('total', len(suppressed_findings)))} |"
+        )
+        if suppressed_findings:
+            lines.extend(
+                [
+                    "",
+                    "| Severity | Rule | Location | Reason |",
+                    "| --- | --- | --- | --- |",
+                ]
+            )
+            for finding in suppressed_findings:
+                suppression = finding.get("suppression") or {}
+                path = _field(finding, "file_path", "target_name")
+                line = _field(finding, "line_number")
+                lines.append(
+                    "| {sev} | {rule} | {loc} | {reason} |".format(
+                        sev=_cell(finding.get("severity", "INFO")),
+                        rule=_cell(_field(finding, "rule_id")),
+                        loc=_cell(f"{path}:{line}"),
+                        reason=_cell(
+                            suppression.get("reason") or suppression.get("source")
+                        ),
+                    )
+                )
+
+    resolved = summary.get("resolved_since_baseline")
+    if resolved is not None:
+        lines.extend(["", f"**Resolved since baseline:** {_cell(resolved)}"])
+    for warning in summary.get("expired_ignore_warnings") or []:
+        lines.append(f"- :warning: {_cell(warning)}")
+
     lines.extend(["", "---", "", f"_{PRO_UPGRADE_FOOTER}_", ""])
     return "\n".join(lines)
 

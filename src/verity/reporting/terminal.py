@@ -92,6 +92,57 @@ def render_scan_terminal(report_data: dict[str, Any]) -> str:
         table.add_row("-", "-", "No findings detected.", "-")
 
     console.print(table)
+
+    suppressed_counts = summary.get("suppressed_counts") or {}
+    suppressed_findings = report_data.get("suppressed_findings") or []
+    if suppressed_counts or suppressed_findings:
+        counts_table = Table(
+            title="Suppressed Findings", show_header=True, header_style="bold"
+        )
+        counts_table.add_column("Source")
+        counts_table.add_column("Count", justify="right")
+        for source in ("baseline", "ignore_file", "policy", "inline", "other"):
+            counts_table.add_row(source, str(int(suppressed_counts.get(source, 0) or 0)))
+        counts_table.add_row(
+            "total",
+            str(int(suppressed_counts.get("total", len(suppressed_findings)) or 0)),
+        )
+        console.print(counts_table)
+
+        if suppressed_findings:
+            detail = Table(
+                title="Suppressed Findings Detail",
+                show_header=True,
+                header_style="bold",
+            )
+            detail.add_column("Severity")
+            detail.add_column("Rule", no_wrap=True)
+            detail.add_column("Location")
+            detail.add_column("Reason")
+            for finding in suppressed_findings:
+                suppression = finding.get("suppression") or {}
+                path = escape(_field(finding, "file_path", "target_name"))
+                line = escape(_field(finding, "line_number"))
+                detail.add_row(
+                    _severity_badge(str(finding.get("severity", "INFO"))),
+                    escape(_field(finding, "rule_id")),
+                    f"{path}:{line}",
+                    escape(
+                        str(
+                            suppression.get("reason")
+                            or suppression.get("source")
+                            or ""
+                        )
+                    ),
+                )
+            console.print(detail)
+
+    resolved = summary.get("resolved_since_baseline")
+    if resolved is not None:
+        console.print(f"Resolved since baseline: {resolved}")
+    for warning in summary.get("expired_ignore_warnings") or []:
+        console.print(f"[yellow]{escape(str(warning))}[/yellow]")
+
     console.print(f"[italic]{PRO_UPGRADE_FOOTER}[/italic]")
     return console.export_text()
 
