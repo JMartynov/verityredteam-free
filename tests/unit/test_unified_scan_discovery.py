@@ -99,7 +99,7 @@ def test_standard_client_paths_discover_new_clients(tmp_path: Path) -> None:
         ClientType.TRAE,
         ClientType.LMSTUDIO,
     ):
-        assert ct in paths_map and paths_map[ct]
+        assert paths_map.get(ct)
 
     discovered, scanned_files = MultiClientConfigScanner.scan_all(sandbox_root=sandbox)
     discovered_map = {d.client_type: d for d in discovered}

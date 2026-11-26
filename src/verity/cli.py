@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import importlib.metadata
 import json
+import logging
 import os
 import re
 import shlex
@@ -49,6 +50,8 @@ _SECRET_RULE_IDS = frozenset({"VERITY-CFG-SECRET-001", "SEC-STATIC-SECRET-IN-CON
 SARIF_MISSING_MESSAGE = (
     "SARIF v2.1.0 compliance export requires the verity-pro plugin."
 )
+
+logger = logging.getLogger("verity.cli")
 
 
 def _iter_plugin_entry_points() -> list[Any]:
@@ -539,9 +542,14 @@ def _collect_config_findings(
     scrub: bool = True,
     scan_workstation: bool = True,
     ignore_matcher: Any | None = None,
+    target_clients: list[Any] | None = None,
+    scan_global: bool = False,
 ) -> tuple[list[dict[str, Any]], set[str]]:
     from verity.discovery.auditor import ConsolidatedSecurityAuditor
-    from verity.discovery.config_scanner import MultiClientConfigScanner
+    from verity.discovery.config_scanner import (
+        MultiClientConfigScanner,
+        strip_jsonc_comments,
+    )
     from verity.scanner.static_rules import StaticRuleEvaluator
 
     scanner = MultiClientConfigScanner()
@@ -564,7 +572,7 @@ def _collect_config_findings(
 
                     raw = yaml.safe_load(content)
                 else:
-                    raw = json.loads(content)
+                    raw = json.loads(strip_jsonc_comments(content))
             except Exception as exc:
                 raise ValueError(f"Invalid config file {raw_path}: {exc}") from exc
             if not isinstance(raw, (dict, list)):
@@ -577,8 +585,43 @@ def _collect_config_findings(
             configs.extend(parsed)
             scanned_files.add(str(raw_path))
     elif scan_workstation:
-        configs, files = scanner.scan_all()
+        configs, files = MultiClientConfigScanner.scan_all(
+            target_clients=target_clients
+        )
         scanned_files.update(files)
+
+    if scan_global:
+        try:
+            global_entries = MultiClientConfigScanner.scan_global_npm() or []
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.debug("scan_global_npm failed: %s", exc)
+            global_entries = []
+        from verity.discovery.models import ClientType
+        from verity.discovery.models import DiscoveredServerConfig as _DSC
+        from verity.discovery.models import TransportType as _TT
+
+        for entry in global_entries:
+            if not isinstance(entry, dict):
+                continue
+            name = str(entry.get("name") or "")
+            if not name:
+                continue
+            command = str(entry.get("command") or "")
+            source = str(entry.get("source") or "")
+            raw_args = entry.get("args") or ()
+            args_tuple = tuple(raw_args) if isinstance(raw_args, (list, tuple)) else ()
+            cfg = _DSC(
+                client_type=ClientType.CUSTOM,
+                server_name=name,
+                command=command or None,
+                args=args_tuple,
+                transport_type=_TT.STDIO if command else _TT.UNKNOWN,
+                config_path=source,
+                raw_config=dict(entry),
+            )
+            configs.append(cfg)
+            if source:
+                scanned_files.add(source)
 
     previous_offline = os.environ.get("VERITY_OFFLINE")
     if offline:
@@ -830,6 +873,8 @@ def _collect_scan_data(
 
     all_config_paths = list(dict.fromkeys([*config_files, *config_targets]))
     scan_workstation = not (config_files or raw_targets or schema_file)
+    target_clients = getattr(args, "_resolved_clients", None)
+    scan_global = bool(getattr(args, "scan_global", False))
 
     if all_config_paths or scan_workstation:
         try:
@@ -840,6 +885,8 @@ def _collect_scan_data(
                 scrub=False,
                 scan_workstation=scan_workstation,
                 ignore_matcher=ignore_matcher,
+                target_clients=target_clients,
+                scan_global=scan_global,
             )
             findings.extend(config_findings)
             scanned_files.update(config_scanned)
@@ -883,6 +930,20 @@ def _cmd_scan(args: argparse.Namespace) -> int:
     if args.format == "sarif" and not _pro_plugin_available():
         _print_pro_message("export_sarif", SARIF_MISSING_MESSAGE)
         return 2
+
+    raw_clients = getattr(args, "client", None)
+    if raw_clients:
+        if isinstance(raw_clients, str):
+            raw_clients = [raw_clients]
+        from verity.discovery.models import ClientType
+
+        try:
+            args._resolved_clients = [ClientType.from_str(c) for c in raw_clients]
+        except ValueError as exc:
+            print(f"Invalid client: {exc}", file=sys.stderr)
+            return 2
+    else:
+        args._resolved_clients = None
 
     if getattr(args, "save_baseline", None) and getattr(args, "baseline", None):
         print(
@@ -1513,6 +1574,20 @@ def build_parser() -> argparse.ArgumentParser:
             "Actively probe configured MCP servers to fingerprint live "
             "capabilities (opt-in, slower)."
         ),
+    )
+    scan.add_argument(
+        "--client",
+        nargs="+",
+        default=None,
+        help=(
+            "Restrict discovery to one or more MCP clients "
+            "(aliases like 'claude-code', 'cline', 'roo-code' are accepted)."
+        ),
+    )
+    scan.add_argument(
+        "--scan-global",
+        action="store_true",
+        help="Also scan globally installed npm MCP servers (opt-in, may exec 'npm').",
     )
     scan.set_defaults(func=_cmd_scan)
 

@@ -11,15 +11,46 @@ class ClientType(StrEnum):
     """Supported LLM clients and IDE MCP configurations."""
 
     CLAUDE_DESKTOP = "claude_desktop"
+    CLAUDE_CODE = "claude_code"
     CURSOR = "cursor"
     VSCODE_CLINE = "vscode_cline"
     VSCODE_ROO = "vscode_roo"
+    GOOSE = "goose"
     CONTINUE = "continue"
     WINDSURF = "windsurf"
     ZED = "zed"
+    VSCODE = "vscode"
+    JUNIE = "junie"
+    ANTIGRAVITY = "antigravity"
+    OPENHANDS = "openhands"
+    TRAE = "trae"
+    LMSTUDIO = "lmstudio"
     LIBRECHAT = "librechat"
     WORKSPACE = "workspace"
     CUSTOM = "custom"
+
+    @classmethod
+    def from_str(cls, value: str) -> ClientType:
+        """Resolve a case-insensitive token or alias into a ``ClientType``."""
+        token = str(value).strip().lower().replace("-", "_")
+        if not token:
+            raise ValueError(f"Unknown client type: {value!r}")
+        aliases: dict[str, ClientType] = {
+            "claude": cls.CLAUDE_DESKTOP,
+            "cline": cls.VSCODE_CLINE,
+            "roo": cls.VSCODE_ROO,
+            "roo_code": cls.VSCODE_ROO,
+            "copilot": cls.VSCODE,
+            "github_copilot": cls.VSCODE,
+            "lm_studio": cls.LMSTUDIO,
+            "open_hands": cls.OPENHANDS,
+        }
+        if token in aliases:
+            return aliases[token]
+        try:
+            return cls(token)
+        except ValueError:
+            raise ValueError(f"Unknown client type: {value!r}") from None
 
 
 class TransportType(StrEnum):

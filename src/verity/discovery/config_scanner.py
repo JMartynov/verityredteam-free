@@ -21,6 +21,88 @@ from verity.scanner.credential_patterns import (
 logger = logging.getLogger("verity.discovery.config_scanner")
 
 
+def strip_jsonc_comments(text: str) -> str:
+    """Strip ``//`` line comments, ``/* */`` block comments, and trailing commas.
+
+    String state is tracked so URLs containing ``//`` and block-comment tokens
+    inside string literals are preserved verbatim. Trailing commas are removed
+    only when they precede a ``}`` or ``]`` outside a string.
+    """
+    if not text:
+        return text
+
+    result: list[str] = []
+    n = len(text)
+    i = 0
+    in_string = False
+    while i < n:
+        ch = text[i]
+        if in_string:
+            result.append(ch)
+            if ch == "\\" and i + 1 < n:
+                result.append(text[i + 1])
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+            result.append(ch)
+            i += 1
+            continue
+        if ch == "/" and i + 1 < n:
+            nxt = text[i + 1]
+            if nxt == "/":
+                while i < n and text[i] != "\n":
+                    i += 1
+                continue
+            if nxt == "*":
+                i += 2
+                while i + 1 < n and not (text[i] == "*" and text[i + 1] == "/"):
+                    i += 1
+                i = min(i + 2, n)
+                continue
+        result.append(ch)
+        i += 1
+
+    cleaned = "".join(result)
+
+    # Second pass: strip trailing commas only outside strings.
+    out: list[str] = []
+    i = 0
+    m = len(cleaned)
+    in_string = False
+    while i < m:
+        ch = cleaned[i]
+        if in_string:
+            out.append(ch)
+            if ch == "\\" and i + 1 < m:
+                out.append(cleaned[i + 1])
+                i += 2
+                continue
+            if ch == '"':
+                in_string = False
+            i += 1
+            continue
+        if ch == '"':
+            in_string = True
+            out.append(ch)
+            i += 1
+            continue
+        if ch == ",":
+            j = i + 1
+            while j < m and cleaned[j] in " \t\r\n":
+                j += 1
+            if j < m and cleaned[j] in "}]":
+                i += 1
+                continue
+        out.append(ch)
+        i += 1
+    return "".join(out)
+
+
 class MultiClientConfigScanner:
     """Discovers, parses, and normalizes MCP client configurations across all supported tools."""
 
@@ -76,12 +158,20 @@ class MultiClientConfigScanner:
 
         paths: dict[ClientType, list[Path]] = {
             ClientType.CLAUDE_DESKTOP: [],
+            ClientType.CLAUDE_CODE: [],
             ClientType.CURSOR: [],
             ClientType.VSCODE_CLINE: [],
             ClientType.VSCODE_ROO: [],
+            ClientType.GOOSE: [],
             ClientType.CONTINUE: [],
             ClientType.WINDSURF: [],
             ClientType.ZED: [],
+            ClientType.VSCODE: [],
+            ClientType.JUNIE: [],
+            ClientType.ANTIGRAVITY: [],
+            ClientType.OPENHANDS: [],
+            ClientType.TRAE: [],
+            ClientType.LMSTUDIO: [],
             ClientType.LIBRECHAT: [],
             ClientType.WORKSPACE: [],
         }
@@ -204,6 +294,57 @@ class MultiClientConfigScanner:
             ]
         )
 
+        # 9. Claude Code (per-user + project-local)
+        paths[ClientType.CLAUDE_CODE].append(home / ".claude.json")
+        paths[ClientType.CLAUDE_CODE].append(cwd / ".mcp.json")
+
+        # 10. Goose (block-style YAML with `extensions`)
+        paths[ClientType.GOOSE].append(home / ".config" / "goose" / "config.yaml")
+        paths[ClientType.GOOSE].append(home / ".config" / "goose" / "config.yml")
+
+        # 11. Junie (JetBrains project-level)
+        paths[ClientType.JUNIE].append(cwd / ".idea" / "mcp.json")
+
+        # 12. GitHub Copilot (VS Code globalStorage)
+        if system == "Darwin":
+            paths[ClientType.VSCODE].append(
+                home
+                / "Library"
+                / "Application Support"
+                / "Code"
+                / "User"
+                / "globalStorage"
+                / "github.copilot"
+                / "mcp.json"
+            )
+        elif system == "Windows":
+            appdata = Path(os.environ.get("APPDATA", home / "AppData" / "Roaming"))
+            paths[ClientType.VSCODE].append(
+                appdata / "Code" / "User" / "globalStorage" / "github.copilot" / "mcp.json"
+            )
+        else:
+            paths[ClientType.VSCODE].append(
+                home
+                / ".config"
+                / "Code"
+                / "User"
+                / "globalStorage"
+                / "github.copilot"
+                / "mcp.json"
+            )
+
+        # 13. Antigravity (Gemini)
+        paths[ClientType.ANTIGRAVITY].append(home / ".gemini" / "config" / "mcp_config.json")
+
+        # 14. OpenHands
+        paths[ClientType.OPENHANDS].append(home / ".openhands" / "mcp.json")
+
+        # 15. Trae
+        paths[ClientType.TRAE].append(home / ".trae" / "mcp.json")
+
+        # 16. LM Studio
+        paths[ClientType.LMSTUDIO].append(home / ".lmstudio" / "mcp.json")
+
         return paths
 
     @classmethod
@@ -219,11 +360,12 @@ class MultiClientConfigScanner:
 
     @classmethod
     def _parse_file_data(cls, file_path: Path) -> object:
-        """Parse JSON or YAML config file contents."""
+        """Parse JSON/JSONC/YAML config file contents with JSONC normalization."""
         content = file_path.read_text(encoding="utf-8")
         if file_path.suffix.lower() in (".yaml", ".yml"):
             return yaml.safe_load(content)
-        return json.loads(content)
+        cleaned = strip_jsonc_comments(content)
+        return json.loads(cleaned)
 
     @classmethod
     def _collect_specs(cls, value: object, pairs: list[tuple[str, dict]]) -> None:
@@ -244,18 +386,23 @@ class MultiClientConfigScanner:
             return []
 
         pairs: list[tuple[str, dict]] = []
-        for key in ("mcpServers", "mcp_servers", "servers", "context_servers"):
+        for key in ("mcpServers", "mcp_servers", "servers", "context_servers", "extensions"):
             cls._collect_specs(data.get(key), pairs)
 
         experimental = data.get("experimental")
         if isinstance(experimental, dict):
             cls._collect_specs(experimental.get("modelContextProtocolServers"), pairs)
 
+        projects = data.get("projects")
+        if isinstance(projects, dict):
+            for project_value in projects.values():
+                if isinstance(project_value, dict):
+                    cls._collect_specs(project_value.get("mcpServers"), pairs)
+
         if not pairs and "command" not in data:
             for name, spec in data.items():
                 if isinstance(spec, dict) and any(
-                    k in spec
-                    for k in ("command", "url", "args", "env", "transport", "type", "disabled")
+                    k in spec for k in ("command", "cmd", "url", "uri")
                 ):
                     pairs.append((str(name), spec))
 
@@ -281,11 +428,11 @@ class MultiClientConfigScanner:
         discovered: list[DiscoveredServerConfig] = []
 
         for name, spec in cls._extract_server_specs(data):
-            command = spec.get("command")
+            command = spec.get("command") or spec.get("cmd")
             raw_args = spec.get("args", [])
             args = tuple(raw_args) if isinstance(raw_args, (list, tuple)) else ()
-            raw_env = spec.get("env", {})
-            url = spec.get("url")
+            raw_env = spec.get("env") or spec.get("envs") or {}
+            url = spec.get("url") or spec.get("uri")
             disabled = bool(spec.get("disabled", False) or spec.get("is_disabled", False))
 
             # Determine transport type
@@ -305,7 +452,15 @@ class MultiClientConfigScanner:
             env_keys = tuple(sorted(env_cleaned.keys()))
 
             raw_config = dict(spec)
-            raw_config["env"] = dict(raw_env) if isinstance(raw_env, dict) else {}
+            if "command" not in raw_config and "cmd" in raw_config:
+                raw_config["command"] = raw_config["cmd"]
+            if "url" not in raw_config and "uri" in raw_config:
+                raw_config["url"] = raw_config["uri"]
+            raw_config["env"] = (
+                dict(spec.get("env") or spec.get("envs") or {})
+                if isinstance(spec.get("env") or spec.get("envs"), dict)
+                else {}
+            )
 
             discovered.append(
                 DiscoveredServerConfig(
@@ -381,3 +536,15 @@ class MultiClientConfigScanner:
                     all_discovered.extend(servers)
 
         return all_discovered, sorted(scanned_files)
+
+    @classmethod
+    def scan_global_npm(cls) -> list[dict[str, Any]]:
+        """Enumerate globally installed npm MCP servers (opt-in, may exec ``npm``)."""
+        try:
+            from mcp_fingerprints.config_scanner import NpmGlobalScanner
+
+            result = NpmGlobalScanner().scan_all()
+            return result if isinstance(result, list) else []
+        except Exception as exc:  # pragma: no cover - defensive
+            logger.debug("Global npm MCP scan failed: %s", exc)
+            return []
