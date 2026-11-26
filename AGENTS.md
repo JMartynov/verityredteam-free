@@ -64,6 +64,7 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
        --test-cmd "uv run pytest <test_file>" \
        --message "<Task specification from TASK_BOARD.md. Zero unrelated changes.>"
      ```
+   - **Auto-Scope (`--auto-scope`)**: For single-repo tasks where target files aren't known yet, pass `--auto-scope` to `dispatch` instead of `--files` to auto-discover relevant files.
    - **Interactive Questions (Exit `10` / `INTERACTIVE_QUESTION`)**: Run `aider_bridge.py inspect --task-id "<task_id>" --json` to read the question, then answer and resume via `aider_bridge.py reply --task-id "<task_id>" --answer "..."`.
 
 3. **Pass 2 — Mandatory Code Review (Prefix-Cached via `--restore`)**:
