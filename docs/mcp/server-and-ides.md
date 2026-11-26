@@ -529,6 +529,14 @@ How the IDE assistant uses the result:
 4. Offer a next step such as `verity_remediation_ops` or a configuration change.
 5. If `isError` is `true`, show the error and suggest a diagnostic command.
 
+Optional `verity_security_scan` brownfield baseline and ignore parameters (`options`):
+
+| Parameter | Type | Default | Description |
+| --- | --- | --- | --- |
+| `baseline_path` | string | — | Path to a `.verity-baseline.json` file (for `scan_client_configs` / `scan_ast_code`) or a tool-hash baseline map (for `detect_rug_pull` / `snapshot_baseline`). |
+| `fail_on_new` | boolean | `false` | Sets `gate_passed: false` when active findings not present in `baseline_path` are detected. |
+| `respect_ignores` | boolean | `true` | Applies `.verityignore`, `verity.toml` (`[[ignore]]` / `[[allowlists]]`), and inline `# verity-ignore` / `# nosemgrep` suppressions. |
+
 ### 7.2 `verity_database_guard`
 
 Use this tool before executing generated or user-supplied SQL. It is a guardrail for database operations.

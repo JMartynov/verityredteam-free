@@ -97,6 +97,17 @@ echo $?
 
 `--fail-on-findings` returns exit code 1 when any finding is present; it does not alter the report.
 
+### Step 5. Gate brownfield repositories with a baseline and severity threshold
+
+For existing codebases, capture a deterministic baseline once (`.verity-baseline.json`) and fail CI only on newly introduced findings at or above a target severity:
+
+~~~bash
+verity scan --path . --save-baseline .verity-baseline.json
+verity scan --path . --baseline .verity-baseline.json --fail-on-new --fail-on-severity HIGH
+~~~
+
+You can also suppress known noise deterministically using `.verityignore` (gitignore globs, `:include .gitignore`, `!negation`), `verity.toml` (`[[ignore]]` with `expires` / `reason` and `[[allowlists]]`), or inline `# verity-ignore` / `# nosemgrep` comments.
+
 ### What happened
 
 - `.mcp.json` was auto-discovered by walking upward from `--path`.

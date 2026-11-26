@@ -561,8 +561,10 @@ detection catches a server that changes its tools after you approved it.
 
 - `--format` supports `terminal`, `json`, `markdown`, and `html`; `--output` writes to a file.
 - `--format sarif` [Pro] — In Verity Free, `--format sarif` returns a deterministic `PRO_FEATURE_REQUIRED` JSON payload (`"ok": false`, `"verdict": "PRO_REQUIRED"`, `"error": "PRO_FEATURE_REQUIRED"`) with exit code 2 and zero partial file writes even when `--output` is supplied; SARIF v2.1.0 export requires `verity-pro`.
+- `--fail-on-severity` / `--fail-on` gates CI at `CRITICAL|HIGH|MEDIUM|LOW|INFO` (`--fail-on-findings` aliases `INFO`); `--path` accepts multiple mixed files (`.py` + `.json`/`.yaml`/`.yml`) and discovers nested monorepo configs.
+- `--save-baseline` / `--baseline` / `--fail-on-new` enable brownfield baseline diffing (`.verity-baseline.json` with pre-redaction `verity:v1:` fingerprints), paired with `.verityignore`, `verity.toml` (`[[ignore]]` / `[[allowlists]]`), and inline `# verity-ignore` / `# nosemgrep` suppressions.
 - `--offline` disables remote snapshot fetching and uses local caches only.
-- Exit codes: `0` success, `1` findings with `--fail-on-findings` (or a failing probe), `2` gated Pro-only feature such as SARIF export.
+- Exit codes: `0` success, `1` findings/new findings exceeding the configured gate (or a failing probe), `2` usage/policy/baseline-schema error or gated Pro-only feature such as SARIF export.
 
 The SQL guard (`SqlSecurityGuard`) is also importable as a library from `verity.mcp_library.sql_guard`.
 
@@ -621,6 +623,13 @@ jobs:
       - name: Scan MCP agents
         run: |
           verity scan --path ./src/my_mcp_server --schema-file vendor_tools.json --fail-on-findings
+```
+
+For existing ("brownfield") repositories, snapshot a baseline once and fail CI only on new regressions above your severity threshold:
+
+```bash
+verity scan --path . --save-baseline .verity-baseline.json
+verity scan --path . --baseline .verity-baseline.json --fail-on-new --fail-on-severity HIGH
 ```
 
 Every command in this README was captured from empty containers. See

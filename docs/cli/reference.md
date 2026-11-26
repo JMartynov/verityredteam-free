@@ -64,9 +64,13 @@ Precedence, highest first: command-line flag → environment variable → built-
 ## verity scan
 
 ~~~text
-verity scan [--config-file PATH] [--schema-file PATH] [--path PATH]
+verity scan [--config-file PATH [PATH ...]] [--schema-file PATH] [--path PATH [PATH ...]]
+            [--root DIR] [--config PATH] [--ignore-file PATH]
             [--format terminal|json|markdown|html|sarif] [--output PATH]
-            [--fail-on-findings] [--offline] [--live-probe]
+            [--fail-on-findings] [--fail-on-severity LEVEL] [--fail-on LEVEL]
+            [--fail-on-new] [--save-baseline PATH] [--baseline PATH]
+            [--show-suppressed] [--strict-policy] [--no-inline-ignores]
+            [--no-default-ignores] [--offline] [--live-probe]
 ~~~
 
 Statically audits discovered MCP/LLM configuration files and Python source trees. Target code is parsed, never executed.
@@ -75,12 +79,23 @@ Statically audits discovered MCP/LLM configuration files and Python source trees
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--config-file` | path | auto-discover | Explicit MCP/LLM config. When omitted, `.mcp.json`, `mcp.json`, and `claude_desktop_config.json` are located by walking upward from `--path` |
+| `--config-file` | path... | auto-discover | One or more MCP/LLM config JSON/YAML files. When omitted alongside `--path`/`--schema-file`, workstation configs are auto-discovered |
 | `--schema-file` | path | — | JSON Schema for declared tool arguments. Enables static checks such as `VERITY-STATIC-TOOL-POISONING` on tool schemas |
-| `--path` | path | — | Python source file or directory to scan |
+| `--path` | path... | — | One or more Python files, directories, or config files (`.json`/`.yaml`/`.yml`). Directories scan AST sources and discover nested monorepo configs (`**/.cursor/mcp.json`, `**/.vscode/mcp.json`, `**/.mcp.json`, `**/mcp.json`) filtered by `.verityignore` |
+| `--root` | dir | auto-discover | Explicit project root for POSIX repo-relative path canonicalization (`--root` → enclosing `.git` → target dir/parent → cwd) |
+| `--config` | path | `<root>/verity.toml` | Path to a `verity.toml` policy config (`[scan]`, `[[ignore]]`, `[[allowlists]]`) |
+| `--ignore-file` | path | `<root>/.verityignore` | Path to a `.verityignore` file |
 | `--format` | enum | `terminal` | `terminal`, `json`, `markdown`, `html`, or `sarif` (`[Pro]`) |
 | `--output` | path | stdout | Write the report to a file |
-| `--fail-on-findings` | flag | off | Exit `1` when at least one finding is present |
+| `--fail-on-findings` | flag | off | Exit `1` when at least one active finding is present (alias for `--fail-on-severity INFO`) |
+| `--fail-on-severity`, `--fail-on` | enum | — | Exit `1` when any active finding meets or exceeds `CRITICAL`, `HIGH`, `MEDIUM`, `LOW`, or `INFO` (case-insensitive) |
+| `--fail-on-new` | flag | off | Exit `1` when active findings not present in `--baseline` appear |
+| `--save-baseline` | path | — | Atomically write a canonical `.verity-baseline.json` (`verity-baseline.v1.json`) snapshot of active findings |
+| `--baseline` | path | — | Diff active findings against a saved `.verity-baseline.json` baseline |
+| `--show-suppressed` | flag | off | Include `suppressed_findings` details in report output |
+| `--strict-policy` | flag | off | Require non-empty `reason` / `description` on policy `[[ignore]]`, `[[allowlists]]`, and inline suppressions |
+| `--no-inline-ignores` | flag | off | Disable in-source `# verity-ignore` and `# nosemgrep` directives |
+| `--no-default-ignores` | flag | off | Disable built-in default ignored directories (`.git`, `.venv`, `node_modules`, etc.) and auto-loaded `.verityignore` |
 | `--offline` | flag | off | Enable air-gapped offline mode using bundled snapshots. Sets `VERITY_OFFLINE=1` for the run |
 | `--live-probe` | flag | off | Permit outbound probes of endpoints referenced by discovered configs |
 
@@ -88,7 +103,8 @@ Statically audits discovered MCP/LLM configuration files and Python source trees
 
 - `--live-probe` implies egress from the host.
 - `--offline` sets `VERITY_OFFLINE=1` for the run.
-- Unreadable config or schema files exit `3`.
+- `--save-baseline` and `--baseline` are mutually exclusive (`exit 2`).
+- Missing `--config-file`, `--config`, `--ignore-file`, `--baseline`, invalid `--fail-on-severity`, `--strict-policy` violations, or baseline schema mismatches exit `2`.
 - Scan never imports, executes, or evaluates project code.
 
 ### Examples
@@ -97,13 +113,20 @@ Statically audits discovered MCP/LLM configuration files and Python source trees
 # Default posture scan of the current directory
 verity scan
 
+# Multi-file mixed-type scan (ideal for pre-commit)
+verity scan --path server.py tools.py .mcp.json --fail-on-severity HIGH
+
 # Explicit config and source root
 verity scan --config-file .mcp.json --path server
 
 # Machine-readable report to a file
 verity scan --path . --format json --output findings.json
 
-# CI gate
+# Brownfield baseline capture and CI regression gate
+verity scan --path . --offline --save-baseline .verity-baseline.json
+verity scan --path . --offline --baseline .verity-baseline.json --fail-on-new --fail-on-severity HIGH
+
+# CI gate (greenfield)
 verity scan --path . --offline --fail-on-findings
 
 # Code-scanning upload [Pro]
@@ -112,6 +135,21 @@ verity scan --path . --format sarif --output verity.sarif
 # Live probing of referenced endpoints
 verity scan --path . --config-file .mcp.json --live-probe
 ~~~
+
+### Brownfield baselines (`.verity-baseline.json`)
+
+- **Schema (`verity-baseline.v1.json`)**: `--save-baseline` writes `schema_version: "1.0"`, `generated_by`, and deterministic `entries` sorted by `(file_path, rule_id, fingerprint)` atomically via a temporary file and `os.replace()`. No `scan_duration_ms`, timestamps, absolute machine paths, or plaintext secrets are stored.
+- **Pre-redaction fingerprints (`verity:v1:<16-hex>_<occ>`)**: Computed before secret scrubbing so AST findings survive line shifts, duplicate findings disambiguate via `_0`/`_1`, and rotating a secret invalidates its baseline entry without storing plaintext credentials.
+- **Schema-mismatch guard (`exit 2`)**: `verity scan --baseline` rejects `verity test` rug-pull hash maps (`{tool: sha256}`) with exit code `2`, and `verity test --baseline` rejects `verity-baseline.v1.json` scan baselines with exit code `2`.
+
+### Ignore rules, policy config & inline suppressions
+
+- **`.verityignore`** (`--ignore-file`): Supports gitignore-style globs, `:include .gitignore` (with cycle and root-escape protection), top-to-bottom `!pattern` negation, and `--no-default-ignores`. Applied to both AST path walks and nested monorepo config discovery.
+- **`verity.toml`** (`--config`): Parsed with stdlib `tomllib`.
+  - `[scan]`: default `fail_on` / `fail_on_severity` (`min_severity`, `baseline`, `fail_on_new`).
+  - `[[ignore]]`: match by `id` (including OSV/CVE `aliases`), `paths`, `servers`, or `fingerprint`, with `reason` and optional `expires = "YYYY-MM-DD"`. Expired rules re-activate findings and emit `expired_ignore_warnings`.
+  - `[[allowlists]]`: match `paths`, `servers`, `stopwords`, and `regexes` against `regex_target` (`secret`, `match`, or `line`) with `description`.
+- **Inline suppressions**: `# verity-ignore`, `# verity-ignore: RULE_1, RULE_2 -- <reason>`, and `# nosemgrep: <rule-id>` on the finding line or immediately preceding line tag findings with `suppression: {"kind": "inSource", "source": "inline", ...}` unless `--no-inline-ignores` is set. `--strict-policy` requires a non-empty `reason` / `description`.
 
 ### Terminal output
 
@@ -148,8 +186,9 @@ Envelope fields:
 | `scan.offline` | boolean | Whether egress was disabled |
 | `scan.live_probe` | boolean | Whether live probing was enabled |
 | `scan.duration_ms` | integer | Wall-clock duration |
-| `summary` | object | Counts per severity plus `total` |
-| `findings` | array | Finding objects (see below) |
+| `summary` | object | Counts per severity, `suppressed_counts` (`baseline`, `ignore_file`, `policy`, `inline`, `other`, `total`), optional `new_findings` / `baseline_findings` / `resolved_since_baseline`, and `expired_ignore_warnings` |
+| `findings` | array | Active finding objects (see below) |
+| `suppressed_findings` | array | Suppressed finding objects with `suppression` metadata (present when `--show-suppressed` is set) |
 
 Finding object fields:
 
@@ -228,9 +267,9 @@ SARIF 2.1.0 export (`--format sarif`) is a `[Pro]` feature requiring `verity-pro
 
 | Code | Condition |
 | --- | --- |
-| `0` | Scan completed; no findings (or `--fail-on-findings` not set) |
-| `1` | Findings present and `--fail-on-findings` was set |
-| `2` | Usage error (unknown or invalid flag) or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
+| `0` | Scan completed; no blocking active findings (or gate threshold not exceeded) |
+| `1` | Active findings met or exceeded `--fail-on-severity`/`--fail-on`/`--fail-on-findings`, or new findings appeared with `--baseline --fail-on-new` |
+| `2` | Usage error, missing `--config-file`/`--config`/`--ignore-file`/`--baseline`, baseline schema mismatch, `--strict-policy` error, or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
 | `3` | Invalid config, schema, or output path |
 | `4` | `--live-probe` could not reach a referenced target |
 | `5` | Internal error |
@@ -270,6 +309,7 @@ Runs isolated payload tests for CWE-89 (SQL injection), CWE-639 (insecure direct
 - `--dialect` defaults to `postgres`.
 - `--url` uses `VERITY_TEST_AUTHORIZATION` if set.
 - `--save-baseline` and `--baseline` require `--command` or `--url` and are mutually exclusive; each violation is reported as a `FAIL` result and exits `1`.
+- Passing a `verity scan` `.verity-baseline.json` (`verity-baseline.v1.json`) file to `verity test --baseline` triggers the schema-mismatch guard and exits `2`.
 - Invalid or missing baseline files exit `1` with a `FAIL` result.
 - `--url` connection failures are reported as a `FAIL` result and exit `1`.
 
@@ -545,7 +585,7 @@ stage('verity') {
 
 ### Gating guidance
 
-- Use `--baseline` on long-lived branches to block only regressions.
+- Use `--baseline .verity-baseline.json --fail-on-new` on long-lived brownfield branches to block only regressions, paired with `--fail-on-severity HIGH` when prioritizing high-impact issues.
 - Use `--fail-on-findings` without a baseline only on greenfield repositories.
 - Always pair `--output` with an artifact upload; exit codes alone discard evidence.
 - Keep `--offline` in CI unless the job is explicitly authorized to probe live endpoints.
