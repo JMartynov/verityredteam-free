@@ -191,20 +191,6 @@ flowchart TD
 #### Context
 Decouple Pro internals behind Python `importlib.metadata.entry_points(group="verity.plugins")` and pure-stdlib JSON-RPC 2.0 MCP server (`server.py`, NO `FastMCP`/`click`/`pydantic` bloat). Establishes the foundational runtime abstraction barrier so that `verity-core` can run completely standalone without any proprietary or heavy external dependencies, while allowing `verity-pro` to dynamically register enterprise extensions when present.
 
-#### Subtask A (`[PRO]` — `verityredteam`)
-- Add `src/verity/mcp_server/plugin_loader.py` implementing `discover_and_load_plugins(dispatcher)`.
-- Expand `src/verity/mcp_server/protocols.py` to define:
-  - `DatabaseOracleProtocol`
-  - `GuardExtensionProtocol`
-  - `PlanProviderProtocol`
-- Decouple the 5 hardcoded Pro imports with `PRO_FEATURE_REQUIRED` graceful degradation:
-  1. `DatabaseVerificationOracle` in `src/verity/mcp_server/tools.py#L54`
-  2. `SnowflakeSecurityGuard` in `src/verity/mcp_server/handlers/database_guard.py#L8`
-  3. `deterministic_plans` (`get_deterministic_plan`) in `src/verity/mcp_server/handlers/database_oracle.py#L19`
-  4. `CANARY_MANIFEST` and `_audit_and_generate_exploit_plan` in `src/verity/mcp_server/handlers/database_oracle.py#L43,L71`
-  5. `RemediationProProvider` in `src/verity/mcp_server/handlers/remediation.py`
-- Add `tests/unit/test_core_degradation.py` validating that when Pro plugins are not loaded, Pro actions return clean `PRO_FEATURE_REQUIRED` payloads instead of `ImportError`.
-
 #### Subtask B (`[FREE]` — `verityredteam-free`)
 - Scaffold `pyproject.toml` with:
   - `name = "verity-core"`
@@ -216,14 +202,7 @@ Decouple Pro internals behind Python `importlib.metadata.entry_points(group="ver
   - `schemas.py`, `protocols.py`, `plugin_loader.py`, `bootstrap.py`, `stream_logger.py`, `tools.py`, `handlers/`
 - Add test suite `tests/unit/test_mcp_server_handshake.py`.
 
-#### Verification (Both Repos)
-- **`verityredteam`**:
-  ```bash
-  uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -q
-  # Pass condition: 17 passed
-  uv run pytest tests/unit/test_core_degradation.py -q
-  # Pass condition: all degradation scenarios return PRO_FEATURE_REQUIRED
-  ```
+#### Verification
 - **`verityredteam-free`**:
   ```bash
   cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
@@ -233,10 +212,10 @@ Decouple Pro internals behind Python `importlib.metadata.entry_points(group="ver
   ```
 
 #### Acceptance Criteria
-- [ ] Pro MCP agent tools pass 17/17 without regressions in `verityredteam`.
-- [ ] `verity-core` MCP server initializes with zero Pro imports and responds to stdio JSON-RPC handshake.
+- [ ] `verity-redteam-core` MCP server initializes standalone with zero Pro imports and responds to stdio JSON-RPC handshake.
 - [ ] Plugin loader discovers plugins registered under entry-point group `"verity.plugins"`.
 - [ ] All missing Pro features return `PRO_FEATURE_REQUIRED` gracefully without `ImportError`.
+- [ ] `pytest tests/` and `ruff check src tests` pass cleanly in `verityredteam-free`.
 
 ---
 
@@ -249,11 +228,6 @@ Decouple Pro internals behind Python `importlib.metadata.entry_points(group="ver
 
 #### Context
 Deliver the 5-second single-player audit: 9-client workstation secret scanning, 13-rule sub-millisecond `StaticRuleEvaluator`, O(1) fingerprinting, and OSV CVE lookup. Provides instantaneous developer value without requiring any Docker containers, databases, or cloud accounts.
-
-#### Subtask A (`[PRO]` — `verityredteam`)
-- Parameterize `recommended_cli_command` in `src/verity/discovery/active_bridge.py` (remove hardcoded `python -m verity_lite.cli`).
-- Prepare `verity_pro` import compatibility layer.
-- Ensure unified MCP agent scan actions remain fully operational.
 
 #### Subtask B (`[FREE]` — `verityredteam-free`)
 - Migrate `src/verity/discovery/`:
@@ -286,12 +260,7 @@ Deliver the 5-second single-player audit: 9-client workstation secret scanning, 
   - `src/verity/data_fetcher.py`
 - Add unit tests: `tests/unit/test_config_scanner.py` and `tests/unit/test_static_rules.py`.
 
-#### Verification (Both Repos)
-- **`verityredteam`**:
-  ```bash
-  uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -q
-  # Pass condition: 17 passed
-  ```
+#### Verification
 - **`verityredteam-free`**:
   ```bash
   cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
@@ -303,7 +272,7 @@ Deliver the 5-second single-player audit: 9-client workstation secret scanning, 
 - [ ] 9 workstation client config paths scanned accurately with credential scrubbing.
 - [ ] All 13 `VERITY-STATIC-*` rules evaluate malicious schema fixtures in `<0.2ms` per schema.
 - [ ] Canonical fingerprinting and OSV vulnerability lookup function offline with zero network latency.
-- [ ] Zero Pro regressions in `verityredteam` MCP test suite.
+- [ ] `pytest tests/` and `ruff check src tests` pass cleanly with zero Pro imports in `verityredteam-free`.
 
 ---
 
@@ -317,11 +286,6 @@ Deliver the 5-second single-player audit: 9-client workstation secret scanning, 
 #### Context
 Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while keeping `SnowflakeSecurityGuard` strictly in Pro. Establishes a clean division: deterministic SQL AST validation (Free) vs. cloud data warehouse RBAC and time-travel policies (Pro).
 
-#### Subtask A (`[PRO]` — `verityredteam`)
-- Ensure `src/verity/mcp_server/handlers/database_guard.py` cleanly delegates SQL checks to `SqlSecurityGuard` and Snowflake checks to the registered `"snowflake"` guard plugin.
-- Keep `SnowflakeSecurityGuard` isolated in Pro with RBAC role escalation, Time-Travel `AT(TIMESTAMP => ...)`, stage isolation, and tag masking checks intact.
-- Verify Pro database guard actions return expected results across both SQL and Snowflake policies.
-
 #### Subtask B (`[FREE]` — `verityredteam-free`)
 - Migrate `src/verity/mcp_library/sql_guard.py` intact:
   - `validate_parameterized_query`
@@ -333,12 +297,7 @@ Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while k
   - `sanitize_like_pattern` (escapes `\`, `%`, `_`)
 - Add unit test suite: `tests/unit/test_sql_guard.py` testing SQL injection evasion vectors, stacked queries, comment tricks, and tenant isolation.
 
-#### Verification (Both Repos)
-- **`verityredteam`**:
-  ```bash
-  uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -k "database_guard" -q
-  # Pass condition: 5 passed
-  ```
+#### Verification
 - **`verityredteam-free`**:
   ```bash
   cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
@@ -349,7 +308,7 @@ Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while k
 #### Acceptance Criteria
 - [ ] `SqlSecurityGuard` completely blocks comment-split queries (`SEL/**/ECT`), stacked queries (`; DROP TABLE`), and unauthorized catalog accesses.
 - [ ] Tenant filtering and projection masking apply correctly via `sqlglot` AST transformation.
-- [ ] Pro database guard retains 5/5 passing unit tests for both standard SQL and Snowflake policies.
+- [ ] `pytest tests/` and `ruff check src tests` pass cleanly with zero Pro imports in `verityredteam-free`.
 
 ---
 
@@ -363,43 +322,12 @@ Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while k
 #### Context
 Eliminate duplicate code in `verityredteam` by mounting `verityredteam-free` as an editable dependency via `[tool.uv.sources]` and moving Pro-only modules into `src/verity_pro/`. Resolves Python namespace collisions between the two repositories and creates a seamless local developer workspace.
 
-#### Subtask A (`[PRO]` — `verityredteam`)
-- Create `src/verity_pro/plugin.py` with `register_pro_extensions(dispatcher)`.
-- Move Pro-only modules into `src/verity_pro/`:
-  - `snowflake_guard.py`
-  - `fixtures/customer_lab/`
-  - `automation/`
-  - `vaib/`
-  - `penetration/`
-  - `oracles/` & canary verification modules
-  - `compliance/sarif.py` (OASIS SARIF v2.1.0 exporter)
-- Configure `pyproject.toml` in `verityredteam`:
-  ```toml
-  [project.entry-points."verity.plugins"]
-  enterprise = "verity_pro.plugin:register_pro_extensions"
-
-  [tool.uv.sources]
-  verity-core = { path = "../verityredteam-free", editable = true }
-  ```
-- Remove duplicated core files from `verityredteam/src/verity/` so imports cleanly resolve to `verity-core`.
-
 #### Subtask B (`[FREE]` — `verityredteam-free`)
 - Stabilize `verity-core` public API exports in `src/verity/__init__.py`.
 - Tag version `v0.1.0-alpha`.
 - Ensure clean standalone packaging that can be consumed as an editable or published wheel.
 
-#### Verification (Both Repos)
-- **`verityredteam`**:
-  ```bash
-  cd /Users/ivan/Project/3t.tools.intellij/verityredteam
-  uv sync
-  uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -q
-  # Pass condition: 17 passed
-  uv run pytest tests/unit --ignore=tests/unit/test_demo_sh_smoke.py --ignore=tests/unit/test_demo_acceptance.py --ignore=tests/unit/test_agent_router.py -q
-  # Pass condition: 551 passed
-  uv run ruff check src tests
-  # Pass condition: 0 errors
-  ```
+#### Verification
 - **`verityredteam-free`**:
   ```bash
   cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
@@ -409,9 +337,9 @@ Eliminate duplicate code in `verityredteam` by mounting `verityredteam-free` as 
   ```
 
 #### Acceptance Criteria
-- [ ] `verityredteam` imports `verity-core` via `uv` workspace editable linkage with zero duplicate core code.
-- [ ] All 17 production MCP agent tool tests and 551 unit regression tests pass in `verityredteam`.
-- [ ] Ruff check passes with 0 lint or formatting errors across both codebases.
+- [ ] `verity-redteam-core` remains the single source of core code with zero duplicated core modules.
+- [ ] `pytest tests/` and `ruff check src tests` pass cleanly in `verityredteam-free`.
+- [ ] `uv build` produces a valid installable wheel with a clean standalone public API.
 
 ---
 
@@ -424,10 +352,6 @@ Eliminate duplicate code in `verityredteam` by mounting `verityredteam-free` as 
 
 #### Context
 Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test --demo`, `verity serve`) with Rich terminal Pass/Fail tables and subtle Pro upgrade prompts. Provides the viral developer adoption hook while cleanly funneling enterprise users to Pro.
-
-#### Subtask A (`[PRO]` — `verityredteam`)
-- Verify that `verity` CLI automatically unlocks Pro capabilities (e.g. SARIF export, Snowflake guards, live database oracles) when `verity-pro` is installed in the same environment.
-- Confirm backwards compatibility for `verity_lite.cli` invocations.
 
 #### Subtask B (`[FREE]` — `verityredteam-free`)
 - Implement `src/verity/cli.py` with commands:
@@ -445,12 +369,7 @@ Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test
   4. `code_exec_target.py` (Python `eval` code execution dropper)
 - Add unit tests in `tests/unit/test_cli.py` and `tests/unit/test_targets.py`.
 
-#### Verification (Both Repos)
-- **`verityredteam`**:
-  ```bash
-  uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py -q
-  # Pass condition: 17 passed
-  ```
+#### Verification
 - **`verityredteam-free`**:
   ```bash
   cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
@@ -463,7 +382,7 @@ Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test
 #### Acceptance Criteria
 - [ ] `verity scan` completes in `<5s` and outputs Rich formatted summary table with actionable advice.
 - [ ] `verity test --demo` launches in-memory targets and validates probe responses without external dependencies.
-- [ ] Subtle Pro upsell hints appear when cloud warehouse connection strings or advanced compliance formats are encountered.
+- [ ] Pro-only capabilities (e.g. SARIF export, warehouse guards) return `PRO_FEATURE_REQUIRED` with exit code `2` when `verity-pro` is absent.
 
 ---
 
@@ -477,12 +396,6 @@ Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test
 #### Context
 Automate quality gates on both repositories and prepare public launch assets. Ensures continuous regression defense across both Open Core and Enterprise Pro, verifying wheel packaging and public documentation.
 
-#### Subtask A (`[PRO]` — `verityredteam`)
-- Run full multi-tier regression:
-  - `./scripts/lite/test.sh unit`
-  - `./scripts/lite/test.sh acceptance` (when Docker lab is active)
-- Verify end-to-end compatibility of unified production MCP agent tools.
-
 #### Subtask B (`[FREE]` — `verityredteam-free`)
 - Add `.github/workflows/ci.yml`:
   - Python 3.12 and 3.13 test matrix on Ubuntu, macOS, and Windows runners
@@ -490,12 +403,7 @@ Automate quality gates on both repositories and prepare public launch assets. En
 - Polish `README.md` with quickstart instructions (`uvx verity scan`), architecture overview, and feature comparison table (Free vs Pro).
 - Verify packaging wheel build via `uv build`.
 
-#### Verification (Both Repos)
-- **`verityredteam`**:
-  ```bash
-  ./scripts/lite/test.sh unit
-  # Pass condition: 100% pass on unit regression
-  ```
+#### Verification
 - **`verityredteam-free`**:
   ```bash
   cd /Users/ivan/Project/3t.tools.intellij/verityredteam-free
@@ -508,7 +416,7 @@ Automate quality gates on both repositories and prepare public launch assets. En
 #### Acceptance Criteria
 - [ ] GitHub Actions CI runs clean on Python 3.12 and 3.13.
 - [ ] `uv build` produces a valid installable wheel (`dist/verity_core-*.whl`).
-- [ ] Pro unit and acceptance suites pass with zero regressions.
+- [ ] `PRO_FEATURE_REQUIRED` graceful gating is verified with zero Pro imports and zero `ImportError` leaks.
 - [ ] Public documentation accurately reflects the open-core boundary and quickstart workflow.
 
 ---
