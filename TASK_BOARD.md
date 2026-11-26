@@ -4,7 +4,7 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Completed (`v0.2.0` Published to PyPI & Verified)  
+> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Docs Portal (`M38`), Realism (`M39`–`M45`); Queued — Wave 1 Adoption (`M30`–`M37`), Next Wave (`M46`–`M53`)  
 > **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` Released (`M7`–`M11`)  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
@@ -75,6 +75,41 @@ flowchart TD
 
 ---
 
+## Executive Priority & Decision Grouping Dashboard
+
+### High Priority (`P0`) Focus Queue (`Not Done`)
+
+- `M30` — `uvx` & Homebrew
+- `M32` — GitHub Action & pre-commit
+- `M33` — TypeScript/JS MCP SAST
+- `M34` — Agent Skill Scanner & Toxic Flows
+- `M35` — Authenticated Remote Probing & Bait-and-Switch
+- `M36` — ANSI Terminal Deception & Unicode BiDi/Tag
+- `M37` — MCP Schema-Handler Drift & Structured Agent Guidance
+
+### Medium Priority (`P1`) Focus Queue (`Partially Done` / `Not Done`)
+
+- `M49` (`Partially Done` — `--llm-assist` Semantic Alignment & Path B Router wiring)
+- `M48` (`Partially Done` — `verity init` & `verity fix` config hygiene)
+- `M31` (`Not Done` — `verity.baseline` & CI flags)
+- `M47` (`Not Done` — `verity view` local web viewer)
+- `M50` (`Not Done` — `PRO_FEATURE_REQUIRED` hooks for `--autofix`/`--explain`)
+- `M51` (`Not Done` — Snapshot `.json.gz` sync, Sigstore & config scanner dedup)
+- `M52` (`Not Done` — LangChain/CrewAI/AutoGen SAST & YARA)
+
+### Low Priority (`P2`) Queue (`Not Done`)
+
+- `M46` — Unified `verity scan` CLI `--scanners`, SBOM, OWASP, inventory drift
+- `M53` — Pre-Boot Maintainer & Package Reputation Scoring
+
+### Grouped by Decisions / Target Files / Purposes
+
+1. *Group A — Zero-Friction Distribution & CI/CD Adoption* (`M30`, `M31`, `M32`, `M48`)
+2. *Group B — Multi-Language & Multi-Framework SAST Expansion* (`M33`, `M34`, `M52`, `M39` [Done])
+3. *Group C — Transport, Deception & Supply-Chain Hardening* (`M35`, `M36`, `M46`, `M51`, `M53`, `M44` [Done])
+4. *Group D — Agent Guidance, Local Viewer & Opt-In Advisory Hooks* (`M37`, `M47`, `M49`, `M50`, `M40` [Done], `M43` [Done])
+5. *Group E — Product Documentation & Open-Core Foundation* (`M1`–`M29` [Done], `M38` [Done], `M41`–`M42` [Done], `M45` [Done])
+
 ## 📋 Task Matrix & Status Overview
 
 | Task Key | Task Title | Architectural Scope | Task Spec | Status | GitHub Project #5 Item |
@@ -128,7 +163,7 @@ flowchart TD
 | **M40** | **Free CLI SARIF Pro Gate & Line Precision (`TASK-103-FREE`)** | `_pro_plugin_available()` SARIF gate (`PRO_FEATURE_REQUIRED`, exit code `2`) and real `line_number` / `uri` in `src/verity/cli.py` | [M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md](docs/tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) | `Done` | [View Item #M40](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmAQ`) |
 | **M41** | **Homepage Tier 1/2 Focus & Registry Parity (`TASK-104`)** | Tier 1 / Tier 2 homepage, single auxiliary appendix, and runtime-registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`) | [M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md](docs/tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) | `Done` | [View Item #M41](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmDo`) |
 | **M42** | **Pro Features Showcase & Comparison Docs in Free (`TASK-107`)** | `docs/pro/enterprise_features.md`, Free vs Pro matrix, `PRO_FEATURE_REQUIRED` contract | [M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md](docs/tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) | `Done` | [View Item #M42](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmsE`) |
-| **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Done` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
+| **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Done` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
 | **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Done` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
 | **M45** | **Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)** | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | `Done` | [View Item #M45](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvnMQ`) |
 
@@ -1032,7 +1067,7 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 
 #### Context & Key Deliverables
 - Expose `verify_physical_database` and `generate_safe_parameterized_query` in `UNIFIED_TOOL_DEFINITIONS` (`schemas.py`) and honor `dialect` in `remediation.py`.
-- Wire `DualPathRouter.classify_server` + `UnknownCapabilityProfiler` + read-only `next_recommended_actions` into `security_scan.py` and add `--unified-only` to `verity serve`. (Companion Mode A/Mode B `SKILL.md` split lives in `verityredteam`.)
+- Wire `DualPathRouter.classify_server` + `UnknownCapabilityProfiler` + read-only `next_recommended_actions` into `security_scan.py` and add `--unified-only` to `verity serve`.
 
 ---
 
@@ -1100,7 +1135,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 
 **Status & Deliverables**
 - **Status:** `Done` (P0, XS)
-- `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database.py` return `PRO_FEATURE_REQUIRED` when the `verity-pro` plugin is absent.
+- `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` return `PRO_FEATURE_REQUIRED` when the `verity-pro` plugin is absent.
 - Covered by `tests/unit/mcp_server/test_database_guard_pro_gating.py`.
 
 ### M44: Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)
