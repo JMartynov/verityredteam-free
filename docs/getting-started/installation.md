@@ -15,7 +15,7 @@ Verity runs on macOS, Linux, and Windows, with first-class support for developer
 
 ### Prerequisites
 
-- Python 3.10 or newer for pip, uvx, uv tool, and source installs.
+- Python 3.12 or newer (<3.15) for pip, uvx, uv tool, and source installs.
 - A supported IDE client for MCP integration.
 - Optional: Docker 24+ only if you choose the container path.
 
@@ -32,16 +32,14 @@ Python 3.12.4
 
 ~~~bash
 $ curl -LsSf https://astral.sh/uv/install.sh | sh
-$ uvx --from verity-redteam-core-core verity scan --offline
-verity scan completed (0.2.1)
-
-$ uvx --from verity-redteam-core-core verity scan --path . --format terminal
+$ uvx --from verity-redteam-core verity scan --offline
+$ uvx --from verity-redteam-core verity scan --path . --format terminal
 ~~~
 
 Pin a version in automation:
 
 ~~~bash
-$ uvx --from verity-redteam-core-core==0.2.1 verity scan --path . --fail-on-findings
+$ uvx --from verity-redteam-core==0.2.1 verity scan --path . --fail-on-findings
 ~~~
 
 ## Install with `pip`
@@ -52,9 +50,8 @@ Use a virtual environment or the CI runner's managed environment.
 $ python -m venv .venv
 $ source .venv/bin/activate
 $ python -m pip install --upgrade pip
-$ python -m pip install "verity-redteam-core-core==0.2.1"
-$ verity --version
-verity scan completed (0.2.1)
+$ python -m pip install "verity-redteam-core==0.2.1"
+$ verity scan --help
 ~~~
 
 ~~~bash
@@ -68,10 +65,9 @@ $ python -m pip install --upgrade verity-redteam-core
 ~~~bash
 $ uv tool install verity-redteam-core
 $ uv tool list
-verity-redteam-core-core v0.2.1
+verity-redteam-core v0.2.1
 
-$ verity --version
-verity scan completed (0.2.1)
+$ verity scan --help
 ~~~
 
 Upgrade or uninstall:
@@ -83,11 +79,12 @@ $ uv tool uninstall verity-redteam-core
 
 ## Install with Homebrew
 
+> The Homebrew formula is upcoming in M30. Use `uvx` or `pip` until then.
+
 ~~~bash
-$ brew tap verity-redteam-core/tap
+$ brew tap JMartynov/tap
 $ brew install verity
-$ verity --version
-verity scan completed (0.2.1)
+$ verity scan --help
 ~~~
 
 Upgrade:
@@ -98,29 +95,27 @@ $ brew upgrade verity
 
 ## Install with Docker
 
-The container is stateless and mounts the working directory for scanning.
+Run Verity from the official Python 3.12 image and mount the working directory for scanning.
 
 ~~~bash
-$ docker pull ghcr.io/verity-redteam-core/verity:0.2.1
 $ docker run --rm \
     -v "$PWD:/work" \
     -w /work \
-    ghcr.io/verity-redteam-core/verity:0.2.1 \
-    scan --path . --format json
+    python:3.12-slim \
+    sh -c "pip install verity-redteam-core==0.2.1 && verity scan --path . --format json"
 ~~~
 
-For CI, pin the digest instead of the tag.
+For CI, pin the image digest instead of the tag.
 
 ## Install from source
 
 Use this path for air-gapped builds, contribution, or deep inspection.
 
 ~~~bash
-$ git clone https://github.com/verity-redteam-core/verityredteam-free.git
+$ git clone https://github.com/JMartynov/verityredteam-free.git
 $ cd verityredteam-free
 $ uv sync
-$ uv run verity --version
-verity scan completed (0.2.1)
+$ uv run verity scan --help
 ~~~
 
 Build an offline wheel for transfer:
@@ -134,12 +129,10 @@ verity_redteam_core-0.2.1-py3-none-any.whl
 ## Verify the installation
 
 ~~~bash
-$ verity doctor
-verity-redteam-core 0.2.1
-Python 3.12.4
-OS macOS-15.2-arm64
-Targets 4/4 available (zero-docker)
-MCP serve ready
+$ verity scan --offline
+$ verity test --demo
+$ python -c "import verity; print(verity.__version__)"
+0.2.1
 ~~~
 
 ---
@@ -207,7 +200,7 @@ For Zed:
 ### 1. `uvx: command not found`
 
 ~~~bash
-$ uvx --from verity-redteam-core-core verity scan --offline
+$ uvx --from verity-redteam-core verity scan --offline
 zsh: command not found: uvx
 ~~~
 
@@ -216,14 +209,15 @@ Install uv and reopen the shell so `~/.local/bin` is on `PATH`.
 ~~~bash
 $ curl -LsSf https://astral.sh/uv/install.sh | sh
 $ exec "$SHELL"
-$ uvx --from verity-redteam-core-core verity scan --offline
-verity scan completed (0.2.1)
+$ uvx --from verity-redteam-core verity scan --offline
 ~~~
 
 ### 2. Permission denied writing an MCP config
 
+Add the `verity` server entry directly to the client JSON config. If the file or directory is not writable:
+
 ~~~bash
-$ verity mcp install --client claude
+$ verity scan --config-file "$HOME/Library/Application Support/Claude/claude_desktop_config.json"
 error: permission denied: /Users/dev/Library/Application Support/Claude/claude_desktop_config.json
 ~~~
 
@@ -232,8 +226,7 @@ Fix ownership or run the client once so it creates the directory, then retry.
 ~~~bash
 $ mkdir -p "$HOME/Library/Application Support/Claude"
 $ chmod u+rw "$HOME/Library/Application Support/Claude"
-$ verity mcp install --client claude
-installed: claude
+$ verity scan --config-file "$HOME/Library/Application Support/Claude/claude_desktop_config.json"
 ~~~
 
 ### 3. Python version mismatch
@@ -249,8 +242,7 @@ Use a supported interpreter explicitly.
 $ uv python install 3.12
 $ uv venv --python 3.12
 $ uv pip install verity-redteam-core
-$ verity --version
-verity scan completed (0.2.1)
+$ verity scan --help
 ~~~
 
 ### 4. Homebrew tap not found
@@ -263,26 +255,26 @@ Error: No available formula with the name "verity".
 Tap the repository first.
 
 ~~~bash
-$ brew tap verity-redteam-core/tap
+$ brew tap JMartynov/tap
 $ brew install verity
-$ verity --version
-verity scan completed (0.2.1)
+$ verity scan --help
 ~~~
 
-### 5. Docker daemon unavailable or image pull denied
+### 5. Docker daemon unavailable
 
 ~~~bash
-$ docker run --rm ghcr.io/verity-redteam-core/verity:0.2.1 --version
+$ docker run --rm python:3.12-slim verity scan --offline
 Cannot connect to the Docker daemon at unix:///var/run/docker.sock.
 ~~~
 
-Start Docker, authenticate to GHCR if required, and retry.
+Start Docker and retry.
 
 ~~~bash
-$ docker login ghcr.io
-$ docker pull ghcr.io/verity-redteam-core/verity:0.2.1
-$ docker run --rm ghcr.io/verity-redteam-core/verity:0.2.1 --version
-verity scan completed (0.2.1)
+$ docker run --rm \
+    -v "$PWD:/work" \
+    -w /work \
+    python:3.12-slim \
+    sh -c "pip install verity-redteam-core==0.2.1 && verity scan --path . --format json"
 ~~~
 
 ### 6. IDE does not list `verity` as an MCP server
@@ -310,15 +302,13 @@ $ which verity
 }
 ~~~
 
-Restart the IDE, then confirm discovery:
+Restart the IDE, then confirm discovery with a manual stdio handshake:
 
 ~~~bash
-$ verity mcp status --client claude
-client: claude
-server: verity
-status: connected
-tools: mcp_security_scan, mcp_database_guard, mcp_database_oracle, mcp_remediation_ops
+$ printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}' '{"jsonrpc":"2.0","method":"notifications/initialized"}' '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' | verity serve --transport stdio
 ~~~
+
+The response lists the four unified tools: `verity_security_scan`, `verity_database_guard`, `verity_database_oracle`, and `verity_remediation_ops`.
 
 ---
 

@@ -14,11 +14,11 @@ verity
 ## Global conventions
 
 - Long options only. Both `--flag=value` and `--flag value` are accepted.
-- `--format` accepts `terminal`, `json`, `markdown`, `html`, or `sarif`.
-- `terminal` is the default when stdout is a TTY; `json` is the default when piped.
+- `--format` accepts `terminal`, `json`, `markdown`, `html`, or `sarif` for `scan` (`sarif` is `[Pro]`); `test` accepts `terminal`, `json`, `markdown`, or `html`.
+- `terminal` is the default for both `scan` and `test`.
 - Color is enabled only when stderr is a TTY and `NO_COLOR` is unset.
 - Reports go to stdout (or `--output`); diagnostics and progress go to stderr.
-- Every command supports `--help`; `--version` prints `verity <semver>`.
+- Every command supports `--help`. To print the version, run `python -c "import verity; print(verity.__version__)"` (`--version` is planned for M30).
 - Repeated scans and tests are deterministic: the same input produces the same fingerprints.
 
 ### Global options
@@ -26,9 +26,6 @@ verity
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `--help` | flag | — | Print help for the command and exit 0 |
-| `--version` | flag | — | Print version and exit 0 |
-| `--no-color` | flag | off | Disable ANSI styling regardless of TTY |
-| `--log-level` | enum | `warn` | One of `error`, `warn`, `info`, `debug`; writes to stderr |
 
 ### Exit codes
 
@@ -36,11 +33,10 @@ verity
 | --- | --- | --- |
 | `0` | success | Completed; no blocking findings |
 | `1` | findings | Findings present with `--fail-on-findings`, or `verity test` reported a vulnerable case |
-| `2` | usage / Pro gate | Invalid flag, unknown command, mutually exclusive options, or gated `[Pro]` feature (`PRO_FEATURE_REQUIRED`) |
-| `3` | config | Unreadable/invalid config, schema, dialect, or baseline file |
+| `2` | usage / Pro gate | Invalid flag, unknown command, or gated `[Pro]` feature (`PRO_FEATURE_REQUIRED`) |
+| `3` | config | Unreadable or invalid config, schema, or dialect file |
 | `4` | target | Target unreachable, refused, or timed out (`--url`, `--live-probe`) |
-| `5` | internal | Unhandled internal error; a stack trace is printed at `--log-level debug` |
-| `6` | baseline | Baseline file incompatible with the current rule set or schema version |
+| `5` | internal | Unhandled internal error |
 
 Exit codes are stable across minor releases. Scripts may rely on them.
 
@@ -52,12 +48,12 @@ Exit codes are stable across minor releases. Scripts may rely on them.
 | `VERITY_SCHEMA_FILE` | scan | — | Default for `--schema-file` |
 | `VERITY_FORMAT` | scan, test | auto | Default for `--format` |
 | `VERITY_OUTPUT` | scan, test | stdout | Default for `--output` |
-| `VERITY_OFFLINE` | scan | `1` | When `0`, behaves like `--live-probe` |
-| `VERITY_FAIL_ON_FINDINGS` | scan, test | `0` | When `1`, behaves like `--fail-on-findings` |
-| `VERITY_BASELINE` | scan, test | — | Default for `--baseline` |
+| `VERITY_OFFLINE` | scan | unset | Set to `1` to enable air-gapped offline mode using bundled snapshots; `--offline` sets it to `1` for the run |
+| `VERITY_FAIL_ON_FINDINGS` | scan | `0` | When `1`, behaves like `--fail-on-findings` |
+| `VERITY_BASELINE` | test | — | Default for `--baseline` |
 | `VERITY_TEST_AUTHORIZATION` | test | — | `Authorization` header supplied to `--url` requests |
 | `VERITY_NO_COLOR` | all | — | Any non-empty value disables color |
-| `VERITY_LOG_LEVEL` | all | `warn` | Default for `--log-level` |
+| `VERITY_LOG_LEVEL` | all | `warn` | Logging verbosity for diagnostics (`error`, `warn`, `info`, `debug`) |
 | `VERITY_TRANSPORT` | serve | — | Default for `--transport` |
 
 Precedence, highest first: command-line flag → environment variable → built-in default. `NO_COLOR` (standard) is honored alongside `VERITY_NO_COLOR`.
@@ -69,7 +65,7 @@ Precedence, highest first: command-line flag → environment variable → built-
 ~~~text
 verity scan [--config-file PATH] [--schema-file PATH] [--path PATH]
             [--format terminal|json|markdown|html|sarif] [--output PATH]
-            [--fail-on-findings] [--offline | --live-probe]
+            [--fail-on-findings] [--offline] [--live-probe]
 ~~~
 
 Statically audits discovered MCP/LLM configuration files and Python source trees. Target code is parsed, never executed.
@@ -79,19 +75,18 @@ Statically audits discovered MCP/LLM configuration files and Python source trees
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `--config-file` | path | auto-discover | Explicit MCP/LLM config. When omitted, `.mcp.json`, `mcp.json`, and `claude_desktop_config.json` are located by walking upward from `--path` |
-| `--schema-file` | path | — | JSON Schema for declared tool arguments. Enables `VERITY-MCP-014` (argument allowlisting) |
-| `--path` | path | `.` | Root of the source tree to scan |
-| `--format` | enum | tty: `table`, pipe: `json` | `terminal`, `json`, `markdown`, `html`, or `sarif` |
-| `--output` | path | stdout | Write the report to a file. When `--format` is omitted, inferred from `.json`/`.sarif` |
+| `--schema-file` | path | — | JSON Schema for declared tool arguments. Enables static checks such as `VERITY-STATIC-TOOL-POISONING` on tool schemas |
+| `--path` | path | — | Python source file or directory to scan |
+| `--format` | enum | `terminal` | `terminal`, `json`, `markdown`, `html`, or `sarif` (`[Pro]`) |
+| `--output` | path | stdout | Write the report to a file |
 | `--fail-on-findings` | flag | off | Exit `1` when at least one finding is present |
-| `--offline` | flag | on | Disable all outbound network calls |
+| `--offline` | flag | off | Enable air-gapped offline mode using bundled snapshots. Sets `VERITY_OFFLINE=1` for the run |
 | `--live-probe` | flag | off | Permit outbound probes of endpoints referenced by discovered configs |
 
 ### Constraints
 
-- `--offline` and `--live-probe` are mutually exclusive (exit `2`).
-- `--live-probe` prints a notice to stderr and implies egress from the host.
-- `--schema-file` requires `--config-file` (exit `3` if the pair is incomplete).
+- `--live-probe` implies egress from the host.
+- `--offline` sets `VERITY_OFFLINE=1` for the run.
 - Unreadable config or schema files exit `3`.
 - Scan never imports, executes, or evaluates project code.
 
@@ -110,7 +105,7 @@ verity scan --path . --format json --output findings.json
 # CI gate
 verity scan --path . --offline --fail-on-findings
 
-# Code-scanning upload
+# Code-scanning upload [Pro]
 verity scan --path . --format sarif --output verity.sarif
 
 # Live probing of referenced endpoints
@@ -120,7 +115,7 @@ verity scan --path . --config-file .mcp.json --live-probe
 ### Terminal output
 
 ~~~text
-verity 1.4.2 — scan
+verity 0.2.1 — scan
 root: /Users/ivan/app
 mode: offline (no live probes)
 
@@ -132,9 +127,9 @@ low       0
 info      1
 total     7
 
-CRITICAL  CWE-78   .mcp.json:12     shell: true with interpolated env var
-HIGH      CWE-798  .mcp.json:8      hard-coded API token
-MEDIUM    CWE-89   app/db.py:58     f-string used in cursor.execute
+CRITICAL  VERITY-STATIC-SHELL-DROPPER  .mcp.json:12     shell: true with interpolated env var
+HIGH      SEC-STATIC-SECRET-IN-CONFIG   .mcp.json:8      hard-coded API token
+MEDIUM    VERITY-AST-CWE-89-SQLI        app/db.py:58     f-string used in cursor.execute
 
 duration: 1.2s   files: 812   configs: 4
 ~~~
@@ -154,13 +149,12 @@ Envelope fields:
 | `scan.duration_ms` | integer | Wall-clock duration |
 | `summary` | object | Counts per severity plus `total` |
 | `findings` | array | Finding objects (see below) |
-| `baseline` | object or null | Present when `--baseline` was used |
 
 Finding object fields:
 
 | Field | Type | Description |
 | --- | --- | --- |
-| `id` | string | Rule identifier, e.g. `CWE-78` or `VERITY-MCP-014` |
+| `id` | string | Rule identifier, e.g. `VERITY-STATIC-SHELL-DROPPER` or `VERITY-STATIC-TOOL-POISONING` |
 | `severity` | enum | `critical`, `high`, `medium`, `low`, `info` |
 | `title` | string | Short human description |
 | `location` | object | `file`, `line`, `column` |
@@ -171,7 +165,7 @@ Finding object fields:
 ~~~json
 {
   "schema_version": "1.0",
-  "tool": { "name": "verity", "version": "1.4.2" },
+  "tool": { "name": "verity", "version": "0.2.1" },
   "scan": {
     "path": "/Users/ivan/app",
     "offline": true,
@@ -181,7 +175,7 @@ Finding object fields:
   "summary": { "critical": 1, "high": 2, "medium": 3, "low": 0, "info": 1, "total": 7 },
   "findings": [
     {
-      "id": "CWE-78",
+      "id": "VERITY-STATIC-SHELL-DROPPER",
       "severity": "critical",
       "title": "Shell execution with interpolated input",
       "location": { "file": ".mcp.json", "line": 12, "column": 5 },
@@ -189,8 +183,7 @@ Finding object fields:
       "remediation": "Pass arguments as an array and avoid shell interpretation.",
       "fingerprint": "sha256:6f1c...e9"
     }
-  ],
-  "baseline": null
+  ]
 }
 ~~~
 
@@ -213,9 +206,9 @@ SARIF 2.1.0 export (`--format sarif`) is a `[Pro]` feature requiring `verity-pro
 {
   "version": "2.1.0",
   "runs": [{
-    "tool": { "driver": { "name": "verity", "version": "1.4.2" } },
+    "tool": { "driver": { "name": "verity", "version": "0.2.1" } },
     "results": [{
-      "ruleId": "CWE-78",
+      "ruleId": "VERITY-STATIC-SHELL-DROPPER",
       "level": "error",
       "message": { "text": "Shell execution with interpolated input" },
       "locations": [{
@@ -236,11 +229,10 @@ SARIF 2.1.0 export (`--format sarif`) is a `[Pro]` feature requiring `verity-pro
 | --- | --- |
 | `0` | Scan completed; no findings (or `--fail-on-findings` not set) |
 | `1` | Findings present and `--fail-on-findings` was set |
-| `2` | Usage error (including `--offline` with `--live-probe`) or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
+| `2` | Usage error (unknown or invalid flag) or gated `[Pro]` feature such as `--format sarif` (`PRO_FEATURE_REQUIRED`, zero partial file writes) |
 | `3` | Invalid config, schema, or output path |
 | `4` | `--live-probe` could not reach a referenced target |
 | `5` | Internal error |
-| `6` | Baseline incompatible with the current rule set |
 
 ---
 
@@ -251,7 +243,7 @@ verity test [--demo] [--target NAME]
             [--sql QUERY --dialect DIALECT]
             [--url URL --target FIELD]
             [--command TEMPLATE]
-            [--format terminal|json|markdown|html|sarif] [--output PATH]
+            [--format terminal|json|markdown|html] [--output PATH]
             [--save-baseline PATH] [--baseline PATH]
 ~~~
 
@@ -262,24 +254,23 @@ Runs isolated payload tests for CWE-89 (SQL injection), CWE-639 (insecure direct
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
 | `--demo` | flag | off | Run one canonical case per CWE. With `--target`, run only that case |
-| `--target` | string | — | With `--demo`: `cwe-89`, `cwe-639`, `cwe-943`, or `cwe-94`. With `--url`: owner field name to compare |
+| `--target` | string | — | With `--demo`: `sqlite-basic`, `postgres-basic`, `mongo-basic`, or `code-exec-basic` |
 | `--sql` | string | — | SQL statement under test |
-| `--dialect` | enum | — | `postgresql`, `mysql`, `sqlite`, `mssql`, `oracle`, or `mongodb` |
-| `--url` | URL | — | Live endpoint tested for CWE-639 |
-| `--command` | string | — | Shell command template containing `{input}` |
-| `--format` | enum | tty: `table`, pipe: `json` | `terminal`, `json`, `markdown`, `html`, or `sarif` |
+| `--dialect` | enum | `postgres` | `postgres`, `mysql`, `sqlite`, `duckdb`, `tsql`, `bigquery`, or `snowflake` |
+| `--url` | URL | — | Live MCP SSE endpoint to probe |
+| `--command` | string | — | Stdio MCP command to probe |
+| `--format` | enum | `terminal` | `terminal`, `json`, `markdown`, or `html` |
 | `--output` | path | stdout | Write results to a file |
 | `--save-baseline` | path | — | Write a baseline of current case verdicts |
 | `--baseline` | path | — | Compare verdicts against a saved baseline |
 
 ### Constraints
 
-- `--sql` requires `--dialect` (exit `2` if missing).
-- `--url` requires `--target` and uses `VERITY_TEST_AUTHORIZATION` if set.
-- `--command` must contain the literal `{input}` placeholder (exit `2`).
-- `--save-baseline` and `--baseline` may be combined to compare and refresh in one run.
-- Invalid or missing baseline files exit `3`; incompatible baselines exit `6`.
-- `--url` connection failures exit `4`; other modes never touch the network.
+- `--dialect` defaults to `postgres`.
+- `--url` uses `VERITY_TEST_AUTHORIZATION` if set.
+- `--save-baseline` and `--baseline` require `--command` or `--url` and are mutually exclusive; each violation is reported as a `FAIL` result and exits `1`.
+- Invalid or missing baseline files exit `1` with a `FAIL` result.
+- `--url` connection failures are reported as a `FAIL` result and exit `1`.
 
 ### Examples
 
@@ -287,38 +278,35 @@ Runs isolated payload tests for CWE-89 (SQL injection), CWE-639 (insecure direct
 # Every demo case
 verity test --demo
 
-# A single CWE
-verity test --demo --target cwe-89
-verity test --demo --target cwe-639
-verity test --demo --target cwe-943
-verity test --demo --target cwe-94
+# A single demo target
+verity test --demo --target sqlite-basic
+verity test --demo --target postgres-basic
+verity test --demo --target mongo-basic
+verity test --demo --target code-exec-basic
 
 # SQL injection against a dialect
-verity test --sql "SELECT * FROM users WHERE name = '%s'" --dialect postgresql
+verity test --sql "SELECT * FROM users WHERE name = '%s'" --dialect postgres
+verity test --sql "SELECT * FROM users WHERE name = '%s'" --dialect sqlite
 
-# NoSQL operator injection
-verity test --sql '{"username": {"$ne": null}}' --dialect mongodb
-
-# IDOR against a live endpoint
+# Probe a live MCP SSE endpoint
 VERITY_TEST_AUTHORIZATION="Bearer $TOKEN" \
-  verity test --url http://127.0.0.1:8000/api/orders/42 --target order
+  verity test --url http://127.0.0.1:8000/sse
 
-# Command injection template
-verity test --command 'echo {input}'
+# Command probe
+verity test --command 'python3 server.py'
 
-# JSON and SARIF
+# JSON output
 verity test --demo --format json --output tests.json
-verity test --demo --format sarif --output tests.sarif
 
-# Baseline the current verdicts, then gate on regressions
-verity test --demo --save-baseline .verity-test-baseline.json
-verity test --demo --baseline .verity-test-baseline.json
+# Baseline MCP tool hashes, then gate on drift
+verity test --command 'python3 server.py' --save-baseline .verity-test-baseline.json
+verity test --command 'python3 server.py' --baseline .verity-test-baseline.json
 ~~~
 
 ### Terminal output
 
 ~~~text
-verity 1.4.2 — test
+verity 0.2.1 — test
 mode: demo (4 cases)
 
 CWE-89   SQL injection            vulnerable  payload: ' OR 1=1 --        result: bypass
@@ -348,7 +336,7 @@ summary: 4 vulnerable, 0 patched, 0 errors
 ~~~json
 {
   "schema_version": "1.0",
-  "tool": { "name": "verity", "version": "1.4.2" },
+  "tool": { "name": "verity", "version": "0.2.1" },
   "suite": "demo",
   "cases": [
     {
@@ -364,28 +352,21 @@ summary: 4 vulnerable, 0 patched, 0 errors
 }
 ~~~
 
-### SARIF output
-
-One rule per CWE (`CWE-89`, `CWE-639`, `CWE-943`, `CWE-94`). `vulnerable` maps to `error`, `error` to `warning`, `patched` and `skipped` produce no result.
-
 ### Test exit codes
 
 | Code | Condition |
 | --- | --- |
-| `0` | Completed; no case reported `vulnerable` |
-| `1` | At least one case reported `vulnerable` |
-| `2` | Usage error (missing `--dialect`, malformed `{input}`, conflicting flags) |
-| `3` | Invalid baseline or output path |
-| `4` | `--url` target unreachable, refused, or timed out |
+| `0` | Completed; no case reported `vulnerable` or `FAIL` |
+| `1` | At least one case reported `vulnerable` or `FAIL`, including baseline/rug-pull and probe failures |
+| `2` | Usage error (unknown flag or unknown subcommand) |
 | `5` | Internal error |
-| `6` | Baseline incompatible with the current case set |
 
 ---
 
 ## verity serve
 
 ~~~text
-verity serve --transport stdio|http|unix
+verity serve [--transport stdio|sse|http] [--host HOST] [--port PORT]
 ~~~
 
 Exposes the scanner as a long-running process using a transport suitable for MCP clients and agent frameworks.
@@ -394,22 +375,24 @@ Exposes the scanner as a long-running process using a transport suitable for MCP
 
 | Option | Type | Default | Description |
 | --- | --- | --- | --- |
-| `--transport` | enum | `VERITY_TRANSPORT` unset → required | `stdio`, `http`, or `unix` |
+| `--transport` | enum | `stdio` | `stdio`, `sse`, or `http` |
+| `--host` | string | `127.0.0.1` | Bind host for network transports |
+| `--port` | integer | `8765` | Bind port for network transports |
 
 ### Transport behavior
 
 | Transport | Endpoint | Notes |
 | --- | --- | --- |
 | `stdio` | stdin/stdout (JSON-RPC 2.0) | Logs go to stderr; stdout carries protocol frames only |
-| `http` | `127.0.0.1:8765` | Loopback only; no authentication |
-| `unix` | `/tmp/verity.sock` | Loopback-equivalent; socket permissions are `0600` |
+| `sse` | `127.0.0.1:8765` | HTTP/SSE JSON-RPC; loopback only; no authentication |
+| `http` | `127.0.0.1:8765` | HTTP JSON-RPC; loopback only; no authentication |
 
 ### Examples
 
 ~~~bash
 verity serve --transport stdio
-verity serve --transport http
-verity serve --transport unix
+verity serve --transport sse
+verity serve --transport http --host 127.0.0.1 --port 8765
 VERITY_TRANSPORT=stdio verity serve
 ~~~
 
@@ -419,7 +402,6 @@ VERITY_TRANSPORT=stdio verity serve
 | --- | --- |
 | `0` | Shut down cleanly |
 | `2` | Missing or unknown `--transport` |
-| `4` | Requested endpoint could not be bound |
 | `5` | Internal error |
 
 The server is unauthenticated. Bind it to loopback only; do not proxy it to untrusted networks.
@@ -485,16 +467,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pipx install verity
-      - name: Restore baseline
-        uses: actions/cache@v4
-        with:
-          path: .verity-baseline.json
-          key: verity-baseline-${{ github.ref_name }}
-      - name: Scan (gate on regressions)
+      - run: pipx install verity-redteam-core
+      - name: Scan (Pro SARIF export)
+        # `--format sarif` requires verity-pro; Free exits 2 and writes no file.
         run: |
           verity scan --path . --offline \
-            --baseline .verity-baseline.json \
             --format sarif --output verity.sarif \
             --fail-on-findings
       - name: Payload tests
@@ -512,12 +489,7 @@ jobs:
             tests.json
 ~~~
 
-On the first run, seed the baseline without gating:
-
-~~~bash
-verity scan --path . --offline --save-baseline .verity-baseline.json
-git add .verity-baseline.json && git commit -m "chore: seed verity baseline"
-~~~
+Install `verity-pro` in the job to enable `--format sarif`. Without it, use `--format json` and upload the JSON report.
 
 ### GitLab CI
 
@@ -525,7 +497,7 @@ git add .verity-baseline.json && git commit -m "chore: seed verity baseline"
 verity:
   image: python:3.12
   before_script:
-    - pip install verity
+    - pip install verity-redteam-core
   script:
     - verity scan --path . --offline --format json --output scan.json
     - verity test --demo --format json --output tests.json
@@ -534,12 +506,10 @@ verity:
     paths:
       - scan.json
       - tests.json
-    reports:
-      sast: scan.sarif
   allow_failure: false
 ~~~
 
-Emit `scan.sarif` alongside `scan.json` when GitLab's SAST report ingestion is required.
+Emit `scan.sarif` with `[Pro]` (`verity-pro` installed) when GitLab's SAST report ingestion is required.
 
 ### pre-commit
 
@@ -564,10 +534,10 @@ repos:
 ~~~groovy
 stage('verity') {
     steps {
-        sh 'pipx install verity'
-        sh 'verity scan --path . --offline --format sarif --output verity.sarif --fail-on-findings'
+        sh 'pipx install verity-redteam-core'
+        sh 'verity scan --path . --offline --format json --output scan.json --fail-on-findings'
         sh 'verity test --demo --format json --output tests.json'
-        archiveArtifacts artifacts: 'verity.sarif, tests.json', allowEmptyArchive: true
+        archiveArtifacts artifacts: 'scan.json, tests.json', allowEmptyArchive: true
     }
 }
 ~~~
@@ -586,10 +556,5 @@ stage('verity') {
 | Symptom | Exit | Cause | Fix |
 | --- | --- | --- | --- |
 | `no findings, nothing scanned` | `0` | `--path` points at a directory with no configs or Python files | Pass `--config-file` explicitly or correct `--path` |
-| `baseline incompatible` | `6` | Rule set or schema version changed | Re-run with `--save-baseline` to refresh |
-| `offline and live-probe conflict` | `2` | Both flags supplied | Keep only one |
-| `dialect is required` | `2` | `--sql` used without `--dialect` | Add `--dialect <name>` |
-| `command template missing {input}` | `2` | `--command` lacks the placeholder | Add the literal `{input}` |
-| `target refused connection` | `4` | `--url` endpoint down or unreachable | Start the service or fix the URL |
-| `cannot bind transport` | `4` | Address or socket already in use | Stop the other process (e.g. remove `/tmp/verity.sock`) |
-| `schema requires config-file` | `3` | `--schema-file` without `--config-file` | Supply both or omit the schema |
+| `target refused connection` | `1` | `--url` endpoint down or unreachable | Start the service or fix the URL |
+| `cannot bind transport` | `4` | Address or port already in use | Stop the other process or choose another `--port` |

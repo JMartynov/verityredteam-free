@@ -41,7 +41,7 @@ The authoritative input schema for every tool is returned by `tools/list`. IDE a
 
 ## 2. Prerequisites
 
-- Python 3.11 or newer.
+- Python 3.12 or newer (<3.15).
 - `uv` for the recommended zero-install `uvx` flow.
 - A Verity installation if you want to use the `verity` command directly.
 - Local Verity data snapshots if you are operating offline. The usual directories are `data/fingerprints` and `data/vulnerabilities`.
@@ -84,7 +84,7 @@ Every configuration in this guide is shown in two variants.
 ~~~json
 {
   "command": "uvx",
-  "args": ["verity-redteam-core", "serve"]
+  "args": ["--from", "verity-redteam-core", "verity", "serve"]
 }
 ~~~
 
@@ -118,7 +118,7 @@ Variant A:
   "mcpServers": {
     "verity": {
       "command": "uvx",
-      "args": ["verity-redteam-core", "serve"]
+      "args": ["--from", "verity-redteam-core", "verity", "serve"]
     }
   }
 }
@@ -153,7 +153,7 @@ Variant A:
   "mcpServers": {
     "verity": {
       "command": "uvx",
-      "args": ["verity-redteam-core", "serve"]
+      "args": ["--from", "verity-redteam-core", "verity", "serve"]
     }
   }
 }
@@ -185,7 +185,7 @@ Variant A:
   "mcpServers": {
     "verity": {
       "command": "uvx",
-      "args": ["verity-redteam-core", "serve"]
+      "args": ["--from", "verity-redteam-core", "verity", "serve"]
     }
   }
 }
@@ -217,7 +217,7 @@ Variant A:
   "mcpServers": {
     "verity": {
       "command": "uvx",
-      "args": ["verity-redteam-core", "serve"]
+      "args": ["--from", "verity-redteam-core", "verity", "serve"]
     }
   }
 }
@@ -250,7 +250,7 @@ Variant A:
     "verity": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["verity-redteam-core", "serve"]
+      "args": ["--from", "verity-redteam-core", "verity", "serve"]
     }
   }
 }
@@ -283,7 +283,7 @@ Variant A:
   "mcpServers": {
     "verity": {
       "command": "uvx",
-      "args": ["verity-redteam-core", "serve"]
+      "args": ["--from", "verity-redteam-core", "verity", "serve"]
     }
   }
 }
@@ -316,7 +316,7 @@ Variant A:
     "verity": {
       "command": {
         "path": "uvx",
-        "args": ["verity-redteam-core", "serve"]
+        "args": ["--from", "verity-redteam-core", "verity", "serve"]
       }
     }
   }
@@ -703,7 +703,7 @@ The assistant should keep tool output structured. It should not paste raw JSON a
 Manual handshake test on macOS or Linux:
 
 ~~~bash
-printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}' '{"jsonrpc":"2.0","method":"notifications/initialized"}' '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' | uvx verity-redteam-core serve
+printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}' '{"jsonrpc":"2.0","method":"notifications/initialized"}' '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}' | uvx --from verity-redteam-core verity serve
 ~~~
 
 If this prints a JSON response containing `tools`, the server is healthy and the IDE configuration is the problem. If it prints nothing, check stderr and the executable path.
@@ -721,7 +721,7 @@ Put that full path into the IDE configuration:
 ~~~json
 {
   "command": "/Users/you/.local/bin/uvx",
-  "args": ["verity-redteam-core", "serve"]
+  "args": ["--from", "verity-redteam-core", "verity", "serve"]
 }
 ~~~
 
@@ -748,7 +748,7 @@ verity serve
 
 Common causes:
 
-- Python version too old. Use Python 3.11 or newer.
+- Python version too old. Use Python 3.12 or newer (<3.15).
 - The package is not installed in the active environment.
 - The virtual environment was created under a different user or architecture.
 - A project-level `.env` or wrapper script is sending output to stdout.
@@ -869,7 +869,7 @@ verity serve
 Zero-install invocation:
 
 ~~~bash
-uvx verity-redteam-core serve
+uvx --from verity-redteam-core verity serve
 ~~~
 
 Manual MCP tools/list smoke test:
