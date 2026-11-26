@@ -115,6 +115,66 @@ UNIFIED_TOOL_DEFINITIONS = [
                                 "Apply inline and policy suppressions to findings."
                             ),
                         },
+                        "scanners": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": [
+                                    "all",
+                                    "config",
+                                    "vuln",
+                                    "secret",
+                                    "ast",
+                                    "taint",
+                                    "typosquat",
+                                    "conflict",
+                                ],
+                            },
+                            "description": (
+                                "Scanner modules to run for SBOM and scan modes."
+                            ),
+                        },
+                        "include_reachability": {
+                            "type": "boolean",
+                            "default": True,
+                            "description": (
+                                "Include reachability analysis in SBOM output."
+                            ),
+                        },
+                        "format": {
+                            "type": "string",
+                            "enum": [
+                                "terminal",
+                                "json",
+                                "markdown",
+                                "html",
+                                "sarif",
+                                "cyclonedx",
+                                "spdx",
+                            ],
+                            "description": "Report output format.",
+                        },
+                        "save_inventory_baseline": {
+                            "type": "string",
+                            "description": (
+                                "Persist an inventory snapshot to this path."
+                            ),
+                        },
+                        "compare_inventory_baseline": {
+                            "type": "string",
+                            "description": (
+                                "Compare current inventory against this baseline "
+                                "path."
+                            ),
+                        },
+                        "fail_on_drift": {
+                            "type": "boolean",
+                            "default": False,
+                            "description": (
+                                "Fail the scan gate when inventory drift is "
+                                "detected."
+                            ),
+                        },
                     },
                 },
             },

@@ -160,6 +160,52 @@ def render_scan_html(report_data: dict[str, Any]) -> str:
                 )
             rows.extend(["</tbody>", "</table>"])
 
+    compliance = report_data.get("compliance") or {}
+    if compliance:
+        rows.extend(
+            [
+                "<h2>OWASP Compliance</h2>",
+                "<table>",
+                "<thead><tr><th>Metric</th><th>Value</th></tr></thead>",
+                "<tbody>",
+                f"<tr><td>Standard</td><td>{_e(compliance.get('standard', '-'))}</td></tr>",
+                f"<tr><td>Score</td><td>{_e(compliance.get('score', '-'))}</td></tr>",
+                f"<tr><td>Tier</td><td>{_e(compliance.get('tier', '-'))}</td></tr>",
+                "</tbody>",
+                "</table>",
+            ]
+        )
+
+    drift = report_data.get("inventory_drift") or {}
+    if drift:
+        state = "detected" if drift.get("has_drift") else "none"
+        rows.append(f"<p><strong>Inventory drift:</strong> {_e(state)}</p>")
+
+    if any(
+        f.get("owasp_mcp_id") or f.get("reachability") or f.get("scanner")
+        for f in findings
+    ):
+        rows.extend(
+            [
+                "<h2>Security Mapping</h2>",
+                "<table>",
+                "<thead><tr><th>Rule</th><th>OWASP MCP</th><th>OWASP LLM</th>"
+                "<th>Reachability</th><th>Scanner</th></tr></thead>",
+                "<tbody>",
+            ]
+        )
+        for finding in findings:
+            rows.append(
+                "<tr>"
+                f"<td>{_e(_field(finding, 'rule_id'))}</td>"
+                f"<td>{_e(finding.get('owasp_mcp_id') or '-')}</td>"
+                f"<td>{_e(finding.get('owasp_llm_id') or '-')}</td>"
+                f"<td>{_e(finding.get('reachability') or '-')}</td>"
+                f"<td>{_e(finding.get('scanner') or '-')}</td>"
+                "</tr>"
+            )
+        rows.extend(["</tbody>", "</table>"])
+
     resolved = summary.get("resolved_since_baseline")
     if resolved is not None:
         rows.append(

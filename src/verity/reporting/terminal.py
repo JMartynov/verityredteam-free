@@ -137,6 +137,46 @@ def render_scan_terminal(report_data: dict[str, Any]) -> str:
                 )
             console.print(detail)
 
+    compliance = report_data.get("compliance") or {}
+    if compliance:
+        comp_table = Table(
+            title="OWASP Compliance", show_header=True, header_style="bold"
+        )
+        comp_table.add_column("Metric")
+        comp_table.add_column("Value", justify="right")
+        comp_table.add_row("Standard", escape(str(compliance.get("standard", "-"))))
+        comp_table.add_row("Score", str(compliance.get("score", "-")))
+        comp_table.add_row("Tier", escape(str(compliance.get("tier", "-"))))
+        console.print(comp_table)
+
+    drift = report_data.get("inventory_drift") or {}
+    if drift:
+        console.print(
+            "Inventory drift: " + ("detected" if drift.get("has_drift") else "none")
+        )
+
+    if any(
+        f.get("owasp_mcp_id") or f.get("reachability") or f.get("scanner")
+        for f in findings
+    ):
+        mapping = Table(
+            title="Security Mapping", show_header=True, header_style="bold"
+        )
+        mapping.add_column("Rule", no_wrap=True)
+        mapping.add_column("OWASP MCP")
+        mapping.add_column("OWASP LLM")
+        mapping.add_column("Reachability")
+        mapping.add_column("Scanner")
+        for finding in findings:
+            mapping.add_row(
+                escape(_field(finding, "rule_id")),
+                escape(str(finding.get("owasp_mcp_id") or "-")),
+                escape(str(finding.get("owasp_llm_id") or "-")),
+                escape(str(finding.get("reachability") or "-")),
+                escape(str(finding.get("scanner") or "-")),
+            )
+        console.print(mapping)
+
     resolved = summary.get("resolved_since_baseline")
     if resolved is not None:
         console.print(f"Resolved since baseline: {resolved}")

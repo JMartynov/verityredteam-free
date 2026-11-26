@@ -145,6 +145,74 @@ class SecurityScanHandlerMixin:
 
         return active, suppressed, counts, new_count, baseline_count, resolved, gate_passed
 
+    def _apply_sbom_and_inventory(
+        self,
+        options: dict[str, Any],
+        res: dict[str, Any],
+        active: list[dict[str, Any]],
+        gate_passed: bool,
+    ) -> bool:
+        """Attach CycloneDX/SPDX SBOM and inventory drift data to a scan result."""
+        from verity.reporting.sbom import (
+            build_audit_records,
+            build_inventory_snapshot,
+            compare_inventory_snapshots,
+            load_inventory_baseline,
+            render_scan_cyclonedx,
+            render_scan_spdx,
+            save_inventory_baseline,
+        )
+
+        fmt = str(options.get("format") or "").lower()
+        save_path = options.get("save_inventory_baseline")
+        compare_path = options.get("compare_inventory_baseline")
+        if fmt not in ("cyclonedx", "spdx") and not save_path and not compare_path:
+            return gate_passed
+
+        servers = list(options.get("servers") or res.get("servers") or [])
+        records = build_audit_records(servers)
+
+        if fmt == "cyclonedx":
+            include_vulns = False
+            raw_scanners = options.get("scanners")
+            if raw_scanners:
+                if isinstance(raw_scanners, (list, tuple, set)):
+                    raw_scanners = ",".join(str(s) for s in raw_scanners)
+                try:
+                    from verity.scanner.engine import parse_scanners_arg
+
+                    include_vulns = "vuln" in parse_scanners_arg(
+                        raw_scanners, fmt=fmt, has_path=False
+                    )
+                except Exception:  # pragma: no cover - defensive
+                    include_vulns = False
+            res["sbom"] = render_scan_cyclonedx(
+                records, active, include_vulns=include_vulns
+            )
+        elif fmt == "spdx":
+            res["sbom"] = render_scan_spdx(records)
+
+        if save_path or compare_path:
+            snapshot = build_inventory_snapshot(records)
+            if save_path:
+                try:
+                    save_inventory_baseline(save_path, snapshot)
+                except Exception as exc:  # pragma: no cover - defensive
+                    logger.warning("Failed to save inventory baseline: %s", exc)
+            if compare_path:
+                try:
+                    baseline_snap = load_inventory_baseline(compare_path)
+                    drift = compare_inventory_snapshots(baseline_snap, snapshot)
+                    res["inventory_drift"] = drift
+                    if bool(options.get("fail_on_drift")) and drift.get("has_drift"):
+                        gate_passed = False
+                except FileNotFoundError:
+                    res["inventory_drift"] = {
+                        "has_drift": False,
+                        "error": "baseline_not_found",
+                    }
+        return gate_passed
+
     def _execute_security_scan(self, args: dict[str, Any]) -> dict[str, Any]:
         action = args.get("action", "")
         options = args.get("options") or {}
@@ -190,16 +258,82 @@ class SecurityScanHandlerMixin:
                 resolved,
                 gate_passed,
             ) = self._augment_findings(findings, options, project_root)
+
+            from verity.reporting.sbom import (
+                build_audit_records,
+                build_inventory_snapshot,
+                compare_inventory_snapshots,
+                enrich_findings_with_owasp,
+                load_inventory_baseline,
+                render_scan_cyclonedx,
+                render_scan_spdx,
+                save_inventory_baseline,
+            )
+
+            active = enrich_findings_with_owasp(active)
+
+            discovered_configs: list[Any] = list(res.get("servers") or [])
+            records = build_audit_records(discovered_configs)
+
+            fmt = str(options.get("format") or "").lower()
+            if fmt == "cyclonedx":
+                from verity.scanner.engine import parse_scanners_arg
+
+                raw_scanners = options.get("scanners")
+                if isinstance(raw_scanners, list):
+                    raw_scanners = ",".join(str(s) for s in raw_scanners)
+                try:
+                    scanners_set = parse_scanners_arg(
+                        raw_scanners, fmt=fmt, has_path=False
+                    )
+                except ValueError:
+                    scanners_set = frozenset()
+                include_vulns = "vuln" in scanners_set
+                res["sbom"] = render_scan_cyclonedx(
+                    records, active, include_vulns=include_vulns
+                )
+            elif fmt == "spdx":
+                res["sbom"] = render_scan_spdx(records)
+
+            save_path = options.get("save_inventory_baseline")
+            compare_path = options.get("compare_inventory_baseline")
+            if save_path or compare_path:
+                snapshot = build_inventory_snapshot(records)
+                if save_path:
+                    try:
+                        save_inventory_baseline(save_path, snapshot)
+                    except Exception as exc:  # pragma: no cover - defensive
+                        logger.warning(
+                            "Failed to save inventory baseline: %s", exc
+                        )
+                if compare_path:
+                    try:
+                        baseline_snap = load_inventory_baseline(compare_path)
+                        drift = compare_inventory_snapshots(
+                            baseline_snap, snapshot
+                        )
+                        res["inventory_drift"] = drift
+                        if (
+                            bool(options.get("fail_on_drift"))
+                            and drift.get("has_drift")
+                        ):
+                            gate_passed = False
+                    except FileNotFoundError:
+                        res["inventory_drift"] = {
+                            "has_drift": False,
+                            "error": "baseline_not_found",
+                        }
+
             res["findings"] = active
             if suppressed:
                 res["suppressed_findings"] = suppressed
             summary = res.setdefault("summary", {})
             summary["suppressed_counts"] = counts
-            res["gate_passed"] = gate_passed
             if new_count is not None:
                 res["new_findings"] = new_count
                 res["baseline_findings"] = baseline_count or 0
                 res["resolved_since_baseline"] = resolved
+            res["gate_passed"] = gate_passed
             res["action"] = action
             return res
 
@@ -243,6 +377,9 @@ class SecurityScanHandlerMixin:
                 resolved,
                 gate_passed,
             ) = self._augment_findings(findings, options, project_root)
+            from verity.reporting.sbom import enrich_findings_with_owasp
+
+            active = enrich_findings_with_owasp(active)
             res["findings"] = active
             if suppressed:
                 res["suppressed_findings"] = suppressed
@@ -257,6 +394,9 @@ class SecurityScanHandlerMixin:
                 summary["new_findings"] = new_count
                 summary["baseline_findings"] = baseline_count or 0
                 summary["resolved_since_baseline"] = resolved
+            gate_passed = self._apply_sbom_and_inventory(
+                options, res, active, gate_passed
+            )
             res["gate_passed"] = gate_passed
             res["ok"] = True
             res["action"] = action
@@ -538,6 +678,9 @@ class SecurityScanHandlerMixin:
             resolved,
             gate_passed,
         ) = self._augment_findings(audit_findings, options, project_root)
+        from verity.reporting.sbom import enrich_findings_with_owasp
+
+        active = enrich_findings_with_owasp(active)
         result["findings"] = active
         result["findings_count"] = len(active)
         result["is_vulnerable"] = len(active) > 0
@@ -545,6 +688,9 @@ class SecurityScanHandlerMixin:
             result["suppressed_findings"] = suppressed
         summary = result.setdefault("summary", {})
         summary["suppressed_counts"] = counts
+        gate_passed = self._apply_sbom_and_inventory(
+            options, result, active, gate_passed
+        )
         result["gate_passed"] = gate_passed
         if new_count is not None:
             result["new_findings"] = new_count

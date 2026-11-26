@@ -97,6 +97,38 @@ def render_scan_markdown(report_data: dict[str, Any]) -> str:
                     )
                 )
 
+    compliance = report_data.get("compliance") or {}
+    if compliance:
+        lines.extend(["", "## OWASP Compliance", ""])
+        lines.append("| Metric | Value |")
+        lines.append("| --- | --- |")
+        lines.append(f"| Standard | {_cell(compliance.get('standard', '-'))} |")
+        lines.append(f"| Score | {_cell(compliance.get('score', '-'))} |")
+        lines.append(f"| Tier | {_cell(compliance.get('tier', '-'))} |")
+
+    drift = report_data.get("inventory_drift") or {}
+    if drift:
+        state = "detected" if drift.get("has_drift") else "none"
+        lines.extend(["", f"**Inventory drift:** {state}"])
+
+    if any(
+        f.get("owasp_mcp_id") or f.get("reachability") or f.get("scanner")
+        for f in findings
+    ):
+        lines.extend(["", "## Security Mapping", ""])
+        lines.append("| Rule | OWASP MCP | OWASP LLM | Reachability | Scanner |")
+        lines.append("| --- | --- | --- | --- | --- |")
+        for finding in findings:
+            lines.append(
+                "| {rule} | {mcp} | {llm} | {reach} | {scanner} |".format(
+                    rule=_cell(_field(finding, "rule_id")),
+                    mcp=_cell(finding.get("owasp_mcp_id") or "-"),
+                    llm=_cell(finding.get("owasp_llm_id") or "-"),
+                    reach=_cell(finding.get("reachability") or "-"),
+                    scanner=_cell(finding.get("scanner") or "-"),
+                )
+            )
+
     resolved = summary.get("resolved_since_baseline")
     if resolved is not None:
         lines.extend(["", f"**Resolved since baseline:** {_cell(resolved)}"])

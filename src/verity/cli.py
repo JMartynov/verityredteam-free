@@ -544,7 +544,7 @@ def _collect_config_findings(
     ignore_matcher: Any | None = None,
     target_clients: list[Any] | None = None,
     scan_global: bool = False,
-) -> tuple[list[dict[str, Any]], set[str]]:
+) -> tuple[list[dict[str, Any]], set[str], list[Any]]:
     from verity.discovery.auditor import ConsolidatedSecurityAuditor
     from verity.discovery.config_scanner import (
         MultiClientConfigScanner,
@@ -786,7 +786,7 @@ def _collect_config_findings(
             )
         )
 
-    return findings, scanned_files
+    return findings, scanned_files, configs
 
 
 def _collect_schema_findings(
@@ -838,10 +838,11 @@ def _collect_scan_data(
     *,
     project_root: Path | None = None,
     ignore_matcher: Any | None = None,
-) -> tuple[list[dict[str, Any]], set[str], float]:
+) -> tuple[list[dict[str, Any]], set[str], float, list[Any]]:
     findings: list[dict[str, Any]] = []
     scanned_files: set[str] = set()
     duration_ms = 0.0
+    discovered_configs: list[Any] = []
 
     config_files = _as_str_list(getattr(args, "config_file", None))
     raw_targets = _as_str_list(getattr(args, "path", None))
@@ -878,18 +879,21 @@ def _collect_scan_data(
 
     if all_config_paths or scan_workstation:
         try:
-            config_findings, config_scanned = _collect_config_findings(
-                all_config_paths or None,
-                offline=getattr(args, "offline", False),
-                live_probe=getattr(args, "live_probe", False),
-                scrub=False,
-                scan_workstation=scan_workstation,
-                ignore_matcher=ignore_matcher,
-                target_clients=target_clients,
-                scan_global=scan_global,
+            config_findings, config_scanned, config_servers = (
+                _collect_config_findings(
+                    all_config_paths or None,
+                    offline=getattr(args, "offline", False),
+                    live_probe=getattr(args, "live_probe", False),
+                    scrub=False,
+                    scan_workstation=scan_workstation,
+                    ignore_matcher=ignore_matcher,
+                    target_clients=target_clients,
+                    scan_global=scan_global,
+                )
             )
             findings.extend(config_findings)
             scanned_files.update(config_scanned)
+            discovered_configs.extend(config_servers)
         except Exception as exc:  # pragma: no cover - defensive
             print(f"Configuration scan failed: {exc}", file=sys.stderr)
 
@@ -912,7 +916,7 @@ def _collect_scan_data(
         except Exception as exc:
             print(f"AST scan failed: {exc}", file=sys.stderr)
 
-    return findings, scanned_files, duration_ms
+    return findings, scanned_files, duration_ms, discovered_configs
 
 
 def _export_sarif(report: dict[str, Any], output: str | None) -> int:
@@ -944,6 +948,11 @@ def _cmd_scan(args: argparse.Namespace) -> int:
             return 2
     else:
         args._resolved_clients = None
+
+    typosquat_threshold = getattr(args, "typosquat_threshold", None)
+    if typosquat_threshold is not None and not 1 <= int(typosquat_threshold) <= 3:
+        print("--typosquat-threshold must be between 1 and 3.", file=sys.stderr)
+        return 2
 
     if getattr(args, "save_baseline", None) and getattr(args, "baseline", None):
         print(
@@ -1003,7 +1012,7 @@ def _cmd_scan(args: argparse.Namespace) -> int:
         print(str(exc), file=sys.stderr)
         return 2
 
-    findings, scanned_files, duration_ms = _collect_scan_data(
+    findings, scanned_files, duration_ms, discovered_configs = _collect_scan_data(
         args, project_root=canonical_root, ignore_matcher=ignore_matcher
     )
 
@@ -1063,6 +1072,78 @@ def _cmd_scan(args: argparse.Namespace) -> int:
             print(str(exc), file=sys.stderr)
             return 2
 
+    if getattr(args, "compliance", None):
+        from verity.reporting.sbom import enrich_findings_with_owasp
+
+        active = enrich_findings_with_owasp(active)
+
+    inventory_drift: dict[str, Any] | None = None
+    if getattr(args, "save_inventory_baseline", None) or getattr(
+        args, "compare_inventory_baseline", None
+    ):
+        from verity.reporting.sbom import (
+            build_audit_records,
+            build_inventory_snapshot,
+            compare_inventory_snapshots,
+            load_inventory_baseline,
+            save_inventory_baseline,
+        )
+
+        records = build_audit_records(discovered_configs)
+        snapshot = build_inventory_snapshot(records)
+        if getattr(args, "save_inventory_baseline", None):
+            try:
+                save_inventory_baseline(args.save_inventory_baseline, snapshot)
+            except Exception as exc:  # pragma: no cover - defensive
+                print(
+                    f"Failed to save inventory baseline: {exc}", file=sys.stderr
+                )
+                return 2
+        if getattr(args, "compare_inventory_baseline", None):
+            try:
+                baseline_snap = load_inventory_baseline(
+                    args.compare_inventory_baseline
+                )
+                inventory_drift = compare_inventory_snapshots(
+                    baseline_snap, snapshot
+                )
+            except FileNotFoundError:
+                inventory_drift = {
+                    "has_drift": False,
+                    "error": "baseline_not_found",
+                }
+
+    if args.format in ("cyclonedx", "spdx"):
+        from verity.reporting.sbom import (
+            build_audit_records,
+            render_scan_cyclonedx,
+            render_scan_spdx,
+        )
+        from verity.scanner.engine import parse_scanners_arg
+
+        records = build_audit_records(discovered_configs)
+        if args.format == "cyclonedx":
+            raw_scanners = getattr(args, "scanners", None)
+            if raw_scanners:
+                try:
+                    scanner_set = parse_scanners_arg(
+                        raw_scanners,
+                        fmt=args.format,
+                        has_path=bool(target_paths),
+                    )
+                except ValueError:
+                    scanner_set = frozenset()
+                include_vulns = "vuln" in scanner_set
+            else:
+                include_vulns = False
+            payload: dict[str, Any] = render_scan_cyclonedx(
+                records, active, include_vulns=include_vulns
+            )
+        else:
+            payload = render_scan_spdx(records)
+        _emit(json.dumps(payload, indent=2), args.output)
+        return 0
+
     target_label = " ".join(target_paths) or None
     report = _build_report(active, scanned_files, duration_ms, target_path=target_label)
     summary = report["summary"]
@@ -1075,6 +1156,14 @@ def _cmd_scan(args: argparse.Namespace) -> int:
         summary["expired_ignore_warnings"] = list(policy.expired_warnings)
     if getattr(args, "show_suppressed", False):
         report["suppressed_findings"] = suppressed
+    if inventory_drift is not None:
+        report["inventory_drift"] = inventory_drift
+    if getattr(args, "compliance", None):
+        from verity.reporting.sbom import build_compliance_scorecard
+
+        report["compliance"] = build_compliance_scorecard(
+            active, standard=args.compliance
+        )
 
     if args.format == "sarif":
         rc = _export_sarif(report, args.output)
@@ -1082,6 +1171,18 @@ def _cmd_scan(args: argparse.Namespace) -> int:
             return rc
     else:
         _emit(_render_scan(report, args.format), args.output)
+
+    if (
+        getattr(args, "fail_on_drift", False)
+        and report.get("inventory_drift", {}).get("has_drift")
+    ):
+        return 2
+
+    if (
+        getattr(args, "fail_on_non_compliant", False)
+        and report.get("compliance", {}).get("tier") not in (None, "COMPLIANT")
+    ):
+        return 1
 
     if (
         new_findings_count is not None
@@ -1515,7 +1616,15 @@ def build_parser() -> argparse.ArgumentParser:
     scan.add_argument("--ignore-file", default=None, help="Path to a .verityignore file.")
     scan.add_argument(
         "--format",
-        choices=("terminal", "json", "markdown", "html", "sarif"),
+        choices=(
+            "terminal",
+            "json",
+            "markdown",
+            "html",
+            "sarif",
+            "cyclonedx",
+            "spdx",
+        ),
         default="terminal",
         help="Output format.",
     )
@@ -1588,6 +1697,69 @@ def build_parser() -> argparse.ArgumentParser:
         "--scan-global",
         action="store_true",
         help="Also scan globally installed npm MCP servers (opt-in, may exec 'npm').",
+    )
+    scan.add_argument(
+        "--typosquat-threshold",
+        type=int,
+        default=None,
+        help="Maximum Levenshtein distance for typosquat detection (1-3).",
+    )
+    scan.add_argument(
+        "--call-analysis",
+        dest="call_analysis",
+        action="store_true",
+        default=None,
+        help="Enable interprocedural call/taint analysis.",
+    )
+    scan.add_argument(
+        "--no-call-analysis",
+        dest="call_analysis",
+        action="store_false",
+        default=None,
+        help="Disable interprocedural call/taint analysis.",
+    )
+    scan.add_argument(
+        "--reachable-only",
+        action="store_true",
+        help="Report only findings reachable from server entry points.",
+    )
+    scan.add_argument(
+        "--manifest",
+        default=None,
+        help="Path to a dependency manifest for transitive reachability analysis.",
+    )
+    scan.add_argument(
+        "--scanners",
+        default=None,
+        help=(
+            "Comma-separated scanner set (all, config, vuln, secret, ast, "
+            "taint, typosquat, conflict)."
+        ),
+    )
+    scan.add_argument(
+        "--compliance",
+        default=None,
+        help="Compliance framework to evaluate (e.g. owasp-mcp-top-10).",
+    )
+    scan.add_argument(
+        "--fail-on-non-compliant",
+        action="store_true",
+        help="Return exit code 1 when the compliance tier is not COMPLIANT.",
+    )
+    scan.add_argument(
+        "--save-inventory-baseline",
+        default=None,
+        help="Persist an inventory snapshot to this path.",
+    )
+    scan.add_argument(
+        "--compare-inventory-baseline",
+        default=None,
+        help="Compare the current inventory against this baseline.",
+    )
+    scan.add_argument(
+        "--fail-on-drift",
+        action="store_true",
+        help="Return exit code 2 when inventory drift is detected.",
     )
     scan.set_defaults(func=_cmd_scan)
 
