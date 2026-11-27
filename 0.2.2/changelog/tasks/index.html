@@ -3682,10 +3682,13 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 </ul>
 <h2 id="customer-upgrade-guide">Customer Upgrade Guide<a class="headerlink" href="#customer-upgrade-guide" title="Permanent link">&para;</a></h2>
 <p>Upgrade the CLI distribution in place:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>verity-redteam-core
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>brew<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>brew<span class="w"> </span>upgrade<span class="w"> </span>verity
+</code></pre></div>
+<p>Or upgrade via <code>pip</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>verity-redteam-core
 </code></pre></div>
 <p>Run the latest scanner without installing it:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan
 </code></pre></div>
 <p>After upgrading, re-run your CI gate with the same policy flags. The
 rule ids are stable, so existing suppressions and baselines continue

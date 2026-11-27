@@ -1992,7 +1992,7 @@
 
 <h1 id="verity-red-team">Verity Red Team<a class="headerlink" href="#verity-red-team" title="Permanent link">&para;</a></h1>
 <p><strong>Find the exploitable path before an attacker does.</strong> Verity is a zero-Docker, MCP-native red-team toolkit for MCP servers, AI database agents, and the IDE clients that connect them. It combines static configuration analysis, AST-aware source review, dialect-specific SQL validation, live exploit verification, and an MCP server that lets assistants invoke security tooling directly.</p>
-<p><a href="getting-started/installation/">Quick start</a> · <a href="#feature-matrix">Feature matrix</a> · <a href="#architecture">Architecture</a> · <a href="#end-to-end-walkthroughs">Walkthroughs</a></p>
+<p><a href="getting-started/installation/">Quick start</a> · <a href="getting-started/installation/#install-with-homebrew">Homebrew Tap</a> · <a href="#feature-matrix">Feature matrix</a> · <a href="#architecture">Architecture</a> · <a href="#end-to-end-walkthroughs">Walkthroughs</a></p>
 <hr />
 <h2 id="why-teams-adopt-verity">Why teams adopt Verity<a class="headerlink" href="#why-teams-adopt-verity" title="Permanent link">&para;</a></h2>
 <p>AI agents now hold credentials, execute shell commands, query production databases, and discover tools dynamically. Traditional SAST tools do not understand MCP transport semantics, tool permission scopes, or the difference between a safe parameterized query and an agent-generated SQL string. Verity closes that gap with checks designed for the AI-native stack and with proof-of-exploit verification that runs locally, without Docker, cloud accounts, or production access.</p>
@@ -2834,8 +2834,8 @@ for the finding it proves.</p>
 <hr />
 <h2 id="next-steps">Next steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
 <ul>
-<li><a href="getting-started/installation/">Install Verity</a> for your environment.</li>
-<li>Run <code>verity scan --path . --format terminal</code> on an existing MCP configuration.</li>
+<li><a href="getting-started/installation/">Install Verity</a> for your environment (or run <code>brew tap JMartynov/tap &amp;&amp; brew install verity</code> on macOS/Linux for an isolated, zero-Python-setup install).</li>
+<li>Run <code>verity test --demo</code> and <code>verity scan --path . --format terminal</code> on an existing MCP configuration.</li>
 <li>Add <code>verity serve</code> to your IDE and ask the assistant to scan the current workspace.</li>
 <li>Wire <code>--fail-on-findings</code> into CI and upload JSON/SARIF artifacts.</li>
 </ul>

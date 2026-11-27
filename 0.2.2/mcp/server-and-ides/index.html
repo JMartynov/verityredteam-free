@@ -1068,10 +1068,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#variant-b-installed-verity-command" class="md-nav__link">
+  <a href="#variant-b-installed-verity-command-homebrew-pip-uv-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Variant B: installed verity command
+        Variant B: installed verity command (Homebrew / pip / uv tool)
       
     </span>
   </a>
@@ -1295,10 +1295,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#92-uvx-works-in-terminal-but-not-in-the-ide" class="md-nav__link">
+  <a href="#92-uvx-or-verity-works-in-terminal-but-not-in-the-ide" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9.2 uvx works in Terminal but not in the IDE
+        9.2 uvx or verity works in Terminal but not in the IDE
       
     </span>
   </a>
@@ -1811,10 +1811,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#variant-b-installed-verity-command" class="md-nav__link">
+  <a href="#variant-b-installed-verity-command-homebrew-pip-uv-tool" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Variant B: installed verity command
+        Variant B: installed verity command (Homebrew / pip / uv tool)
       
     </span>
   </a>
@@ -2038,10 +2038,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#92-uvx-works-in-terminal-but-not-in-the-ide" class="md-nav__link">
+  <a href="#92-uvx-or-verity-works-in-terminal-but-not-in-the-ide" class="md-nav__link">
     <span class="md-ellipsis">
       
-        9.2 uvx works in Terminal but not in the IDE
+        9.2 uvx or verity works in Terminal but not in the IDE
       
     </span>
   </a>
@@ -2239,10 +2239,9 @@
 <hr />
 <h2 id="2-prerequisites">2. Prerequisites<a class="headerlink" href="#2-prerequisites" title="Permanent link">&para;</a></h2>
 <ul>
-<li>Python 3.12 or newer (&lt;3.15).</li>
-<li><code>uv</code> for the recommended zero-install <code>uvx</code> flow.</li>
-<li>A Verity installation if you want to use the <code>verity</code> command directly.</li>
-<li>Local Verity data snapshots if you are operating offline. The usual directories are <code>data/fingerprints</code> and <code>data/vulnerabilities</code>.</li>
+<li><strong>Homebrew (macOS / Linux):</strong> <code>brew install JMartynov/tap/verity</code> — builds an isolated virtualenv (<code>python@3.13</code> + <code>libyaml</code>) and places <code>verity</code> on standard Homebrew <code>PATH</code> (<code>/opt/homebrew/bin/verity</code> on Apple Silicon, <code>/usr/local/bin/verity</code> on Intel macOS, <code>/home/linuxbrew/.linuxbrew/bin/verity</code> on Linux) with zero Python or venv setup.</li>
+<li><strong>PyPI / <code>uv</code>:</strong> Python 3.12 or newer (&lt;3.15), <code>uv</code> for zero-install <code>uvx</code>, or <code>pip install verity-redteam-core</code>.</li>
+<li>Local Verity data snapshots if you are operating offline (<code>--offline</code>). The usual directories are <code>data/fingerprints</code> and <code>data/vulnerabilities</code> (or the snapshots bundled with the installed package).</li>
 </ul>
 <p>Verify <code>uvx</code>:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>uvx<span class="w"> </span>--version
@@ -2268,13 +2267,13 @@
 <a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="p">}</span>
 </code></pre></div>
 <p>This is the easiest starting point. <code>uvx</code> resolves and runs the package without a permanent global install.</p>
-<h3 id="variant-b-installed-verity-command">Variant B: installed <code>verity</code> command<a class="headerlink" href="#variant-b-installed-verity-command" title="Permanent link">&para;</a></h3>
+<h3 id="variant-b-installed-verity-command-homebrew-pip-uv-tool">Variant B: installed <code>verity</code> command (Homebrew / <code>pip</code> / <code>uv tool</code>)<a class="headerlink" href="#variant-b-installed-verity-command-homebrew-pip-uv-tool" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
 <a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
 <a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="p">}</span>
 </code></pre></div>
-<p>Use this when Verity is already installed in a controlled environment or when your organization pins tool versions internally.</p>
+<p>Use this when Verity is installed via Homebrew (<code>brew install JMartynov/tap/verity</code>), <code>uv tool</code>, or <code>pip</code>. Because Homebrew installs <code>verity</code> to a fixed system prefix (<code>/opt/homebrew/bin/verity</code> on Apple Silicon, <code>/usr/local/bin/verity</code> on Intel macOS, <code>/home/linuxbrew/.linuxbrew/bin/verity</code> on Linux), GUI apps like Claude Desktop and Cursor can launch it without inheriting shell <code>pyenv</code> or <code>.venv</code> <code>PATH</code> settings. If a GUI client still cannot resolve bare <code>verity</code>, pass the full Homebrew binary path as <code>"command"</code>.</p>
 <p>Both variants communicate over stdio. Do not configure an HTTP or SSE URL for IDE use.</p>
 <hr />
 <h2 id="4-ready-to-copy-ide-configurations">4. Ready-to-Copy IDE Configurations<a class="headerlink" href="#4-ready-to-copy-ide-configurations" title="Permanent link">&para;</a></h2>
@@ -2816,9 +2815,10 @@
 <div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>If this prints a JSON response containing <code>tools</code>, the server is healthy and the IDE configuration is the problem. If it prints nothing, check stderr and the executable path.</p>
-<h3 id="92-uvx-works-in-terminal-but-not-in-the-ide">9.2 <code>uvx</code> works in Terminal but not in the IDE<a class="headerlink" href="#92-uvx-works-in-terminal-but-not-in-the-ide" title="Permanent link">&para;</a></h3>
-<p>GUI applications often have a different <code>PATH</code> than your shell. Use an absolute path.</p>
+<h3 id="92-uvx-or-verity-works-in-terminal-but-not-in-the-ide">9.2 <code>uvx</code> or <code>verity</code> works in Terminal but not in the IDE<a class="headerlink" href="#92-uvx-or-verity-works-in-terminal-but-not-in-the-ide" title="Permanent link">&para;</a></h3>
+<p>GUI applications often have a different <code>PATH</code> than your shell (for example, they do not source <code>.zshrc</code> or activate <code>pyenv</code>/<code>.venv</code>). Use an absolute path—with Homebrew on macOS/Linux, those paths are predictable (<code>/opt/homebrew/bin/verity</code> on Apple Silicon, <code>/usr/local/bin/verity</code> on Intel macOS, <code>/home/linuxbrew/.linuxbrew/bin/verity</code> on Linux):</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>which<span class="w"> </span>uvx
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>which<span class="w"> </span>verity
 </code></pre></div>
 <p>Put that full path into the IDE configuration:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="p">{</span>
@@ -2826,17 +2826,15 @@
 <a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"--from"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity-redteam-core"</span><span class="p">,</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span><span class="w"> </span><span class="s2">"serve"</span><span class="p">]</span>
 <a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="p">}</span>
 </code></pre></div>
-<p>For the installed command:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>which<span class="w"> </span>verity
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="p">{</span>
-<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/you/.local/bin/verity"</span><span class="p">,</span>
-<a id="__codelineno-38-3" name="__codelineno-38-3" href="#__codelineno-38-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
-<a id="__codelineno-38-4" name="__codelineno-38-4" href="#__codelineno-38-4"></a><span class="p">}</span>
+<p>For Homebrew-installed <code>verity</code> (Apple Silicon example):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="p">{</span>
+<a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/opt/homebrew/bin/verity"</span><span class="p">,</span>
+<a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-37-4" name="__codelineno-37-4" href="#__codelineno-37-4"></a><span class="p">}</span>
 </code></pre></div>
 <h3 id="93-the-process-exits-immediately">9.3 The process exits immediately<a class="headerlink" href="#93-the-process-exits-immediately" title="Permanent link">&para;</a></h3>
 <p>Run the server manually and inspect stderr:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>verity<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>Common causes:</p>
 <ul>
@@ -2848,19 +2846,19 @@
 <p>Only JSON-RPC may be written to stdout. Logs and prompts must go to stderr.</p>
 <h3 id="94-virtual-environment-problems">9.4 Virtual environment problems<a class="headerlink" href="#94-virtual-environment-problems" title="Permanent link">&para;</a></h3>
 <p>Create and activate a clean environment:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>uv<span class="w"> </span>venv
-<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
-<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>uv<span class="w"> </span>venv
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a><span class="nb">source</span><span class="w"> </span>.venv/bin/activate
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 <p>On Windows:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>uv<span class="w"> </span>venv
-<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>.venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
-<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>uv<span class="w"> </span>venv
+<a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a>.venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+<a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div>
 <p>Then confirm:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>python<span class="w"> </span>--version
-<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>which<span class="w"> </span>verity
-<a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>verity<span class="w"> </span>serve<span class="w"> </span>--help
+<div class="highlight"><pre><span></span><code><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a>python<span class="w"> </span>--version
+<a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>which<span class="w"> </span>verity
+<a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>verity<span class="w"> </span>serve<span class="w"> </span>--help
 </code></pre></div>
 <p>If the IDE uses <code>uvx</code>, the virtual environment is managed by <code>uvx</code> and does not need to be activated. If the IDE uses <code>verity</code>, make sure the IDE's command path points to the environment where Verity is installed.</p>
 <h3 id="95-the-server-starts-but-the-handshake-times-out">9.5 The server starts but the handshake times out<a class="headerlink" href="#95-the-server-starts-but-the-handshake-times-out" title="Permanent link">&para;</a></h3>
@@ -2875,16 +2873,16 @@
 <p>Call <code>tools/list</code> and inspect the <code>inputSchema</code> for the target tool. The dispatcher validates arguments against the schemas returned by the server. Do not copy arguments from a different Verity version.</p>
 <h3 id="97-fingerprints-or-vulnerability-data-are-missing">9.7 Fingerprints or vulnerability data are missing<a class="headerlink" href="#97-fingerprints-or-vulnerability-data-are-missing" title="Permanent link">&para;</a></h3>
 <p>Local scans depend on local snapshots. Confirm that the data directories exist relative to the process working directory, or configure the scan to use the packaged snapshots.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>data/fingerprints
-<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>data/vulnerabilities
+<div class="highlight"><pre><span></span><code><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>ls<span class="w"> </span>-la<span class="w"> </span>data/fingerprints
+<a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>ls<span class="w"> </span>-la<span class="w"> </span>data/vulnerabilities
 </code></pre></div>
 <p>If the IDE starts the server from a different working directory, run Verity from the repository root or install a build that bundles the expected data paths.</p>
 <h3 id="98-windows-path-and-quoting-issues">9.8 Windows path and quoting issues<a class="headerlink" href="#98-windows-path-and-quoting-issues" title="Permanent link">&para;</a></h3>
 <p>Use escaped backslashes in JSON or use forward slashes.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a><span class="p">{</span>
-<a id="__codelineno-44-2" name="__codelineno-44-2" href="#__codelineno-44-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C:\\Users\\you\\.local\\bin\\verity.exe"</span><span class="p">,</span>
-<a id="__codelineno-44-3" name="__codelineno-44-3" href="#__codelineno-44-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
-<a id="__codelineno-44-4" name="__codelineno-44-4" href="#__codelineno-44-4"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-43-1" name="__codelineno-43-1" href="#__codelineno-43-1"></a><span class="p">{</span>
+<a id="__codelineno-43-2" name="__codelineno-43-2" href="#__codelineno-43-2"></a><span class="w">  </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"C:\\Users\\you\\.local\\bin\\verity.exe"</span><span class="p">,</span>
+<a id="__codelineno-43-3" name="__codelineno-43-3" href="#__codelineno-43-3"></a><span class="w">  </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-43-4" name="__codelineno-43-4" href="#__codelineno-43-4"></a><span class="p">}</span>
 </code></pre></div>
 <p>Do not wrap the command in extra shell quotes. The MCP client starts the executable directly.</p>
 <hr />
@@ -2923,13 +2921,13 @@
 <hr />
 <h2 id="12-quick-reference">12. Quick Reference<a class="headerlink" href="#12-quick-reference" title="Permanent link">&para;</a></h2>
 <p>Start the server manually:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>verity<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-44-1" name="__codelineno-44-1" href="#__codelineno-44-1"></a>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>Zero-install invocation:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-45-1" name="__codelineno-45-1" href="#__codelineno-45-1"></a>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>Manual MCP tools/list smoke test:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-47-1" name="__codelineno-47-1" href="#__codelineno-47-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>verity<span class="w"> </span>serve
+<div class="highlight"><pre><span></span><code><a id="__codelineno-46-1" name="__codelineno-46-1" href="#__codelineno-46-1"></a><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"smoke","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>verity<span class="w"> </span>serve
 </code></pre></div>
 <p>Supported unified tools:</p>
 <ul>

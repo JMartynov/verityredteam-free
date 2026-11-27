@@ -698,6 +698,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Install with Homebrew">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-homebrew-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the Homebrew installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-run-usage-steps-after-installing-via-homebrew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-run usage steps after installing via Homebrew
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-inspecting-uninstalling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading, inspecting &amp; uninstalling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -807,10 +868,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-homebrew-tap-not-found" class="md-nav__link">
+  <a href="#4-homebrew-tap-not-found-or-outdated-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Homebrew tap not found
+        4. Homebrew tap not found or outdated metadata
       
     </span>
   </a>
@@ -833,6 +894,17 @@
     <span class="md-ellipsis">
       
         6. IDE does not list verity as an MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-air-gapped-or-offline-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Air-gapped or offline environments
       
     </span>
   </a>
@@ -1675,6 +1747,67 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Install with Homebrew">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installation-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify-the-homebrew-installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify the Homebrew installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-run-usage-steps-after-installing-via-homebrew" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First-run usage steps after installing via Homebrew
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#upgrading-inspecting-uninstalling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrading, inspecting &amp; uninstalling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1784,10 +1917,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-homebrew-tap-not-found" class="md-nav__link">
+  <a href="#4-homebrew-tap-not-found-or-outdated-metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
-        4. Homebrew tap not found
+        4. Homebrew tap not found or outdated metadata
       
     </span>
   </a>
@@ -1810,6 +1943,17 @@
     <span class="md-ellipsis">
       
         6. IDE does not list verity as an MCP server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-air-gapped-or-offline-environments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Air-gapped or offline environments
       
     </span>
   </a>
@@ -1881,8 +2025,8 @@
 <tbody>
 <tr>
 <td>Developer workstation</td>
-<td><code>uvx</code> or <code>brew</code></td>
-<td>Fast updates, no global pollution</td>
+<td><code>brew</code> or <code>uvx</code></td>
+<td>Isolated env, fast updates, zero global pollution</td>
 <td><code>verity scan --path .</code></td>
 </tr>
 <tr>
@@ -1951,49 +2095,92 @@
 <a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>uninstall<span class="w"> </span>verity-redteam-core
 </code></pre></div>
 <h2 id="install-with-homebrew">Install with Homebrew<a class="headerlink" href="#install-with-homebrew" title="Permanent link">&para;</a></h2>
-<p>Install Verity on macOS or Linux via the official tap <a href="https://github.com/JMartynov/homebrew-tap"><code>JMartynov/homebrew-tap</code></a>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>JMartynov/tap/verity
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>verity<span class="w"> </span><span class="m">0</span>.2.2
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--demo
+<p>Install Verity on macOS (Apple Silicon or Intel) or Linux (Linuxbrew) via the official tap <a href="https://github.com/JMartynov/homebrew-tap"><code>JMartynov/homebrew-tap</code></a>.</p>
+<h3 id="prerequisites_1">Prerequisites<a class="headerlink" href="#prerequisites_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><a href="https://brew.sh/">Homebrew</a> installed on macOS or Linux.</li>
+<li><strong>Zero Python or virtualenv management required:</strong> <code>Formula/verity.rb</code> uses <code>Language::Python::Virtualenv</code> to build a self-contained virtualenv with <code>python@3.13</code>, <code>libyaml</code>, and pinned PyPI sdist SHA-256 resources, isolated from your system or project Python environments.</li>
+</ul>
+<h3 id="installation-options">Installation options<a class="headerlink" href="#installation-options" title="Permanent link">&para;</a></h3>
+<p>Two-step install (recommended for easy tap discovery and updates):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>JMartynov/tap
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
 </code></pre></div>
-<p>Or tap first and install:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>JMartynov/tap
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
+<p>Single-command install:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>JMartynov/tap/verity
 </code></pre></div>
-<p>Upgrade:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>brew<span class="w"> </span>upgrade<span class="w"> </span>verity
+<h3 id="verify-the-homebrew-installation">Verify the Homebrew installation<a class="headerlink" href="#verify-the-homebrew-installation" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>verity<span class="w"> </span><span class="m">0</span>.2.2
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>$<span class="w"> </span>which<span class="w"> </span>verity
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>/opt/homebrew/bin/verity
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>$<span class="w"> </span>brew<span class="w"> </span><span class="nb">test</span><span class="w"> </span>JMartynov/tap/verity
+</code></pre></div>
+<h3 id="first-run-usage-steps-after-installing-via-homebrew">First-run usage steps after installing via Homebrew<a class="headerlink" href="#first-run-usage-steps-after-installing-via-homebrew" title="Permanent link">&para;</a></h3>
+<p>Run the zero-Docker offline self-test demo to verify SQLi, BOLA, NoSQLi, and code-injection checks end to end:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--demo
+</code></pre></div>
+<p>Discover and audit local MCP clients (Claude Desktop, Cursor, VS Code, Windsurf, Cline, and more) either with default settings or strictly offline:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+</code></pre></div>
+<p>Scan a project directory or MCP server repository (SAST + OSV advisories + typosquatting + CycloneDX SBOM export):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>./my-mcp-server
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline<span class="w"> </span>--format<span class="w"> </span>cyclonedx<span class="w"> </span>--scanners<span class="w"> </span>vuln<span class="w"> </span>--output<span class="w"> </span>sbom.json
+</code></pre></div>
+<p>Gate brownfield repositories in CI with a deterministic baseline and severity threshold:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--save-baseline<span class="w"> </span>.verity-baseline.json
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>.<span class="w"> </span>--baseline<span class="w"> </span>.verity-baseline.json<span class="w"> </span>--fail-on-new<span class="w"> </span>--fail-on-severity<span class="w"> </span>high
+</code></pre></div>
+<p>Run Verity as a local stdio MCP server for IDE agents:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>$<span class="w"> </span>verity<span class="w"> </span>serve
+</code></pre></div>
+<p>Add Verity to your client's <code>mcpServers</code> block. Because Homebrew symlinks <code>verity</code> into a standard <code>bin</code> directory (<code>/opt/homebrew/bin/verity</code> on Apple Silicon, <code>/usr/local/bin/verity</code> on Intel macOS, or <code>/home/linuxbrew/.linuxbrew/bin/verity</code> on Linux), GUI apps such as Claude Desktop and Cursor can launch it reliably without inheriting shell <code>pyenv</code> or <code>.venv</code> <code>PATH</code> configuration:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="p">}</span>
+</code></pre></div>
+<p>If a GUI app does not include Homebrew's <code>bin</code> directory in its launch environment, set <code>"command"</code> to the full path reported by <code>which verity</code> (for example <code>"/opt/homebrew/bin/verity"</code>).</p>
+<h3 id="upgrading-inspecting-uninstalling">Upgrading, inspecting &amp; uninstalling<a class="headerlink" href="#upgrading-inspecting-uninstalling" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>$<span class="w"> </span>brew<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>brew<span class="w"> </span>upgrade<span class="w"> </span>verity
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>$<span class="w"> </span>brew<span class="w"> </span>info<span class="w"> </span>JMartynov/tap/verity
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>$<span class="w"> </span>brew<span class="w"> </span>uninstall<span class="w"> </span>verity
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>$<span class="w"> </span>brew<span class="w"> </span>untap<span class="w"> </span>JMartynov/tap
 </code></pre></div>
 <blockquote>
 <p><strong>Stage B (<code>Homebrew/homebrew-core</code>) Graduation:</strong> Verity ships via <code>JMartynov/homebrew-tap</code> immediately. Graduation to <code>Homebrew/homebrew-core</code> requires meeting notability thresholds (≥75 stars / ≥30 forks for third-party submissions, or ≥225 stars / ≥90 forks for self-submissions) and validating Python 3.15 so <code>requires-python</code> can be lifted from <code>&gt;=3.12,&lt;3.15</code> to <code>&gt;=3.12,&lt;3.16</code>.</p>
 </blockquote>
 <h2 id="install-with-docker">Install with Docker<a class="headerlink" href="#install-with-docker" title="Permanent link">&para;</a></h2>
 <p>Run Verity from the official Python 3.12 image and mount the working directory for scanning.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="w">    </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"pip install verity-redteam-core==0.2.2 &amp;&amp; verity scan --path . --format json"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a><span class="w">    </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="w">    </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"pip install verity-redteam-core==0.2.2 &amp;&amp; verity scan --path . --format json"</span>
 </code></pre></div>
 <p>For CI, pin the image digest instead of the tag.</p>
 <h2 id="install-from-source">Install from source<a class="headerlink" href="#install-from-source" title="Permanent link">&para;</a></h2>
 <p>Use this path for air-gapped builds, contribution, or deep inspection.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/JMartynov/verityredteam-free.git
-<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>verityredteam-free
-<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>$<span class="w"> </span>uv<span class="w"> </span>sync
-<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>$<span class="w"> </span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/JMartynov/verityredteam-free.git
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>verityredteam-free
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>$<span class="w"> </span>uv<span class="w"> </span>sync
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>$<span class="w"> </span>uv<span class="w"> </span>run<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
 <p>Build an offline wheel for transfer:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>$<span class="w"> </span>uv<span class="w"> </span>build
-<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>$<span class="w"> </span>ls<span class="w"> </span>dist
-<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>verity_redteam_core-0.2.2-py3-none-any.whl
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>$<span class="w"> </span>uv<span class="w"> </span>build
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>$<span class="w"> </span>ls<span class="w"> </span>dist
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>verity_redteam_core-0.2.2-py3-none-any.whl
 </code></pre></div>
 <h2 id="verify-the-installation">Verify the installation<a class="headerlink" href="#verify-the-installation" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
-<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--demo
-<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>$<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import verity; print(verity.__version__)"</span>
-<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="m">0</span>.2.2
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>$<span class="w"> </span>verity<span class="w"> </span><span class="nb">test</span><span class="w"> </span>--demo
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>$<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"import verity; print(verity.__version__)"</span>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a><span class="m">0</span>.2.2
 </code></pre></div>
 <hr />
 <h2 id="mcp-client-discovery-paths">MCP client discovery paths<a class="headerlink" href="#mcp-client-discovery-paths" title="Permanent link">&para;</a></h2>
@@ -2053,115 +2240,123 @@
 </table>
 <h3 id="shared-mcp-server-entry">Shared MCP server entry<a class="headerlink" href="#shared-mcp-server-entry" title="Permanent link">&para;</a></h3>
 <p>Most clients accept the same command block. Adapt the key name where required (<code>mcpServers</code>, <code>context_servers</code>, or IDE-specific schema).</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="p">{</span>
-<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
-<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
-<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="p">{</span>
+<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
+<a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="p">}</span>
 </code></pre></div>
 <p>For Continue:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="p">{</span>
-<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a><span class="w">    </span><span class="p">{</span>
-<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a><span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
-<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
-<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
-<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a><span class="w">  </span><span class="p">]</span>
-<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="p">{</span>
+<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a><span class="w">    </span><span class="p">{</span>
+<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a><span class="w">      </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
+<a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a><span class="w">  </span><span class="p">]</span>
+<a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a><span class="p">}</span>
 </code></pre></div>
 <p>For Zed:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="p">{</span>
-<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a><span class="w">  </span><span class="nt">"context_servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a><span class="w">        </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
-<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a><span class="w">        </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
-<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a><span class="w">      </span><span class="p">}</span>
-<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="p">{</span>
+<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a><span class="w">  </span><span class="nt">"context_servers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-3" name="__codelineno-23-3" href="#__codelineno-23-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-4" name="__codelineno-23-4" href="#__codelineno-23-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-23-5" name="__codelineno-23-5" href="#__codelineno-23-5"></a><span class="w">        </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"verity"</span><span class="p">,</span>
+<a id="__codelineno-23-6" name="__codelineno-23-6" href="#__codelineno-23-6"></a><span class="w">        </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
+<a id="__codelineno-23-7" name="__codelineno-23-7" href="#__codelineno-23-7"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-23-8" name="__codelineno-23-8" href="#__codelineno-23-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-23-9" name="__codelineno-23-9" href="#__codelineno-23-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-23-10" name="__codelineno-23-10" href="#__codelineno-23-10"></a><span class="p">}</span>
 </code></pre></div>
 <hr />
 <h2 id="troubleshooting-faq">Troubleshooting FAQ<a class="headerlink" href="#troubleshooting-faq" title="Permanent link">&para;</a></h2>
 <h3 id="1-uvx-command-not-found">1. <code>uvx: command not found</code><a class="headerlink" href="#1-uvx-command-not-found" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
-<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>zsh:<span class="w"> </span><span class="nb">command</span><span class="w"> </span>not<span class="w"> </span>found:<span class="w"> </span>uvx
+<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>zsh:<span class="w"> </span><span class="nb">command</span><span class="w"> </span>not<span class="w"> </span>found:<span class="w"> </span>uvx
 </code></pre></div>
 <p>Install uv and reopen the shell so <code>~/.local/bin</code> is on <code>PATH</code>.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
-<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>$<span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SHELL</span><span class="s2">"</span>
-<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>$<span class="w"> </span>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>$<span class="w"> </span><span class="nb">exec</span><span class="w"> </span><span class="s2">"</span><span class="nv">$SHELL</span><span class="s2">"</span>
+<a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a>$<span class="w"> </span>uvx<span class="w"> </span>--from<span class="w"> </span>verity-redteam-core<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
 </code></pre></div>
 <h3 id="2-permission-denied-writing-an-mcp-config">2. Permission denied writing an MCP config<a class="headerlink" href="#2-permission-denied-writing-an-mcp-config" title="Permanent link">&para;</a></h3>
 <p>Add the <code>verity</code> server entry directly to the client JSON config. If the file or directory is not writable:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude/claude_desktop_config.json"</span>
-<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>error:<span class="w"> </span>permission<span class="w"> </span>denied:<span class="w"> </span>/Users/dev/Library/Application<span class="w"> </span>Support/Claude/claude_desktop_config.json
+<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude/claude_desktop_config.json"</span>
+<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a>error:<span class="w"> </span>permission<span class="w"> </span>denied:<span class="w"> </span>/Users/dev/Library/Application<span class="w"> </span>Support/Claude/claude_desktop_config.json
 </code></pre></div>
 <p>Fix ownership or run the client once so it creates the directory, then retry.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude"</span>
-<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>$<span class="w"> </span>chmod<span class="w"> </span>u+rw<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude"</span>
-<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude/claude_desktop_config.json"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>$<span class="w"> </span>mkdir<span class="w"> </span>-p<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude"</span>
+<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>$<span class="w"> </span>chmod<span class="w"> </span>u+rw<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude"</span>
+<a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--config-file<span class="w"> </span><span class="s2">"</span><span class="nv">$HOME</span><span class="s2">/Library/Application Support/Claude/claude_desktop_config.json"</span>
 </code></pre></div>
 <h3 id="3-python-version-mismatch">3. Python version mismatch<a class="headerlink" href="#3-python-version-mismatch" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
-<a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>ERROR:<span class="w"> </span>Package<span class="w"> </span><span class="s1">'verity-redteam-core'</span><span class="w"> </span>requires<span class="w"> </span>a<span class="w"> </span>different<span class="w"> </span>Python:<span class="w"> </span><span class="m">3</span>.9.6<span class="w"> </span>not<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">'&gt;=3.12,&lt;3.15'</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
+<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>ERROR:<span class="w"> </span>Package<span class="w"> </span><span class="s1">'verity-redteam-core'</span><span class="w"> </span>requires<span class="w"> </span>a<span class="w"> </span>different<span class="w"> </span>Python:<span class="w"> </span><span class="m">3</span>.9.6<span class="w"> </span>not<span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="s1">'&gt;=3.12,&lt;3.15'</span>
 </code></pre></div>
 <p>Use a supported interpreter explicitly.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>$<span class="w"> </span>uv<span class="w"> </span>python<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.12
-<a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>$<span class="w"> </span>uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12
-<a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>$<span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
-<a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
+<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>$<span class="w"> </span>uv<span class="w"> </span>python<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.12
+<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>$<span class="w"> </span>uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12
+<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a>$<span class="w"> </span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>verity-redteam-core
+<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
 </code></pre></div>
-<h3 id="4-homebrew-tap-not-found">4. Homebrew tap not found<a class="headerlink" href="#4-homebrew-tap-not-found" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
-<a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>Error:<span class="w"> </span>No<span class="w"> </span>available<span class="w"> </span>formula<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>name<span class="w"> </span><span class="s2">"verity"</span>.
+<h3 id="4-homebrew-tap-not-found-or-outdated-metadata">4. Homebrew tap not found or outdated metadata<a class="headerlink" href="#4-homebrew-tap-not-found-or-outdated-metadata" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
+<a id="__codelineno-30-2" name="__codelineno-30-2" href="#__codelineno-30-2"></a>Error:<span class="w"> </span>No<span class="w"> </span>available<span class="w"> </span>formula<span class="w"> </span>with<span class="w"> </span>the<span class="w"> </span>name<span class="w"> </span><span class="s2">"verity"</span>.
 </code></pre></div>
-<p>Tap the repository first.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>JMartynov/tap
-<a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
-<a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--help
+<p>Tap the repository and refresh Homebrew's tap metadata:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>$<span class="w"> </span>brew<span class="w"> </span>tap<span class="w"> </span>JMartynov/tap
+<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>$<span class="w"> </span>brew<span class="w"> </span>update
+<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>verity
+<a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>$<span class="w"> </span>verity<span class="w"> </span>--version
 </code></pre></div>
+<p>If <code>brew upgrade verity</code> reports that the latest version is already installed right after a new PyPI release, run <code>brew update &amp;&amp; brew upgrade verity</code> to pull the updated <code>Formula/verity.rb</code>.</p>
 <h3 id="5-docker-daemon-unavailable">5. Docker daemon unavailable<a class="headerlink" href="#5-docker-daemon-unavailable" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>python:3.12-slim<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
-<a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a>Cannot<span class="w"> </span>connect<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>Docker<span class="w"> </span>daemon<span class="w"> </span>at<span class="w"> </span>unix:///var/run/docker.sock.
+<div class="highlight"><pre><span></span><code><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>python:3.12-slim<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>Cannot<span class="w"> </span>connect<span class="w"> </span>to<span class="w"> </span>the<span class="w"> </span>Docker<span class="w"> </span>daemon<span class="w"> </span>at<span class="w"> </span>unix:///var/run/docker.sock.
 </code></pre></div>
 <p>Start Docker and retry.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="w">    </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
-<a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="w">    </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"pip install verity-redteam-core==0.2.2 &amp;&amp; verity scan --path . --format json"</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a>$<span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a><span class="w">    </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/work"</span><span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="w">    </span>-w<span class="w"> </span>/work<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a><span class="w">    </span>python:3.12-slim<span class="w"> </span><span class="se">\</span>
+<a id="__codelineno-33-5" name="__codelineno-33-5" href="#__codelineno-33-5"></a><span class="w">    </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s2">"pip install verity-redteam-core==0.2.2 &amp;&amp; verity scan --path . --format json"</span>
 </code></pre></div>
 <h3 id="6-ide-does-not-list-verity-as-an-mcp-server">6. IDE does not list <code>verity</code> as an MCP server<a class="headerlink" href="#6-ide-does-not-list-verity-as-an-mcp-server" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>$<span class="w"> </span>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
-<a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a>error:<span class="w"> </span><span class="nb">command</span><span class="w"> </span>not<span class="w"> </span>found<span class="w"> </span><span class="k">in</span><span class="w"> </span>client<span class="w"> </span>PATH
+<div class="highlight"><pre><span></span><code><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a>$<span class="w"> </span>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
+<a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>error:<span class="w"> </span><span class="nb">command</span><span class="w"> </span>not<span class="w"> </span>found<span class="w"> </span><span class="k">in</span><span class="w"> </span>client<span class="w"> </span>PATH
 </code></pre></div>
-<p>Use an absolute path in the client config, or install Verity where the IDE can see it.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>$<span class="w"> </span>which<span class="w"> </span>verity
-<a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a>/Users/dev/.local/bin/verity
+<p>GUI desktop apps often do not inherit shell <code>PATH</code> entries from <code>pyenv</code>, <code>uv</code>, or <code>.venv</code> activations. Use the absolute Homebrew path (<code>/opt/homebrew/bin/verity</code> on Apple Silicon macOS, <code>/usr/local/bin/verity</code> on Intel macOS, <code>/home/linuxbrew/.linuxbrew/bin/verity</code> on Linux) or the path returned by <code>which verity</code>:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a>$<span class="w"> </span>which<span class="w"> </span>verity
+<a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a>/opt/homebrew/bin/verity
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a><span class="p">{</span>
-<a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-29-3" name="__codelineno-29-3" href="#__codelineno-29-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<a id="__codelineno-29-4" name="__codelineno-29-4" href="#__codelineno-29-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/Users/dev/.local/bin/verity"</span><span class="p">,</span>
-<a id="__codelineno-29-5" name="__codelineno-29-5" href="#__codelineno-29-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">,</span><span class="w"> </span><span class="s2">"--transport"</span><span class="p">,</span><span class="w"> </span><span class="s2">"stdio"</span><span class="p">]</span>
-<a id="__codelineno-29-6" name="__codelineno-29-6" href="#__codelineno-29-6"></a><span class="w">    </span><span class="p">}</span>
-<a id="__codelineno-29-7" name="__codelineno-29-7" href="#__codelineno-29-7"></a><span class="w">  </span><span class="p">}</span>
-<a id="__codelineno-29-8" name="__codelineno-29-8" href="#__codelineno-29-8"></a><span class="p">}</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a><span class="p">{</span>
+<a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a><span class="w">  </span><span class="nt">"mcpServers"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-36-3" name="__codelineno-36-3" href="#__codelineno-36-3"></a><span class="w">    </span><span class="nt">"verity"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-36-4" name="__codelineno-36-4" href="#__codelineno-36-4"></a><span class="w">      </span><span class="nt">"command"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/opt/homebrew/bin/verity"</span><span class="p">,</span>
+<a id="__codelineno-36-5" name="__codelineno-36-5" href="#__codelineno-36-5"></a><span class="w">      </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"serve"</span><span class="p">]</span>
+<a id="__codelineno-36-6" name="__codelineno-36-6" href="#__codelineno-36-6"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-36-7" name="__codelineno-36-7" href="#__codelineno-36-7"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-36-8" name="__codelineno-36-8" href="#__codelineno-36-8"></a><span class="p">}</span>
 </code></pre></div>
 <p>Restart the IDE, then confirm discovery with a manual stdio handshake:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
+<div class="highlight"><pre><span></span><code><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>$<span class="w"> </span><span class="nb">printf</span><span class="w"> </span><span class="s1">'%s\n'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"manual","version":"1.0.0"}}}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","method":"notifications/initialized"}'</span><span class="w"> </span><span class="s1">'{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>verity<span class="w"> </span>serve<span class="w"> </span>--transport<span class="w"> </span>stdio
 </code></pre></div>
 <p>The response lists the four unified tools: <code>verity_security_scan</code>, <code>verity_database_guard</code>, <code>verity_database_oracle</code>, and <code>verity_remediation_ops</code>.</p>
+<h3 id="7-air-gapped-or-offline-environments">7. Air-gapped or offline environments<a class="headerlink" href="#7-air-gapped-or-offline-environments" title="Permanent link">&para;</a></h3>
+<p>Pass <code>--offline</code> (or set <code>VERITY_OFFLINE=1</code>) so <code>verity scan</code> disables remote snapshot fetching and relies strictly on the bundled fingerprint and OSV caches:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--offline
+<a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a>$<span class="w"> </span>verity<span class="w"> </span>scan<span class="w"> </span>--path<span class="w"> </span>./my-mcp-server<span class="w"> </span>--offline
+</code></pre></div>
 <hr />
 <h2 id="uninstall">Uninstall<a class="headerlink" href="#uninstall" title="Permanent link">&para;</a></h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>uninstall<span class="w"> </span>verity-redteam-core
-<a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>$<span class="w"> </span>brew<span class="w"> </span>uninstall<span class="w"> </span>verity
-<a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>uninstall<span class="w"> </span>-y<span class="w"> </span>verity-redteam-core
+<div class="highlight"><pre><span></span><code><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>$<span class="w"> </span>uv<span class="w"> </span>tool<span class="w"> </span>uninstall<span class="w"> </span>verity-redteam-core
+<a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>$<span class="w"> </span>brew<span class="w"> </span>uninstall<span class="w"> </span>verity
+<a id="__codelineno-39-3" name="__codelineno-39-3" href="#__codelineno-39-3"></a>$<span class="w"> </span>brew<span class="w"> </span>untap<span class="w"> </span>JMartynov/tap
+<a id="__codelineno-39-4" name="__codelineno-39-4" href="#__codelineno-39-4"></a>$<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>uninstall<span class="w"> </span>-y<span class="w"> </span>verity-redteam-core
 </code></pre></div>
 <p>Remove any <code>verity</code> entry from the MCP config paths listed above, then restart the IDE client.</p>
 
