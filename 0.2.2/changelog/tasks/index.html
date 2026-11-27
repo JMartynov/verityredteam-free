@@ -3418,7 +3418,7 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <ul>
 <li><strong>Phase:</strong> Hardening &amp; Parity</li>
 <li><strong>Status:</strong> Done</li>
-<li><strong>Scope:</strong> Dual <code>verity-redteam-core</code> script entrypoint, <code>-V</code>/<code>--version</code>, <code>[project.urls]</code>, <code>generate_homebrew_formula.py</code>, <code>JMartynov/homebrew-tap</code></li>
+<li><strong>Scope:</strong> Dual <code>verity</code>/<code>verity-redteam-core</code> entrypoints, <code>-V</code>/<code>--version</code>, <code>[project.urls]</code>, <code>generate_homebrew_formula.py</code>, live <code>JMartynov/homebrew-tap</code> (<code>v0.2.2</code>)</li>
 <li><strong>Task references:</strong> TASK-79</li>
 <li><strong>Verification:</strong> <code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></li>
 </ul>
@@ -3426,7 +3426,7 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <ul>
 <li><strong>Phase:</strong> Hardening &amp; Parity</li>
 <li><strong>Status:</strong> Done</li>
-<li><strong>Scope:</strong> Stdlib <code>verity.baseline</code> (<code>paths</code>, <code>fingerprint</code>, <code>ignore</code>, <code>inline</code>, <code>store</code>), <code>--fail-on-severity</code>, multi-file <code>--path</code>, Pro-gated SARIF <code>partialFingerprints</code> &amp; suppressions</li>
+<li><strong>Scope:</strong> Stdlib <code>verity.baseline</code> (<code>paths</code>, <code>fingerprint</code>, <code>ignore</code>, <code>inline</code>, <code>store</code>), <code>--fail-on-severity</code>, multi-file <code>--path</code>, MCP parity (<code>--format sarif</code> Pro-gated per <code>M40</code>)</li>
 <li><strong>Task references:</strong> TASK-80</li>
 <li><strong>Verification:</strong> <code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></li>
 </ul>
@@ -3546,7 +3546,7 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <ul>
 <li><strong>Phase:</strong> Next-Gen SAST, UX &amp; Supply-Chain Roadmap</li>
 <li><strong>Status:</strong> Done</li>
-<li><strong>Scope:</strong> 15+ client discovery with JSONC, composable <code>--scanners</code>, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift</li>
+<li><strong>Scope:</strong> 17-client discovery with JSONC, composable <code>--scanners</code>, offline BK-Tree typosquat, conflicts, reachability, OWASP scorecards, CycloneDX/SPDX SBOM, inventory drift, MCP parity (<code>v0.2.2</code>)</li>
 <li><strong>Task references:</strong> TASK-82</li>
 <li><strong>Verification:</strong> <code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></li>
 </ul>
