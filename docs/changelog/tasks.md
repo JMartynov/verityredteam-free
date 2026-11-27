@@ -381,7 +381,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 - **Phase:** Hardening & Parity
 - **Status:** Done
-- **Scope:** Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap`
+- **Scope:** Dual `verity`/`verity-redteam-core` entrypoints, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, live `JMartynov/homebrew-tap` (`v0.2.2`)
 - **Task references:** TASK-79
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
 
@@ -389,7 +389,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 - **Phase:** Hardening & Parity
 - **Status:** Done
-- **Scope:** Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, Pro-gated SARIF `partialFingerprints` & suppressions
+- **Scope:** Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, MCP parity (`--format sarif` Pro-gated per `M40`)
 - **Task references:** TASK-80
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
 
@@ -509,7 +509,7 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 
 - **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
 - **Status:** Done
-- **Scope:** 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift
+- **Scope:** 17-client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, OWASP scorecards, CycloneDX/SPDX SBOM, inventory drift, MCP parity (`v0.2.2`)
 - **Task references:** TASK-82
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
 

@@ -151,8 +151,8 @@ Transport, detection, offline, credential, dialect, governance, and distribution
 | M27 | Guard `uv build` & Local Wheel Staging in `run_e2e.sh` When `INSTALL_SOURCE=pypi` | Done | Guard `uv build` behind `INSTALL_SOURCE=wheel`, clean stale wheels, unit test & dual-mode container E2E |
 | M28 | Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard | Done | Replace `verity-core` with `verity-redteam-core` in `AGENTS.md` and extend `test_no_stale_package_references` |
 | M29 | Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`) | Done | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard |
-| M30 | `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) | Done | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` |
-| M31 | CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) | Done | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, Pro-gated SARIF `partialFingerprints` & suppressions |
+| M30 | `uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`) | Done | Dual `verity`/`verity-redteam-core` entrypoints, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, live `JMartynov/homebrew-tap` (`v0.2.2`) |
+| M31 | CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`) | Done | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, MCP parity (`--format sarif` Pro-gated per `M40`) |
 | M32 | Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`) | Not Done | `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action` |
 | M33 | TypeScript / JavaScript MCP SAST Scanner (`TASK-90`) | Not Done | Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring |
 | M34 | Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`) | Not Done | `InstructionFileScanner` (6 formats), `ToxicFlowAnalyzer` lethal-trifecta correlation (`VERITY-TOXIC-FLOW-*`), `--skills` / `--toxic-flows` |
@@ -188,7 +188,7 @@ Unified verity scan CLI (SBOM & drift), local web viewer, interactive init/fix, 
 
 | Milestone | Title | Status | Focus |
 | --- | --- | --- | --- |
-| M46 | Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) | Done | 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift |
+| M46 | Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`) | Done | 17-client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, OWASP scorecards, CycloneDX/SPDX SBOM, inventory drift, MCP parity (`v0.2.2`) |
 | M47 | Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`) | Not Done | Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, `ViewerRegistry` |
 | M48 | Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`) | Partially Done | Lossless `JsoncPatcher`, `AtomicBackupManager` rollback, `verity init` wizard & `verity fix` dry-run/write config remediation |
 | M49 | Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`) | Partially Done | Wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, `--llm-assist` |

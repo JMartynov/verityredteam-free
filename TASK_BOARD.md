@@ -4,14 +4,15 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), CI & Brownfield Baselines (`M31`), Docs Portal (`M38`), Realism (`M39`–`M45`), Unified Scan CLI (`M46`); Queued — Wave 1 Adoption (`M32`–`M37`), Next Wave (`M47`–`M53`)  
-> **Target Baseline**: `v0.1.0` Baseline (Wave 1 `M1`–`M6`) / `v0.2.0` (`M7`–`M11`) / `v0.2.1` (`M12`–`M45`) / `v0.2.2` (`M46`)  
+> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), CI & Brownfield Baselines (`M31`), Docs Portal (`M38`), Realism (`M39`–`M45`), Unified Scan CLI (`M46`) [40 / 53 Done]; Active / Queued — Wave 1 Adoption (`M32`–`M37`), Next Wave (`M47`–`M53`) [2 Partially Done, 11 Not Done]  
+> **Target Baseline**: `v0.1.0` (`M1`–`M6`) / `v0.2.0` (`M7`–`M11`) / `v0.2.1` (`M12`–`M29`, `M38`–`M45`) / `v0.2.2` (`M30`, `M31`, `M46` — live on PyPI `verity-redteam-core==0.2.2` & Homebrew `JMartynov/tap/verity`)  
+> **Verification Suite**: `uv run pytest tests/` (`895 passed, 1 skipped`), `uv run ruff check src tests scripts`, `uv run mkdocs build --strict`  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
 
 ---
 
-## 🗺️ High-Level Roadmap & 10-Task Delivery Pipeline
+## 🗺️ High-Level Roadmap & Delivery Pipeline
 
 ```mermaid
 flowchart TD
@@ -59,6 +60,19 @@ flowchart TD
         M29["M29: Exact GitHub Project #5 Item Links Across TASK_BOARD.md<br/>(Backfill M1-M11 PVTI_... IDs &amp; parity guard)"]
     end
 
+    subgraph Phase6["Phase 6: Portal, Realism, Distribution &amp; Unified CLI (v0.2.1–v0.2.2 Done)"]
+        M38["M38: MkDocs Documentation Portal &amp; Task-to-Docs Pipeline<br/>(10 pages, build_docs_portal.py, GitHub Pages)"]
+        M39_45["M39–M45: Feature Realism &amp; Product Alignment<br/>(AST rules, SARIF Pro gate, DB guard gate, Tier 1/2 parity)"]
+        M30["M30: uvx Single-Token &amp; Homebrew Tap<br/>(verity-redteam-core, -V, JMartynov/tap/verity)"]
+        M31["M31: CI Gates &amp; Brownfield Baseline Engine<br/>(verity.baseline, .verityignore, verity.toml, --fail-on-severity)"]
+        M46["M46: Unified verity scan CLI, SBOM &amp; Drift<br/>(17 clients, BK-Tree typosquat, CycloneDX/SPDX, OWASP)"]
+    end
+
+    subgraph Phase7["Phase 7: Queued Adoption &amp; Next-Gen Roadmap (Active Backlog)"]
+        Q1["M32–M37: Wave 1 Adoption &amp; SAST<br/>(GitHub Action, TS SAST, Skills, Auth Probe, ANSI, Guidance)"]
+        Q2["M47–M53: Next-Gen UX &amp; Supply Chain<br/>(verity view, init/fix, --llm-assist, hooks, Sigstore, Reputation)"]
+    end
+
     M1 --> M2
     M1 --> M3
     M2 --> M4
@@ -71,11 +85,21 @@ flowchart TD
     M8 --> M10
     M9 --> M10
     M10 --> M11
+    M11 --> M29
+    M29 --> M38
+    M38 --> M39_45
+    M39_45 --> M30
+    M30 --> M31
+    M31 --> M46
+    M46 --> Q1
+    Q1 --> Q2
 ```
 
 ---
 
 ## Executive Priority & Decision Grouping Dashboard
+
+- **Completion Snapshot (`40 / 53` `Done`)**: `M1`–`M31`, `M38`, `M39`–`M45`, `M46` (`Done`); `M48`, `M49` (`Partially Done`); `M32`–`M37`, `M47`, `M50`–`M53` (`Not Done`).
 
 ### High Priority (`P0`) Focus Queue (`Not Done`)
 
@@ -101,10 +125,10 @@ flowchart TD
 
 ### Grouped by Decisions / Target Files / Purposes
 
-1. *Group A — Zero-Friction Distribution & CI/CD Adoption* (`M30` [Done], `M31` [Done], `M32`, `M48`)
+1. *Group A — Zero-Friction Distribution & CI/CD Adoption* (`M30` [Done], `M31` [Done], `M32`, `M48` [Partially Done])
 2. *Group B — Multi-Language & Multi-Framework SAST Expansion* (`M33`, `M34`, `M52`, `M39` [Done])
 3. *Group C — Transport, Deception & Supply-Chain Hardening* (`M35`, `M36`, `M46` [Done], `M51`, `M53`, `M44` [Done])
-4. *Group D — Agent Guidance, Local Viewer & Opt-In Advisory Hooks* (`M37`, `M47`, `M49`, `M50`, `M40` [Done], `M43` [Done])
+4. *Group D — Agent Guidance, Local Viewer & Opt-In Advisory Hooks* (`M37`, `M47`, `M49` [Partially Done], `M50`, `M40` [Done], `M43` [Done])
 5. *Group E — Product Documentation & Open-Core Foundation* (`M1`–`M29` [Done], `M38` [Done], `M41`–`M42` [Done], `M45` [Done])
 
 ## 📋 Task Matrix & Status Overview
@@ -141,14 +165,14 @@ flowchart TD
 | **M28** | **Fix Retired `verity-core` Package Name in `AGENTS.md` & Extend Documentation Parity Guard** | Replace `verity-core` with `verity-redteam-core` in `AGENTS.md` and extend `test_no_stale_package_references` | [M28_fix_agents_md_retired_package_name.md](docs/tasks/M28_fix_agents_md_retired_package_name.md) | `Done` | [View Item #M28](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXFA`) |
 | **M29** | **Populate Exact GitHub Project #5 Item IDs & Links Across `TASK_BOARD.md` (`M1`–`M29`)** | Harvest `PVTI_…` item IDs via `gh project item-list 5`, backfill `M1`–`M11` rows/sections, add dynamic parity guard | [M29_exact_task_board_project_links.md](docs/tasks/M29_exact_task_board_project_links.md) | `Done` | [View Item #M29](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhKQXJA`) |
 
-### 🔜 Next Wave (`Not Done` — Wave 1 Adoption, CI & Core SAST)
+### 📦 Wave 1 Adoption, Docs Portal, Feature Realism & Next-Gen Roadmap (`M30`–`M53`)
 
 > Canonical technical specs and ATDD matrices live in [`docs/tasks/`](docs/tasks). Each row below tracks the `verityredteam-free` deliverable on [Project #5](https://github.com/users/JMartynov/projects/5).
 
 | Task Key | Task Title | Architectural Scope | Task Spec | Status | GitHub Project #5 Item |
 | :---: | :--- | :--- | :--- | :---: | :---: |
-| **M30** | **`uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)** | Dual `verity-redteam-core` script entrypoint, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, `JMartynov/homebrew-tap` | [M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md](docs/tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) | `Done` | [View Item #M30](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPUU`) |
-| **M31** | **CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`)** | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, Pro-gated SARIF `partialFingerprints` & suppressions | [M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md](docs/tasks/M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md) | `Done` | [View Item #M31](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPYA`) |
+| **M30** | **`uvx` Single-Token Execution & Homebrew Distribution (`TASK-79`)** | Dual `verity`/`verity-redteam-core` entrypoints, `-V`/`--version`, `[project.urls]`, `generate_homebrew_formula.py`, live `JMartynov/homebrew-tap` (`v0.2.2`) | [M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md](docs/tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) | `Done` | [View Item #M30](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPUU`) |
+| **M31** | **CLI CI Prerequisites & Brownfield Baseline / Ignore Engine (`TASK-80`)** | Stdlib `verity.baseline` (`paths`, `fingerprint`, `ignore`, `inline`, `store`), `--fail-on-severity`, multi-file `--path`, MCP parity (`--format sarif` Pro-gated per `M40`) | [M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md](docs/tasks/M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md) | `Done` | [View Item #M31](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPYA`) |
 | **M32** | **Official GitHub Action (`verity-scan-action@v1`) & Pre-Commit Hooks (`TASK-81`)** | `.pre-commit-hooks.yaml` (`verity-scan`, `verity-scan-configs`, `verity-scan-uvx`), README snippet, `JMartynov/verity-scan-action` | [M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md](docs/tasks/M32_TASK_81_GITHUB_ACTION_AND_PRECOMMIT_HOOKS.md) | `Not Done` | [View Item #M32](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPcI`) |
 | **M33** | **TypeScript / JavaScript MCP SAST Scanner (`TASK-90`)** | Polyglot `.ts`/`.tsx`/`.js`/`.mjs` discovery in `McpAstScannerEngine`, `typescript_ast.py`, 5 `VERITY-AST-TS-*` sink rules, UCP/StaticRule wiring | [M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md](docs/tasks/M33_TASK_90_TYPESCRIPT_JS_MCP_SAST_SCANNER.md) | `Not Done` | [View Item #M33](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPfA`) |
 | **M34** | **Agent Skill / Instruction File Scanner & Cross-Tool Toxic Flow Analysis (`TASK-91`)** | `InstructionFileScanner` (6 formats), `ToxicFlowAnalyzer` lethal-trifecta correlation (`VERITY-TOXIC-FLOW-*`), `--skills` / `--toxic-flows` | [M34_TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md](docs/tasks/M34_TASK_91_AGENT_SKILL_SCANNER_AND_TOXIC_FLOWS.md) | `Not Done` | [View Item #M34](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLJPjE`) |
@@ -163,7 +187,7 @@ flowchart TD
 | **M43** | **Free MCP Database Guard Pro Gating (`TASK-109-FREE`)** | `PRO_FEATURE_REQUIRED` gate for `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` | [M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) | `Done` | [View Item #M43](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvm_M`) |
 | **M44** | **Free Read-Only Guard & Router Decoupling (`TASK-106-FREE`)** | Destructive-verb blocking in `readonly_guard.py` and formula de-hardcoding in `dual_path_router.py` | [M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) | `Done` | [View Item #M44](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvmgk`) |
 | **M45** | **Free README Tier 1/2 Focus, Pro Showcase & Parity (`TASK-110-FREE`)** | `README.md` Tier 1 / Tier 2 focus, Pro showcase, and registry / badge parity | [M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) | `Done` | [View Item #M45](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhLvnMQ`) |
-| **M46** | **Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)** | 15+ client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, CycloneDX/SPDX SBOM, inventory drift | [M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) | `Done` | [View Item #M46](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjAI`) |
+| **M46** | **Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)** | 17-client discovery with JSONC, composable `--scanners`, offline BK-Tree typosquat, conflicts, reachability, OWASP scorecards, CycloneDX/SPDX SBOM, inventory drift, MCP parity (`v0.2.2`) | [M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) | `Done` | [View Item #M46](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjAI`) |
 | **M47** | **Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`)** | Loopback HTTP+SSE server, DNS-rebinding/CSP/token guards, JSON/JSONL artifact indexer, zero-build ES module SPA, `ViewerRegistry` | [M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md](docs/tasks/M47_TASK_83_FREE_LOCAL_WEB_VIEWER_SPA.md) | `Not Done` | [View Item #M47](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjFQ`) |
 | **M48** | **Interactive Onboarding Wizard (`verity init`) & Safe Config Fix (`verity fix`) (`TASK-84-FREE`)** | Lossless `JsoncPatcher`, `AtomicBackupManager` rollback, `verity init` wizard & `verity fix` dry-run/write config remediation | [M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md](docs/tasks/M48_TASK_84_FREE_INTERACTIVE_INIT_AND_SAFE_FIX.md) | `Partially Done` | [View Item #M48](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjKw`) |
 | **M49** | **Opt-In `--llm-assist` Semantic Alignment Analyzer on UCP Path B (`TASK-87-FREE`)** | Wire `DualPathRouter` in `auditor.py`, fix `TEMPLATE_INDICATORS`, pure-stdlib `semantic_assist.py` with exact `evidence_span` guard, `--llm-assist` | [M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md](docs/tasks/M49_TASK_87_FREE_OPT_IN_LLM_ASSIST_SEMANTIC_ALIGNMENT.md) | `Partially Done` | [View Item #M49](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjOY`) |
@@ -209,10 +233,10 @@ Decouple Pro internals behind Python `importlib.metadata.entry_points(group="ver
   ```
 
 #### Acceptance Criteria
-- [ ] `verity-redteam-core` MCP server initializes standalone with zero Pro imports and responds to stdio JSON-RPC handshake.
-- [ ] Plugin loader discovers plugins registered under entry-point group `"verity.plugins"`.
-- [ ] All missing Pro features return `PRO_FEATURE_REQUIRED` gracefully without `ImportError`.
-- [ ] `pytest tests/` and `ruff check src tests` pass cleanly in `verityredteam-free`.
+- [x] `verity-redteam-core` MCP server initializes standalone with zero Pro imports and responds to stdio JSON-RPC handshake.
+- [x] Plugin loader discovers plugins registered under entry-point group `"verity.plugins"`.
+- [x] All missing Pro features return `PRO_FEATURE_REQUIRED` gracefully without `ImportError`.
+- [x] `pytest tests/` and `ruff check src tests` pass cleanly in `verityredteam-free`.
 
 ---
 
@@ -266,10 +290,10 @@ Deliver the 5-second single-player audit: 9-client workstation secret scanning, 
   ```
 
 #### Acceptance Criteria
-- [ ] 9 workstation client config paths scanned accurately with credential scrubbing.
-- [ ] All 13 `VERITY-STATIC-*` rules evaluate malicious schema fixtures in `<0.2ms` per schema.
-- [ ] Canonical fingerprinting and OSV vulnerability lookup function offline with zero network latency.
-- [ ] `pytest tests/` and `ruff check src tests` pass cleanly with zero Pro imports in `verityredteam-free`.
+- [x] 9 workstation client config paths scanned accurately with credential scrubbing.
+- [x] All 13 `VERITY-STATIC-*` rules evaluate malicious schema fixtures in `<0.2ms` per schema.
+- [x] Canonical fingerprinting and OSV vulnerability lookup function offline with zero network latency.
+- [x] `pytest tests/` and `ruff check src tests` pass cleanly with zero Pro imports in `verityredteam-free`.
 
 ---
 
@@ -303,9 +327,9 @@ Move the cohesive 245-line `SqlSecurityGuard` (`sqlglot`) intact to Free while k
   ```
 
 #### Acceptance Criteria
-- [ ] `SqlSecurityGuard` completely blocks comment-split queries (`SEL/**/ECT`), stacked queries (`; DROP TABLE`), and unauthorized catalog accesses.
-- [ ] Tenant filtering and projection masking apply correctly via `sqlglot` AST transformation.
-- [ ] `pytest tests/` and `ruff check src tests` pass cleanly with zero Pro imports in `verityredteam-free`.
+- [x] `SqlSecurityGuard` completely blocks comment-split queries (`SEL/**/ECT`), stacked queries (`; DROP TABLE`), and unauthorized catalog accesses.
+- [x] Tenant filtering and projection masking apply correctly via `sqlglot` AST transformation.
+- [x] `pytest tests/` and `ruff check src tests` pass cleanly with zero Pro imports in `verityredteam-free`.
 
 ---
 
@@ -334,9 +358,9 @@ Eliminate duplicate code in `verityredteam` by mounting `verityredteam-free` as 
   ```
 
 #### Acceptance Criteria
-- [ ] `verity-redteam-core` remains the single source of core code with zero duplicated core modules.
-- [ ] `pytest tests/` and `ruff check src tests` pass cleanly in `verityredteam-free`.
-- [ ] `uv build` produces a valid installable wheel with a clean standalone public API.
+- [x] `verity-redteam-core` remains the single source of core code with zero duplicated core modules.
+- [x] `pytest tests/` and `ruff check src tests` pass cleanly in `verityredteam-free`.
+- [x] `uv build` produces a valid installable wheel with a clean standalone public API.
 
 ---
 
@@ -377,9 +401,9 @@ Deliver the zero-Docker "5-Second Magic Moment" (`uvx verity scan`, `verity test
   ```
 
 #### Acceptance Criteria
-- [ ] `verity scan` completes in `<5s` and outputs Rich formatted summary table with actionable advice.
-- [ ] `verity test --demo` launches in-memory targets and validates probe responses without external dependencies.
-- [ ] Pro-only capabilities (e.g. SARIF export, warehouse guards) return `PRO_FEATURE_REQUIRED` with exit code `2` when `verity-pro` is absent.
+- [x] `verity scan` completes in `<5s` and outputs Rich formatted summary table with actionable advice.
+- [x] `verity test --demo` launches in-memory targets and validates probe responses without external dependencies.
+- [x] Pro-only capabilities (e.g. SARIF export, warehouse guards) return `PRO_FEATURE_REQUIRED` with exit code `2` when `verity-pro` is absent.
 
 ---
 
@@ -411,10 +435,10 @@ Automate quality gates on both repositories and prepare public launch assets. En
   ```
 
 #### Acceptance Criteria
-- [ ] GitHub Actions CI runs clean on Python 3.12 and 3.13.
-- [ ] `uv build` produces a valid installable wheel (`dist/verity_core-*.whl`).
-- [ ] `PRO_FEATURE_REQUIRED` graceful gating is verified with zero Pro imports and zero `ImportError` leaks.
-- [ ] Public documentation accurately reflects the open-core boundary and quickstart workflow.
+- [x] GitHub Actions CI runs clean on Python 3.12 and 3.13.
+- [x] `uv build` produces a valid installable wheel (`dist/verity_core-*.whl`).
+- [x] `PRO_FEATURE_REQUIRED` graceful gating is verified with zero Pro imports and zero `ImportError` leaks.
+- [x] Public documentation accurately reflects the open-core boundary and quickstart workflow.
 
 ---
 
@@ -575,7 +599,7 @@ Upgrade `HttpSseDiscoveryTransport` (`src/verity/discovery/transports/sse.py`) f
 #### Acceptance Criteria
 - [x] `HttpSseDiscoveryTransport` parses incremental `text/event-stream` frames with bounded timeout and never hangs waiting for EOF.
 - [x] `tests/unit/test_sse_transport.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
-- [ ] Real `FastMCP` server acceptance scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+- [x] Real `FastMCP` server acceptance scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
 
 ---
 
@@ -595,7 +619,7 @@ Expose `UnknownCapabilityProfiler.detect_rug_pull()` (`src/verity/ucp/engine.py`
 #### Acceptance Criteria
 - [x] `verity_security_scan(action="detect_rug_pull")` and `verity test --save-baseline` / `--baseline` detect added, removed, and description-mutated tools cleanly.
 - [x] `tests/unit/test_rug_pull_exposure.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
-- [ ] Real mutable MCP server rug-pull scenario (CLI + `verity serve` JSON-RPC) passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+- [x] Real mutable MCP server rug-pull scenario (CLI + `verity serve` JSON-RPC) passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
 
 ---
 
@@ -615,7 +639,7 @@ Enforce `VERITY_OFFLINE=1` / `verity scan --offline` across `data_fetcher.py`, `
 #### Acceptance Criteria
 - [x] `VERITY_OFFLINE=1` makes zero outbound network calls across all data/matching layers and serves expired caches cleanly.
 - [x] `tests/unit/test_offline_airgap.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
-- [ ] Real `--network none` container acceptance scenario completes in `<3s` with zero network errors inside `tests/e2e_containers/run_e2e.sh`.
+- [x] Real `--network none` container acceptance scenario completes in `<3s` with zero network errors inside `tests/e2e_containers/run_e2e.sh`.
 
 ---
 
@@ -635,7 +659,7 @@ Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/match
 #### Acceptance Criteria
 - [x] Unpinned `npx`/`uvx`/`@latest` configs emit `SEC-STATIC-UNPINNED-PACKAGE` with no fabricated version OSV lookups; pinned (`@0.1.15`, `==1.2.0`) and local scripts produce zero false positives.
 - [x] `tests/unit/test_unpinned_package_detection.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
-- [ ] Real pinned vs. unpinned `mcp-remote` acceptance scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+- [x] Real pinned vs. unpinned `mcp-remote` acceptance scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
 
 ---
 
@@ -653,9 +677,9 @@ Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/match
 - `tests/unit/test_credential_patterns.py` + container E2E scenario with a real AWS MCP server config and leak scan.
 
 #### Acceptance Criteria
-- [ ] AWS, PEM, Slack, and Google credentials are flagged as `SEC-STATIC-SECRET-IN-CONFIG` regardless of env key name and fully redacted; `${VAR}` references and benign values produce zero findings.
-- [ ] `tests/unit/test_credential_patterns.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
-- [ ] Container E2E scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh` with zero raw secret leaks.
+- [x] AWS, PEM, Slack, and Google credentials are flagged as `SEC-STATIC-SECRET-IN-CONFIG` regardless of env key name and fully redacted; `${VAR}` references and benign values produce zero findings.
+- [x] `tests/unit/test_credential_patterns.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [x] Container E2E scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh` with zero raw secret leaks.
 
 ---
 
@@ -673,9 +697,9 @@ Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/match
 - Unit test suite `tests/unit/test_sql_guard_dialects.py` + container E2E scenario with a real SQLite/MySQL MCP query flow.
 
 #### Acceptance Criteria
-- [ ] `SqlSecurityGuard.validate_single_select_statement()` supports all 7 dialects with `"postgres"` default (100% backward compatible) and blocks stacked/destructive queries across every dialect.
-- [ ] `tests/unit/test_sql_guard_dialects.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
-- [ ] Container E2E scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
+- [x] `SqlSecurityGuard.validate_single_select_statement()` supports all 7 dialects with `"postgres"` default (100% backward compatible) and blocks stacked/destructive queries across every dialect.
+- [x] `tests/unit/test_sql_guard_dialects.py`, full `pytest tests/`, and `ruff check src tests` pass cleanly.
+- [x] Container E2E scenario passes inside `INSTALL_SOURCE=wheel ./tests/e2e_containers/run_e2e.sh`.
 
 ---
 
@@ -693,8 +717,8 @@ Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/match
 - Container E2E SARIF export check in `tests/e2e_containers/verify_all_scenarios.sh`.
 
 #### Acceptance Criteria
-- [ ] `_stdlib_sarif_exporter()` emits `verity.__version__` with zero hardcoded version strings remaining in `src/verity/cli.py`.
-- [ ] Unit tests and container E2E SARIF version assertion pass cleanly.
+- [x] `_stdlib_sarif_exporter()` emits `verity.__version__` with zero hardcoded version strings remaining in `src/verity/cli.py`.
+- [x] Unit tests and container E2E SARIF version assertion pass cleanly.
 
 ---
 
@@ -712,8 +736,8 @@ Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/match
 - `tests/unit/test_scan_live_probe.py` + container E2E live-probe scan scenario in `tests/e2e_containers/verify_all_scenarios.sh`.
 
 #### Acceptance Criteria
-- [ ] `verity scan --live-probe` probes configured stdio/HTTP MCP servers and surfaces live `VERITY-STATIC-*` and OSV findings across all report formats while isolating dead servers.
-- [ ] `tests/unit/test_scan_live_probe.py`, full `pytest tests/`, `ruff check src tests`, and container E2E pass cleanly.
+- [x] `verity scan --live-probe` probes configured stdio/HTTP MCP servers and surfaces live `VERITY-STATIC-*` and OSV findings across all report formats while isolating dead servers.
+- [x] `tests/unit/test_scan_live_probe.py`, full `pytest tests/`, `ruff check src tests`, and container E2E pass cleanly.
 
 ---
 
@@ -730,8 +754,8 @@ Stop `HybridDiscoveryMatcher.match_static_config()` (`src/verity/discovery/match
 - `test_readme_hero_badges_present_and_valid` in `tests/unit/test_documentation_parity.py` + packaged wheel metadata verification in container E2E.
 
 #### Acceptance Criteria
-- [ ] All 4 badges render above the fold in `README.md` with valid targets and zero stale `verity-core` references.
-- [ ] `tests/unit/test_documentation_parity.py` and container E2E wheel-metadata parity check pass cleanly.
+- [x] All 4 badges render above the fold in `README.md` with valid targets and zero stale `verity-core` references.
+- [x] `tests/unit/test_documentation_parity.py` and container E2E wheel-metadata parity check pass cleanly.
 
 ---
 
@@ -749,8 +773,8 @@ Two embedded terminal tables in `README.md` (lines 76–104 and 206–218) still
 - Snapshot parity and no-ellipsized-rule-ID guard tests in `tests/unit/test_documentation_parity.py`.
 
 #### Acceptance Criteria
-- [ ] `README.md` tables match snapshots `01` and `02` with zero ellipsized rule IDs, and `demo.gif` is re-recorded against `0.2.0` with all 4 demo targets.
-- [ ] `tests/unit/test_documentation_parity.py`, `scripts/record_demo_gif.sh`, and container E2E pass cleanly.
+- [x] `README.md` tables match snapshots `01` and `02` with zero ellipsized rule IDs, and `demo.gif` is re-recorded against `0.2.0` with all 4 demo targets.
+- [x] `tests/unit/test_documentation_parity.py`, `scripts/record_demo_gif.sh`, and container E2E pass cleanly.
 
 ---
 
@@ -892,7 +916,7 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 
 ---
 
-## 🔜 Next Wave (`Not Done`) — Wave 1 Task Specifications (`M30`–`M37`)
+## 📦 Wave 1 & Documentation Portal Specifications (`M30`–`M38`)
 
 ---
 
@@ -901,11 +925,11 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 #### Canonical Task Spec
 - [`M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md`](docs/tasks/M30_TASK_79_UVX_AND_HOMEBREW_DISTRIBUTION.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPUU`)
 
-**Status:** `Done`
+**Status:** `Done` (P0, S; `v0.2.2`; commits `e6f2217`, `ba3c474`, `33de892`)
 
 #### Context & Key Deliverables
-- Add dual `[project.scripts]` (`verity` and `verity-redteam-core`) + `[project.urls]` in `pyproject.toml`, `-V`/`--version` in `src/verity/cli.py`, and quickstart updates in `README.md`.
-- Add deterministic `scripts/generate_homebrew_formula.py`, `.github/workflows/homebrew-tap.yml`, and `JMartynov/homebrew-tap` (`Formula/verity.rb`).
+- Registered dual `[project.scripts]` (`verity` and `verity-redteam-core`) + `[project.urls]` in `pyproject.toml`, added `-V`/`--version` in `src/verity/cli.py`, and updated `README.md` / `docs/getting-started/installation.md` quickstarts (`uvx verity-redteam-core scan`, `brew install JMartynov/tap/verity`).
+- Delivered deterministic `scripts/generate_homebrew_formula.py`, `.github/workflows/homebrew-tap.yml`, and live `JMartynov/homebrew-tap` (`Formula/verity.rb`) alongside `verity-redteam-core==0.2.2` on PyPI.
 
 ---
 
@@ -914,11 +938,11 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 #### Canonical Task Spec
 - [`M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md`](docs/tasks/M31_TASK_80_FREE_CLI_CI_AND_BROWNFIELD_BASELINES.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLJPYA`)
 
-**Status:** `Done`
+**Status:** `Done` (P1, M; `v0.2.2`; commits `f72e2e7`, `a89df8e`, `7df0948`, `7820f92`, `e78aaee`)
 
 #### Context & Key Deliverables
-- Implement 100% stdlib `src/verity/baseline/` (`paths.py`, `fingerprint.py`, `ignore.py`, `inline.py`, `store.py`) with pre-scrubbing fingerprints, `.verityignore`, `verity.toml`, `# verity-ignore`, and `.verity-baseline.json`.
-- Add `--fail-on-severity` / `--fail-on`, multi-file `--path`, nested monorepo config discovery, suppression/baseline summaries across reporters & MCP `verity_security_scan`, and Pro-gated SARIF `partialFingerprints` & suppressions (keeping `--format sarif` Pro-only per `M40`).
+- Implemented 100% stdlib `src/verity/baseline/` (`paths.py`, `fingerprint.py`, `ignore.py`, `inline.py`, `store.py`) with line-shift-stable pre-scrubbing `verity:v1:` fingerprints, `.verityignore` (including `:include .gitignore` & `!` negation), `verity.toml` `[[ignore]]`/`[[allowlists]]` with expiry, inline `# verity-ignore` / `# nosemgrep` suppressions, and `.verity-baseline.json`.
+- Wired `--fail-on-severity` / `--fail-on`, `--save-baseline` / `--baseline` / `--fail-on-new`, `verity test --baseline` schema-mismatch guard (`exit 2`), multi-file `--path`, nested monorepo config discovery, suppression/baseline summaries across all reporters, and MCP `verity_security_scan` parity (`baseline_path`, `fail_on_new`, `respect_ignores`), while keeping `--format sarif` Pro-gated (`PRO_FEATURE_REQUIRED`, exit code `2`) per `M40` (Pro SARIF `partialFingerprints` & `suppressions[]` tracked in `TASK-80-PRO`).
 
 ---
 
@@ -1005,13 +1029,15 @@ Task Matrix rows `M1`–`M11` in `TASK_BOARD.md` link only to the generic Projec
 #### Task Spec
 - [`M38_web_documentation_portal_and_task_publisher.md`](docs/tasks/M38_web_documentation_portal_and_task_publisher.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLOM2U`)
 
+**Status:** `Done` (P1; commits `f0bc5cf`, `721090d`, `46b94dd`)
+
 #### Context & Key Deliverables
-- Configure MkDocs Material documentation portal (`mkdocs.yml`) and GitHub Pages workflow (`.github/workflows/pages.yml`) targeting `https://jmartynov.github.io/verityredteam-free/`.
-- Deliver 10 comprehensive customer documentation pages covering installation, quickstart, CLI reference, 22-rule encyclopedia (`docs/rules/catalog.md`), SQL Security Guard, IDE/MCP setup, extensibility, milestone roadmap (`docs/roadmap/index.md`), and task changelog (`docs/changelog/tasks.md`), plus `scripts/build_docs_portal.py` (`--check`) and `tests/unit/test_documentation_parity.py` guards.
+- Configured MkDocs Material documentation portal (`mkdocs.yml`) and GitHub Pages workflow (`.github/workflows/pages.yml`) targeting `https://jmartynov.github.io/verityredteam-free/`.
+- Delivered 10 comprehensive customer documentation pages covering installation, quickstart, CLI reference, 22-rule encyclopedia (`docs/rules/catalog.md`), SQL Security Guard, IDE/MCP setup, extensibility, milestone roadmap (`docs/roadmap/index.md`), and task changelog (`docs/changelog/tasks.md`), plus `scripts/build_docs_portal.py` (`--check`), `uv run mkdocs build --strict`, and `tests/unit/test_documentation_parity.py` guards.
 
 ---
 
-## Feature Realism & Product Alignment Wave (M39–M45)
+## Feature Realism & Product Alignment Wave (`M39`–`M45` — `7 / 7 Done`)
 
 Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md)
 
@@ -1021,7 +1047,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md`](docs/tasks/M39_TASK_102_PYTHON_AST_REAL_WORLD_RULES_AND_IMPORT_ALIASES.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvl0M`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P0, S; commits `4e6399a`, `650df12`)
+- **Status:** `Done` (P0, S; commits `4e6399a`, `650df12`, `1b5a7d7`)
 - Resolve `self.imports` aliases in `visit_Call` before rule dispatch.
 - Real def-use rules `VERITY-AST-CWE-22-TRAVERSAL`, `VERITY-AST-CWE-89-SQLI`, and `VERITY-AST-CWE-862-BOLA` in `src/verity/scanner/python_ast.py`.
 - Paired controls guarded by `tests/unit/scanner/test_python_ast.py`.
@@ -1032,7 +1058,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md`](docs/tasks/M40_TASK_103_FREE_CLI_SARIF_PRO_GATE_AND_LINE_PRECISION.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmAQ`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P0, XS)
+- **Status:** `Done` (P0, XS; commits `60d7eb9`, `fe849b4`)
 - `--format sarif` gated by `_pro_plugin_available()` in `src/verity/cli.py`; returns `PRO_FEATURE_REQUIRED` with exit code `2` and writes no artifact even when `--output` is supplied.
 - Real `file_path` propagated as `artifactLocation.uri`; real `line_number` propagated as `region.startLine` (fallback `1`).
 - Covered by `tests/unit/cli/test_sarif_pro_gate.py` and `tests/unit/cli/test_sarif_line_precision.py`.
@@ -1043,7 +1069,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md`](docs/tasks/M41_TASK_104_HOMEPAGE_TIER1_2_FOCUS_AND_REGISTRY_PARITY.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmDo`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P0, S)
+- **Status:** `Done` (P0, S; commits `55b03ae`, `ba895a0`, `821a53f`, `6422f92`)
 - `docs/index.md` leads with Tier 1 (12) and Tier 2 (13), a single `Auxiliary & Benchmark Appendix (Tier 3/4)` pointer, and no bulk Tier 3/4 disclosures inline.
 - Runtime registry parity (`STATIC_RULE_IDS`, `AST_RULE_IDS`, `TARGET_SLUGS`, `MCP_TOOL_NAMES`) enforced by `tests/unit/test_docs_homepage_parity.py`.
 
@@ -1053,7 +1079,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md`](docs/tasks/M42_TASK_107_PRO_FEATURES_SHOWCASE_AND_COMPARISON_DOCS_IN_FREE.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmsE`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P0, S)
+- **Status:** `Done` (P0, S; commits `55b03ae`, `821a53f`, `6422f92`)
 - `docs/pro/enterprise_features.md` showcases `SnowflakeSecurityGuard`, `FilterSecurityGuard`, `VolumePolicyGuard`, OASIS SARIF v2.1.0 & Compliance Bundles, Pro `verity_remediation_ops`, and Multi-Turn Socratic Red-Teaming, with the Free vs Pro matrix and `PRO_FEATURE_REQUIRED` documentation.
 - Covered by `tests/unit/test_docs_pro_features_showcase.py`.
 
@@ -1063,7 +1089,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md`](docs/tasks/M43_TASK_109_FREE_MCP_DATABASE_GUARD_PRO_GATING.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvm_M`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P0, XS)
+- **Status:** `Done` (P0, XS; commits `44f1e84`, `9ea71a1`, `59672b9`, `1b5a7d7`)
 - `validate_nosql_filter` and `enforce_volume_policy` in `src/verity/mcp_server/handlers/database_guard.py` return `PRO_FEATURE_REQUIRED` when the `verity-pro` plugin is absent.
 - Covered by `tests/unit/mcp_server/test_database_guard_pro_gating.py`.
 
@@ -1073,7 +1099,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md`](docs/tasks/M44_TASK_106_FREE_READONLY_GUARD_AND_ROUTER_DECOUPLING.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvmgk`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P1, S)
+- **Status:** `Done` (P1, S; commits `bc8dbcb`, `99e3e70`, `daa814f`)
 - `readonly_guard.py` blocks `run_sql`, `execute_sql`, `upsert`, `post_`, `put_`, `patch_`, `chmod`, and `kill` in addition to the existing destructive verbs.
 - `dual_path_router.py` removes the hardcoded `"formula": "1 + 1"` argument for unknown tools and emits a schema-driven required-argument skeleton with neutral values, or an explicit `NEEDS_ARGS` marker when a required argument cannot be synthesised safely.
 - Covered by `tests/unit/test_readonly_guard.py` and `tests/unit/test_dual_path_router.py`.
@@ -1084,14 +1110,14 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md`](docs/tasks/M45_TASK_110_FREE_README_TIER1_2_FOCUS_PRO_SHOWCASE_AND_PARITY.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhLvnMQ`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P0, S)
+- **Status:** `Done` (P0, S; commits `55b03ae`, `1716237`, `6422f92`)
 - `README.md` leads with Tier 1 (12) / Tier 2 (13), a single auxiliary pointer, and the Pro showcase section.
 - `[Pro]` badge on `--format sarif` with `PRO_FEATURE_REQUIRED` / exit code `2`; Free formats unbadged.
 - Covered by `tests/unit/test_readme_parity.py`.
 
 ---
 
-## Next-Gen SAST, UX & Supply-Chain Wave (M46–M53)
+## Next-Gen SAST, UX & Supply-Chain Wave (`M46` Done; `M47`–`M53` Active / Queued)
 
 ### M46: Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)
 
@@ -1099,9 +1125,11 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md`](docs/tasks/M46_TASK_82_FREE_UNIFIED_SCAN_CLI_SBOM_AND_DRIFT.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMEjAI`)
 
 **Status & Deliverables**
-- **Status:** `Done` (P2, L)
-- 15+ client discovery with JSONC parsing, composable `--scanners`, offline BK-Tree typosquatting, conflicts, and reachability.
-- CycloneDX 1.6 / SPDX 2.3 SBOM export, OWASP MCP Top 10 mapping, and inventory drift flags.
+- **Status:** `Done` (P2, L; `v0.2.2`; commits `48fe803`, `621f605`, `7176895`, `e4c1124`, `861aeb0`, `61500f9`, `e78aaee`)
+- 17-client discovery (`claude_code`, `goose`, `junie`, `vscode`, `antigravity`, `openhands`, `trae`, `lmstudio`, etc.) with lossless JSONC comment/trailing-comma stripping, `--client` filtering, and opt-in `--scan-global`.
+- Composable `--scanners` orchestrator, offline BK-Tree `TyposquatDetector` (6,000+ corpus, `--typosquat-threshold`), `ConflictDetector` (`TOOL_COLLISION`), transitive reachability (`--call-analysis`, `--no-call-analysis`, `--reachable-only`, `--manifest`), and `taint`/`ast` deduplication.
+- Additive OWASP MCP/LLM Top 10 enrichment & compliance scorecards (`--compliance`, `--fail-on-non-compliant`), CycloneDX 1.6 (`--format cyclonedx`) & SPDX 2.3 (`--format spdx`) SBOM export, inventory drift (`--save-inventory-baseline`, `--compare-inventory-baseline`, `--fail-on-drift` exiting `2`), and `verity_security_scan` MCP parity.
+- Released as `v0.2.2` on PyPI & Homebrew tap; verified green (`895 passed, 1 skipped` in `uv run pytest tests/`, `uv run ruff check src tests scripts`, `uv run verity test --demo`, `uv run mkdocs build --strict`).
 
 ### M47: Zero-Signup Local Web Viewer (`verity view` Core SPA & Server) (`TASK-83-FREE`)
 
