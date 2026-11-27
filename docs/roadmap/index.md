@@ -196,8 +196,8 @@ Unified verity scan CLI (SBOM & drift), local web viewer, interactive init/fix, 
 | M51 | Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`) | Not Done | Sync `passports.json.gz`/`vulnerabilities.json.gz`, Sigstore verification in `data_fetcher.py`, dedup `StaticConfigScanner` |
 | M52 | Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`) | Not Done | `langchain_ast.py`, `crewai_ast.py`, `autogen_ast.py` visitors + optional `yara_engine.py` graceful fallback |
 | M53 | Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`) | Not Done | Opt-in `ReputationScorer` (0-100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1` |
-| M54 | GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`) | Not Done | Fix `homebrew-tap.yml` fallback/`--from-lock`/`ruby -c`/`HOMEBREW_TAP_TOKEN` preflight, GitHub Release assets + post-publish PyPI E2E in `workflow.yaml`, add `upstream-sync.yml` |
-| M55 | CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`) | Not Done | Dynamic workflow discovery in `test_workflow_hygiene.py`, dynamic `VERITY_VERSION` across E2E Dockerfiles & parity tests, `scripts` ruff + portal PR check |
+| M54 | GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`) | Done | Fix `homebrew-tap.yml` fallback/`--from-lock`/`ruby -c`/`HOMEBREW_TAP_TOKEN` preflight, GitHub Release assets + post-publish PyPI E2E in `workflow.yaml`, add `upstream-sync.yml` |
+| M55 | CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`) | Done | Dynamic workflow discovery in `test_workflow_hygiene.py`, dynamic `VERITY_VERSION` across E2E Dockerfiles & parity tests, `scripts` ruff + portal PR check |
 
 ## Milestone Table (M01-M55)
 
@@ -256,8 +256,8 @@ Unified verity scan CLI (SBOM & drift), local web viewer, interactive init/fix, 
 | M51 | Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjXY` | [M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md](../tasks/M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md) |
 | M52 | Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjcE` | [M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md](../tasks/M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md) |
 | M53 | Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMEjic` | [M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md](../tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md) |
-| M54 | GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMX-Sc` | [M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md](../tasks/M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md) |
-| M55 | CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Not Done | `PVTI_lAHOD-xmQM4Br351zhMX-Wo` | [M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md](../tasks/M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md) |
+| M54 | GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Done | `PVTI_lAHOD-xmQM4Br351zhMX-Sc` | [M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md](../tasks/M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md) |
+| M55 | CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`) | Next-Gen SAST, UX & Supply-Chain Roadmap | Done | `PVTI_lAHOD-xmQM4Br351zhMX-Wo` | [M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md](../tasks/M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md) |
 
 ## Documentation Guide
 

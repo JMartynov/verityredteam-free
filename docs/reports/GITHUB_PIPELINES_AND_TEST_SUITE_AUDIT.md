@@ -79,5 +79,5 @@
 
 | Milestone / Task | Priority | Status | Summary |
 | :--- | :---: | :---: | :--- |
-| **`M54` (`TASK-111-FREE`)** | `P0` (`High`) | `Not Done` | Fix `homebrew-tap.yml` fallback + `--from-lock` + `ruby -c` + secret preflight; publish GitHub Release artifacts + trigger `INSTALL_SOURCE=pypi` verification in `workflow.yaml`; add `.github/workflows/upstream-sync.yml`. |
-| **`M55` (`TASK-112-FREE`)** | `P0` (`High`) | `Not Done` | Dynamically validate all `.github/workflows/*.{yml,yaml}` in `test_workflow_hygiene.py`; eliminate hardcoded `"0.2.2"` across E2E Dockerfiles, `verify_all_scenarios.sh`, `run_e2e.sh`, and `test_cli_auditor_parity.py`; add `scripts` to `ruff` and `build_docs_portal.py --check` to `ci.yml`. |
+| **`M54` (`TASK-111-FREE`)** | `P0` (`High`) | `Done` | Fix `homebrew-tap.yml` fallback + `--from-lock` + `ruby -c` + secret preflight; publish GitHub Release artifacts + trigger `INSTALL_SOURCE=pypi` verification in `workflow.yaml`; add `.github/workflows/upstream-sync.yml`. |
+| **`M55` (`TASK-112-FREE`)** | `P0` (`High`) | `Done` | Dynamically validate all `.github/workflows/*.{yml,yaml}` in `test_workflow_hygiene.py`; eliminate hardcoded `"0.2.2"` across E2E Dockerfiles, `verify_all_scenarios.sh`, `run_e2e.sh`, and `test_cli_auditor_parity.py`; add `scripts` to `ruff` and `build_docs_portal.py --check` to `ci.yml`. |

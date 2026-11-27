@@ -15,7 +15,13 @@ trap cleanup EXIT
 
 cd "$REPO_ROOT"
 
-VERITY_VERSION="${VERITY_VERSION:-$(python3 -c 'import tomllib;print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')}"
+if [ -z "${VERITY_VERSION:-}" ]; then
+  if [ -f "$REPO_ROOT/pyproject.toml" ]; then
+    VERITY_VERSION="$(python3 -c 'import tomllib;print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')"
+  else
+    VERITY_VERSION="0.0.0"
+  fi
+fi
 export VERITY_VERSION
 
 rm -rf "$BUILD_DIST"

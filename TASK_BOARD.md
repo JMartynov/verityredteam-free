@@ -4,9 +4,9 @@
 > **GitHub Project Board**: [Project #5: Verity RedTeam Free Task Board](https://github.com/users/JMartynov/projects/5)  
 > **Target Repository (Free Core)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam-free`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam-free) (`JMartynov/verityredteam-free`)  
 > **Source Repository (Enterprise Pro)**: [`/Users/ivan/Project/3t.tools.intellij/verityredteam`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam)  
-> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), CI & Brownfield Baselines (`M31`), Docs Portal (`M38`), Realism (`M39`–`M45`), Unified Scan CLI (`M46`) [40 / 55 Done]; Active / Queued — Wave 1 Adoption (`M32`–`M37`), Next Wave (`M47`–`M55`) [2 Partially Done, 13 Not Done]  
+> **Status**: Shipped — Wave 1 (`M1`–`M6`), Wave 2 (`M7`–`M11`), Runtime Hardening (`M12`–`M29`), Distribution (`M30`), CI & Brownfield Baselines (`M31`), Docs Portal (`M38`), Realism (`M39`–`M45`), Unified Scan CLI (`M46`), CI/Release Automation (`M54`–`M55`) [42 / 55 Done]; Active / Queued — Wave 1 Adoption (`M32`–`M37`), Next Wave (`M47`–`M53`) [2 Partially Done, 11 Not Done]  
 > **Target Baseline**: `v0.1.0` (`M1`–`M6`) / `v0.2.0` (`M7`–`M11`) / `v0.2.1` (`M12`–`M29`, `M38`–`M45`) / `v0.2.2` (`M30`, `M31`, `M46` — live on PyPI `verity-redteam-core==0.2.2` & Homebrew `JMartynov/tap/verity`)  
-> **Verification Suite**: `uv run pytest tests/` (`895 passed, 1 skipped`), `uv run ruff check src tests scripts`, `uv run mkdocs build --strict`  
+> **Verification Suite**: `uv run pytest tests/` (`912 passed, 1 skipped`), `uv run ruff check src tests scripts`, `uv run mkdocs build --strict`  
 > **Architecture Plan**: [`open_core_migration_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/open_core_migration_plan.md)  
 > **Verification Plan**: [`architecture_review_and_verification_plan.md`](file:///Users/ivan/Project/3t.tools.intellij/verityredteam/docs/plans/architecture_review_and_verification_plan.md)  
 
@@ -99,12 +99,10 @@ flowchart TD
 
 ## Executive Priority & Decision Grouping Dashboard
 
-- **Completion Snapshot (`40 / 55` `Done`)**: `M1`–`M31`, `M38`, `M39`–`M45`, `M46` (`Done`); `M48`, `M49` (`Partially Done`); `M32`–`M37`, `M47`, `M50`–`M55` (`Not Done`).
+- **Completion Snapshot (`42 / 55` `Done`)**: `M1`–`M31`, `M38`, `M39`–`M45`, `M46`, `M54`–`M55` (`Done`); `M48`, `M49` (`Partially Done`); `M32`–`M37`, `M47`, `M50`–`M53` (`Not Done`).
 
 ### High Priority (`P0`) Focus Queue (`Not Done`)
 
-- `M54` — GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`)
-- `M55` — CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`)
 - `M32` — GitHub Action & pre-commit
 - `M33` — TypeScript/JS MCP SAST
 - `M34` — Agent Skill Scanner & Toxic Flows
@@ -197,8 +195,8 @@ flowchart TD
 | **M51** | **Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`)** | Sync `passports.json.gz`/`vulnerabilities.json.gz`, Sigstore verification in `data_fetcher.py`, dedup `StaticConfigScanner` | [M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md](docs/tasks/M51_TASK_94_FREE_SNAPSHOT_SYNC_SIGSTORE_AND_DEDUP.md) | `Not Done` | [View Item #M51](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjXY`) |
 | **M52** | **Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`)** | `langchain_ast.py`, `crewai_ast.py`, `autogen_ast.py` visitors + optional `yara_engine.py` graceful fallback | [M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md](docs/tasks/M52_TASK_95_FREE_MULTI_FRAMEWORK_AGENT_SAST_AND_YARA.md) | `Not Done` | [View Item #M52](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjcE`) |
 | **M53** | **Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`)** | Opt-in `ReputationScorer` (0-100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1` | [M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md](docs/tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING.md) | `Not Done` | [View Item #M53](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMEjic`) |
-| **M54** | **GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`)** | Fix `homebrew-tap.yml` fallback/`--from-lock`/`ruby -c`/`HOMEBREW_TAP_TOKEN` preflight, GitHub Release assets + post-publish PyPI E2E in `workflow.yaml`, add `upstream-sync.yml` | [M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md](docs/tasks/M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md) | `Not Done` | [View Item #M54](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMX-Sc`) |
-| **M55** | **CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`)** | Dynamic workflow discovery in `test_workflow_hygiene.py`, dynamic `VERITY_VERSION` across E2E Dockerfiles & parity tests, `scripts` ruff + portal PR check | [M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md](docs/tasks/M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md) | `Not Done` | [View Item #M55](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMX-Wo`) |
+| **M54** | **GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`)** | Fix `homebrew-tap.yml` fallback/`--from-lock`/`ruby -c`/`HOMEBREW_TAP_TOKEN` preflight, GitHub Release assets + post-publish PyPI E2E in `workflow.yaml`, add `upstream-sync.yml` | [M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md](docs/tasks/M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md) | `Done` | [View Item #M54](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMX-Sc`) |
+| **M55** | **CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`)** | Dynamic workflow discovery in `test_workflow_hygiene.py`, dynamic `VERITY_VERSION` across E2E Dockerfiles & parity tests, `scripts` ruff + portal PR check | [M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md](docs/tasks/M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md) | `Done` | [View Item #M55](https://github.com/users/JMartynov/projects/5) (`PVTI_lAHOD-xmQM4Br351zhMX-Wo`) |
 
 ---
 
@@ -1121,7 +1119,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 
 ---
 
-## Next-Gen SAST, UX & Supply-Chain Wave (`M46` Done; `M47`–`M55` Active / Queued)
+## Next-Gen SAST, UX & Supply-Chain Wave (`M46`, `M54`–`M55` Done; `M47`–`M53` Active / Queued)
 
 ### M46: Unified `verity scan` CLI (`mcp-fingerprints` + `mcp-vulnerabilities`, SBOM & Drift) (`TASK-82-FREE`)
 
@@ -1208,7 +1206,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md`](docs/tasks/M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMX-Sc`)
 
 **Status & Deliverables**
-- **Status:** `Not Done` (P0, M)
+- **Status:** `Done` (P0, M)
 - Fix `homebrew-tap.yml` `workflow_dispatch`/main fallback version resolution, pass `--from-lock`, run `ruby -c` syntax validation, and add an explicit `HOMEBREW_TAP_TOKEN` secret preflight check.
 - Expand `workflow.yaml` on `v*` tags to publish a GitHub Release with built wheel, sdist, and `SHA256SUMS.txt`, and trigger post-publish `INSTALL_SOURCE=pypi` container verification.
 - Add `.github/workflows/upstream-sync.yml` (`repository_dispatch`, weekly cron, `workflow_dispatch`) to update `mcp-fingerprints`/`mcp-vulnerabilities` in `uv.lock`, refresh `src/verity/data/*.json.gz`, run gates, and open/update a PR.
@@ -1219,7 +1217,7 @@ Plan: [`FEATURE_REALISM_ACTION_PLAN_AND_TASKS.md`](docs/reports/FEATURE_REALISM_
 - [`M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md`](docs/tasks/M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY.md) (GitHub Project #5 Item: `PVTI_lAHOD-xmQM4Br351zhMX-Wo`)
 
 **Status & Deliverables**
-- **Status:** `Not Done` (P0, S)
+- **Status:** `Done` (P0, S)
 - Dynamically discover all `.github/workflows/*.{yml,yaml}` files (including `pages.yml` and `upstream-sync.yml`) in `tests/unit/test_workflow_hygiene.py`.
 - Replace hardcoded `"0.2.2"` literals across `tests/e2e_containers/` Dockerfiles, `verify_all_scenarios.sh`, `run_e2e.sh`, and `test_cli_auditor_parity.py` with dynamic `VERITY_VERSION` resolution from `pyproject.toml` / `verity.__version__`.
 - Include `scripts` in `ruff check src tests scripts` across `ci.yml` / `full-tests.yml` and run `scripts/build_docs_portal.py --check` on PRs in `ci.yml`.

@@ -2,7 +2,7 @@
 task_id: M54
 alias: TASK-111-FREE
 title: "GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation"
-status: Not Done
+status: Done
 priority: High (P0)
 size: M
 estimate_days: 3
@@ -48,8 +48,8 @@ uv run ruff check src tests scripts
 ```
 
 ## 5. Execution Checklist
-- [ ] `AC-54.1` verified green (test locked during Pass 1)
-- [ ] `AC-54.2` verified green
-- [ ] `AC-54.3` verified green
-- [ ] `AC-54.4` verified green
-- [ ] Board #5 item `PVTI_lAHOD-xmQM4Br351zhMX-Sc` synced & status updated
+- [x] `AC-54.1` verified green (test locked during Pass 1)
+- [x] `AC-54.2` verified green
+- [x] `AC-54.3` verified green
+- [x] `AC-54.4` verified green
+- [x] Board #5 item `PVTI_lAHOD-xmQM4Br351zhMX-Sc` synced & status updated

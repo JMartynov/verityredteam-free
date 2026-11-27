@@ -2,7 +2,7 @@
 task_id: M55
 alias: TASK-112-FREE
 title: "CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates"
-status: Not Done
+status: Done
 priority: High (P0)
 size: S
 estimate_days: 2
@@ -52,8 +52,8 @@ uv run ruff check src tests scripts
 ```
 
 ## 5. Execution Checklist
-- [ ] `AC-55.1` verified green (test locked during Pass 1)
-- [ ] `AC-55.2` verified green
-- [ ] `AC-55.3` verified green
-- [ ] `AC-55.4` verified green
-- [ ] Board #5 item `PVTI_lAHOD-xmQM4Br351zhMX-Wo` synced & status updated
+- [x] `AC-55.1` verified green (test locked during Pass 1)
+- [x] `AC-55.2` verified green
+- [x] `AC-55.3` verified green
+- [x] `AC-55.4` verified green
+- [x] Board #5 item `PVTI_lAHOD-xmQM4Br351zhMX-Wo` synced & status updated
