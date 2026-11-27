@@ -23,12 +23,12 @@ FULL_TESTS_WORKFLOW_PATH = (
     Path(__file__).resolve().parents[2] / ".github" / "workflows" / "full-tests.yml"
 )
 WORKFLOWS_DIR = Path(__file__).resolve().parents[2] / ".github" / "workflows"
-ALL_WORKFLOW_PATHS = (
-    WORKFLOWS_DIR / "ci.yml",
-    WORKFLOWS_DIR / "full-tests.yml",
-    WORKFLOWS_DIR / "workflow.yaml",
-    WORKFLOWS_DIR / "e2e-containers.yml",
-    WORKFLOWS_DIR / "homebrew-tap.yml",
+ALL_WORKFLOW_PATHS = tuple(
+    sorted(
+        path
+        for path in WORKFLOWS_DIR.iterdir()
+        if path.is_file() and path.suffix in {".yml", ".yaml"}
+    )
 )
 CHECKOUT_ACTION = "actions/checkout"
 SETUP_UV_ACTION = "astral-sh/setup-uv"
@@ -490,3 +490,128 @@ def test_homebrew_tap_workflow_contract() -> None:
     assert "scripts/generate_homebrew_formula.py" in raw_text
     assert "HOMEBREW_TAP_TOKEN" in raw_text
     assert "JMartynov/homebrew-tap" in raw_text
+
+
+def _pin_violations(workflow: dict[str, Any]) -> list[str]:
+    """Return checkout/setup-uv refs that deviate from the expected pins."""
+    bad: list[str] = []
+    for uses in _iter_uses(workflow):
+        if uses.startswith(f"{CHECKOUT_ACTION}@") and uses != EXPECTED_CHECKOUT_REF:
+            bad.append(uses)
+        if uses.startswith(f"{SETUP_UV_ACTION}@") and uses != EXPECTED_SETUP_UV_REF:
+            bad.append(uses)
+    return bad
+
+
+def _job(path: Path, name: str) -> dict[str, Any]:
+    jobs = load_workflow(path).get("jobs")
+    assert isinstance(jobs, dict), f"{path.name} must define jobs"
+    job = jobs.get(name)
+    assert isinstance(job, dict), f"{path.name} must define job {name}"
+    return job
+
+
+def test_all_workflows_dynamically_discovered_and_pinned() -> None:
+    """AC-55.1: every workflow file is discovered and pinned; v4 fixture fails."""
+    names = {path.name for path in ALL_WORKFLOW_PATHS}
+    on_disk = {
+        p.name for p in WORKFLOWS_DIR.iterdir() if p.suffix in {".yml", ".yaml"}
+    }
+    assert names == on_disk
+    assert {"pages.yml", "upstream-sync.yml"} <= names
+    for path in ALL_WORKFLOW_PATHS:
+        assert not _pin_violations(load_workflow(path)), path.name
+    fixture = {
+        "on": {"push": None},
+        "jobs": {"x": {"steps": [{"uses": "actions/checkout@v4"}]}},
+    }
+    assert _pin_violations(fixture) == ["actions/checkout@v4"]
+
+
+def test_ci_lints_scripts_and_checks_portal() -> None:
+    """AC-55.3: CI lints scripts and checks docs portal parity."""
+    ci = (WORKFLOWS_DIR / "ci.yml").read_text(encoding="utf-8")
+    full = (WORKFLOWS_DIR / "full-tests.yml").read_text(encoding="utf-8")
+    assert "ruff check src tests scripts" in ci
+    assert "ruff check src tests scripts" in full
+    assert "scripts/build_docs_portal.py --check" in ci
+
+
+def test_homebrew_tap_fallback_and_preflight_contract() -> None:
+    """AC-54.1: version fallback, --from-lock, ruby -c, token preflight."""
+    raw = (WORKFLOWS_DIR / "homebrew-tap.yml").read_text(encoding="utf-8")
+    assert "--from-lock" in raw
+    assert "ruby -c" in raw
+    assert "pyproject.toml" in raw
+    assert '"main"' in raw or "'main'" in raw
+    assert "fetch-depth: 0" in raw
+    steps = _job(WORKFLOWS_DIR / "homebrew-tap.yml", "update-homebrew-tap")["steps"]
+    preflight = [
+        s
+        for s in steps
+        if isinstance(s, dict)
+        and "HOMEBREW_TAP_TOKEN" in json.dumps(s.get("env", {}))
+        and "run" in s
+    ]
+    assert preflight, "must have a HOMEBREW_TAP_TOKEN preflight run step"
+    assert "::warning" in preflight[0]["run"] or "::error" in preflight[0]["run"]
+    tap_checkout = [
+        s
+        for s in steps
+        if isinstance(s, dict)
+        and isinstance(s.get("with"), dict)
+        and s["with"].get("repository") == "JMartynov/homebrew-tap"
+    ]
+    assert tap_checkout and "if" in tap_checkout[0], "tap checkout must be gated"
+
+
+def test_workflow_release_artifacts_and_pypi_e2e() -> None:
+    """AC-54.2: GitHub Release with artifacts on v* tags + PyPI e2e."""
+    raw = WORKFLOW_PATH.read_text(encoding="utf-8")
+    wf = load_workflow()
+    jobs = wf["jobs"]
+    publish = jobs["pypi-publish"]
+    assert "refs/tags/v" in str(publish.get("if", "")), "publish only on v* tags"
+    assert "SHA256SUMS.txt" in raw
+    release_jobs = [
+        j for j in jobs.values()
+        if isinstance(j, dict) and "SHA256SUMS.txt" in json.dumps(j)
+    ]
+    assert release_jobs
+    rel = release_jobs[0]
+    assert rel.get("permissions", {}).get("contents") == "write"
+    assert "refs/tags/v" in str(rel.get("if", ""))
+    blob = json.dumps(rel)
+    assert ".whl" in blob and ".tar.gz" in blob
+    e2e_jobs = [
+        j for j in jobs.values()
+        if isinstance(j, dict) and "e2e-containers.yml" in str(j.get("uses", ""))
+    ]
+    assert e2e_jobs, "post-publish e2e must call e2e-containers.yml"
+    assert e2e_jobs[0].get("with", {}).get("install_source") == "pypi"
+    e2e_on = _raw_on(load_workflow(E2E_CONTAINERS_WORKFLOW_PATH))
+    assert "workflow_call" in e2e_on
+    assert "install_source" in json.dumps(e2e_on["workflow_dispatch"])
+
+
+def test_upstream_sync_workflow_contract() -> None:
+    """AC-54.3: upstream-sync triggers, pins, gates, PR, permissions."""
+    path = WORKFLOWS_DIR / "upstream-sync.yml"
+    assert path.is_file()
+    raw = path.read_text(encoding="utf-8")
+    wf = load_workflow(path)
+    on = _raw_on(wf)
+    assert set(on["repository_dispatch"]["types"]) == {
+        "upstream_fingerprints_updated",
+        "upstream_vulnerabilities_updated",
+    }
+    assert "schedule" in on and "workflow_dispatch" in on
+    uses = _iter_uses(wf)
+    assert EXPECTED_CHECKOUT_REF in uses and EXPECTED_SETUP_UV_REF in uses
+    assert not _pin_violations(wf)
+    assert "ruff check" in raw and "pytest" in raw
+    assert "mcp-fingerprints" in raw and "mcp-vulnerabilities" in raw
+    assert "gh pr" in raw or "create-pull-request" in raw
+    perms = wf.get("permissions") or next(iter(wf["jobs"].values())).get("permissions")
+    assert perms.get("contents") == "write"
+    assert perms.get("pull-requests") == "write"

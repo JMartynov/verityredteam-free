@@ -526,8 +526,22 @@ def test_yaml_configs_parsed_and_scanned(
     assert report["summary"]["scanned_files_count"] == 1
 
 
-def test_package_version_is_0_2_2() -> None:
-    assert verity.__version__ == "0.2.2"
+def test_package_version_matches_pyproject() -> None:
+    import re
+    import tomllib
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parents[2]
+    expected = tomllib.loads((root / "pyproject.toml").read_text())["project"][
+        "version"
+    ]
+    assert verity.__version__ == expected
+    e2e = root / "tests" / "e2e_containers"
+    pin = re.compile(r"verity-redteam-core==\d|Version: \d+\\?\.\d")
+    for f in e2e.iterdir():
+        if f.is_file():
+            assert not pin.search(f.read_text(encoding="utf-8")), f.name
+    assert "VERITY_VERSION" in (e2e / "run_e2e.sh").read_text(encoding="utf-8")
 
 
 def test_default_active_bridge_template_parses() -> None:
