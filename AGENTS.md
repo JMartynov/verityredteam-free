@@ -23,9 +23,9 @@
 
 ---
 
-## 2. Mandatory DeepSeek 2-Pass Parallel Development Workflow
+## 2. DeepSeek Cost-Gated Parallel Worktree Workflow
 
-All implementation and test authoring in `verityredteam-free` MUST use the **Aider-DeepSeek Token-Sparse Sub-Agent** (`~/.gemini/config/skills/aider-deepseek/scripts/aider_bridge.py` with `deepseek/deepseek-flash`) following a strict **ATDD Red → Lock → 2-Pass + Gated Merge** workflow.
+Delegate **production code and test files only** (`*.py`, `*.sh`, `Dockerfile`, CI workflows) via `~/.gemini/config/skills/aider-deepseek/scripts/aider_bridge.py` (`deepseek/deepseek-flash`) following an **ATDD Red → Lock → Risk-Gated Review + Gated Merge** workflow. Handle routine Markdown, doc, and board syncs ([TASK_BOARD.md](TASK_BOARD.md), `docs/tasks/*.md`, `README.md`) directly in ephemeral Antigravity `flash` / `flash_lite` subagents.
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -40,7 +40,7 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
 ┌─────────────────────────────────────────┐             ┌─────────────────────────────────────────┐
 │ 1. Isolate: --worktree --no-auto-merge  │             │ 1. Isolate: --worktree --no-auto-merge  │
 │ 2. PASS 1: Impl + --test-cmd (DeepSeek) │             │ 2. PASS 1: Impl + --test-cmd (DeepSeek) │
-│ 3. PASS 2: Code Review (--restore)      │             │ 3. PASS 2: Code Review (--restore)      │
+│ 3. PASS 2: Risk-Gated Review (--restore)│             │ 3. PASS 2: Risk-Gated Review (--restore)│
 │ 4. Verify: Free + Pro pytest & ruff     │             │ 4. Verify: Pro MCP + unit gates + ruff  │
 │ 5. Merge: merge-worktree ONLY on green  │             │ 5. Merge: merge-worktree ONLY on green  │
 └─────────────────────────────────────────┘             └─────────────────────────────────────────┘
@@ -49,12 +49,14 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
 ### Step-by-Step Execution Protocol for Every Task
 
 1. **ATDD Red → Lock & Preflight Commit (Prevents Exit `14`)**:
-   - Author failing acceptance/unit tests for the task's criteria first and **commit them to git BEFORE launching `--worktree`**.
-   - `--worktree` branches from `HEAD`; uncommitted test files do not exist in the new worktree and cause `--read-files` preflight checks to fail with exit code `14` (`PREFLIGHT_FAILED`).
+   - Author failing acceptance/unit tests for the task's criteria first and **commit them to git BEFORE launching `--worktree`** so `--read-files` does not fail preflight with exit code `14` (`PREFLIGHT_FAILED`).
    - Pass locked acceptance test files via `--read-files` (read-only) during Pass 1 so DeepSeek cannot weaken assertions.
 
-2. **Pass 1 — Smart Dispatch & Closed-Loop TDD (`--worktree --no-auto-merge`)**:
-   - Invoke `aider_bridge.py dispatch` (auto-selects Tier 1 `patch`, Tier 2 `surgical`, Tier 3 `architect` + `plan_align`, or Tier 4 `research`) via an ephemeral sub-agent (`flash_lite` / `flash`) with explicit `--files` and `--read-files` (never broad globs). Use `--worktree --no-auto-merge` (handles `.env` copy and branch isolation) and `--test-cmd` for in-turn closed-loop TDD self-healing:
+2. **Scope & Alignment (No Read-Only `--plan-align` Audits)**:
+   - Never use `aider_bridge.py --plan-align` for read-only repo audits (use Antigravity `research` `flash` subagents or `aider_bridge.py scope`). Use `--plan-align` only when true architectural ambiguity exists.
+
+3. **Pass 1 — Smart Dispatch & Closed-Loop TDD (`--worktree --no-auto-merge`)**:
+   - Invoke `aider_bridge.py dispatch` (auto-selects Tier 1 `patch`, Tier 2 `surgical`, Tier 3 `architect` + `plan_align`, or Tier 4 `research`) via an ephemeral sub-agent (`flash_lite` / `flash`) with explicit `--files` and `--read-files` (never broad globs). Use `--worktree --no-auto-merge` and `--test-cmd` for in-turn closed-loop TDD self-healing:
      ```bash
      python3 ~/.gemini/config/skills/aider-deepseek/scripts/aider_bridge.py dispatch \
        --task-id "<task_id>" \
@@ -64,11 +66,12 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
        --test-cmd "uv run pytest <test_file>" \
        --message "<Task specification from TASK_BOARD.md. Zero unrelated changes.>"
      ```
+   - **Backticks in Prompts**: `aider_bridge.py` takes `--message` (no `--message-file` flag); load prompts containing backticks via `MSG=$(cat <<'EOF' ... EOF)` and pass `--message "$MSG"`.
    - **Auto-Scope (`--auto-scope`)**: For single-repo tasks where target files aren't known yet, pass `--auto-scope` to `dispatch` instead of `--files` to auto-discover relevant files.
    - **Interactive Questions (Exit `10` / `INTERACTIVE_QUESTION`)**: Run `aider_bridge.py inspect --task-id "<task_id>" --json` to read the question, then answer and resume via `aider_bridge.py reply --task-id "<task_id>" --answer "..."`.
 
-3. **Pass 2 — Mandatory Code Review (Prefix-Cached via `--restore`)**:
-   - Before running final merge gates, always run a second pass on the same `--task-id` with `--restore --worktree --no-auto-merge`:
+4. **Pass 2 — Risk-Gated Code Review (Prefix-Cached via `--restore`)**:
+   - Run Pass 2 **only** for high-risk changes (security guards, AST/parsers, concurrency/locks, breaking API changes, or `>150` LOC). Skip Pass 2 on small fixes, scaffolds, and docs when `ruff` + `pytest` pass:
      ```bash
      python3 ~/.gemini/config/skills/aider-deepseek/scripts/aider_bridge.py turn \
        --task-id "<task_id>" \
@@ -78,7 +81,7 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
        --message "PASS 2 CODE REVIEW: Audit your Pass 1 changes for: (1) strict compliance with task scope and zero unrelated edits, (2) zero imports from verity_pro or verity_lite, (3) edge-case exception handling and resource cleanup, (4) complete Python 3.12+ type hints and docstrings. Apply surgical fixes if needed."
      ```
 
-4. **Dual-Repository Verification Gate (Before Merge)**:
+5. **Dual-Repository Verification Gate (Before Merge)**:
    - Run standalone tests and linter inside the worktree (note: `pyproject.toml` already configures `addopts = "-q --strict-markers"`):
      ```bash
      uv run pytest tests/
@@ -91,8 +94,8 @@ All implementation and test authoring in `verityredteam-free` MUST use the **Aid
      uv run pytest tests/unit/test_unified_production_mcp_agent_tools.py
      ```
 
-5. **Locked Merge (`merge-worktree`) & Session Cleanup**:
-   - Run `aider_bridge.py merge-worktree --task-id "<task_id>"` (acquires `.git/aider_merge.lock.d`, enforces the exit-`5` guard on `.aider-sessions/<task_id>/state.json`, auto-rebases, merges into `main`, and removes the worktree) **THEN** `aider_bridge.py cleanup --task-id "<task_id>"` **only after Pass 1, Pass 2, and all verification gates pass**.
+6. **Locked Merge (`merge-worktree`) & Session Cleanup**:
+   - Run `aider_bridge.py merge-worktree --task-id "<task_id>"` (acquires `.git/aider_merge.lock.d`, enforces the exit-`5` guard on `.aider-sessions/<task_id>/state.json`, auto-rebases, merges into `main`, and removes the worktree) **THEN** `aider_bridge.py cleanup --task-id "<task_id>"` **only after all required passes and verification gates pass**.
 
 ### Web Search Guardrails (`aider_bridge.py search`)
 - **Allowed**: Targeted technical research only (Python PEPs, PyPI packages, OSV/CVE advisories, SQLGlot dialects, MCP specifications).
