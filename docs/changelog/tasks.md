@@ -1,4 +1,4 @@
-# Task Changelog (M01 - M53)
+# Task Changelog (M01 - M55)
 
 This changelog is generated from `TASK_BOARD.md` and
 `docs/tasks/*.md` by `scripts/build_docs_portal.py`. It merges the
@@ -7,7 +7,7 @@ any behaviour back to a milestone and a verification command.
 
 Discovered task specifications with frontmatter `task_id`:
 
-`M30`, `M31`, `M32`, `M33`, `M34`, `M35`, `M36`, `M37`, `TASK-94`, `M39`, `M40`, `M41`, `M42`, `M43`, `M44`, `M45`, `M46`, `M47`, `M48`, `M49`, `M50`, `M51`, `M52`, `M53`
+`M30`, `M31`, `M32`, `M33`, `M34`, `M35`, `M36`, `M37`, `TASK-94`, `M39`, `M40`, `M41`, `M42`, `M43`, `M44`, `M45`, `M46`, `M47`, `M48`, `M49`, `M50`, `M51`, `M52`, `M53`, `M54`, `M55`
 
 ## Release Notes
 
@@ -38,7 +38,7 @@ SBOM export (`--format cyclonedx|spdx`), inventory drift baselines
 (`--save-inventory-baseline`, `--compare-inventory-baseline`,
 `--fail-on-drift`), and `verity_security_scan` MCP parity.
 
-### Continuous Engineering Ledger (M12-M53)
+### Continuous Engineering Ledger (M12-M55)
 
 Every change after the 0.2.0 cut lands as a tracked milestone:
 
@@ -84,6 +84,8 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **M51** — Bundled Snapshot Sync (`passports`/`vulns`), Sigstore Verification & Config Scanner Dedup (`TASK-94-FREE`) (Not Done)
 - **M52** — Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) & Optional YARA Engine (`TASK-95-FREE`) (Not Done)
 - **M53** — Pre-Boot Maintainer & Package Reputation Scoring (0-100) (`TASK-97-FREE`) (Not Done)
+- **M54** — GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`) (Not Done)
+- **M55** — CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`) (Not Done)
 
 ## Task Verification Matrix
 
@@ -142,6 +144,8 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 | TASK-94 | M51 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-95 | M52 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 | TASK-97 | M53 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-111 | M54 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
+| TASK-112 | M55 | Not Done | `uv run pytest tests/ -q && uv run ruff check src tests` |
 
 ## Detailed Engineering Notes
 
@@ -567,6 +571,22 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 - **Status:** Not Done
 - **Scope:** Opt-in `ReputationScorer` (0-100) on `DualPathRouter` Path B respecting `VERITY_OFFLINE=1`
 - **Task references:** TASK-97
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M54 — GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases & Upstream Sync Automation (`TASK-111-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** Fix `homebrew-tap.yml` fallback/`--from-lock`/`ruby -c`/`HOMEBREW_TAP_TOKEN` preflight, GitHub Release assets + post-publish PyPI E2E in `workflow.yaml`, add `upstream-sync.yml`
+- **Task references:** TASK-111
+- **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
+
+### M55 — CI Workflow Hygiene, Dynamic E2E Container Version Parity & Static Security Gates (`TASK-112-FREE`)
+
+- **Phase:** Next-Gen SAST, UX & Supply-Chain Roadmap
+- **Status:** Not Done
+- **Scope:** Dynamic workflow discovery in `test_workflow_hygiene.py`, dynamic `VERITY_VERSION` across E2E Dockerfiles & parity tests, `scripts` ruff + portal PR check
+- **Task references:** TASK-112
 - **Verification:** `uv run pytest tests/ -q && uv run ruff check src tests`
 
 ## Customer Upgrade Guide
