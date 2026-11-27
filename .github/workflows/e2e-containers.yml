@@ -1,7 +1,19 @@
 name: e2e-containers
 
 on:
+  workflow_call:
+    inputs:
+      install_source:
+        type: string
+        default: wheel
   workflow_dispatch:
+    inputs:
+      install_source:
+        type: choice
+        options:
+          - wheel
+          - pypi
+        default: wheel
   schedule:
     - cron: '0 4 * * *'
   push:
@@ -25,6 +37,13 @@ jobs:
         uses: astral-sh/setup-uv@v6
 
       - name: Run container E2E verification
+        if: ${{ inputs.install_source != 'pypi' }}
         env:
           INSTALL_SOURCE: wheel
+        run: bash ./tests/e2e_containers/run_e2e.sh
+
+      - name: Run container E2E verification (PyPI)
+        if: ${{ inputs.install_source == 'pypi' }}
+        env:
+          INSTALL_SOURCE: pypi
         run: bash ./tests/e2e_containers/run_e2e.sh

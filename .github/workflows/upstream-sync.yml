@@ -1,0 +1,100 @@
+name: Upstream Sync
+
+on:
+  repository_dispatch:
+    types:
+      - upstream_fingerprints_updated
+      - upstream_vulnerabilities_updated
+  schedule:
+    - cron: '0 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  upstream-sync:
+    name: Sync upstream data packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Upgrade mcp-fingerprints and mcp-vulnerabilities
+        run: |
+          uv lock \
+            --upgrade-package mcp-fingerprints \
+            --upgrade-package mcp-vulnerabilities
+
+      - name: Sync dev dependencies
+        run: uv sync --extra dev
+
+      - name: Refresh upstream snapshots
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import importlib.resources as resources
+          import shutil
+          from pathlib import Path
+
+          target = Path("src/verity/data")
+          target.mkdir(parents=True, exist_ok=True)
+
+          candidates = (
+              ("mcp_fingerprints", "passports.json.gz"),
+              ("mcp_vulnerabilities", "vulnerabilities.json.gz"),
+          )
+          for package, filename in candidates:
+              try:
+                  src = resources.files(package).joinpath(filename)
+              except (ModuleNotFoundError, ImportError):
+                  continue
+              try:
+                  with resources.as_file(src) as path:
+                      if path.is_file():
+                          shutil.copy(path, target / filename)
+                          print(f"copied {package}/{filename}")
+              except (FileNotFoundError, ModuleNotFoundError):
+                  continue
+          PY
+
+      - name: Lint
+        run: uv run ruff check src tests scripts
+
+      - name: Run tests
+        run: uv run pytest tests/
+
+      - name: Commit and open pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if git diff --quiet && git diff --cached --quiet; then
+            echo "No upstream changes detected"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BRANCH="automation/upstream-sync"
+          git checkout -B "$BRANCH"
+          git add -A
+          git commit -m "chore: sync upstream fingerprints and vulnerabilities"
+          git push --force origin "$BRANCH"
+          if gh pr view "$BRANCH" > /dev/null 2>&1; then
+            gh pr edit "$BRANCH" \
+              --title "chore: sync upstream data packages" \
+              --body "Automated sync of mcp-fingerprints and mcp-vulnerabilities."
+          else
+            gh pr create --base main --head "$BRANCH" \
+              --title "chore: sync upstream data packages" \
+              --body "Automated sync of mcp-fingerprints and mcp-vulnerabilities."
+          fi

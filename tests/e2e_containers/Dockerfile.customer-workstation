@@ -1,6 +1,8 @@
 FROM ubuntu:24.04
 
 ARG INSTALL_SOURCE=wheel
+ARG VERITY_VERSION=0.0.0
+ENV VERITY_VERSION=${VERITY_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -19,7 +21,7 @@ ENV PATH="/opt/verity-venv/bin:$PATH"
 COPY .build_dist /tmp/dist
 
 RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
-        /opt/verity-venv/bin/pip install --no-cache-dir "verity-redteam-core==0.2.2"; \
+        /opt/verity-venv/bin/pip install --no-cache-dir "verity-redteam-core==${VERITY_VERSION}"; \
     else \
         /opt/verity-venv/bin/pip install --no-cache-dir /tmp/dist/*.whl; \
     fi

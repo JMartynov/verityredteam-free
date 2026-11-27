@@ -166,9 +166,10 @@ JSON
 export OPENAI_API_KEY=sk-exported-host-env-should-not-flag
 
 # ---------------- PyPI version assertion ----------------
+EXPECTED_VERSION="${VERITY_VERSION:-$(python3 -c 'import verity;print(verity.__version__)')}"
 if pip show verity-redteam-core > "$OUT_DIR/pip_show.txt" 2>&1; then
-  if grep -qE '^Version: 0\.2\.2$' "$OUT_DIR/pip_show.txt"; then
-    pass "pip show verity-redteam-core reports Version: 0.2.2"
+  if grep -qxF "Version: ${EXPECTED_VERSION}" "$OUT_DIR/pip_show.txt"; then
+    pass "pip show verity-redteam-core reports Version: ${EXPECTED_VERSION}"
   else
     cat "$OUT_DIR/pip_show.txt" >&2 || true
     fail "pip show verity-redteam-core version mismatch"

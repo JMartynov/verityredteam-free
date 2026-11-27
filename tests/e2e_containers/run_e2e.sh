@@ -15,6 +15,9 @@ trap cleanup EXIT
 
 cd "$REPO_ROOT"
 
+VERITY_VERSION="${VERITY_VERSION:-$(python3 -c 'import tomllib;print(tomllib.load(open("pyproject.toml","rb"))["project"]["version"])')}"
+export VERITY_VERSION
+
 rm -rf "$BUILD_DIST"
 mkdir -p "$BUILD_DIST" "$SCRIPT_DIR/snapshots"
 
@@ -47,7 +50,8 @@ if [ "$INSTALL_SOURCE" = "wheel" ]; then
 fi
 
 docker compose -f "$COMPOSE_FILE" build --no-cache \
-  --build-arg INSTALL_SOURCE="$INSTALL_SOURCE"
+  --build-arg INSTALL_SOURCE="$INSTALL_SOURCE" \
+  --build-arg VERITY_VERSION="$VERITY_VERSION"
 
 docker compose -f "$COMPOSE_FILE" up -d --wait target-sse-lab
 

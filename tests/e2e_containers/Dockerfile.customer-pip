@@ -1,6 +1,8 @@
 FROM python:3.12-slim-bookworm
 
 ARG INSTALL_SOURCE=wheel
+ARG VERITY_VERSION=0.0.0
+ENV VERITY_VERSION=${VERITY_VERSION}
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git ca-certificates curl \
@@ -10,7 +12,7 @@ COPY .build_dist /tmp/dist
 RUN cp -r /tmp/dist/docs /opt/docs
 
 RUN if [ "$INSTALL_SOURCE" = "pypi" ]; then \
-        pip install --no-cache-dir "verity-redteam-core==0.2.2"; \
+        pip install --no-cache-dir "verity-redteam-core==${VERITY_VERSION}"; \
     else \
         pip install --no-cache-dir /tmp/dist/*.whl; \
     fi

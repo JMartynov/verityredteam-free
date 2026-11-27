@@ -27,6 +27,9 @@ services:
       dockerfile: Dockerfile.customer-pip
       args:
         INSTALL_SOURCE: ${INSTALL_SOURCE:-wheel}
+        VERITY_VERSION: ${VERITY_VERSION:-}
+    environment:
+      VERITY_VERSION: ${VERITY_VERSION:-}
     networks:
       - verity-e2e-net
     depends_on:
@@ -41,6 +44,9 @@ services:
       dockerfile: Dockerfile.customer-uvx
       args:
         INSTALL_SOURCE: ${INSTALL_SOURCE:-wheel}
+        VERITY_VERSION: ${VERITY_VERSION:-}
+    environment:
+      VERITY_VERSION: ${VERITY_VERSION:-}
     networks:
       - verity-e2e-net
     depends_on:
@@ -53,6 +59,9 @@ services:
       dockerfile: Dockerfile.customer-workstation
       args:
         INSTALL_SOURCE: ${INSTALL_SOURCE:-wheel}
+        VERITY_VERSION: ${VERITY_VERSION:-}
+    environment:
+      VERITY_VERSION: ${VERITY_VERSION:-}
     networks:
       - verity-e2e-net
     depends_on:
