@@ -1,5 +1,5 @@
 version = 1
-revision = 3
+revision = 5
 requires-python = ">=3.12, <3.15"
 
 [[package]]
@@ -523,21 +523,21 @@ wheels = [
 
 [[package]]
 name = "mcp-fingerprints"
-version = "1.4.12"
+version = "1.4.22"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "packaging" },
     { name = "pyyaml" },
     { name = "tenacity" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/00/27/4d3c9f83499879c1fabc8c99e4dcf23cf43f9dd64e335cb30fd8d348eed9/mcp_fingerprints-1.4.12.tar.gz", hash = "sha256:54383fa98e541a2d0b36ca2823fd7cd959fa91335a0c31518be85db3958e3d22", size = 5982225, upload-time = "2026-11-16T12:38:51.27Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/da/31d4d20f863d039f9e2a568f6362ed65381a4423be9b150595c1bd1af5b0/mcp_fingerprints-1.4.22.tar.gz", hash = "sha256:3a1e2b93e17d10f8c9383dbb3273af6d24ffbf4efc332ccf2d43f138a8c19741", size = 7338123, upload-time = "2026-11-27T15:17:28.972Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/61/3c/03c75fce910037ac80f211a4985a02bb33088a699921ca1fd3c2498530f5/mcp_fingerprints-1.4.12-py3-none-any.whl", hash = "sha256:16cb5eaafbff93ac46b3ab9898e2d36fcc0860f51d1339da7154bc800af048c9", size = 197110, upload-time = "2026-11-16T12:38:49.203Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/80/9841b324648648680f2613d5e9bc9dee7c0c529f57b4958bdadf593b052f/mcp_fingerprints-1.4.22-py3-none-any.whl", hash = "sha256:4dbec67b286368265310515abadaaea7de4323799f1a7be7a6488083779e12b6", size = 197721, upload-time = "2026-11-27T15:17:27.584Z" },
 ]
 
 [[package]]
 name = "mcp-vulnerabilities"
-version = "1.7.22"
+version = "1.7.48"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -546,9 +546,9 @@ dependencies = [
     { name = "pyyaml" },
     { name = "rich" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/9b/a5/93ef4475d294ad85f31f0eda9698d38fc80b4e7b8c83e8cb8051d1dde9a0/mcp_vulnerabilities-1.7.22.tar.gz", hash = "sha256:b8d7a5b8b5b7f9062e5f3d9b72c50bbc2fe52ad71938acd8deacb799a7931467", size = 407445, upload-time = "2026-11-16T12:28:28.824Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ed/03/2b3bed286ab269dbac044a57cb4dec66eaf09cc8aa64a7f7dbff45b904b6/mcp_vulnerabilities-1.7.48.tar.gz", hash = "sha256:f3fd539506434c76eb8edb98331bb8092acc6ba0da300bb6aaeb8bd7a4ec5286", size = 414655, upload-time = "2026-11-27T15:38:11.653Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/60/c8/9082f539c88a41f68e034e0259615c47e0627b456596f5e6a0170420214e/mcp_vulnerabilities-1.7.22-py3-none-any.whl", hash = "sha256:bc98cbd60dc3e81116763aa93253006a5602d62bbed888959d0e94096c798fc3", size = 305674, upload-time = "2026-11-16T12:28:27.107Z" },
+    { url = "https://files.pythonhosted.org/packages/12/fe/f6263e6940238cfb107a38a82ac32b3e02ad2449329318d621dd74383ce5/mcp_vulnerabilities-1.7.48-py3-none-any.whl", hash = "sha256:98e91a2f4a26744a9353aa806d8d1381b582b124f94482c68a63b77312d74556", size = 308024, upload-time = "2026-11-27T15:38:09.973Z" },
 ]
 
 [[package]]
