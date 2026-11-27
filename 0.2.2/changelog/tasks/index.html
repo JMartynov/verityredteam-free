@@ -2893,8 +2893,8 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <li><strong>M51</strong> — Bundled Snapshot Sync (<code>passports</code>/<code>vulns</code>), Sigstore Verification &amp; Config Scanner Dedup (<code>TASK-94-FREE</code>) (Not Done)</li>
 <li><strong>M52</strong> — Multi-Framework Agent SAST (LangChain/CrewAI/AutoGen) &amp; Optional YARA Engine (<code>TASK-95-FREE</code>) (Not Done)</li>
 <li><strong>M53</strong> — Pre-Boot Maintainer &amp; Package Reputation Scoring (0-100) (<code>TASK-97-FREE</code>) (Not Done)</li>
-<li><strong>M54</strong> — GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases &amp; Upstream Sync Automation (<code>TASK-111-FREE</code>) (Not Done)</li>
-<li><strong>M55</strong> — CI Workflow Hygiene, Dynamic E2E Container Version Parity &amp; Static Security Gates (<code>TASK-112-FREE</code>) (Not Done)</li>
+<li><strong>M54</strong> — GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases &amp; Upstream Sync Automation (<code>TASK-111-FREE</code>) (Done)</li>
+<li><strong>M55</strong> — CI Workflow Hygiene, Dynamic E2E Container Version Parity &amp; Static Security Gates (<code>TASK-112-FREE</code>) (Done)</li>
 </ul>
 <h2 id="task-verification-matrix">Task Verification Matrix<a class="headerlink" href="#task-verification-matrix" title="Permanent link">&para;</a></h2>
 <table>
@@ -3228,13 +3228,13 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <tr>
 <td>TASK-111</td>
 <td>M54</td>
-<td>Not Done</td>
+<td>Done</td>
 <td><code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></td>
 </tr>
 <tr>
 <td>TASK-112</td>
 <td>M55</td>
-<td>Not Done</td>
+<td>Done</td>
 <td><code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></td>
 </tr>
 </tbody>
@@ -3667,7 +3667,7 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <h3 id="m54-github-pipeline-publishing-homebrew-tap-github-releases-upstream-sync-automation-task-111-free">M54 — GitHub Pipeline Publishing, Homebrew Tap, GitHub Releases &amp; Upstream Sync Automation (<code>TASK-111-FREE</code>)<a class="headerlink" href="#m54-github-pipeline-publishing-homebrew-tap-github-releases-upstream-sync-automation-task-111-free" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Phase:</strong> Next-Gen SAST, UX &amp; Supply-Chain Roadmap</li>
-<li><strong>Status:</strong> Not Done</li>
+<li><strong>Status:</strong> Done</li>
 <li><strong>Scope:</strong> Fix <code>homebrew-tap.yml</code> fallback/<code>--from-lock</code>/<code>ruby -c</code>/<code>HOMEBREW_TAP_TOKEN</code> preflight, GitHub Release assets + post-publish PyPI E2E in <code>workflow.yaml</code>, add <code>upstream-sync.yml</code></li>
 <li><strong>Task references:</strong> TASK-111</li>
 <li><strong>Verification:</strong> <code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></li>
@@ -3675,7 +3675,7 @@ SBOM export (<code>--format cyclonedx|spdx</code>), inventory drift baselines
 <h3 id="m55-ci-workflow-hygiene-dynamic-e2e-container-version-parity-static-security-gates-task-112-free">M55 — CI Workflow Hygiene, Dynamic E2E Container Version Parity &amp; Static Security Gates (<code>TASK-112-FREE</code>)<a class="headerlink" href="#m55-ci-workflow-hygiene-dynamic-e2e-container-version-parity-static-security-gates-task-112-free" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Phase:</strong> Next-Gen SAST, UX &amp; Supply-Chain Roadmap</li>
-<li><strong>Status:</strong> Not Done</li>
+<li><strong>Status:</strong> Done</li>
 <li><strong>Scope:</strong> Dynamic workflow discovery in <code>test_workflow_hygiene.py</code>, dynamic <code>VERITY_VERSION</code> across E2E Dockerfiles &amp; parity tests, <code>scripts</code> ruff + portal PR check</li>
 <li><strong>Task references:</strong> TASK-112</li>
 <li><strong>Verification:</strong> <code>uv run pytest tests/ -q &amp;&amp; uv run ruff check src tests</code></li>
