@@ -49,6 +49,10 @@
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
+         <loc>https://jmartynov.github.io/verityredteam-free/0.2.2/reports/GITHUB_PIPELINES_AND_TEST_SUITE_AUDIT/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
          <loc>https://jmartynov.github.io/verityredteam-free/0.2.2/roadmap/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
@@ -230,6 +234,14 @@
     </url>
     <url>
          <loc>https://jmartynov.github.io/verityredteam-free/0.2.2/tasks/M53_TASK_97_FREE_PRE_BOOT_REPUTATION_SCORING/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://jmartynov.github.io/verityredteam-free/0.2.2/tasks/M54_TASK_111_FREE_PIPELINE_PUBLISHING_AND_RELEASE_AUTOMATION/</loc>
+         <lastmod>2026-11-27</lastmod>
+    </url>
+    <url>
+         <loc>https://jmartynov.github.io/verityredteam-free/0.2.2/tasks/M55_TASK_112_FREE_CI_TEST_HYGIENE_AND_VERSION_PARITY/</loc>
          <lastmod>2026-11-27</lastmod>
     </url>
     <url>
