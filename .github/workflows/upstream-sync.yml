@@ -74,7 +74,7 @@ jobs:
 
       - name: Commit and open pull request
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.UPSTREAM_SYNC_TOKEN || github.token }}
         shell: bash
         run: |
           set -euo pipefail
@@ -94,7 +94,14 @@ jobs:
               --title "chore: sync upstream data packages" \
               --body "Automated sync of mcp-fingerprints and mcp-vulnerabilities."
           else
-            gh pr create --base main --head "$BRANCH" \
+            if ! pr_err="$(gh pr create --base main --head "$BRANCH" \
               --title "chore: sync upstream data packages" \
-              --body "Automated sync of mcp-fingerprints and mcp-vulnerabilities."
+              --body "Automated sync of mcp-fingerprints and mcp-vulnerabilities." 2>&1)"; then
+              if echo "$pr_err" | grep -qi "not permitted to create"; then
+                echo "::warning::GitHub Actions is not permitted to create pull requests (enable 'Allow GitHub Actions to create and approve pull requests' in Settings > Actions > General, or configure UPSTREAM_SYNC_TOKEN); branch ${BRANCH} pushed."
+              else
+                echo "$pr_err" >&2
+                exit 1
+              fi
+            fi
           fi
