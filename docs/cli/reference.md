@@ -631,3 +631,5 @@ stage('verity') {
 | `no findings, nothing scanned` | `0` | `--path` points at a directory with no configs or Python files | Pass `--config-file` explicitly or correct `--path` |
 | `target refused connection` | `1` | `--url` endpoint down or unreachable | Start the service or fix the URL |
 | `cannot bind transport` | `4` | Address or port already in use | Stop the other process or choose another `--port` |
+| `verity: command not found` in GUI IDE | — | GUI app does not inherit shell `PATH` | Use `/opt/homebrew/bin/verity` (Apple Silicon), `/usr/local/bin/verity` (Intel macOS), `/home/linuxbrew/.linuxbrew/bin/verity` (Linux), or `which verity` |
+| Outdated formula after PyPI release | — | Local Homebrew tap metadata is stale | Run `brew update && brew upgrade verity` |

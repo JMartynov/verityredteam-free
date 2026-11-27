@@ -41,10 +41,9 @@ The authoritative input schema for every tool is returned by `tools/list`. IDE a
 
 ## 2. Prerequisites
 
-- Python 3.12 or newer (<3.15).
-- `uv` for the recommended zero-install `uvx` flow.
-- A Verity installation if you want to use the `verity` command directly.
-- Local Verity data snapshots if you are operating offline. The usual directories are `data/fingerprints` and `data/vulnerabilities`.
+- **Homebrew (macOS / Linux):** `brew install JMartynov/tap/verity` — builds an isolated virtualenv (`python@3.13` + `libyaml`) and places `verity` on standard Homebrew `PATH` (`/opt/homebrew/bin/verity` on Apple Silicon, `/usr/local/bin/verity` on Intel macOS, `/home/linuxbrew/.linuxbrew/bin/verity` on Linux) with zero Python or venv setup.
+- **PyPI / `uv`:** Python 3.12 or newer (<3.15), `uv` for zero-install `uvx`, or `pip install verity-redteam-core`.
+- Local Verity data snapshots if you are operating offline (`--offline`). The usual directories are `data/fingerprints` and `data/vulnerabilities` (or the snapshots bundled with the installed package).
 
 Verify `uvx`:
 
@@ -90,7 +89,7 @@ Every configuration in this guide is shown in two variants.
 
 This is the easiest starting point. `uvx` resolves and runs the package without a permanent global install.
 
-### Variant B: installed `verity` command
+### Variant B: installed `verity` command (Homebrew / `pip` / `uv tool`)
 
 ~~~json
 {
@@ -99,7 +98,7 @@ This is the easiest starting point. `uvx` resolves and runs the package without 
 }
 ~~~
 
-Use this when Verity is already installed in a controlled environment or when your organization pins tool versions internally.
+Use this when Verity is installed via Homebrew (`brew install JMartynov/tap/verity`), `uv tool`, or `pip`. Because Homebrew installs `verity` to a fixed system prefix (`/opt/homebrew/bin/verity` on Apple Silicon, `/usr/local/bin/verity` on Intel macOS, `/home/linuxbrew/.linuxbrew/bin/verity` on Linux), GUI apps like Claude Desktop and Cursor can launch it without inheriting shell `pyenv` or `.venv` `PATH` settings. If a GUI client still cannot resolve bare `verity`, pass the full Homebrew binary path as `"command"`.
 
 Both variants communicate over stdio. Do not configure an HTTP or SSE URL for IDE use.
 
@@ -722,12 +721,13 @@ printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocol
 
 If this prints a JSON response containing `tools`, the server is healthy and the IDE configuration is the problem. If it prints nothing, check stderr and the executable path.
 
-### 9.2 `uvx` works in Terminal but not in the IDE
+### 9.2 `uvx` or `verity` works in Terminal but not in the IDE
 
-GUI applications often have a different `PATH` than your shell. Use an absolute path.
+GUI applications often have a different `PATH` than your shell (for example, they do not source `.zshrc` or activate `pyenv`/`.venv`). Use an absolute path—with Homebrew on macOS/Linux, those paths are predictable (`/opt/homebrew/bin/verity` on Apple Silicon, `/usr/local/bin/verity` on Intel macOS, `/home/linuxbrew/.linuxbrew/bin/verity` on Linux):
 
 ~~~bash
 which uvx
+which verity
 ~~~
 
 Put that full path into the IDE configuration:
@@ -739,15 +739,11 @@ Put that full path into the IDE configuration:
 }
 ~~~
 
-For the installed command:
-
-~~~bash
-which verity
-~~~
+For Homebrew-installed `verity` (Apple Silicon example):
 
 ~~~json
 {
-  "command": "/Users/you/.local/bin/verity",
+  "command": "/opt/homebrew/bin/verity",
   "args": ["serve"]
 }
 ~~~

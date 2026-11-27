@@ -16,7 +16,7 @@ Offline, deterministic, zero Docker, zero API keys, Apache-2.0.
 
 ## Install & 5-Second Quickstart
 
-End users install straight from PyPI:
+End users install straight from PyPI or Homebrew (macOS & Linux):
 
 ```bash
 uvx verity-redteam-core scan
@@ -24,6 +24,26 @@ brew install JMartynov/tap/verity
 pip install verity-redteam-core
 uvx --from verity-redteam-core verity scan
 ```
+
+### Install via Homebrew Tap (macOS & Linux)
+
+No local Python or virtualenv setup is required: [`JMartynov/homebrew-tap`](https://github.com/JMartynov/homebrew-tap) builds an isolated Homebrew virtualenv (`python@3.13` + `libyaml`) with pinned PyPI sdist SHA-256 checksums and places `verity` directly on your `PATH`.
+
+```bash
+# Two-step install (recommended for easy discovery and updates)
+brew tap JMartynov/tap
+brew install verity
+
+# Or single-command install
+brew install JMartynov/tap/verity
+
+# Verify installation
+verity --version
+which verity
+brew test JMartynov/tap/verity
+```
+
+First-run checks, SBOM export, CI baselines, upgrades (`brew update && brew upgrade verity`), uninstall steps, and GUI IDE `PATH` tips (`/opt/homebrew/bin/verity` on Apple Silicon, `/usr/local/bin/verity` on Intel macOS, `/home/linuxbrew/.linuxbrew/bin/verity` on Linux) live in the [Homebrew installation guide](docs/getting-started/installation.md#install-with-homebrew).
 
 <details>
 <summary>Install from source (contributors)</summary>
@@ -480,7 +500,7 @@ defends, with no infrastructure to provision.
 **The Problem:** You want your IDE agent (Cursor, Claude Desktop, Antigravity) to audit its
 own MCP environment and detect a server changing behaviour after trust (a rug pull).
 
-**What You Run:** add Verity as an MCP server in your client config:
+**What You Run:** add Verity as an MCP server in your client config (use `"command": "uvx"` for zero-install, or `"command": "verity"` / `/opt/homebrew/bin/verity` when installed via Homebrew so GUI apps find it without shell `PATH` wrappers):
 
 ```json
 {
@@ -488,6 +508,19 @@ own MCP environment and detect a server changing behaviour after trust (a rug pu
     "verity": {
       "command": "uvx",
       "args": ["--from", "verity-redteam-core", "verity", "serve", "--transport", "stdio"]
+    }
+  }
+}
+```
+
+Or with Homebrew-installed `verity`:
+
+```json
+{
+  "mcpServers": {
+    "verity": {
+      "command": "verity",
+      "args": ["serve"]
     }
   }
 }

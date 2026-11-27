@@ -8,7 +8,7 @@ Verity runs on macOS, Linux, and Windows, with first-class support for developer
 
 | Environment | Recommended install | Why | Key flags |
 |---|---|---|---|
-| Developer workstation | `uvx` or `brew` | Fast updates, no global pollution | `verity scan --path .` |
+| Developer workstation | `brew` or `uvx` | Isolated env, fast updates, zero global pollution | `verity scan --path .` |
 | CI/CD pipeline | `pip` or container | Pinned versions, deterministic cache | `--fail-on-findings --format json` |
 | Air-gapped / regulated | Source or offline wheel | Full artifact control | `--offline` |
 | Security researcher | `uv tool` or source | Isolated env, editable checkout | `--target ... --demo` |
@@ -83,27 +83,95 @@ $ uv tool uninstall verity-redteam-core
 
 ## Install with Homebrew
 
-Install Verity on macOS or Linux via the official tap [`JMartynov/homebrew-tap`](https://github.com/JMartynov/homebrew-tap):
+Install Verity on macOS (Apple Silicon or Intel) or Linux (Linuxbrew) via the official tap [`JMartynov/homebrew-tap`](https://github.com/JMartynov/homebrew-tap).
 
-~~~bash
-$ brew install JMartynov/tap/verity
-$ verity --version
-verity 0.2.2
-$ verity test --demo
-~~~
+### Prerequisites
 
-Or tap first and install:
+- [Homebrew](https://brew.sh/) installed on macOS or Linux.
+- **Zero Python or virtualenv management required:** `Formula/verity.rb` uses `Language::Python::Virtualenv` to build a self-contained virtualenv with `python@3.13`, `libyaml`, and pinned PyPI sdist SHA-256 resources, isolated from your system or project Python environments.
+
+### Installation options
+
+Two-step install (recommended for easy tap discovery and updates):
 
 ~~~bash
 $ brew tap JMartynov/tap
 $ brew install verity
-$ verity scan --help
 ~~~
 
-Upgrade:
+Single-command install:
 
 ~~~bash
-$ brew upgrade verity
+$ brew install JMartynov/tap/verity
+~~~
+
+### Verify the Homebrew installation
+
+~~~bash
+$ verity --version
+verity 0.2.2
+$ which verity
+/opt/homebrew/bin/verity
+$ brew test JMartynov/tap/verity
+~~~
+
+### First-run usage steps after installing via Homebrew
+
+Run the zero-Docker offline self-test demo to verify SQLi, BOLA, NoSQLi, and code-injection checks end to end:
+
+~~~bash
+$ verity test --demo
+~~~
+
+Discover and audit local MCP clients (Claude Desktop, Cursor, VS Code, Windsurf, Cline, and more) either with default settings or strictly offline:
+
+~~~bash
+$ verity scan
+$ verity scan --offline
+~~~
+
+Scan a project directory or MCP server repository (SAST + OSV advisories + typosquatting + CycloneDX SBOM export):
+
+~~~bash
+$ verity scan --path ./my-mcp-server
+$ verity scan --offline --format cyclonedx --scanners vuln --output sbom.json
+~~~
+
+Gate brownfield repositories in CI with a deterministic baseline and severity threshold:
+
+~~~bash
+$ verity scan --path . --save-baseline .verity-baseline.json
+$ verity scan --path . --baseline .verity-baseline.json --fail-on-new --fail-on-severity high
+~~~
+
+Run Verity as a local stdio MCP server for IDE agents:
+
+~~~bash
+$ verity serve
+~~~
+
+Add Verity to your client's `mcpServers` block. Because Homebrew symlinks `verity` into a standard `bin` directory (`/opt/homebrew/bin/verity` on Apple Silicon, `/usr/local/bin/verity` on Intel macOS, or `/home/linuxbrew/.linuxbrew/bin/verity` on Linux), GUI apps such as Claude Desktop and Cursor can launch it reliably without inheriting shell `pyenv` or `.venv` `PATH` configuration:
+
+~~~json
+{
+  "mcpServers": {
+    "verity": {
+      "command": "verity",
+      "args": ["serve"]
+    }
+  }
+}
+~~~
+
+If a GUI app does not include Homebrew's `bin` directory in its launch environment, set `"command"` to the full path reported by `which verity` (for example `"/opt/homebrew/bin/verity"`).
+
+### Upgrading, inspecting & uninstalling
+
+~~~bash
+$ brew update && brew upgrade verity
+$ brew info JMartynov/tap/verity
+$ brew uninstall verity
+$ brew untap JMartynov/tap
 ~~~
 
 > **Stage B (`Homebrew/homebrew-core`) Graduation:** Verity ships via `JMartynov/homebrew-tap` immediately. Graduation to `Homebrew/homebrew-core` requires meeting notability thresholds (≥75 stars / ≥30 forks for third-party submissions, or ≥225 stars / ≥90 forks for self-submissions) and validating Python 3.15 so `requires-python` can be lifted from `>=3.12,<3.15` to `>=3.12,<3.16`.
@@ -260,20 +328,23 @@ $ uv pip install verity-redteam-core
 $ verity scan --help
 ~~~
 
-### 4. Homebrew tap not found
+### 4. Homebrew tap not found or outdated metadata
 
 ~~~bash
 $ brew install verity
 Error: No available formula with the name "verity".
 ~~~
 
-Tap the repository first.
+Tap the repository and refresh Homebrew's tap metadata:
 
 ~~~bash
 $ brew tap JMartynov/tap
+$ brew update
 $ brew install verity
-$ verity scan --help
+$ verity --version
 ~~~
+
+If `brew upgrade verity` reports that the latest version is already installed right after a new PyPI release, run `brew update && brew upgrade verity` to pull the updated `Formula/verity.rb`.
 
 ### 5. Docker daemon unavailable
 
@@ -299,19 +370,19 @@ $ verity serve --transport stdio
 error: command not found in client PATH
 ~~~
 
-Use an absolute path in the client config, or install Verity where the IDE can see it.
+GUI desktop apps often do not inherit shell `PATH` entries from `pyenv`, `uv`, or `.venv` activations. Use the absolute Homebrew path (`/opt/homebrew/bin/verity` on Apple Silicon macOS, `/usr/local/bin/verity` on Intel macOS, `/home/linuxbrew/.linuxbrew/bin/verity` on Linux) or the path returned by `which verity`:
 
 ~~~bash
 $ which verity
-/Users/dev/.local/bin/verity
+/opt/homebrew/bin/verity
 ~~~
 
 ~~~json
 {
   "mcpServers": {
     "verity": {
-      "command": "/Users/dev/.local/bin/verity",
-      "args": ["serve", "--transport", "stdio"]
+      "command": "/opt/homebrew/bin/verity",
+      "args": ["serve"]
     }
   }
 }
@@ -325,6 +396,15 @@ $ printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protoc
 
 The response lists the four unified tools: `verity_security_scan`, `verity_database_guard`, `verity_database_oracle`, and `verity_remediation_ops`.
 
+### 7. Air-gapped or offline environments
+
+Pass `--offline` (or set `VERITY_OFFLINE=1`) so `verity scan` disables remote snapshot fetching and relies strictly on the bundled fingerprint and OSV caches:
+
+~~~bash
+$ verity scan --offline
+$ verity scan --path ./my-mcp-server --offline
+~~~
+
 ---
 
 ## Uninstall
@@ -332,6 +412,7 @@ The response lists the four unified tools: `verity_security_scan`, `verity_datab
 ~~~bash
 $ uv tool uninstall verity-redteam-core
 $ brew uninstall verity
+$ brew untap JMartynov/tap
 $ python -m pip uninstall -y verity-redteam-core
 ~~~
 

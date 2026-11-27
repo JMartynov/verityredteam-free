@@ -14,30 +14,40 @@ The four tutorials are independent. Tutorial 1 needs no project files.
 
 ## Requirements
 
-- Python 3.12+ (>=3.12,<3.15)
+- **Homebrew (macOS / Linux):** zero Python or virtualenv management required (`JMartynov/homebrew-tap` builds an isolated virtualenv with `python@3.13`, `libyaml`, and pinned SHA-256 resources).
+- **PyPI (`pip` / `uvx`):** Python 3.12+ (`>=3.12,<3.15`).
 - `verity-redteam-core` 0.2.2+
 - No network access for Tutorials 1, 3, and 4
 
 ## Install
 
+Install with Homebrew (macOS & Linux):
+
 ~~~bash
-pip install verity-redteam-core
-python -c "import verity; print(verity.__version__)"
-# 0.2.2
+# Two-step (recommended for discovery and updates)
+brew tap JMartynov/tap
+brew install verity
+
+# Or single-command install
+brew install JMartynov/tap/verity
 ~~~
 
-Alternative with `uvx`:
+Or install from PyPI / run ephemerally with `uvx`:
 
 ~~~bash
+pip install verity-redteam-core
 uvx verity-redteam-core scan --offline
 # Legacy two-token form (equivalent):
 uvx --from verity-redteam-core verity scan --offline
 ~~~
 
-Confirm the binary resolves and the subcommands load:
+Confirm the binary resolves, passes the Homebrew formula test (if installed via Homebrew), and loads subcommands:
 
 ~~~bash
+verity --version
 which verity
+brew test JMartynov/tap/verity   # Homebrew installs
+verity test --demo
 verity scan --help
 verity test --help
 ~~~

@@ -594,6 +594,12 @@ Every change after the 0.2.0 cut lands as a tracked milestone:
 Upgrade the CLI distribution in place:
 
 ```bash
+brew update && brew upgrade verity
+```
+
+Or upgrade via `pip`:
+
+```bash
 pip install --upgrade verity-redteam-core
 ```
 

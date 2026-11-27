@@ -2,7 +2,7 @@
 
 **Find the exploitable path before an attacker does.** Verity is a zero-Docker, MCP-native red-team toolkit for MCP servers, AI database agents, and the IDE clients that connect them. It combines static configuration analysis, AST-aware source review, dialect-specific SQL validation, live exploit verification, and an MCP server that lets assistants invoke security tooling directly.
 
-[Quick start](getting-started/installation.md) · [Feature matrix](#feature-matrix) · [Architecture](#architecture) · [Walkthroughs](#end-to-end-walkthroughs)
+[Quick start](getting-started/installation.md) · [Homebrew Tap](getting-started/installation.md#install-with-homebrew) · [Feature matrix](#feature-matrix) · [Architecture](#architecture) · [Walkthroughs](#end-to-end-walkthroughs)
 
 ---
 
@@ -492,7 +492,7 @@ The non-zero exit code fails a CI gate configured with `--fail-on-findings`, whi
 
 ## Next steps
 
-- [Install Verity](getting-started/installation.md) for your environment.
-- Run `verity scan --path . --format terminal` on an existing MCP configuration.
+- [Install Verity](getting-started/installation.md) for your environment (or run `brew tap JMartynov/tap && brew install verity` on macOS/Linux for an isolated, zero-Python-setup install).
+- Run `verity test --demo` and `verity scan --path . --format terminal` on an existing MCP configuration.
 - Add `verity serve` to your IDE and ask the assistant to scan the current workspace.
 - Wire `--fail-on-findings` into CI and upload JSON/SARIF artifacts.
